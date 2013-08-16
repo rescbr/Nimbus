@@ -1,0 +1,1 @@
+Nimbus.ConsoleHost\bin\Debug\Nimbus.exe
