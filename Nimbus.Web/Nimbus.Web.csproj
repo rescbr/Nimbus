@@ -96,6 +96,16 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\Controllers\ChannelAPIController.cs" />
+    <Compile Include="API\Controllers\CommentAPIController.cs" />
+    <Compile Include="API\Controllers\MessageAPIController.cs" />
+    <Compile Include="API\Controllers\TopicAPIController.cs" />
+    <Compile Include="API\Controllers\UserAPIController.cs" />
+    <Compile Include="API\Models\ChannelAPIModel.cs" />
+    <Compile Include="API\Models\CommentAPIModel.cs" />
+    <Compile Include="API\Models\MessageAPIModel.cs" />
+    <Compile Include="API\Models\TopicAPIModel.cs" />
+    <Compile Include="API\Models\UserAPIModel.cs" />
     <Compile Include="API\Test.cs" />
     <Compile Include="OwinApp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
