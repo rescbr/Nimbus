@@ -28,5 +28,24 @@ namespace Nimbus.DB
         public decimal? Price { get; set; }
         public string Description { get; set; }
         public string UrlVideo { get; set; }
+        public AllQuestion Question { get; set; }
     }
+
+    public class AllQuestion
+    {
+        public List<Question> Questions { get; set; }
+    }
+
+    public class Question
+    {
+        public string TextQuestion { get; set; }
+        public string CorrectAnswer { get; set; }
+        public List<Answer> ChoicesAnswer { get; set; }
+    }
+
+    public class Answer
+    {
+        public string TextAnswer { get; set; }
+    }
+
 }

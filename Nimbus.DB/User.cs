@@ -12,6 +12,10 @@ namespace Nimbus.DB
         [AutoIncrement]
         public int Id { get; set; }
         public string Username { get; set; }
+        public DateTime BirthDate { get; set; }
+        public string Occupation { get; set; }
+        public string Interest { get; set; }
+        public string Experience { get; set; }
         public string Email { get; set; }
         public string Name { get; set; }
         public string AvatarUrl { get; set; }

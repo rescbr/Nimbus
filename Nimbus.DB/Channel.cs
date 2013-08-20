@@ -24,6 +24,9 @@ namespace Nimbus.DB
         public bool OpenToComments { get; set; }
         public bool Visible { get; set; }
         public bool IsCourse { get; set; }
+        public int Ranking { get; set; }
+        public int Followers { get; set; }
+
 
     }
 }
