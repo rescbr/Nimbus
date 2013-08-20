@@ -12,5 +12,13 @@ namespace Nimbus.Web.API.Controllers
     /// </summary>
     public class TopicAPIController : NimbusApiController
     {
+
+        //exibir tópicos em resumo
+        //ler o tópico mais tarde ou retirar da lista de leitura 
+        //favoritar/desfavoritar o tópico
+        //abrir o tópico
+
+
+
     }
 }

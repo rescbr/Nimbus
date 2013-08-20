@@ -23,6 +23,7 @@ namespace Nimbus.Web.API.Controllers
         //carregar informações do canal(para o dono)
         //carregar informações do canal(para o público)
         //editar/add tags do canal
+        //ver mais tarde o canal ou retirar da lista de ver mais tarde
 
 
 

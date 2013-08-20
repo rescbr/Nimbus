@@ -12,5 +12,13 @@ namespace Nimbus.Web.API.Controllers
     /// </summary>
     public class CommentAPIController : NimbusApiController
     {
+
+        //criar comentario
+        //deletar comentario
+        //responder comentario
+        //visualizar comentario 
+        //denunciar comentario
+
+
     }
 }
