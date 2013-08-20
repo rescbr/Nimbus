@@ -7,12 +7,11 @@ using System.Web.Http;
 
 namespace Nimbus.Web.API
 {
-    public class TestController : ApiController
+    public class TestController : NimbusApiController
     {
         public string Get()
         {
-            INimbusAppBus appbus = Configuration.Properties["NimbusAppBus"] as INimbusAppBus;
-            return "Nimbus: " + appbus.Settings.DatabaseConnectionString;
+            return "Nimbus: " + NimbusAppBus.Settings.DatabaseConnectionString;
         }
     }
 }
