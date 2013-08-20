@@ -1,4 +1,5 @@
 ﻿using Nimbus.Plumbing.Interface;
+using ServiceStack.OrmLite;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,5 +17,16 @@ namespace Nimbus.Web.API
                 return base.Configuration.Properties["NimbusAppBus"] as INimbusAppBus;
             }
         }
+
+        public IDbConnectionFactory DatabaseFactory
+        {
+            get
+            {
+                return new OrmLiteConnectionFactory
+                    (NimbusAppBus.Settings.DatabaseConnectionString,
+                    SqlServerDialect.Provider);
+            }
+        }
+        
     }
 }
