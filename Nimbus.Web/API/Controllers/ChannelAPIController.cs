@@ -7,6 +7,7 @@ using System.Web.Http;
 
 namespace Nimbus.API.Controllers
 {
+
     /// <summary>
     /// Controle sobre todas as funções realizadas para os Canais.
     /// </summary>
@@ -14,4 +15,7 @@ namespace Nimbus.API.Controllers
     {
        
     }
+
+
+
 }
