@@ -138,6 +138,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Nimbus.DB\Nimbus.DB.csproj">
+      <Project>{0d485fa6-60bc-410c-b437-37a7c47cdb70}</Project>
+      <Name>Nimbus.DB</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Nimbus.Plumbing.Interface\Nimbus.Plumbing.Interface.csproj">
       <Project>{c28f8f7a-c5a2-4cb4-92b1-9507a87d5ffe}</Project>
       <Name>Nimbus.Plumbing.Interface</Name>

@@ -62,6 +62,14 @@ namespace Nimbus.Plumbing
                 set { _nimbusWebAssemblyFile = value; }
             }
 
+            private string _DBConnectionString;
+            public string DBConnectionString
+            {
+                get { return _DBConnectionString; }
+                set { _DBConnectionString = value; }
+            }
+
+
         }
         #endregion
 
@@ -92,7 +100,7 @@ namespace Nimbus.Plumbing
                 new NimbusSettings(
                     isDevelopment: initOptions.IsDevEnvironment,
                     isDebug: initOptions.IsDebugAllowed,
-                    dbConnString: "nimbus rules")
+                    dbConnString: initOptions.DBConnectionString)
                 );
 
             instance.StartWebApp(initOptions);
