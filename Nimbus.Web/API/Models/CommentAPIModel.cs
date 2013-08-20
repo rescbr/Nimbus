@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace Nimbus.API.Models.Comment
+namespace Nimbus.Web.API.Models.Comment
 {
     /// <summary>
     /// Exibe os  comentários tópico.

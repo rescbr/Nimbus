@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace Nimbus.API.Models.Channel
+namespace Nimbus.Web.API.Models.Channel
 {
     /// <summary>
     /// Tipos de canais existens no Nimbus

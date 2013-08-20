@@ -5,12 +5,12 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 
-namespace Nimbus.API.Controllers
+namespace Nimbus.Web.API.Controllers
 {
     /// <summary>
     /// Controle sobre todas as funções realizadas para as Mensagens
     /// </summary>
-    public class MessageAPIController : ApiController
+    public class MessageAPIController : NimbusApiController
     {
     }
 }
