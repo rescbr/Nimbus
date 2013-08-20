@@ -89,7 +89,10 @@ namespace Nimbus.Plumbing
             if (instance != null) throw new Exception("Init() must be called only once.");
             instance = new NimbusStartup();
             instance._nimbusAppBus = new NimbusAppBus(
-                new NimbusSettings(initOptions.IsDevEnvironment, initOptions.IsDebugAllowed)
+                new NimbusSettings(
+                    isDevelopment: initOptions.IsDevEnvironment,
+                    isDebug: initOptions.IsDebugAllowed,
+                    dbConnString: "nimbus rules")
                 );
 
             instance.StartWebApp(initOptions);

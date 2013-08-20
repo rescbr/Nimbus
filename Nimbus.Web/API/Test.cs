@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nimbus.Plumbing.Interface;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -10,7 +11,8 @@ namespace Nimbus.Web.API
     {
         public string Get()
         {
-            return "This is Nimbus";
+            INimbusAppBus appbus = Configuration.Properties["NimbusAppBus"] as INimbusAppBus;
+            return "Nimbus: " + appbus.Settings.DatabaseConnectionString;
         }
     }
 }

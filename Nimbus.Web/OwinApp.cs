@@ -4,15 +4,16 @@ using System.Linq;
 using System.Web;
 using Owin;
 using Nimbus.Plumbing.Interface;
+using Owin.Types;
+using System.IO;
+using System.Threading.Tasks;
+using System.Web.Http;
 
 namespace Nimbus.Web
 {
     
     using AppFunc = Func<IDictionary<string, object>, System.Threading.Tasks.Task>;
-    using Owin.Types;
-    using System.IO;
-    using System.Threading.Tasks;
-    using System.Web.Http;
+    
     public class NimbusOwinApp : INimbusOwinApp
     {
         private INimbusAppBus _nimbusAppBus;
@@ -28,6 +29,7 @@ namespace Nimbus.Web
 
             //WebAPI
             HttpConfiguration webApiConfig = new HttpConfiguration();
+            webApiConfig.Properties["NimbusAppBus"] = nimbusAppBus;
             webApiConfig.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",
@@ -35,7 +37,7 @@ namespace Nimbus.Web
             );
 
 
-
+            
             //Owin.AppBuilderExtensions.Run(
             app
                 .UseWebApi(webApiConfig)

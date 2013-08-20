@@ -2,6 +2,9 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nimbus.ConsoleHost", "Nimbus.ConsoleHost\Nimbus.ConsoleHost.csproj", "{3C5FA9D5-0CE6-4C7E-8D95-27A4187CC797}"
+	ProjectSection(ProjectDependencies) = postProject
+		{88D9068C-E0CB-4FE5-84EB-4278ACEA5808} = {88D9068C-E0CB-4FE5-84EB-4278ACEA5808}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{E53276D8-BE4D-4BE6-B503-50C8A0096F04}"
 	ProjectSection(SolutionItems) = preProject
@@ -18,6 +21,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nimbus.Web", "Nimbus.Web\Nimbus.Web.csproj", "{88D9068C-E0CB-4FE5-84EB-4278ACEA5808}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nimbus.Plumbing.Interface", "Nimbus.Plumbing.Interface\Nimbus.Plumbing.Interface.csproj", "{C28F8F7A-C5A2-4CB4-92B1-9507A87D5FFE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nimbus.DB", "Nimbus.DB\Nimbus.DB.csproj", "{0D485FA6-60BC-410C-B437-37A7C47CDB70}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +46,10 @@ Global
 		{C28F8F7A-C5A2-4CB4-92B1-9507A87D5FFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C28F8F7A-C5A2-4CB4-92B1-9507A87D5FFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C28F8F7A-C5A2-4CB4-92B1-9507A87D5FFE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D485FA6-60BC-410C-B437-37A7C47CDB70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D485FA6-60BC-410C-B437-37A7C47CDB70}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D485FA6-60BC-410C-B437-37A7C47CDB70}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D485FA6-60BC-410C-B437-37A7C47CDB70}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

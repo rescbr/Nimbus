@@ -20,11 +20,19 @@ namespace Nimbus.Plumbing.Interface
             get { return _isDebug; }
         }
 
+        private string _dbConnString;
+        public string DatabaseConnectionString
+        {
+            get { return _dbConnString; }
+        }
+
         public NimbusSettings() { }
-        public NimbusSettings(bool isDevelopment, bool isDebug)
+        public NimbusSettings(bool isDevelopment, bool isDebug, string dbConnString)
         {
             _isDebug = isDebug;
             _isDevelopment = isDevelopment;
+            _dbConnString = dbConnString;
         }
+
     }
 }
