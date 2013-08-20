@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace Nimbus.API.Models.Message
+namespace Nimbus.Web.API.Models.Message
 {
     /// <summary>
     /// Tipos de mensagens que são exibidas no perfil do usuário

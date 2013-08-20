@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace Nimbus.API.Models.Channel
+namespace Nimbus.Web.API.Models.Channel
 {
     /// <summary>
     /// Tipos de canais existens no Nimbus
@@ -20,12 +20,12 @@ namespace Nimbus.API.Models.Channel
     /// </summary>
     public class ChannelAPIModel
     {
-        public int channel_ID { get; set; }
+        public int Organization_ID { get; set; }
         public string ChannelName { get; set; }
         public string OwnerChannel { get; set; }
         public string owner_ID { get; set; }
         public string CountFollowers { get; set; }
-        //public int Count
+        public string RankingChannel { get; set; }
         public string ParticipationChannel { get; set; }
         public List<ChannelTagAPI> TagList { get; set; }
         public string UrlImgChannel { get; set; }
@@ -37,6 +37,7 @@ namespace Nimbus.API.Models.Channel
     /// </summary>
     public class RelatedChannelAPI 
     {
+        public int Organization_ID { get; set; }
         public int channel_ID { get; set; }
         public string ChannelName { get; set; }
         public string UrlImgChannel { get; set; }
@@ -47,6 +48,7 @@ namespace Nimbus.API.Models.Channel
     /// </summary>
     public class AbstractChannelAPI
     {
+        public int Organization_ID { get; set; }
         public int channel_ID { get; set; }
         public string ChannelName { get; set; }
         public string UrlImgChannel { get; set; }

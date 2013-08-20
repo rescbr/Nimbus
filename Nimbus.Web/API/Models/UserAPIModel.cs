@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace Nimbus.API.Models.User
+namespace Nimbus.Web.API.Models.User
 {
     /// <summary>
     /// Registra um novo usuário
