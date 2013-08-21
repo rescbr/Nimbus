@@ -7,6 +7,7 @@ using CommandLine;
 using CommandLine.Text;
 using Nimbus.Plumbing;
 using Nimbus.Plumbing.Interface;
+using System.IO;
 
 namespace Nimbus
  {
@@ -39,9 +40,9 @@ namespace Nimbus
             [Option('w', "nimbus-web-assembly", DefaultValue = "Nimbus.Web\\bin\\Nimbus.Web.dll", HelpText = "Nimbus.Web.dll file")]
             public string NimbusWebAssemblyFile { get; set; }
 
-            [Option('d', "database-string", HelpText = "Database Connection String",
-                DefaultValue = @"Data Source=.\SQLEXPRESS;Initial Catalog=Nimbus;Integrated Security=True;MultipleActiveResultSets=True")]
-            public string DBString { get; set; }
+            [Option('f', "config-file", HelpText = "Configuration file",
+                DefaultValue = "NimbusSettings.json")]
+            public string ConfigFile { get; set; }
 
             [HelpOption]
             public string GetUsage()
@@ -72,15 +73,16 @@ namespace Nimbus
             try
             {
                 Console.WriteLine("Starting Nimbus...");
+
+                NimbusSettings ns = GetNSFromConfigFile(cmdline.ConfigFile);
+                
                 var initOptions = new NimbusStartup.StartupOptions()
                 {
                     HttpPort = cmdline.HttpListen,
                     ZmqPort = cmdline.ZmqListen,
                     InitLog = new SimpleLog(),
-                    IsDebugAllowed = true, //verificar de acordo com a cmdline!
-                    IsDevEnvironment = true, //verificar de acordo com a cmdline!
                     NimbusWebAssemblyFile = cmdline.NimbusWebAssemblyFile,
-                    DBConnectionString = cmdline.DBString,
+                    NimbusSettings = ns
                 };
 
                 NimbusStartup.Init(initOptions);
@@ -103,6 +105,15 @@ namespace Nimbus
             }
 
             return 0;
+        }
+
+        private static NimbusSettings GetNSFromConfigFile(string path)
+        {
+            using(var sr = new StreamReader(path)) {
+                string nsjson = sr.ReadToEnd();
+                var ns = B64JavaScriptSerializerFactory.JSS.Deserialize<NimbusSettings>(nsjson);
+                return ns;
+            }
         }
     }
 }

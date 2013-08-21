@@ -12,7 +12,7 @@ namespace Nimbus.Web.API
     {
         public string Get()
         {
-            using (var db = DatabaseFactory.OpenDbConnection())
+            /*using (var db = DatabaseFactory.OpenDbConnection())
             {
                 db.DropAndCreateTables(new Type[]{
                     typeof(Nimbus.DB.Ad), 
@@ -27,7 +27,9 @@ namespace Nimbus.Web.API
                     typeof(Nimbus.DB.UserTopicFavorite)});
 
             }
-            return "Nimbus: " + NimbusAppBus.Settings.DatabaseConnectionString;
+            */
+            byte x = NimbusAppBus.Settings.Cryptography.RSAParams.Exponent[0];
+            return x.ToString() + "Nimbus: " + NimbusAppBus.Settings.DatabaseConnectionString;
         }
     }
 }

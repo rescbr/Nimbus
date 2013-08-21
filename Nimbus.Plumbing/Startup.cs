@@ -41,20 +41,6 @@ namespace Nimbus.Plumbing
                 set { _initLog = value; }
             }
 
-            private bool _isDevEnvironment;
-            public bool IsDevEnvironment
-            {
-                get { return _isDevEnvironment; }
-                set { _isDevEnvironment = value; }
-            }
-
-            private bool _isDebugAllowed;
-            public bool IsDebugAllowed
-            {
-                get { return _isDebugAllowed; }
-                set { _isDebugAllowed = value; }
-            }
-
             private string _nimbusWebAssemblyFile;
             public string NimbusWebAssemblyFile
             {
@@ -62,12 +48,13 @@ namespace Nimbus.Plumbing
                 set { _nimbusWebAssemblyFile = value; }
             }
 
-            private string _DBConnectionString;
-            public string DBConnectionString
+            private NimbusSettings _nimbusSettings;
+            public NimbusSettings NimbusSettings
             {
-                get { return _DBConnectionString; }
-                set { _DBConnectionString = value; }
+                get { return _nimbusSettings; }
+                set { _nimbusSettings = value; }
             }
+
 
 
         }
@@ -96,12 +83,7 @@ namespace Nimbus.Plumbing
         {
             if (instance != null) throw new Exception("Init() must be called only once.");
             instance = new NimbusStartup();
-            instance._nimbusAppBus = new NimbusAppBus(
-                new NimbusSettings(
-                    isDevelopment: initOptions.IsDevEnvironment,
-                    isDebug: initOptions.IsDebugAllowed,
-                    dbConnString: initOptions.DBConnectionString)
-                );
+            instance._nimbusAppBus = new NimbusAppBus(initOptions.NimbusSettings);
 
             instance.StartWebApp(initOptions);
         }

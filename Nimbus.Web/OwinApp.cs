@@ -25,6 +25,9 @@ namespace Nimbus.Web
         public void Configuration(INimbusAppBus nimbusAppBus, IAppBuilder app)
         {
             _nimbusAppBus = nimbusAppBus;
+
+            app.Use(typeof(Middleware.Authentication), _nimbusAppBus);
+            
             app.Properties["host.AppName"] = "Nimbus";
 
             //WebAPI
@@ -36,11 +39,11 @@ namespace Nimbus.Web
                 defaults: new { id = RouteParameter.Optional }
             );
 
-
+            app.UseWebApi(webApiConfig);
             
             //Owin.AppBuilderExtensions.Run(
-            app
-                .UseWebApi(webApiConfig)
+            //app
+                //.UseWebApi(webApiConfig)
                 //.UseFunc(AutoDebugAttach)
                 //.UseShowExceptions() //Gate.Middleware
                 //.UseFunc(Thrower()) //Owin.Extensions
@@ -55,7 +58,7 @@ namespace Nimbus.Web
                 //})
                 //.UseStatic();
                 //.Run(new HelloWorldResponder());
-            ;
+            //;
         }
 
         /// <summary>

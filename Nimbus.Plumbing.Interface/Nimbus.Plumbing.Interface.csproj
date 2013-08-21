@@ -47,6 +47,7 @@
     <Compile Include="INimbusAppBus.cs" />
     <Compile Include="INimbusDebugAutoAttach.cs" />
     <Compile Include="INimbusOwinApp.cs" />
+    <Compile Include="INimbusUser.cs" />
     <Compile Include="ISimpleLog.cs" />
     <Compile Include="NimbusSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
