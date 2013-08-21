@@ -12,5 +12,19 @@ namespace Nimbus.Web.API.Controllers
     /// </summary>
     public class MessageAPIController : NimbusApiController
     {
+        //enviar mensagem por um canal
+
+
+        
+        //enviar mensagem pela caixa de correio
+        //receber mensangem
+        //exibir mensagem
+        //ler mensagem
+        //excluir mensagem
+
+        
+
+
+
     }
 }

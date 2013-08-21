@@ -12,8 +12,7 @@ namespace Nimbus.Web.API.Models.User
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public int Age { get; set; }
-        public bool Gender { get; set; }
+        public int BirthDate { get; set; }
         public string Country { get; set; }
         public string City { get; set; }
         public string State { get; set; }
@@ -32,7 +31,7 @@ namespace Nimbus.Web.API.Models.User
     }
     
     /// <summary>
-    /// Listar as imagens dos canais pagos adquiridos pelo usuário
+    /// Listar os dados dos canais pagos adquiridos pelo usuário
     /// </summary>
     public class ChannelPayAPI
     {
@@ -40,6 +39,40 @@ namespace Nimbus.Web.API.Models.User
         public string ChannelName { get; set; }
         public string UrlImgChannel { get; set; }
     }
+
+    /// <summary>
+    /// Edita informações básicas do perfil do usuário
+    /// </summary>
+    public class EditUserAPIModel
+    {
+        public string UrlImg { get; set; }
+        public string City { get; set; }
+        public string State { get; set; }
+        public string Country { get; set; }
+        public string Occupation { get; set; }
+        public string Interest { get; set; }
+        public string Experience { get; set; }
+        public string About { get; set; }
+    }
+
+    ///<sumary>
+    ///Exibir as informações de um perfil
+    ///</sumary>
+    public class ShowProfile
+    {
+        public int user_ID { get; set; }
+        public string UrlImg { get; set; }
+        public string Name { get; set; }
+        public string BirthDate { get; set; }
+        public string Occupation { get; set; }
+        public string Interest { get; set; }
+        public string Experience { get; set; }
+        public string About { get; set; }
+        public string City { get; set; }
+        public string State { get; set; }
+        public string Country { get; set; }
+    }
+
 
 
 }
