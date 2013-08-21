@@ -17,6 +17,7 @@ namespace Nimbus.Web.API.Controllers
         //ler o tópico mais tarde ou retirar da lista de leitura 
         //favoritar/desfavoritar o tópico
         //abrir o tópico
+        //listar tópicos relacionados 
 
 
 
