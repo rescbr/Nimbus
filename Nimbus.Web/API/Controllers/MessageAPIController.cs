@@ -119,8 +119,36 @@ namespace Nimbus.Web.API.Controllers
             return listMessage.OrderBy(d => d.Date).ToList();
         }
 
-        //excluir mensagem
-
+       
+        /// <summary>
+        /// Troca a visibilidade das mensagens//excluir mensagem 
+        /// </summary>
+        /// <param name="listID"></param>
+        /// <returns></returns>
+        [Authorize]
+        public string DeleteMessages(List<int> listID)
+        {
+            AlertGeneral alert = new AlertGeneral();
+            string msg = alert.ErrorMessage;
+            try
+            {
+                using(var db = DatabaseFactory.OpenDbConnection())
+                {
+                    foreach (int item in listID)
+                    {
+                        db.Update<Nimbus.DB.Message>(new { Visible = false }, msgID => msgID.Id == item && 
+                                                                              (msgID.Receiver_ID == NimbusUser.UserId ||
+                                                                               msgID.Sender_ID == NimbusUser.UserId));
+                    }
+                    msg = alert.SuccessMessage;
+                }
+            }
+            catch (Exception ex)
+            {                
+                throw ex;
+            }
+            return msg; 
+        }
 
         
 
