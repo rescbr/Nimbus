@@ -60,7 +60,12 @@
     <Compile Include="Badge.cs" />
     <Compile Include="Category.cs" />
     <Compile Include="Channel.cs" />
+    <Compile Include="ChannelReported.cs" />
     <Compile Include="ChannelUser.cs" />
+    <Compile Include="CommentReported.cs" />
+    <Compile Include="Message.cs" />
+    <Compile Include="TopicReported.cs" />
+    <Compile Include="UserReported.cs" />
     <Compile Include="UserBadge.cs" />
     <Compile Include="Comment.cs" />
     <Compile Include="Organization.cs" />

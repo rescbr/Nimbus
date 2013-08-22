@@ -31,17 +31,18 @@ namespace Nimbus.Web.API.Controllers
         ///</summary>
         public ShowProfile userProfile()
         {
-            return showProfile(0);
+            return showProfile(NimbusUser.UserId);
         }
 
         ///<sumary>
         ///método padrão de exibir perfil
         /// </sumary>
+        [Authorize]
         public ShowProfile showProfile(int idUser)
         {
             ShowProfile profile = new ShowProfile();
             try
-            {                
+            {
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
                     var user = db.SelectParam<Nimbus.DB.User>(usr => usr.Id == idUser).FirstOrDefault();
@@ -63,7 +64,8 @@ namespace Nimbus.Web.API.Controllers
                 throw ex;
             }
             return profile;
-        }
+        }        
+        
 
         #endregion
 
@@ -72,6 +74,8 @@ namespace Nimbus.Web.API.Controllers
         /// </summary>
         /// <param name="profile"></param>
         /// <returns>bool</returns>
+        
+        [Authorize]
         public bool editProfile(EditUserAPIModel profile)
         {
             bool success = false;
@@ -87,9 +91,10 @@ namespace Nimbus.Web.API.Controllers
                                                                City = profile.City,
                                                                State = profile.State,
                                                                Country = profile.Country 
-                                                             }, usr => usr.Id == 0 );
+                                                             }, usr => usr.Id == NimbusUser.UserId );
+                    db.Save(user);
+                    success = true;
                 }
-                success = true;
             }
             catch (Exception ex)
             {                
@@ -97,28 +102,8 @@ namespace Nimbus.Web.API.Controllers
             }
             return success; 
         }
-          
-        //TO DO
-        //reportar usuários (terminar a parte que salva no banco
-        public bool reportUser(ReportUserAPIModel user)
-        {
-            bool success = false;
-            try
-            {
-                using(var db = DatabaseFactory.OpenDbConnection())
-                {
-                //db.Insert(new Report{userReported_ID = user.userReported_ID, Justification = user.Justification, user_ID = 0});
-                }
-                success = true;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return success;
-        }
-
-
+         
+       
         //deletar conta
         
 

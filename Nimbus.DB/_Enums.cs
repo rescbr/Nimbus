@@ -16,5 +16,11 @@ namespace Nimbus.DB
             Exam,
             Add
         }
+
+        public enum MessageType
+        {
+            received,
+            send
+        }
     }
 }
