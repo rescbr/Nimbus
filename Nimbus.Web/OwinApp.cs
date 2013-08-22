@@ -39,6 +39,12 @@ namespace Nimbus.Web
                 defaults: new { id = RouteParameter.Optional }
             );
 
+            webApiConfig.Routes.MapHttpRoute(
+                name: "Admin",
+                routeTemplate: "admin/{controller}"
+            );
+
+
             app.UseWebApi(webApiConfig);
             
             //Owin.AppBuilderExtensions.Run(
