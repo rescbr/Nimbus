@@ -12,31 +12,24 @@ namespace Nimbus.Plumbing.Interface
         //IIdentity
         public string AuthenticationType { get { return "NimbusUser"; } }
 
-        private bool _isAuthenticated;
-        public bool IsAuthenticated
+        public bool IsAuthenticated { get; set; }
+        public string Name { get; set; }
+        public int UserId { get; set; }
+        public string AvatarUrl { get; set; }
+    }
+
+    public class NimbusPrincipal : IPrincipal
+    {
+        public IIdentity Identity { get; set; }
+
+        public bool IsInRole(string role)
         {
-            get { return _isAuthenticated; }
+            return false;
         }
 
-        private string _name;
-        public string Name
+        public NimbusPrincipal(NimbusUser identity)
         {
-            get { return _name; }
+            Identity = identity;
         }
-
-
-        private int _userId;
-        public int UserId
-        {
-            get { return _userId; }
-        }
-
-        private string _avatarUrl;
-        public string AvatarUrl
-        {
-            get { return _avatarUrl; }
-        }
-
-
     }
 }

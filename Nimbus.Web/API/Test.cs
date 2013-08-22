@@ -5,11 +5,43 @@ using System.Linq;
 using System.Web;
 using System.Web.Http;
 using ServiceStack.OrmLite;
+using Nimbus.Web.Middleware;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Net.Http.Headers;
+
 
 namespace Nimbus.Web.API
 {
+    public class CookieController : NimbusApiController
+    {
+        [AllowAnonymous]
+        public async Task<HttpResponseMessage> Get()
+        {
+                        Guid token;
+            string authToken = Authentication.GenerateToken(NimbusAppBus,
+                new Authentication.NSCInfo()
+                {
+                    TokenGenerationDate = DateTime.Now.ToUniversalTime(),
+                    UserId = 1
+                }, 
+                out token);
+
+            var loginCookie = new CookieHeaderValue("nsc-session", authToken)
+            {
+                //params
+            };
+            
+            var response = Request.CreateResponse<string>("Cookie!");
+            response.Headers.AddCookies(new CookieHeaderValue[] {
+                loginCookie
+            });
+            return response;
+        }
+    }
     public class TestController : NimbusApiController
     {
+        [Authorize]
         public string Get()
         {
             /*using (var db = DatabaseFactory.OpenDbConnection())
@@ -28,8 +60,7 @@ namespace Nimbus.Web.API
 
             }
             */
-            byte x = NimbusAppBus.Settings.Cryptography.RSAParams.Exponent[0];
-            return x.ToString() + "Nimbus: " + NimbusAppBus.Settings.DatabaseConnectionString;
+                return "AvatarURL: " + NimbusUser.AvatarUrl;
         }
     }
 }

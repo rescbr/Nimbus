@@ -18,6 +18,18 @@ namespace Nimbus.Web.API
             }
         }
 
+        public NimbusUser NimbusUser
+        {
+            get
+            {
+                if (User.Identity.AuthenticationType == "NimbusUser")
+                {
+                    return ((User.Identity) as NimbusUser);
+                }
+                else throw new Exception("User.Identity.AuthenticationType is not NimbusUser.");
+            }
+        }
+
         public IDbConnectionFactory DatabaseFactory
         {
             get
