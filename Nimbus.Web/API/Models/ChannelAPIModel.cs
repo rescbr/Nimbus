@@ -18,7 +18,7 @@ namespace Nimbus.Web.API.Models.Channel
     /// <summary>
     /// Exibe todas as informações sobre um canal.
     /// </summary>
-    public class ChannelAPIModel
+    public class showChannelAPIModel
     {
         public int Organization_ID { get; set; }
         public string ChannelName { get; set; }

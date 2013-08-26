@@ -15,6 +15,9 @@ namespace Nimbus.Web.API.Controllers
     {
         
         //criar canal
+
+
+
         //editar canal
         //add moderadores para o canal
         //deletar moderadores
