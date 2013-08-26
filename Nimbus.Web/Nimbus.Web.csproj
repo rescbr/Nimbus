@@ -138,6 +138,8 @@
     <Compile Include="Middleware\Authentication.cs" />
     <Compile Include="OwinApp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Security\PasswordHash.cs" />
+    <Compile Include="Security\Token.cs" />
     <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
