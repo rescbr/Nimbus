@@ -15,6 +15,9 @@ namespace Nimbus.DB
         [References(typeof(User))]
         public int UserReporter_ID { get; set; }
 
+        [References(typeof(User))]
+        public int UserReported_ID { get; set; }
+
         [References (typeof(Comment))]
         public int CommentReported_ID { get; set; }
 
