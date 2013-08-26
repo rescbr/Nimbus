@@ -39,7 +39,7 @@ namespace Nimbus.Web.API.Controllers
                             Sender_ID = NimbusUser.UserId,
                             Channel_ID = message.Channel_ID,
                             Title = message.Title,
-                            Message = message.Text,
+                            Text = message.Text,
                             ReadStatus = false,
                             Status = Nimbus.DB.Enums.MessageType.received, //add p pessoa que vai receber a msg
                             Date = DateTime.Now,
@@ -52,7 +52,7 @@ namespace Nimbus.Web.API.Controllers
                             Sender_ID = NimbusUser.UserId,
                             Channel_ID = message.Channel_ID,
                             Title = message.Title,
-                            Message = message.Text,
+                            Text = message.Text,
                             ReadStatus = true,
                             Status = Nimbus.DB.Enums.MessageType.send, //add p pessoa que enviou como registro/histórico
                             Date = DateTime.Now,
@@ -60,7 +60,6 @@ namespace Nimbus.Web.API.Controllers
                         }
                     };
                    db.Insert(dados);
-                   db.Save(dados);
                    msg = alert.SuccessMessage;
                 }
             }

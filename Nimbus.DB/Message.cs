@@ -22,7 +22,7 @@ namespace Nimbus.DB
         public int Channel_ID { get; set; }
 
         public string Title { get; set; }
-        public string Message { get; set; }
+        public string Text { get; set; }
         public bool ReadStatus { get; set; }
         public Enums.MessageType Status { get; set; }
         public DateTime Date { get; set; }

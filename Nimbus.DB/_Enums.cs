@@ -22,5 +22,13 @@ namespace Nimbus.DB
             received,
             send
         }
+
+        public enum ReportType
+        {
+            comment,
+            topic,
+            channel,
+            user
+        }
     }
 }

@@ -17,7 +17,10 @@ namespace Nimbus.DB
 
         [References(typeof(User))]
         public int UserReporter_ID { get; set; }
-        
+
+        public Enums.ReportType Type { get; set; }
+
+        public int Report_ID { get; set; }
     }
 
 }

@@ -9,6 +9,9 @@ namespace Nimbus.DB
 {
     public class UserTopicFavorite
     {
+        [AutoIncrement]
+        public int Id { get; set; }
+
         [References(typeof(User))]
         public int UserId { get; set; }
 

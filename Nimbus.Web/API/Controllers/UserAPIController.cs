@@ -73,8 +73,7 @@ namespace Nimbus.Web.API.Controllers
         /// editar informações perfil
         /// </summary>
         /// <param name="profile"></param>
-        /// <returns>bool</returns>
-        
+        /// <returns>bool</returns>        
         [Authorize]
         public bool editProfile(EditUserAPIModel profile)
         {
