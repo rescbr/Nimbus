@@ -9,6 +9,7 @@ using Nimbus.Web.Middleware;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Net.Http.Headers;
+using Nimbus.Web.Security;
 
 
 namespace Nimbus.Web.API
@@ -19,8 +20,8 @@ namespace Nimbus.Web.API
         public async Task<HttpResponseMessage> Get()
         {
                         Guid token;
-            string authToken = Authentication.GenerateToken(NimbusAppBus,
-                new Authentication.NSCInfo()
+            string authToken = Token.GenerateToken(NimbusAppBus,
+                new NSCInfo()
                 {
                     TokenGenerationDate = DateTime.Now.ToUniversalTime(),
                     UserId = 1

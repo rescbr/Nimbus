@@ -13,6 +13,7 @@ namespace Nimbus.Web
 {
     
     using AppFunc = Func<IDictionary<string, object>, System.Threading.Tasks.Task>;
+    using WebApiContrib.Formatting.Html.Formatters;
     
     public class NimbusOwinApp : INimbusOwinApp
     {
@@ -26,13 +27,15 @@ namespace Nimbus.Web
         {
             _nimbusAppBus = nimbusAppBus;
 
-            app.Use(typeof(Middleware.Authentication), _nimbusAppBus);
+            //app.Use(typeof(Middleware.Authentication), _nimbusAppBus);
             
             app.Properties["host.AppName"] = "Nimbus";
 
             //WebAPI
             HttpConfiguration webApiConfig = new HttpConfiguration();
             webApiConfig.Properties["NimbusAppBus"] = nimbusAppBus;
+            webApiConfig.Formatters.Add(new HtmlMediaTypeViewFormatter()); //adiciona Razor
+            
             webApiConfig.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",
@@ -44,7 +47,12 @@ namespace Nimbus.Web
                 routeTemplate: "admin/{controller}"
             );
 
-
+            webApiConfig.Routes.MapHttpRoute(
+                name: "NewAccount",
+                routeTemplate: "newaccount",
+                defaults: new { controller = "NewAccount" }
+            );
+            
             app.UseWebApi(webApiConfig);
             
             //Owin.AppBuilderExtensions.Run(

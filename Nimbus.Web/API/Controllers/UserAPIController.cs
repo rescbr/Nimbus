@@ -48,7 +48,7 @@ namespace Nimbus.Web.API.Controllers
                     var user = db.SelectParam<Nimbus.DB.User>(usr => usr.Id == idUser).FirstOrDefault();
                     profile.user_ID = user.Id;
                     profile.UrlImg = user.AvatarUrl;
-                    profile.Name = user.Name;
+                    profile.Name = user.FirstName; //TODO: Arrumar aqui =p
                     profile.BirthDate = (DateTime.Now - user.BirthDate).ToString();
                     profile.City = user.City;
                     profile.State = user.State;
@@ -82,15 +82,19 @@ namespace Nimbus.Web.API.Controllers
             {
                 using(var db = DatabaseFactory.OpenDbConnection())
                 {
-                    var user = db.Update<Nimbus.DB.User>(new { Occupation = profile.Occupation, 
-                                                               Interest = profile.Interest,
-                                                               Experience = profile.Experience,
-                                                               AvatarUrl = profile.UrlImg,
-                                                               About = profile.About,
-                                                               City = profile.City,
-                                                               State = profile.State,
-                                                               Country = profile.Country 
-                                                             }, usr => usr.Id == NimbusUser.UserId );
+                    Nimbus.DB.User user = new Nimbus.DB.User()
+                    {
+                        Occupation = profile.Occupation,
+                        Interest = profile.Interest,
+                        Experience = profile.Experience,
+                        AvatarUrl = profile.UrlImg,
+                        About = profile.About,
+                        City = profile.City,
+                        State = profile.State,
+                        Country = profile.Country
+                    };
+
+                    db.Update<Nimbus.DB.User>(user, usr => usr.Id == NimbusUser.UserId );
                     db.Save(user);
                     success = true;
                 }
@@ -104,8 +108,31 @@ namespace Nimbus.Web.API.Controllers
          
        
         //deletar conta
-        
 
+        [HttpPost]
+        public bool createProfile(CreateUserAPIModel newUser)
+        {
+            string passwordHash = new Security.PlaintextPassword(newUser.Password).Hash;
+
+            using (var db = DatabaseFactory.OpenDbConnection())
+            {
+                Nimbus.DB.User user = new Nimbus.DB.User()
+                {
+                    FirstName = newUser.FirstName,
+                    LastName = newUser.LastName,
+                    //Falta birthdate
+                    City = newUser.City,
+                    Country = newUser.Country,
+                    Email = newUser.Email,
+                    State = newUser.State,
+                    Password = passwordHash
+                };
+
+                db.Insert(user);
+            }
+
+            return true;
+        }
 
 
     }

@@ -27,9 +27,6 @@ namespace Nimbus.Web.API.Controllers
         //visualizar 'meus canais'
         //visualizar canais moderados
 
-
-
-
     }
 
 
