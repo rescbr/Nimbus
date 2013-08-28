@@ -46,7 +46,6 @@ namespace Nimbus.Web.API.Models.Channel
         public int channel_ID { get; set; }
         public string ChannelName { get; set; }
         public string UrlImgChannel { get; set; }
-        public string UrlAdd { get; set; }
     }
 
     /// <summary>

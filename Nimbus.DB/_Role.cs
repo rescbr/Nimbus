@@ -8,5 +8,12 @@ namespace Nimbus.DB
 {
     public class Role
     {
+        public enum RoleType
+        {
+            Owner,
+            Moderator,
+            Visitor
+        }
+        
     }
 }
