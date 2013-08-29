@@ -41,13 +41,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.Owin, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.Owin.2.0.0-rc1\lib\net45\Microsoft.Owin.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Hosting">
-      <HintPath>..\packages\Microsoft.Owin.Hosting.1.1.0-beta2\lib\net40\Microsoft.Owin.Hosting.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -155,6 +148,10 @@
     <Content Include="Website\Views\NewAccount.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Dependencies\Microsoft.Owin\Microsoft.Owin.Net45.csproj">
+      <Project>{0db69cae-b0bc-4688-9467-66b4c1023d3f}</Project>
+      <Name>Microsoft.Owin.Net45</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Dependencies\WebApiContrib.Formatting.Html\src\WebApiContrib.Formatting.Html\WebApiContrib.Formatting.Html.csproj">
       <Project>{1055bcc1-bbb1-45f2-8260-e00959a6ac89}</Project>
       <Name>WebApiContrib.Formatting.Html</Name>
