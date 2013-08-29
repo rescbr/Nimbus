@@ -64,6 +64,7 @@
     <Compile Include="ChannelUser.cs" />
     <Compile Include="CommentReported.cs" />
     <Compile Include="Message.cs" />
+    <Compile Include="ReceiverMessage.cs" />
     <Compile Include="TopicReported.cs" />
     <Compile Include="UserReported.cs" />
     <Compile Include="UserBadge.cs" />
@@ -76,7 +77,7 @@
     <Compile Include="UserTopicFavorite.cs" />
     <Compile Include="_Enums.cs" />
     <Compile Include="_LocalizedString.cs" />
-    <Compile Include="_Role.cs" />
+    <Compile Include="Role.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

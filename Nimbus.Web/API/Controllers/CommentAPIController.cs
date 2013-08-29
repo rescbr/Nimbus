@@ -39,6 +39,7 @@ namespace Nimbus.Web.API.Controllers
                                                    UserId  = NimbusUser.UserId,
                                                    Visible = true
                                                };
+                    db.Insert(dados);
                     alert = "";
                 }
             }
@@ -74,6 +75,7 @@ namespace Nimbus.Web.API.Controllers
                         UserId = NimbusUser.UserId,
                         Visible = true
                     };
+                    db.Insert(dados);
                     alert = "";
                 }
             }

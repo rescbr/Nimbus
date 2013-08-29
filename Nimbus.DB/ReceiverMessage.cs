@@ -7,16 +7,15 @@ using System.Threading.Tasks;
 
 namespace Nimbus.DB
 {
-    public class ChannelUser
+    public class ReceiverMessage
     {
         [References(typeof(User))]
-        public int UserId { get; set; }
-        
-        [References(typeof(Channel))]
-        public int ChannelId { get; set; }
-        
-        public bool? Vote { get; set; }
+        public int UserID { get; set; }
 
-        public int Interaction { get; set; }
+        [References(typeof(Channel))]
+        public int ChannelID { get; set; }
+
+        [References(typeof(User))]
+        public string Name { get; set; }
     }
 }

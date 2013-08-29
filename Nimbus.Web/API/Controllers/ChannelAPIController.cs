@@ -22,6 +22,7 @@ namespace Nimbus.Web.API.Controllers
         /// carregar informações gerais do canal
         /// </summary>
         /// <returns></returns>
+        [Authorize]
         public showChannelAPIModel showChannel(int channelID)
         {
             showChannelAPIModel showChannel = new showChannelAPIModel();
@@ -70,10 +71,11 @@ namespace Nimbus.Web.API.Controllers
             return showChannel;
         }
 
+        /*arrumar roles de tods*/
         /// <summary>
         /// visualizar 'meus canais'
         /// </summary>
-        /// <returns></returns>
+        /// <returns></returns>        
         public List<AbstractChannelAPI> myChannel()
         {
             List<AbstractChannelAPI> listChannel = new List<AbstractChannelAPI>();
@@ -179,16 +181,44 @@ namespace Nimbus.Web.API.Controllers
             return message;
  
         }
-  
-        //deletar moderadores
 
+        //seguir/ñ seguir canal
+        public bool followChannel(int channelID)
+        {
+            bool follow = false;
+            try
+            {
+                using(var db = DatabaseFactory.OpenDbConnection())
+                {
+                    Nimbus.DB.ChannelUser user = db.SelectParam<Nimbus.DB.ChannelUser>(chn => chn.UserId == NimbusUser.UserId &&
+                                                                                              chn.ChannelId == channelID).FirstOrDefault();
+                    if (user == null)
+                    {
+                        db.Insert<Nimbus.DB.ChannelUser>(new ChannelUser { ChannelId= channelID, Interaction=0, 
+                                                                           Role = Role.RoleType.Visitor, Vote = false,
+                                                                           UserId = NimbusUser.UserId });
+                    }
+                    else //já segue -> unfollow
+                    {
+ 
+                    }
+                }
+            }
+            catch (Exception ex)
+            {                
+                throw ex;
+            }
+            return follow;
+        }
+
+
+        //deletar moderadores
         //add moderadores para o canal
 
 
         //criar canal
         //editar canal
-      
-        //seguir/ñ seguir canal
+
         //enviar mensagem para o canal/dono)
         //editar/add tags do canal
         //ver mais tarde o canal ou retirar da lista de ver mais tarde
