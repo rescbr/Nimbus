@@ -46,6 +46,8 @@ namespace Nimbus.Web.API.Controllers
                             {
                                 listReceiver.Add(ownerID);
                             }
+                            //lista de receivers
+                            var receivers = db.Select<Message.Receiver>("SELECT  ");
 
                             foreach (int item in listReceiver)
                             {
@@ -97,8 +99,10 @@ namespace Nimbus.Web.API.Controllers
             {
                 using(var db = DatabaseFactory.OpenDbConnection())
                 {
-                    listMessage = db.SelectParam<Nimbus.DB.Message>(user => user.Receiver_ID == NimbusUser.UserId 
-                                                                            && user.Status == DB.Enums.MessageType.received); 
+                    listMessage = db.Select<Message>("SELECT *  "+
+                                                     "FROM Message"+
+                                                     "INNER JOIN ReceiverMessage ON  Message.Id = ReceiverMessage.MessageID" +
+                                                     "WHERE ReceiverMessage.UserID = {0} AND Message.Visible = true", NimbusUser.UserId);
                 }
             }
             catch (Exception)
@@ -121,8 +125,9 @@ namespace Nimbus.Web.API.Controllers
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    listMessage = db.SelectParam<Nimbus.DB.Message>(user => user.Receiver_ID == NimbusUser.UserId
-                                                                            && user.Status == DB.Enums.MessageType.send);
+                    listMessage = db.Select<Message>("SELECT *  " +
+                                                     "FROM Message" +
+                                                     "WHERE Message.Sender_ID = {0} AND Message.Visible = true", NimbusUser.UserId);
                 }
             }
             catch (Exception)
@@ -150,9 +155,7 @@ namespace Nimbus.Web.API.Controllers
                 {
                     foreach (int item in listID)
                     {
-                        db.Update<Nimbus.DB.Message>(new { Visible = false }, msgID => msgID.Id == item && 
-                                                                              (msgID.Receiver_ID == NimbusUser.UserId ||
-                                                                               msgID.Sender_ID == NimbusUser.UserId));
+                       // db.Update<Nimbus.DB.Message>(new { Visible = false };
                     }
                     msg = alert.SuccessMessage;
                 }

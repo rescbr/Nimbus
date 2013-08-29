@@ -12,10 +12,9 @@ namespace Nimbus.DB
         [References(typeof(User))]
         public int UserID { get; set; }
 
-        [References(typeof(Channel))]
-        public int ChannelID { get; set; }
+        [References(typeof(Message))]
+        public int MessageID { get; set; }
 
-        [References(typeof(User))]
-        public string Name { get; set; }
+        public bool  IsOwner { get; set; }
     }
 }

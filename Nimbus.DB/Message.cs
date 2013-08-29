@@ -14,10 +14,7 @@ namespace Nimbus.DB
 
         [References(typeof(User))]
         public int Sender_ID { get; set; }
-
-        [References(typeof(User))]
-        public int Receiver_ID { get; set; }
-
+        
         [References(typeof(Channel))]
         public int Channel_ID { get; set; }
 
@@ -25,8 +22,10 @@ namespace Nimbus.DB
         {
             [References(typeof(User))]
             public int UserID { get; set; }
-
+            
+            [References(typeof(User))]
             public string Name { get; set; }
+
             public bool IsOwner { get; set; }
         }
 
