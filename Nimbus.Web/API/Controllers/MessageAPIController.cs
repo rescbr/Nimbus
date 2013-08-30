@@ -155,7 +155,10 @@ namespace Nimbus.Web.API.Controllers
                 {
                     foreach (int item in listID)
                     {
-                       // db.Update<Nimbus.DB.Message>(new { Visible = false };
+                        //db.Update<Nimbus.DB.Message>("UPDATE Message SET Message.Visible = false "+
+                        //                             "INNER JOIN ReceiverMessage ON Message.Id = ReceiverMessage.MessageID "+
+                        //                             "WHERE Message.Id = {0} AND (Message.Sender_ID = {1} OR ReceiverMessage.UserID = {2}) ",
+                        //                              item, NimbusUser.UserId, NimbusUser.UserId);
                     }
                     msg = alert.SuccessMessage;
                 }
