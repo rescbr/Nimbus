@@ -20,6 +20,7 @@ namespace Nimbus.DB
         public bool UserManager { get; set; }
         public bool ModeratorManager { get; set; }
         public bool IsOwner { get; set; }
-
+        public bool Paid { get; set; }
+        public bool Accepted { get; set; }
     }
 }

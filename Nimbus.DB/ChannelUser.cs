@@ -18,5 +18,7 @@ namespace Nimbus.DB
         public bool? Vote { get; set; }
 
         public int Interaction { get; set; }
+
+        public bool Follow { get; set; }
     }
 }

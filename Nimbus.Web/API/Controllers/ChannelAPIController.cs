@@ -33,7 +33,8 @@ namespace Nimbus.Web.API.Controllers
                 {
                     
                     bool ismember = (db.SelectParam<Nimbus.DB.ChannelUser>(usr => usr.UserId == NimbusUser.UserId &&
-                                                                                        usr.ChannelId == channelID).Count()) > 0 ? true : false;
+                                                                                  usr.ChannelId == channelID &&
+                                                                                  usr.Follow == true).Count()) > 0 ? true : false;
 
                     if (ismember == true)
                     {
@@ -70,12 +71,12 @@ namespace Nimbus.Web.API.Controllers
             }
             return showChannel;
         }
-
-        /*arrumar roles de tods*/
+               
         /// <summary>
         /// visualizar 'meus canais'
         /// </summary>
         /// <returns></returns>        
+        [Authorize]
         public List<AbstractChannelAPI> myChannel()
         {
             List<AbstractChannelAPI> listChannel = new List<AbstractChannelAPI>();
@@ -84,8 +85,9 @@ namespace Nimbus.Web.API.Controllers
                 using(var db = DatabaseFactory.OpenDbConnection())
                 {
                     List<int> listID = db.Select<int>("SELECT ChannelUser.ChannelId FROM ChannelUser" +
-                                                                 "WHERE ChannelUser.UserId = {0} AND ChannelUser.Role ={1}",
-                                                                  NimbusUser.UserId, Role.RoleType.Owner);
+                                                      "INNER JOIN Role ON ChannelUser.UserId = Role.UserId "+
+                                                      "WHERE ChannelUser.UserId = {0} AND Role.IsOwner = true AND ChannelUser.Follow = true",
+                                                       NimbusUser.UserId);
                     foreach (int item in listID)
                     {
                         Nimbus.DB.Channel chn = db.Select<Nimbus.DB.Channel>("SELECT Channel.Organization, Channel.Id, Channel.Name, Channel.ImgUrl "+
@@ -118,8 +120,9 @@ namespace Nimbus.Web.API.Controllers
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
                     List<int> listID = db.Select<int>("SELECT ChannelUser.ChannelId FROM ChannelUser" +
-                                                                 "WHERE ChannelUser.UserId = {0} AND ChannelUser.Role ={1}",
-                                                                  NimbusUser.UserId, Role.RoleType.Moderator);
+                                                      "INNER JOIN Role ON ChannelUser.UserId = Role.UserId " +
+                                                      "WHERE ChannelUser.UserId = {0} AND Role.IsOwner = false AND ChannelUser.Follow = true ",
+                                                       NimbusUser.UserId);
                     foreach (int item in listID)
                     {
                         Nimbus.DB.Channel chn = db.Select<Nimbus.DB.Channel>("SELECT Channel.Organization, Channel.Id, Channel.Name, Channel.ImgUrl " +
@@ -143,6 +146,41 @@ namespace Nimbus.Web.API.Controllers
             return listChannel;
         }
 
+        /// <summary>
+        /// retorna uma lista com os resumos de todos os canais disponíveis no nimbus 
+        /// </summary>
+        /// <returns></returns>
+        [Authorize]
+        public List<AbstractChannelAPI> abstractAllChannel()
+        {
+            List<AbstractChannelAPI> listChannel = new List<AbstractChannelAPI>();
+            try
+            {
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {
+
+                    List<Nimbus.DB.Channel> chnList = db.Select<Nimbus.DB.Channel>("SELECT Channel.OrganizationId, Channel.Id, Channel.Name, Channel.ImgUrl " +
+                                                                             "FROM Channel WHERE Channel.Visible = true");
+                    foreach (var item in chnList)
+                    {
+                        AbstractChannelAPI absChannel = new AbstractChannelAPI
+                        {
+                            channel_ID = item.Id,
+                            ChannelName = item.Name,
+                            Organization_ID = item.OrganizationId,
+                            UrlImgChannel = item.ImgUrl
+                        };
+                        listChannel.Add(absChannel);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return listChannel;
+        }
+
         #endregion
 
 
@@ -153,6 +191,7 @@ namespace Nimbus.Web.API.Controllers
         /// </summary>
         /// <param name="channelID"></param>
         /// <returns></returns>
+        [Authorize]
         public string DeleteChannel(int channelID)
         {
             AlertGeneral alert = new AlertGeneral();
@@ -161,14 +200,13 @@ namespace Nimbus.Web.API.Controllers
             {
                 using(var db = DatabaseFactory.OpenDbConnection())
                 {
-                    Nimbus.DB.Channel channel = db.SelectParam<Nimbus.DB.Channel>(cn => cn.Id == channelID &&
-                                                                                        cn.OwnerId == NimbusUser.UserId &&
-                                                                                        cn.Visible == true).FirstOrDefault();
-                    if (channel != null)
+                    int idOwner = db.Select<int>("SELECT Channel.OwnerId FROM Channel "+
+                                                                             "INNER JOIN Role ON Channel.Id = Role.ChannelId "+
+                                                                             "WHERE Channel.Id = {0} AND Channel.UserId = {1} AND Channel.Visible = true AND Role.IsOwner = true",
+                                                                              channelID, NimbusUser.UserId).FirstOrDefault();
+                    if (idOwner != null && idOwner > 0)
                     {
-                        channel.OwnerId = 0;
-                        db.Update(channel);
-                        db.Save(channel);
+                        db.UpdateOnly(new Channel { OwnerId = 0 }, chn => chn.OwnerId, chn => chn.Id == channelID);
                         message = alert.SuccessMessage;
                     }
                     
@@ -181,8 +219,13 @@ namespace Nimbus.Web.API.Controllers
             return message;
  
         }
-
-        //seguir/ñ seguir canal
+                
+        /// <summary>
+        /// seguir/ñ seguir canal
+        /// </summary>
+        /// <param name="channelID"></param>
+        /// <returns></returns>
+        [Authorize]
         public bool followChannel(int channelID)
         {
             bool follow = false;
@@ -192,15 +235,24 @@ namespace Nimbus.Web.API.Controllers
                 {
                     Nimbus.DB.ChannelUser user = db.SelectParam<Nimbus.DB.ChannelUser>(chn => chn.UserId == NimbusUser.UserId &&
                                                                                               chn.ChannelId == channelID).FirstOrDefault();
-                    if (user == null)
+                    if (user == null)//novato
                     {
-                        db.Insert<Nimbus.DB.ChannelUser>(new ChannelUser { ChannelId= channelID, Interaction=0, 
-                                                                           Role = Role.RoleType.Visitor, Vote = false,
-                                                                           UserId = NimbusUser.UserId });
+                        db.Insert<Nimbus.DB.ChannelUser>(new ChannelUser { ChannelId = channelID, Interaction = 0, Follow=true, 
+                                                                           Vote = false, UserId = NimbusUser.UserId });
+                        follow = true;
                     }
-                    else //já segue -> unfollow
+                    else //já existia
                     {
- 
+                        if (user.Follow == false)
+                        {
+                            db.UpdateOnly(new ChannelUser { Follow = true }, usr => usr.Follow, usr => usr.UserId == NimbusUser.UserId);
+                            follow = true;
+                        }
+                        else if (user.Follow == true)
+                        {
+                            db.UpdateOnly(new ChannelUser { Follow = false }, usr => usr.Follow, usr => usr.UserId == NimbusUser.UserId);
+                            follow = false;
+                        }                                                                                                                                                                                                                                                                                                                                                                                                                                                            
                     }
                 }
             }
@@ -212,7 +264,7 @@ namespace Nimbus.Web.API.Controllers
         }
 
 
-        //deletar moderadores
+        //apagar permissoes moderadores
         //add moderadores para o canal
 
 
