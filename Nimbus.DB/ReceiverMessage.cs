@@ -16,5 +16,10 @@ namespace Nimbus.DB
         public int MessageID { get; set; }
 
         public bool  IsOwner { get; set; }
+
+        [References(typeof(User))]
+        public string NameUser { get; set; }
+
+        public Enums.MessageType Status { get; set; }
     }
 }
