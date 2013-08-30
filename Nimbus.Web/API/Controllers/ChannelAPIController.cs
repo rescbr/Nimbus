@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Web.Http;
 using ServiceStack.OrmLite;
 using Nimbus.Web.API.Models;
+using Nimbus.DB;
 
 namespace Nimbus.Web.API.Controllers
 {
@@ -69,25 +70,129 @@ namespace Nimbus.Web.API.Controllers
             return showChannel;
         }
 
-        //visualizar 'meus canais'
-        //visualizar canais moderados
-        //visualizar resumo do  canal
+        /// <summary>
+        /// visualizar 'meus canais'
+        /// </summary>
+        /// <returns></returns>
+        public List<AbstractChannelAPI> myChannel()
+        {
+            List<AbstractChannelAPI> listChannel = new List<AbstractChannelAPI>();
+            try
+            {
+                using(var db = DatabaseFactory.OpenDbConnection())
+                {
+                    List<int> listID = db.Select<int>("SELECT ChannelUser.ChannelId FROM ChannelUser" +
+                                                                 "WHERE ChannelUser.UserId = {0} AND ChannelUser.Role ={1}",
+                                                                  NimbusUser.UserId, Role.RoleType.Owner);
+                    foreach (int item in listID)
+                    {
+                        Nimbus.DB.Channel chn = db.Select<Nimbus.DB.Channel>("SELECT Channel.Organization, Channel.Id, Channel.Name, Channel.ImgUrl "+
+                                                                                 "FROM Channel WHERE Channel.Id = {0} AND Channel.Visible = true", item).FirstOrDefault();
+                        AbstractChannelAPI channel = new AbstractChannelAPI();
+                        channel.channel_ID = chn.Id;
+                        channel.ChannelName = chn.Name;
+                        channel.Organization_ID = chn.OrganizationId;
+                        channel.UrlImgChannel = chn.ImgUrl;
+                        listChannel.Add(channel);
+                    }                       
+                }
+            }
+            catch (Exception ex)
+            {                
+                throw ex;
+            }
+            return listChannel;
+        }
+
+       /// <summary>
+       ///visualizar canais moderados
+       /// </summary>
+       /// <returns></returns>
+        public List<AbstractChannelAPI> moderatorChannel()
+        {
+            List<AbstractChannelAPI> listChannel = new List<AbstractChannelAPI>();
+            try
+            {
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {
+                    List<int> listID = db.Select<int>("SELECT ChannelUser.ChannelId FROM ChannelUser" +
+                                                                 "WHERE ChannelUser.UserId = {0} AND ChannelUser.Role ={1}",
+                                                                  NimbusUser.UserId, Role.RoleType.Moderator);
+                    foreach (int item in listID)
+                    {
+                        Nimbus.DB.Channel chn = db.Select<Nimbus.DB.Channel>("SELECT Channel.Organization, Channel.Id, Channel.Name, Channel.ImgUrl " +
+                                                                                 "FROM Channel WHERE Channel.Id = {0} AND Channel.Visible = true",item).FirstOrDefault();
+                        if (chn != null)
+                        {
+                            AbstractChannelAPI channel = new AbstractChannelAPI();
+                            channel.channel_ID = chn.Id;
+                            channel.ChannelName = chn.Name;
+                            channel.Organization_ID = chn.OrganizationId;
+                            channel.UrlImgChannel = chn.ImgUrl;
+                            listChannel.Add(channel);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return listChannel;
+        }
+
         #endregion
 
 
         #region métodos de interação com o canal
+               
+        /// <summary>
+        /// Caso o usuário deseje deletar o channel, ele perde a posse e o channel passa a ser do 'nimbus'
+        /// </summary>
+        /// <param name="channelID"></param>
+        /// <returns></returns>
+        public string DeleteChannel(int channelID)
+        {
+            AlertGeneral alert = new AlertGeneral();
+            string message = alert.ErrorMessage;
+            try
+            {
+                using(var db = DatabaseFactory.OpenDbConnection())
+                {
+                    Nimbus.DB.Channel channel = db.SelectParam<Nimbus.DB.Channel>(cn => cn.Id == channelID &&
+                                                                                        cn.OwnerId == NimbusUser.UserId &&
+                                                                                        cn.Visible == true).FirstOrDefault();
+                    if (channel != null)
+                    {
+                        channel.OwnerId = 0;
+                        db.Update(channel);
+                        db.Save(channel);
+                        message = alert.SuccessMessage;
+                    }
+                    
+                }
+            }
+            catch (Exception ex)
+            {                
+                throw ex;
+            }
+            return message;
+ 
+        }
+  
+        //deletar moderadores
+
+        //add moderadores para o canal
+
+
         //criar canal
         //editar canal
-        //add moderadores para o canal
-        //deletar moderadores
+      
         //seguir/ñ seguir canal
         //enviar mensagem para o canal/dono)
         //editar/add tags do canal
         //ver mais tarde o canal ou retirar da lista de ver mais tarde
         #endregion
-
-
-
 
     }
 

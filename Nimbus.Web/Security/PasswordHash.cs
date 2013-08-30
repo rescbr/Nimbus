@@ -7,10 +7,10 @@ using System.Web;
 
 namespace Nimbus.Web.Security
 {
-    public static class NSPHash
+    public class NSPHash
     {
-        private static const int PBKDF2_ITERS = 1024;
-        private static const int SALT_BYTES = 16;
+        private const int PBKDF2_ITERS = 1024;
+        private const int SALT_BYTES = 16;
         public static int Version { get { return 1; } }
         public static int Iters { get { return PBKDF2_ITERS; } }
 

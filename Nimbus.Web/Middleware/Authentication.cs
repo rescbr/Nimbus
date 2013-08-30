@@ -19,20 +19,22 @@ namespace Nimbus.Web.Middleware
             : base(next)
         { _nimbusAppBus = nimbusAppBus; }
 
-        public override async Task Invoke(OwinRequest request, OwinResponse response)
+        //public override async Task Invoke(OwinRequest request, OwinResponse response)
+        public override async Task Invoke(IOwinContext context)
         {
+            var request = context.Request;
+            var response = context.Response;
             //Caso o WebAPI informe que é necessário autenticar...
-            request.OnSendingHeaders(state =>
+            /*request.OnSendingHeaders(state =>
             {
-                var resp = (OwinResponse)state;
+                var resp = (IOwinResponse)state;
 
                 if (resp.StatusCode == 401)
                     FailLoginRequest(ref resp); //TODO: Pegar path de retorno do login
-            }, response);
-
+            }, response);*/
 
             //Lê Cookie
-            var cookies = request.GetCookies();
+            var cookies = context.Request.Cookies;
             string sessionToken = null;
             try
             {
@@ -70,10 +72,17 @@ namespace Nimbus.Web.Middleware
             }
             else FailLoginRequest(ref response); //token = null
 
-            await Next.Invoke(request, response);
+            await Next.Invoke(context);
+
+            //Mesma coisa que o OnSendingHeaders(?)
+            if (context.Response.StatusCode == 401)
+            {
+                var resp = context.Response;
+                FailLoginRequest(ref resp);
+            }
         }
 
-        private void FailLoginRequest(ref OwinResponse response)
+        private void FailLoginRequest(ref IOwinResponse response)
         {
             //TODO: Colocar endereço de retorno
             response.Redirect("/login");
