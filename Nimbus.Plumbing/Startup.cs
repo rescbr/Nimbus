@@ -4,6 +4,7 @@ using Nimbus.Plumbing.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -114,8 +115,18 @@ namespace Nimbus.Plumbing
                     nimbusOwinApp.Configuration(_nimbusAppBus, bld));
             
             initOptions.InitLog.Log("StartWebApp", "Taking off...");
-            engine.Start(context);
-            
+            try
+            {
+                engine.Start(context);
+            }
+            catch (Exception ex)
+            {
+                if (ex.InnerException != null && ex.InnerException.HResult == -2147467259)
+                {
+                    initOptions.InitLog.Log("HttpListenerException","Run 'netsh http add urlacl url=http://+:9000/ user=DOMAIN\\user' as admin");
+                }
+                throw ex;
+            }
             initOptions.InitLog.Log("StartWebApp", "WebApp initialized.");
         }
 
