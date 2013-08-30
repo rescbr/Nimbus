@@ -98,7 +98,10 @@ namespace Nimbus.Web.API.Controllers
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    var dado = db.Update<Nimbus.DB.Comment>(new { Visible = false }, cmt => cmt.Id == item_ID);
+                    var dado = new Nimbus.DB.Comment()
+                                  { Visible = false };
+
+                    db.Update<Nimbus.DB.Comment>(dado, cmt => cmt.Id == item_ID);
                     db.Save(dado);
                     success = true;
                 }

@@ -5,31 +5,25 @@ using System.Web;
 
 namespace Nimbus.Web.API.Models.Channel
 {
-    /// <summary>
-    /// Tipos de canais existens no Nimbus
-    /// </summary>
-    enum ChannelType
-    {
-        free,
-        paid,
-        add
-    }
-
+  
     /// <summary>
     /// Exibe todas as informações sobre um canal.
     /// </summary>
-    public class ChannelAPIModel
+    public class showChannelAPIModel
     {
         public int Organization_ID { get; set; }
         public string ChannelName { get; set; }
-        public string OwnerChannel { get; set; }
-        public string owner_ID { get; set; }
+        public int owner_ID { get; set; }
         public string CountFollowers { get; set; }
         public string RankingChannel { get; set; }
         public string ParticipationChannel { get; set; }
-        public List<ChannelTagAPI> TagList { get; set; }
+        public string MessageAlert { get; set; }
+        //public List<ChannelTagAPI> TagList { get; set; }
+        public decimal Price {get;set;}
         public string UrlImgChannel { get; set; }
-        public List<RelatedChannelAPI> RelatedChannelList { get; set; }
+        public bool isMember { get; set; }
+        public bool isPrivate { get; set; }
+        //public List<RelatedChannelAPI> RelatedChannelList { get; set; }
     }
 
     /// <summary>
@@ -52,7 +46,6 @@ namespace Nimbus.Web.API.Models.Channel
         public int channel_ID { get; set; }
         public string ChannelName { get; set; }
         public string UrlImgChannel { get; set; }
-        public string UrlAdd { get; set; }
     }
 
     /// <summary>

@@ -23,5 +23,11 @@ namespace Nimbus.Web.API.Models
         public string AtentionMessage { get { return "Tem certeza que deseja realizar está operação?"; } }
         public string ErrorMessage { get { return "Erro ao tentar realizar essa operação. Tente novamente."; } } 
     }
+
+    public class AlertChannelPay
+    {
+        public string AlertPay { get { return "Este canal é pago. Para acessar as informações realize sua inscrição."; } }
+        public string AlertPrivate { get { return "Este canal é privado. Para acessar as informações solicite sua inscrição."; } }
+    }
     
 }
