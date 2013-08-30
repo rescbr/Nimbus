@@ -12,7 +12,7 @@ namespace Nimbus.Web.Website.Controllers
     public class NewAccountController : NimbusApiController
     {
         public View Get() {
-            return new View("NewAccount", null);
+            return new View("NewAccount", new object());
         }
 
         public View Post(NewAccountModel newAccount)

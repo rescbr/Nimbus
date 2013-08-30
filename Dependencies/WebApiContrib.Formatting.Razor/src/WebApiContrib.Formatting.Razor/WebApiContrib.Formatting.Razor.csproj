@@ -34,6 +34,12 @@
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>NimbusSNK.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="RazorEngine">
       <HintPath>..\..\..\..\packages\RazorEngine.3.3.0\lib\net40\RazorEngine.dll</HintPath>
@@ -53,6 +59,7 @@
     <Compile Include="RazorViewParser.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="NimbusSNK.snk" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

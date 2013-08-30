@@ -8,12 +8,16 @@ using Owin.Types;
 using System.IO;
 using System.Threading.Tasks;
 using System.Web.Http;
+using WebApiContrib.Formatting.Html.Formatters;
+using WebApiContrib.Formatting.Html.Configuration;
 
 namespace Nimbus.Web
 {
     
     using AppFunc = Func<IDictionary<string, object>, System.Threading.Tasks.Task>;
-    using WebApiContrib.Formatting.Html.Formatters;
+    using WebApiContrib.Formatting.Razor;
+    using Nimbus.Web.Middleware;
+    
     
     public class NimbusOwinApp : INimbusOwinApp
     {
@@ -28,14 +32,18 @@ namespace Nimbus.Web
             _nimbusAppBus = nimbusAppBus;
 
             //app.Use(typeof(Middleware.Authentication), _nimbusAppBus);
-            
+            app.UseErrorPage();
+
             app.Properties["host.AppName"] = "Nimbus";
 
             //WebAPI
             HttpConfiguration webApiConfig = new HttpConfiguration();
             webApiConfig.Properties["NimbusAppBus"] = nimbusAppBus;
             webApiConfig.Formatters.Add(new HtmlMediaTypeViewFormatter()); //adiciona Razor
-            
+            //GlobalViews.DefaultViewLocator = new RazorViewLocator();
+            GlobalViews.DefaultViewLocator = new NimbusFastViewLocator();
+            GlobalViews.DefaultViewParser = new RazorViewParser();
+
             webApiConfig.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",

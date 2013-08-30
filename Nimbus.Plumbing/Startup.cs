@@ -94,7 +94,7 @@ namespace Nimbus.Plumbing
             initOptions.InitLog.Log("StartWebApp", "Initializing WebApp on port " + initOptions.HttpPort.ToString());
             
             var owinStartOptions = new StartOptions();
-            var httpListener = typeof(Microsoft.Owin.Host.HttpListener.ServerFactory);
+            var httpListener = typeof(Microsoft.Owin.Host.HttpListener.OwinServerFactory);
             owinStartOptions.ServerFactory = httpListener.Namespace; //"Microsoft.Owin.Host.HttpListener";
             owinStartOptions.Urls.Add("http://+:" + initOptions.HttpPort.ToString());
 
@@ -110,7 +110,8 @@ namespace Nimbus.Plumbing
             IHostingEngine engine = (IHostingEngine)services.GetService(typeof(IHostingEngine));
             var context = new StartContext(owinStartOptions);
             context.Startup = new Action<Owin.IAppBuilder>
-                ((bld) => nimbusOwinApp.Configuration(_nimbusAppBus, bld));
+                ((bld) => 
+                    nimbusOwinApp.Configuration(_nimbusAppBus, bld));
             
             initOptions.InitLog.Log("StartWebApp", "Taking off...");
             engine.Start(context);
