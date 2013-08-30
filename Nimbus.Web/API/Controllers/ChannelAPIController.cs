@@ -224,9 +224,6 @@ namespace Nimbus.Web.API.Controllers
         //ver mais tarde o canal ou retirar da lista de ver mais tarde
         #endregion
 
-
-
-
     }
 
 
