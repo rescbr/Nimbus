@@ -156,8 +156,7 @@ namespace Nimbus.Web.API.Controllers
                 throw;
             }
             return listMessage.OrderBy(d => d.Date).ToList();
-        }
-
+        }        
        
         /// <summary>
         /// Troca a visibilidade das mensagens//excluir mensagem 
@@ -192,8 +191,5 @@ namespace Nimbus.Web.API.Controllers
         }
 
         
-
-
-
     }
 }

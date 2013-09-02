@@ -298,6 +298,7 @@ namespace Nimbus.Web.API.Controllers
                             {
                                 msg = alert.NotAllowed;
                             }
+                            trans.Commit();
                         }
                         catch (Exception ex)
                         {
@@ -314,12 +315,100 @@ namespace Nimbus.Web.API.Controllers
             return msg;
         }
 
+        /// <summary>
+        /// Add/retirar channel da lista de ler mais tarde 
+        /// </summary>
+        /// <param name="channelID"></param>
+        /// <param name="readOn"></param>
+        /// <returns></returns>
+        [Authorize]
+        public bool ReadChannelLater(int channelID, DateTime readOn)
+        {
+            bool operation = false;
+            try
+            {
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {
+                    //se ja existir = retirar//se não existir = criar
+                    UserChannelReadLater user = db.SelectParam<Nimbus.DB.UserChannelReadLater>(rl => rl.UserId == NimbusUser.UserId && rl.ChannelId == channelID).FirstOrDefault();
+                    if (user != null)
+                    {
+                        user.Visible = false;
+                        user.ReadOn = null;
+                    }
+                    else
+                    {
+                        user.Visible = true;
+                        user.UserId = NimbusUser.UserId;
+                        user.ReadOn = readOn;
+                        user.Date = DateTime.Now;
+                    }
+                    db.Save(user);
+                }
+                operation = true;
+            }
+            catch (Exception ex)
+            {
+                operation = false;
+                throw;
+            }
+
+            return operation;
+        }
+
+
+        //editar/add tags do canal
+        public bool TagsChannel(int channelID, List<string> tagsList)
+        {
+            bool isOk = false;
+            try
+            {
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {
+                    using (var trans = db.OpenTransaction(System.Data.IsolationLevel.ReadCommitted))
+                    {
+                        try
+                        {
+                            bool allow = db.SelectParam<Nimbus.DB.Role>(user => user.UserId == NimbusUser.UserId).Select(us => us.IsOwner).FirstOrDefault();
+
+                            if (allow == true)
+                            {
+                                //add as tags
+                                //colocar restrição apra canal free/pago
+                                foreach (string item in tagsList)
+                                {
+                                    ChannelTag tag = new ChannelTag
+                                    {
+                                        ChannelID = channelID,
+                                        TagName = item
+                                    };
+                                    db.Save(tag);
+                                }
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            trans.Rollback();
+                            isOk = false;
+                            throw;
+                        }
+                    }
+                }          
+                isOk = true;
+            }
+            catch (Exception ex)
+            {
+                isOk = false;
+                throw;
+            }
+            return isOk;
+        }
+
 
         //criar canal
         //editar canal
 
-        //editar/add tags do canal
-        //ver mais tarde o canal ou retirar da lista de ver mais tarde
+      
         #endregion
 
     }

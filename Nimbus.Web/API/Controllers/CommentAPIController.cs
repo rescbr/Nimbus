@@ -40,7 +40,7 @@ namespace Nimbus.Web.API.Controllers
                                                    Visible = true
                                                };
                     db.Insert(dados);
-                    alert = "";
+                    alert = string.Empty;
                 }
             }
             catch (Exception ex)
@@ -76,7 +76,7 @@ namespace Nimbus.Web.API.Controllers
                         Visible = true
                     };
                     db.Insert(dados);
-                    alert = "";
+                    alert = string.Empty;
                 }
             }
             catch (Exception ex)
