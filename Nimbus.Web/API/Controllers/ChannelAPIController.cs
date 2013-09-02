@@ -219,7 +219,7 @@ namespace Nimbus.Web.API.Controllers
             return message;
  
         }
-                
+                 
         /// <summary>
         /// seguir/ñ seguir canal
         /// </summary>
@@ -262,16 +262,62 @@ namespace Nimbus.Web.API.Controllers
             }
             return follow;
         }
+            
+        /// <summary>
+        /// addou retira as permissões dos moderadores para o canal
+        /// </summary>
+        /// <param name="userModerator"></param>
+        /// <returns></returns>
+        [Authorize]
+        public string managerModerator(List<Role> userModerator, int idChannel)
+        {
+            AlertGeneral alert = new AlertGeneral();
+            string msg = alert.ErrorMessage;
+            try
+            {
+                using(var db = DatabaseFactory.OpenDbConnection())
+                {
+                    using(var trans = db.OpenTransaction(System.Data.IsolationLevel.ReadCommitted))
+                    {
+                        try
+                        {
+                            bool  isOwner = db.SelectParam<Nimbus.DB.Role>(role => role.UserId == NimbusUser.UserId && role.IsOwner == true)
+                                               .Select(s => s.IsOwner).FirstOrDefault();
 
-
-        //apagar permissoes moderadores
-        //add moderadores para o canal
+                            bool isManager = db.SelectParam<Nimbus.DB.Role>(role => role.UserId == NimbusUser.UserId && role.ModeratorManager == true)
+                                                 .Select(s => s.ModeratorManager).FirstOrDefault();
+                            if (isOwner == true || isManager == true)
+                            {
+                                foreach (Role item in userModerator)
+                                {
+                                    db.Save(item);
+                                }
+                                msg = alert.SuccessMessage;
+                            }
+                            else
+                            {
+                                msg = alert.NotAllowed;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            trans.Rollback();  
+                            throw ex;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {                
+                throw ex;
+            }
+            return msg;
+        }
 
 
         //criar canal
         //editar canal
 
-        //enviar mensagem para o canal/dono)
         //editar/add tags do canal
         //ver mais tarde o canal ou retirar da lista de ver mais tarde
         #endregion
