@@ -39,11 +39,14 @@ namespace Nimbus.Web.API.Controllers
                     if (ismember == true)
                     {
                         Nimbus.DB.Channel channel = db.SelectParam<Nimbus.DB.Channel>(chn => chn.Id == channelID && chn.Visible == true).FirstOrDefault();
+                        List<ChannelTag> tagList = db.SelectParam<Nimbus.DB.ChannelTag>(tg => tg.ChannelID ==channelID  && tg.Visible == true).ToList();
+
                         showChannel.ChannelName = channel.Name;
                         showChannel.CountFollowers = channel.Followers.ToString();
                         showChannel.Organization_ID = channel.OrganizationId;
                         showChannel.owner_ID = channel.OwnerId;
                         showChannel.Price = channel.Price;
+                        showChannel.TagList = tagList;
                         //showChannel.ParticipationChannel = 
                         showChannel.RankingChannel = channel.Ranking.ToString();
                         showChannel.UrlImgChannel = channel.ImgUrl;
@@ -355,9 +358,14 @@ namespace Nimbus.Web.API.Controllers
 
             return operation;
         }
-
-
-        //editar/add tags do canal
+           
+        /// <summary>
+        /// Add tags para os canais
+        /// </summary>
+        /// <param name="channelID"></param>
+        /// <param name="tagsList"></param>
+        /// <returns></returns>
+        [Authorize]
         public bool TagsChannel(int channelID, List<string> tagsList)
         {
             bool isOk = false;
@@ -370,19 +378,42 @@ namespace Nimbus.Web.API.Controllers
                         try
                         {
                             bool allow = db.SelectParam<Nimbus.DB.Role>(user => user.UserId == NimbusUser.UserId).Select(us => us.IsOwner).FirstOrDefault();
+                            bool isPrivate = db.SelectParam<Nimbus.DB.Channel>(ch => ch.Id == channelID).Select(p => p.IsPrivate).FirstOrDefault();
+                            bool allOk = false;
 
-                            if (allow == true)
+                            if (allow == true)//usuario possui permissao
                             {
-                                //add as tags
-                                //colocar restrição apra canal free/pago
-                                foreach (string item in tagsList)
+                                //colocar restrição apra canal free
+                                if (isPrivate == false)
                                 {
-                                    ChannelTag tag = new ChannelTag
+                                    int countTag = db.SelectParam<Nimbus.DB.ChannelTag>(ch => ch.ChannelID == channelID).Count();
+                                    if (countTag <= 4)
                                     {
-                                        ChannelID = channelID,
-                                        TagName = item
-                                    };
-                                    db.Save(tag);
+                                        tagsList = tagsList.Take(5 - (countTag + 1)).ToList();
+                                        allOk = true;
+                                    }
+                                    else
+                                    {
+                                        allOk = false;
+                                    }
+                                }
+                                else
+                                {
+                                    allOk = true;
+                                }
+                                if (allOk == true)
+                                {
+                                    foreach (string item in tagsList)
+                                    {
+                                        ChannelTag tag = new ChannelTag
+                                        {
+                                            ChannelID = channelID,
+                                            TagName = item,
+                                            Visible = true 
+                                        };
+                                        db.Save(tag);
+                                    }
+                                    isOk = true;
                                 }
                             }
                         }
@@ -393,8 +424,56 @@ namespace Nimbus.Web.API.Controllers
                             throw;
                         }
                     }
-                }          
-                isOk = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                isOk = false;
+                throw;
+            }
+            return isOk;
+        }
+
+        /// <summary>
+        /// Troca a visibilidade (deleta) a tag escolhida
+        /// </summary>
+        /// <param name="channelID"></param>
+        /// <param name="tagList"></param>
+        /// <returns></returns>
+        [Authorize]
+        public bool DeleteTagChannel(int channelID, List<int> tagList)
+        {
+            bool isOk = false;
+            try
+            {
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {
+                    using (var trans = db.OpenTransaction(System.Data.IsolationLevel.ReadCommitted))
+                    {
+                        try
+                        {
+                            bool allow = db.SelectParam<Nimbus.DB.Role>(user => user.UserId == NimbusUser.UserId).Select(us => us.IsOwner).FirstOrDefault();
+
+                            if (allow == true)//usuario possui permissao
+                            {
+
+                                foreach (int item in tagList)
+                                {
+                                    var dado = new Nimbus.DB.ChannelTag() { Visible = false };
+                                    db.Update<Nimbus.DB.ChannelTag>(dado, ch => ch.ChannelID == item);
+                                    db.Save(dado);
+                                }
+                                isOk = true;
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            trans.Rollback();
+                            isOk = false;
+                            throw;
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -406,6 +485,7 @@ namespace Nimbus.Web.API.Controllers
 
 
         //criar canal
+
         //editar canal
 
       

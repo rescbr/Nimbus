@@ -16,5 +16,6 @@ namespace Nimbus.DB
         public int ChannelID { get; set; }
 
         public string TagName { get; set; }
+        public bool Visible { get; set; }
     }
 }
