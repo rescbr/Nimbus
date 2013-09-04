@@ -78,6 +78,7 @@
     <Compile Include="User.cs" />
     <Compile Include="UserTopicFavorite.cs" />
     <Compile Include="UserTopicReadLater.cs" />
+    <Compile Include="VoteChannel.cs" />
     <Compile Include="_Enums.cs" />
     <Compile Include="_LocalizedString.cs" />
     <Compile Include="Role.cs" />

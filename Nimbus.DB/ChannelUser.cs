@@ -16,9 +16,8 @@ namespace Nimbus.DB
         public int ChannelId { get; set; }
         
         public bool? Vote { get; set; }
-
+        public int Score { get; set; }
         public int Interaction { get; set; }
-
         public bool Follow { get; set; }
     }
 }

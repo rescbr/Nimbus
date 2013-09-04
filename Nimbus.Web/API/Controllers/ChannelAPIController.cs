@@ -230,7 +230,7 @@ namespace Nimbus.Web.API.Controllers
         /// <returns></returns>
         [Authorize]
         public bool followChannel(int channelID)
-        {
+        {//TODO : notificação
             bool follow = false;
             try
             {
@@ -273,7 +273,7 @@ namespace Nimbus.Web.API.Controllers
         /// <returns></returns>
         [Authorize]
         public string managerModerator(List<Role> userModerator, int idChannel)
-        {
+        {//TODO: notificação
             AlertGeneral alert = new AlertGeneral();
             string msg = alert.ErrorMessage;
             try
@@ -490,7 +490,7 @@ namespace Nimbus.Web.API.Controllers
         /// <returns></returns>
         [Authorize]
         public bool newChannel(NewChannelAPI newChannel)
-        {
+        {//TODO:Notificação
             bool created = false;
             try
             {
@@ -585,6 +585,7 @@ namespace Nimbus.Web.API.Controllers
 
                         db.Update(channel);
                         edit = true;
+                        //TODO: Notificação
                     }
                     else 
                     {
@@ -599,8 +600,79 @@ namespace Nimbus.Web.API.Controllers
             }
 
             return edit;
-        } 
+        }
 
+        /// <summary>
+        /// Método de adicionar/atualizar os scores de um canal
+        /// </summary>
+        /// <param name="vote"></param>
+        /// <returns></returns>
+        [Authorize]
+        public int voteChannel(VoteChannelAPI vote)
+        {
+            int score = -1;
+            try
+            {
+                using(var db = DatabaseFactory.OpenDbConnection())
+                {
+                    using (var trans = db.OpenTransaction(System.Data.IsolationLevel.ReadCommitted))
+                    {
+                        try
+                        {
+                            var voted = db.SelectParam<Nimbus.DB.ChannelUser>(vt => vt.UserId == NimbusUser.UserId && vt.ChannelId == vote.Channel_ID)
+                                                                                     .Select(vt => vt.Vote).FirstOrDefault();
+                            if (voted == null)
+                            {
+                                VoteChannel vtChannel = new VoteChannel
+                                {
+                                    Score = vote.Score
+                                };
+                                int nota = db.Query<int>("UPDATE VoteChannel SET VoteChannel.Score = VoteChannel.Score + @score OUTPUT INSERTED.Score " +
+                                                                "WHERE VoteChannel.Channel_ID = @channelID",
+                                                                new { score = vote.Score, channelID = vote.Channel_ID }).FirstOrDefault();
+
+                                ChannelUser chnUser = new ChannelUser { Vote = true, Score = vote.Score };
+                                db.Update<Nimbus.DB.ChannelUser>(chnUser, chn => chn.UserId == NimbusUser.UserId && chn.ChannelId == vote.Channel_ID);
+
+                                score = nota;
+                                trans.Commit();
+                            }
+                            else if (voted == true)
+                            {
+                                VoteChannel vtChannel = new VoteChannel
+                                {
+                                    Score = vote.Score
+                                };
+
+                                int notaVelha = db.SelectParam<Nimbus.DB.ChannelUser>(vt => vt.ChannelId == vote.Channel_ID && vt.UserId == NimbusUser.UserId)
+                                                                                           .Select(vt => vt.Score).FirstOrDefault();
+
+                                int nota = db.Query<int>("UPDATE VoteChannel SET VoteChannel.Score = VoteChannel.Score + @score OUTPUT INSERTED.Score " +
+                                                                "INNER JOIN ChannelUser ON VoteChannel.Channel_ID = ChannelUser.ChannelId " +
+                                                                "WHERE VoteChannel.Channel_ID = @channelID AND ChannelUser.UserId = @user ",
+                                                                new { score = (vote.Score - notaVelha), channelID = vote.Channel_ID, user = NimbusUser.UserId }).FirstOrDefault();
+
+                                ChannelUser chnUser = new ChannelUser { Score = vote.Score };
+                                db.Update<Nimbus.DB.ChannelUser>(chnUser, chn => chn.UserId == NimbusUser.UserId && chn.ChannelId == vote.Channel_ID);
+
+                                trans.Commit();
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            trans.Rollback();
+                            throw ex;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return score;
+        }
       
         #endregion
 
