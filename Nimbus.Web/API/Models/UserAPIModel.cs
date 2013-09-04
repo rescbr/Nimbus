@@ -12,7 +12,7 @@ namespace Nimbus.Web.API.Models.User
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public int BirthDate { get; set; }
+        public DateTime BirthDate { get; set; }
         public string Country { get; set; }
         public string City { get; set; }
         public string State { get; set; }

@@ -485,6 +485,58 @@ namespace Nimbus.Web.API.Controllers
 
 
         //criar canal
+        public bool newChannel(NewChannelAPI newChannel)
+        {
+            bool created = false;
+            try
+            {
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {
+                    bool allow = false; //zero = padrao Nimbus
+                    if (newChannel.Organization_ID != 0)
+                    {
+                        int idUser = db.SelectParam<Nimbus.DB.OrganizationUser>(us => us.UserId == NimbusUser.UserId
+                                                                                   && us.OrganizationId == newChannel.Organization_ID).Select(us => us.UserId).FirstOrDefault();
+                        allow = true;
+                    }
+                    else 
+                    {
+                        allow = true;
+                    }
+
+                    if (allow == true)
+                    {
+                        Nimbus.DB.Channel channel = new Nimbus.DB.Channel()
+                        {
+                            CategoryId = newChannel.Category_ID,
+                            CreatedOn = DateTime.Now,
+                            Description = newChannel.Description,
+                            Followers = 0,
+                            ImgUrl = newChannel.ImgUrl,
+                            IsCourse = newChannel.IsCourse,
+                            IsPrivate = newChannel.IsPrivate,
+                            Name = newChannel.Name,
+                            OpenToComments = newChannel.OpenToComments,
+                            OrganizationId = newChannel.Organization_ID,
+                            OwnerId = NimbusUser.UserId,
+                            Price = newChannel.IsPrivate == true ? newChannel.Price : 0,
+                            //TO DO Ranking = 
+                            Visible = true
+                        };
+
+                        db.Insert(channel);
+                        created = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                created = false;
+                throw ex;
+            }
+            return created;
+        }
+
 
         //editar canal
 

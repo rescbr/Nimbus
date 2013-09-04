@@ -68,6 +68,22 @@ namespace Nimbus.Web.API.Models.Channel
         public string TagName { get; set; }
     }
 
-    
+    public class NewChannelAPI
+    {
+        public int Owner_ID { get; set; }
+        public int Category_ID { get; set; }
+        public int Organization_ID { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public string ImgUrl { get; set; }
+        public DateTime CreatedOn { get; set; }
+        public bool OpenToComments { get; set; }
+        public bool IsPrivate { get; set; }
+        public bool Visible { get; set; }
+        public bool IsCourse { get; set; }
+        public decimal Price { get; set; }
+        public int Ranking { get; set; }
+        public int Followers { get; set; }
+    }
 
 }

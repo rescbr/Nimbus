@@ -112,26 +112,36 @@ namespace Nimbus.Web.API.Controllers
         [HttpPost]
         public bool createProfile(CreateUserAPIModel newUser)
         {
-            string passwordHash = new Security.PlaintextPassword(newUser.Password).Hash;
-
-            using (var db = DatabaseFactory.OpenDbConnection())
+            bool login = false;
+            try
             {
-                Nimbus.DB.User user = new Nimbus.DB.User()
-                {
-                    FirstName = newUser.FirstName,
-                    LastName = newUser.LastName,
-                    //Falta birthdate
-                    City = newUser.City,
-                    Country = newUser.Country,
-                    Email = newUser.Email,
-                    State = newUser.State,
-                    Password = passwordHash
-                };
+                string passwordHash = new Security.PlaintextPassword(newUser.Password).Hash;
 
-                db.Insert(user);
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {
+                    Nimbus.DB.User user = new Nimbus.DB.User()
+                    {
+                        FirstName = newUser.FirstName,
+                        LastName = newUser.LastName,
+                        BirthDate= newUser.BirthDate,
+                        City = newUser.City,
+                        Country = newUser.Country,
+                        Email = newUser.Email,
+                        State = newUser.State,
+                        Password = passwordHash
+                    };
+
+                    db.Insert(user);
+                    login = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                login = false;
+                throw ex;
             }
 
-            return true;
+            return login;
         }
 
 
