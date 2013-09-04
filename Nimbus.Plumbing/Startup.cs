@@ -3,6 +3,7 @@ using Microsoft.Owin.Hosting.Engine;
 using Nimbus.Plumbing.Interface;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
@@ -93,7 +94,7 @@ namespace Nimbus.Plumbing
         {
 
             initOptions.InitLog.Log("StartWebApp", "Initializing WebApp on port " + initOptions.HttpPort.ToString());
-            
+
             var owinStartOptions = new StartOptions();
             var httpListener = typeof(Microsoft.Owin.Host.HttpListener.OwinServerFactory);
             owinStartOptions.ServerFactory = httpListener.Namespace; //"Microsoft.Owin.Host.HttpListener";
@@ -101,19 +102,25 @@ namespace Nimbus.Plumbing
 
             initOptions.InitLog.Log("StartWebApp", "Trying to load N.Web from " + initOptions.NimbusWebAssemblyFile);
 
-            INimbusOwinApp nimbusOwinApp = 
+            INimbusOwinApp nimbusOwinApp =
                 (INimbusOwinApp)Activator.CreateInstanceFrom
                 (initOptions.NimbusWebAssemblyFile, "Nimbus.Web.NimbusOwinApp")
                 .Unwrap();
+
+            initOptions.InitLog.Log("StartWebApp", "Adding Nimbus.Web dir to Assembly search path...");
+            AppDomain currentDomain = AppDomain.CurrentDomain;
+            currentDomain.AssemblyResolve += new ResolveEventHandler(
+                new DirectoryAssemblyLoader(initOptions.NimbusWebAssemblyFile, true)
+                .LoadDelegate);
 
             initOptions.InitLog.Log("StartWebApp", "Creating context");
             var services = Microsoft.Owin.Hosting.Services.ServicesFactory.Create();
             IHostingEngine engine = (IHostingEngine)services.GetService(typeof(IHostingEngine));
             var context = new StartContext(owinStartOptions);
             context.Startup = new Action<Owin.IAppBuilder>
-                ((bld) => 
+                ((bld) =>
                     nimbusOwinApp.Configuration(_nimbusAppBus, bld));
-            
+
             initOptions.InitLog.Log("StartWebApp", "Taking off...");
             try
             {
@@ -123,12 +130,16 @@ namespace Nimbus.Plumbing
             {
                 if (ex.InnerException != null && ex.InnerException.HResult == -2147467259)
                 {
-                    initOptions.InitLog.Log("HttpListenerException","Run 'netsh http add urlacl url=http://+:9000/ user=DOMAIN\\user' as admin");
+                    initOptions.InitLog.Log("HttpListenerException", "Run 'netsh http add urlacl url=http://+:9000/ user=DOMAIN\\user' as admin");
                 }
                 throw ex;
             }
             initOptions.InitLog.Log("StartWebApp", "WebApp initialized.");
         }
+
+
+
+
 
     }
 }
