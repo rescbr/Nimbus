@@ -68,6 +68,9 @@ namespace Nimbus.Web.API.Models.Channel
         public string TagName { get; set; }
     }
 
+    /// <summary>
+    /// informações necessárias para se criar um canal
+    /// </summary>
     public class NewChannelAPI
     {
         public int Owner_ID { get; set; }
@@ -86,4 +89,21 @@ namespace Nimbus.Web.API.Models.Channel
         public int Followers { get; set; }
     }
 
+    /// <summary>
+    /// informações necessárias para editar um canal
+    /// </summary>
+    public class EditChannelAPI
+    {
+        public int Channel_ID { get; set; }
+        public int Category_ID { get; set; }
+        public int Organization_ID { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public string ImgUrl { get; set; }
+        public bool OpenToComments { get; set; }
+        public bool IsPrivate { get; set; }
+        public bool Visible { get; set; }
+        public bool IsCourse { get; set; }
+        public decimal Price { get; set; }
+    }
 }

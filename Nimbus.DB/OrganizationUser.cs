@@ -14,7 +14,5 @@ namespace Nimbus.DB
 
         [References(typeof(Organization))]
         public int OrganizationId { get; set; }
-
-        //public Role Role { get; set; }
     }
 }

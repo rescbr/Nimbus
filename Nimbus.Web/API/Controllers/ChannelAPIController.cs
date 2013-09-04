@@ -483,8 +483,12 @@ namespace Nimbus.Web.API.Controllers
             return isOk;
         }
 
-
-        //criar canal
+        /// <summary>
+        /// Criar um canal
+        /// </summary>
+        /// <param name="newChannel"></param>
+        /// <returns></returns>
+        [Authorize]
         public bool newChannel(NewChannelAPI newChannel)
         {
             bool created = false;
@@ -497,7 +501,16 @@ namespace Nimbus.Web.API.Controllers
                     {
                         int idUser = db.SelectParam<Nimbus.DB.OrganizationUser>(us => us.UserId == NimbusUser.UserId
                                                                                    && us.OrganizationId == newChannel.Organization_ID).Select(us => us.UserId).FirstOrDefault();
-                        allow = true;
+                        int idManager = db.SelectParam<Nimbus.DB.Role>(us => us.UserId == idUser
+                                                                           && (us.IsOwner == true || us.ChannelMagager == true)).Select(us => us.UserId).FirstOrDefault();
+                        if (idManager > 0)
+                        {
+                            allow = true;
+                        }
+                        else
+                        {
+                            allow = false;
+                        }
                     }
                     else 
                     {
@@ -510,6 +523,7 @@ namespace Nimbus.Web.API.Controllers
                         {
                             CategoryId = newChannel.Category_ID,
                             CreatedOn = DateTime.Now,
+                            LastModification = DateTime.Now,
                             Description = newChannel.Description,
                             Followers = 0,
                             ImgUrl = newChannel.ImgUrl,
@@ -536,9 +550,56 @@ namespace Nimbus.Web.API.Controllers
             }
             return created;
         }
+        
+        /// <summary>
+        /// Méetodo para editar as informações de um canal
+        /// </summary>
+        /// <param name="editChannel"></param>
+        /// <returns></returns>
+        [Authorize]
+        public bool editChannel(EditChannelAPI editChannel)
+        {
+            bool edit = false;
+            try
+            {
+                using(var db = DatabaseFactory.OpenDbConnection())
+                {
+                    bool isOwner = db.SelectParam<Nimbus.DB.Role>(own => own.UserId == NimbusUser.UserId && own.ChannelId == editChannel.Channel_ID)
+                                                                        .Select(own => own.IsOwner).FirstOrDefault();
+                    bool isManager = db.SelectParam<Nimbus.DB.Role>(mg => mg.UserId == NimbusUser.UserId && mg.ChannelId == editChannel.Channel_ID)
+                                                                        .Select(mg => mg.ChannelMagager).FirstOrDefault();
+                    if (isOwner == true || isManager == true)
+                    {
+                        Channel channel = db.SelectParam<Nimbus.DB.Channel>(chn => chn.Id == editChannel.Channel_ID && chn.Visible == true).FirstOrDefault();
+                        channel.Name = editChannel.Name;
+                        channel.CategoryId = editChannel.Category_ID;
+                        channel.Description = editChannel.Description;
+                        channel.ImgUrl = editChannel.ImgUrl;
+                        channel.IsCourse = editChannel.IsCourse;
+                        channel.IsPrivate = editChannel.IsPrivate;
+                        channel.LastModification = DateTime.Now;
+                        channel.OpenToComments = editChannel.OpenToComments;
+                        channel.OrganizationId = editChannel.Organization_ID;
+                        channel.Price = editChannel.Price;
+                        channel.Visible = editChannel.Visible;
 
+                        db.Update(channel);
+                        edit = true;
+                    }
+                    else 
+                    {
+                        edit = false;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                edit = false;
+                throw ex;
+            }
 
-        //editar canal
+            return edit;
+        } 
 
       
         #endregion

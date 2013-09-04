@@ -15,6 +15,7 @@ namespace Nimbus.DB
         [References(typeof(Channel))]
         public int ChannelId { get; set; }
 
+        public bool ChannelMagager { get; set; } 
         public bool TopicManager { get; set; }
         public bool MessageManager { get; set; }
         public bool UserManager { get; set; }
