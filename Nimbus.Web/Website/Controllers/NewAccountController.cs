@@ -12,7 +12,7 @@ namespace Nimbus.Web.Website.Controllers
     public class NewAccountController : NimbusApiController
     {
         public View Get() {
-            return new View("NewAccount", new object());
+            return new View("NewAccount", null);
         }
 
         public View Post(NewAccountModel newAccount)
@@ -28,7 +28,11 @@ namespace Nimbus.Web.Website.Controllers
                      * Não são todos os métodos que podem ser chamados diretamente! 
                      * TODO: criar clone de request
                      */
-                    var userapi = new Nimbus.Web.API.Controllers.UserAPIController();
+                    
+                    var userapi = ClonedContextInstance<API.Controllers.UserAPIController>();
+                    //var userapi = new API.Controllers.UserAPIController();
+                    //userapi.ControllerContext = this.ControllerContext;
+
                     var newUser = new Nimbus.Web.API.Models.User.CreateUserAPIModel()
                     {
                         City = newAccount.City,

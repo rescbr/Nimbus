@@ -17,6 +17,7 @@ namespace Nimbus.Web
     using AppFunc = Func<IDictionary<string, object>, System.Threading.Tasks.Task>;
     using WebApiContrib.Formatting.Razor;
     using Nimbus.Web.Middleware;
+    using System.Web.Http.Filters;
     
     
     public class NimbusOwinApp : INimbusOwinApp
@@ -40,9 +41,10 @@ namespace Nimbus.Web
             HttpConfiguration webApiConfig = new HttpConfiguration();
             webApiConfig.Properties["NimbusAppBus"] = nimbusAppBus;
             webApiConfig.Formatters.Add(new HtmlMediaTypeViewFormatter()); //adiciona Razor
-            //GlobalViews.DefaultViewLocator = new RazorViewLocator();
             GlobalViews.DefaultViewLocator = new NimbusFastViewLocator();
             GlobalViews.DefaultViewParser = new RazorViewParser();
+            
+
 
             webApiConfig.Routes.MapHttpRoute(
                 name: "DefaultApi",
@@ -82,6 +84,7 @@ namespace Nimbus.Web
                 //.Run(new HelloWorldResponder());
             //;
         }
+
 
         /// <summary>
         /// Método para tratar o auto-attach do Visual Studio
