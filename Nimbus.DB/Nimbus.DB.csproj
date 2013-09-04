@@ -61,10 +61,13 @@
     <Compile Include="Category.cs" />
     <Compile Include="Channel.cs" />
     <Compile Include="ChannelReported.cs" />
+    <Compile Include="ChannelTag.cs" />
     <Compile Include="ChannelUser.cs" />
     <Compile Include="CommentReported.cs" />
     <Compile Include="Message.cs" />
+    <Compile Include="ReceiverMessage.cs" />
     <Compile Include="TopicReported.cs" />
+    <Compile Include="UserChannelReadLater.cs" />
     <Compile Include="UserReported.cs" />
     <Compile Include="UserBadge.cs" />
     <Compile Include="Comment.cs" />
@@ -74,9 +77,10 @@
     <Compile Include="Topic.cs" />
     <Compile Include="User.cs" />
     <Compile Include="UserTopicFavorite.cs" />
+    <Compile Include="UserTopicReadLater.cs" />
     <Compile Include="_Enums.cs" />
     <Compile Include="_LocalizedString.cs" />
-    <Compile Include="_Role.cs" />
+    <Compile Include="Role.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

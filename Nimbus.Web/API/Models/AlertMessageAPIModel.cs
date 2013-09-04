@@ -21,7 +21,8 @@ namespace Nimbus.Web.API.Models
     {
         public string SuccessMessage { get { return "Operação realizada com sucesso."; } }
         public string AtentionMessage { get { return "Tem certeza que deseja realizar está operação?"; } }
-        public string ErrorMessage { get { return "Erro ao tentar realizar essa operação. Tente novamente."; } } 
+        public string ErrorMessage { get { return "Erro ao tentar realizar essa operação. Tente novamente."; } }
+        public string NotAllowed { get { return "Você não possui permissão para realizar esta tarefa."; } }
     }
 
     public class AlertChannelPay
