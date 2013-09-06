@@ -115,4 +115,14 @@ namespace Nimbus.Web.API.Models.Channel
         public int Channel_ID { get; set; }
         public int Score { get; set; }
     }
+
+    /// <summary>
+    /// Api para aceitar/recusar usuario
+    /// </summary>
+    public class AcceptUserAPI 
+    {
+        public int ChannelID { get; set; }
+        public int IdUser { get; set; }
+        public bool? isAccept { get; set; }
+    }
 }

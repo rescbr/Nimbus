@@ -33,7 +33,7 @@ namespace Nimbus.Web.API.Models.User
     /// <summary>
     /// Listar os dados dos canais pagos adquiridos pelo usuário
     /// </summary>
-    public class ChannelPayAPI
+    public class ChannelUserPaidAPI
     {
         public int channel_ID { get; set; }
         public string ChannelName { get; set; }
@@ -73,7 +73,12 @@ namespace Nimbus.Web.API.Models.User
         public string Country { get; set; }
     }
 
-
+    public class abstractProfile
+    {
+        public int idUser { get; set; }
+        public string AvatarUrl { get; set; }
+        public string Name { get; set; }
+    }
 
 }
 
