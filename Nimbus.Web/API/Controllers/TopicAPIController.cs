@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using ServiceStack.OrmLite;
+using Nimbus.DB;
 
 namespace Nimbus.Web.API.Controllers
 {
@@ -59,11 +60,120 @@ namespace Nimbus.Web.API.Controllers
             else
                return list;
         }
+             
+        /// <summary>
+        /// método de favoritar/desfavoritar o tópico
+        /// </summary>
+        /// <param name="idTopic"></param>
+        /// <returns></returns>
+        [Authorize]
+        public bool TopicFavorite(int idTopic)
+        {
+            bool flag = false;
+            try
+            {
+                using(var db = DatabaseFactory.OpenDbConnection())
+                {
+                    Nimbus.DB.UserTopicFavorite user = new DB.UserTopicFavorite();
+                    user = db.SelectParam<Nimbus.DB.UserTopicFavorite>(us => us.UserId == NimbusUser.UserId && us.TopicId == idTopic).FirstOrDefault();
+                    UserTopicFavorite usrFavorite = new UserTopicFavorite();
+                    if (user == null) //nunca favoritou
+                    {
+                            usrFavorite.UserId = NimbusUser.UserId;
+                            usrFavorite.TopicId = idTopic;
+                            usrFavorite.FavoritedOn = DateTime.Now;
+                            usrFavorite.Visible = true;
+                        db.Insert(usrFavorite);
+                        flag = true;
+                    }
+                    else
+                    {
+                        user.FavoritedOn = DateTime.Now;
+                        user.Visible = (user.Visible == true) ? false : true;
+                        db.Update(user);
+                        flag = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                flag = false;
+                throw ex;
+            }
 
-        //ler o tópico mais tarde ou retirar da lista de leitura 
-        //favoritar/desfavoritar o tópico
+            return flag;
+        }
+
+        /// <summary>
+        /// Add/retirar tópico da lista de ler mais tarde 
+        /// </summary>
+        /// <param name="topicID"></param>
+        /// <param name="readOn"></param>
+        /// <returns></returns>
+        [Authorize]
+        public bool ReadChannelLater(int topicID, DateTime readOn)
+        {
+            bool operation = false;
+            try
+            {
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {
+                    //se ja existir = retirar//se não existir = criar
+                    UserTopicReadLater user = db.SelectParam<Nimbus.DB.UserTopicReadLater>(rl => rl.UserId == NimbusUser.UserId && rl.TopicId == topicID).FirstOrDefault();
+                    if (user != null)
+                    {
+                        user.Visible = false;
+                        user.ReadOn = null;
+                    }
+                    else
+                    {
+                        user.Visible = true;
+                        user.UserId = NimbusUser.UserId;
+                        user.ReadOn = readOn;
+                        user.TopicId = topicID;
+                    }
+                    db.Save(user);
+                }
+                operation = true;
+            }
+            catch (Exception ex)
+            {
+                operation = false;
+                throw;
+            }
+
+            return operation;
+        }
+        
         //abrir o tópico
-        //listar tópicos relacionados 
+        /// <summary>
+        /// carregar informações gerais de um tópico
+        /// </summary>
+        /// <returns></returns>
+        [Authorize]
+        public ShowTopicAPI showTopic(int topicID, TopicType type)
+        {
+            ShowTopicAPI topic = new ShowTopicAPI();
+            try
+            {
+                //ver permissao p vizualizar => se é pago = ter pagado, se é privado = ser aceito
+
+                using(var db = DatabaseFactory.OpenDbConnection())
+                {
+
+                }
+
+            }
+            catch (Exception ex)
+            {                
+                throw;
+            }
+            return topic;         
+            
+        }
+               
+        
+        //TODO: listar tópicos relacionados 
 
 
 

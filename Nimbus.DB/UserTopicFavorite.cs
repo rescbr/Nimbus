@@ -8,10 +8,7 @@ using System.Threading.Tasks;
 namespace Nimbus.DB
 {
     public class UserTopicFavorite
-    {
-        [AutoIncrement]
-        public int Id { get; set; }
-
+    {      
         [References(typeof(User))]
         public int UserId { get; set; }
 
@@ -19,5 +16,6 @@ namespace Nimbus.DB
         public int TopicId { get; set; }
 
         public DateTime FavoritedOn { get; set; }
+        public bool Visible { get; set; }
     }
 }

@@ -27,6 +27,14 @@ namespace Nimbus.Web.API.Models.Topic
         byPopularity
     }
 
+    public class ShowTopicAPI
+    {
+        public TopicDiscussionAPI Discussion { get; set; }
+        public TopicExamAPI Exam { get; set; }
+        public TopicTextAPI Text { get; set; }
+        public TopicVideoAPI Video { get; set; }
+    }
+
     /// <summary>
     /// Criar um novo tópico
     /// </summary>

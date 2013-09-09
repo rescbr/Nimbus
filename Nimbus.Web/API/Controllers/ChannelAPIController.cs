@@ -404,6 +404,7 @@ namespace Nimbus.Web.API.Controllers
                         user.UserId = NimbusUser.UserId;
                         user.ReadOn = readOn;
                         user.Date = DateTime.Now;
+                        user.ChannelId = channelID;
                     }
                     db.Save(user);
                 }
