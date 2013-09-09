@@ -18,6 +18,16 @@ namespace Nimbus.Web.API.Models.Topic
     }
 
     /// <summary>
+    /// Tipo de visualizações dos tópicos de um canal
+    /// </summary>
+    public enum TopicList
+    {
+        byAll,
+        byModified,
+        byPopularity
+    }
+
+    /// <summary>
     /// Criar um novo tópico
     /// </summary>
     public class NewTopicAPIModel
@@ -108,7 +118,10 @@ namespace Nimbus.Web.API.Models.Topic
         public int topic_ID { get; set; }
         public string UrlImgTopic { get; set; }
         public string shortTextTopic { get; set; }
-        public string UrlAdd { get; set; }
+        public string Title { get; set; }
+        public string Type { get; set; }
+        public int Count { get; set; }
+        public DateTime ModifiedOn { get; set; }
     }
     
     /// <summary>

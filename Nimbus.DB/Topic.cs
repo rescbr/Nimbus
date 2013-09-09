@@ -18,7 +18,7 @@ namespace Nimbus.DB
         [References(typeof(User))]
         public int AuthorId { get; set; }
 
-
+        public string ImgUrl { get; set; }
         public string Title { get; set; }
         public DateTime CreatedOn { get; set; }
         public DateTime LastModified { get; set; }

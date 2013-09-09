@@ -774,7 +774,7 @@ namespace Nimbus.Web.API.Controllers
                         List<int> idUsers = db.SelectParam<Nimbus.DB.ChannelUser>(ch => ch.ChannelId == channelID && ch.Pending == true).Select(ch => ch.UserId).ToList();
                         foreach (int item in idUsers)
                         {
-                            User user = db.Select<Nimbus.DB.User>(("SELECT User.FirstName, User.LastName, User.AvatarUrl " +
+                            User user = db.Select<Nimbus.DB.User>("SELECT User.FirstName, User.LastName, User.AvatarUrl " +
                                                                              "FROM User WHERE User.Id = {0}", item).FirstOrDefault();
                             if(user != null)
                             {
