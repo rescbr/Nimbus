@@ -66,6 +66,7 @@
     <Compile Include="CommentReported.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="ReceiverMessage.cs" />
+    <Compile Include="RoleTopic.cs" />
     <Compile Include="TopicReported.cs" />
     <Compile Include="UserChannelReadLater.cs" />
     <Compile Include="UserReported.cs" />

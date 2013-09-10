@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Web.Http;
 using ServiceStack.OrmLite;
 using Nimbus.DB;
+using Nimbus.Web.API.Models.Comment;
 
 namespace Nimbus.Web.API.Controllers
 {
@@ -151,16 +152,97 @@ namespace Nimbus.Web.API.Controllers
         /// </summary>
         /// <returns></returns>
         [Authorize]
-        public ShowTopicAPI showTopic(int topicID, TopicType type)
+        public ShowTopicAPI showTopic(int topicID)
         {
             ShowTopicAPI topic = new ShowTopicAPI();
             try
             {
                 //ver permissao p vizualizar => se é pago = ter pagado, se é privado = ser aceito
-
                 using(var db = DatabaseFactory.OpenDbConnection())
                 {
+                    bool allow = false;
+                    Topic tpc = db.SelectParam<Nimbus.DB.Topic>(tp => tp.Id == topicID).FirstOrDefault();
+                    bool chnPrivate = db.SelectParam<Nimbus.DB.Channel>(ch => ch.Id == tpc.ChannelId).Select(ch => ch.IsPrivate).FirstOrDefault();
 
+                    if (chnPrivate == false)
+                    {
+                        allow = true;
+                    }
+                    else
+                    {
+                        bool? pending = db.SelectParam<Nimbus.DB.ChannelUser>(ch => ch.ChannelId == tpc.ChannelId && ch.UserId == NimbusUser.UserId)
+                                                                                                        .Select(ch => ch.Pending).FirstOrDefault();
+                        if (pending == false && pending != null) //não esta pendente = já foi aceito
+                        {
+                            allow = true;
+                        }
+                        else
+                        {
+                            allow = false;
+                        }
+                    }
+                    if (tpc.Price > 0)
+                    {
+                        bool paid = db.SelectParam<Nimbus.DB.RoleTopic>(tp => tp.ChannelID == tpc.ChannelId && tp.TopicID == topicID)
+                                                                             .Select(tp => tp.Paid).FirstOrDefault();
+                        if (paid == true)
+                        {
+                            allow = true;
+                        }
+                        else
+                        {
+                            allow = false;
+                        }
+                    }
+
+                    if (allow == true)
+                    {
+                        List<Comment> comments = db.SelectParam<Nimbus.DB.Comment>(cm => cm.TopicId == topicID && cm.Visible == true);
+                        List<CommentAPIModel> listComments = new List<CommentAPIModel>();
+                        foreach (Comment item in comments)
+                        {                                
+                            CommentAPIModel dados = new CommentAPIModel();
+                            dados.AvatarUrl = db.SelectParam<Nimbus.DB.User>(us => us.Id == item.UserId).Select(us => us.AvatarUrl).FirstOrDefault();
+                            dados.comment_ID = item.Id;
+                            dados.Name = db.SelectParam<Nimbus.DB.User>(us => us.Id == item.UserId).Select(us => us.FirstName + " " + us.LastName).FirstOrDefault();
+                            dados.ParentID = item.ParentId;
+                            dados.PostedOn = item.PostedOn;
+                            dados.Text = item.Text;
+                            dados.TopicId = item.TopicId;
+
+                            listComments.Add(dados);
+                        }
+
+                        if (tpc.TopicType == Nimbus.DB.Enums.TopicType.Exam)
+                        {
+                            List<QuestionTopicAPI> listQuestion = new List<QuestionTopicAPI>();
+                            //TODO listQuestion
+
+                            //TODO topic.Exam.RelatedTopicList = ;
+                            topic.Exam.ShortDescriptionTopic = tpc.Description;
+                            topic.Exam.topic_ID = tpc.Id;
+                            topic.Exam.TopicExam = listQuestion;
+                            topic.Exam.TopicName = tpc.Title;
+                            topic.Exam.TopicType = tpc.TopicType.ToString();
+                            topic.Exam.UrlImgBanner = tpc.UrlCapa;
+                            topic.Exam.UrlImgTopic = tpc.ImgUrl;
+                            topic.Exam.Comments = listComments;
+                        }
+                        else if (tpc.TopicType == Nimbus.DB.Enums.TopicType.Exam)
+                        {
+                            //TODO topic.generalTopic.RelatedTopicList = 
+                            topic.generalTopic.ShortDescriptionTopic = tpc.Description;
+                            topic.generalTopic.topic_ID = tpc.Id;
+                            topic.generalTopic.TopicName = tpc.Title;
+                            topic.generalTopic.TopicContent = tpc.Text;
+                            topic.generalTopic.TopicType = tpc.TopicType.ToString();
+                            topic.generalTopic.UrlImgTopic = tpc.ImgUrl;
+                            topic.generalTopic.UrlImgBanner = tpc.UrlCapa;
+                            topic.generalTopic.CountFavorites = db.SelectParam<Nimbus.DB.UserTopicFavorite>(tp => tp.TopicId == topicID && tp.Visible == true).Count();
+                            topic.Exam.Comments = listComments;
+                        }
+                       
+                    }
                 }
 
             }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nimbus.Web.API.Models.Comment;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -10,11 +11,11 @@ namespace Nimbus.Web.API.Models.Topic
     /// </summary>
     public enum TopicType
     {
-        text,
-        video,
-        discussion,
-        exam,
-        add
+        Text,
+        Video,
+        Discussion,
+        Exam,
+        Add
     }
 
     /// <summary>
@@ -28,11 +29,9 @@ namespace Nimbus.Web.API.Models.Topic
     }
 
     public class ShowTopicAPI
-    {
-        public TopicDiscussionAPI Discussion { get; set; }
+    {    
         public TopicExamAPI Exam { get; set; }
-        public TopicTextAPI Text { get; set; }
-        public TopicVideoAPI Video { get; set; }
+        public GeneralTopicAPI generalTopic { get; set; }
     }
 
     /// <summary>
@@ -56,49 +55,18 @@ namespace Nimbus.Web.API.Models.Topic
     /// <summary>
     /// Retorna todas as informações de um tópico de vídeo
     /// </summary>
-    public class TopicVideoAPI
+    public class GeneralTopicAPI
     {
         public int topic_ID {get;set;}
         public string TopicName{get;set;}
-        public TopicType TopicType{get;set;}
-        public string TopicURLVideo {get;set;}
+        public string TopicType{get;set;}
+        public string TopicContent {get;set;}
         public string UrlImgTopic{get;set;}
         public string UrlImgBanner { get; set; }
         public string ShortDescriptionTopic { get; set; }
         public int CountFavorites { get; set; }
         public List<RelatedTopicAPI> RelatedTopicList { get; set; }
-    }
-
-    /// <summary>
-    /// Retorna todas as informações de um tópico de texto
-    /// </summary>
-    public class TopicTextAPI
-    {
-        public int topic_ID { get; set; }
-        public string TopicName { get; set; }
-        public TopicType TopicType { get; set; }
-        public string TopicText { get; set; }
-        public string UrlImgTopic { get; set; }
-        public string UrlImgBanner { get; set; }
-        public string ShortDescriptionTopic { get; set; }
-        public int CountFavorites { get; set; }
-        public List<RelatedTopicAPI> RelatedTopicList { get; set; }
-    }
-
-    /// <summary>
-    /// Retorna todas as informações de um tópico de discussão
-    /// </summary>
-    public class TopicDiscussionAPI
-    {
-        public int topic_ID { get; set; }
-        public string TopicName { get; set; }
-        public TopicType TopicType { get; set; }
-        public string TopicDiscussion { get; set; }
-        public string UrlImgTopic { get; set; }
-        public string UrlImgBanner { get; set; }
-        public string ShortDescriptionTopic { get; set; }
-        public int CountFavorites { get; set; }
-        public List<RelatedTopicAPI> RelatedTopicList { get; set; }
+        public List<CommentAPIModel> Comments { get; set; }
     }
 
     /// <summary>
@@ -108,12 +76,13 @@ namespace Nimbus.Web.API.Models.Topic
     {
         public int topic_ID { get; set; }
         public string TopicName { get; set; }
-        public TopicType TopicType { get; set; }
+        public string TopicType { get; set; }
         public List<QuestionTopicAPI> TopicExam { get; set; }
         public string UrlImgTopic { get; set; }
         public string UrlImgBanner { get; set; }
         public string ShortDescriptionTopic { get; set; }
         public List<RelatedTopicAPI> RelatedTopicList { get; set; }
+        public List<CommentAPIModel> Comments { get; set; }
     }
 
     /// <summary>
@@ -163,15 +132,6 @@ namespace Nimbus.Web.API.Models.Topic
         public string UrlImgTopic{get;set;}
     }
 
-    /// <summary>
-    /// retorna uma lista com os comentários feitos para o tópico
-    /// </summary>
-    public class CommentTopicAPI 
-    {
-        public List<Models.Comment.CommentAPIModel> CommentTopic { get; set; }
-    }
-
-
-
+    
 
 }
