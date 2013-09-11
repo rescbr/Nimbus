@@ -153,7 +153,7 @@ namespace Nimbus.Web.API.Controllers
         /// <param name="topicID"></param>
         /// <returns></returns>
         [NonAction]
-        public bool validarShowTopic(int topicID)
+        public bool validateShowTopic(int topicID)
         {
             bool allow = false; 
             try
@@ -215,11 +215,13 @@ namespace Nimbus.Web.API.Controllers
             {
                 using(var db = DatabaseFactory.OpenDbConnection())
                 {
-                    bool allow = validarShowTopic(topicID);
+                    bool allow = validateShowTopic(topicID);
 
                     if (allow == true)
                     {
                         Topic tpc = db.SelectParam<Nimbus.DB.Topic>(tp => tp.Id == topicID).FirstOrDefault();
+
+                        #region comments
                         List<Comment> comments = db.SelectParam<Nimbus.DB.Comment>(cm => cm.TopicId == topicID && cm.Visible == true);
                         List<CommentAPIModel> listComments = new List<CommentAPIModel>();
                         foreach (Comment item in comments)
@@ -235,31 +237,51 @@ namespace Nimbus.Web.API.Controllers
 
                             listComments.Add(dados);
                         }
+                        #endregion
 
                         if (tpc.TopicType == Nimbus.DB.Enums.TopicType.Exam)
                         {
-                            List<QuestionTopicAPI> listQuestion = new List<QuestionTopicAPI>();
-                                                
-                            foreach (Question item in tpc.Question )
+                            #region exam
+                            //verificar se o usuario já fez o exame
+                            int ChannelID = db.SelectParam<Nimbus.DB.Channel>(ch => ch.Id == tpc.ChannelId).Select(ch => ch.OrganizationId).FirstOrDefault();
+                         
+                            UserExamAPI userExam = validateExam(tpc.Id, ChannelID);
+                            bool isPrivate = db.SelectParam<Nimbus.DB.Channel>(ch => ch.Id == tpc.ChannelId).Select(ch => ch.IsPrivate).FirstOrDefault();
+                            
+                            if (userExam == null || isPrivate == false)
                             {
-                                QuestionTopicAPI question = new QuestionTopicAPI();
-                                question.Question = item.TextQuestion;
-                                question.Options = item.ChoicesAnswer;
-                                listQuestion.Add(question);
-                            }
+                                //se nunca tiver feito o exame, pode fazer. Canal privado = pode limitar. Canal free = sempre aberto 
+                                //caso seja um teste free, o 'bool' já permite refazer
+                                List<QuestionTopicAPI> listQuestion = new List<QuestionTopicAPI>();
 
-                            //TODO topic.Exam.RelatedTopicList = ;
-                            topic.Exam.ShortDescriptionTopic = tpc.Description;
-                            topic.Exam.topic_ID = tpc.Id;
-                            topic.Exam.Questions = listQuestion;
-                            topic.Exam.TopicName = tpc.Title;
-                            topic.Exam.TopicType = tpc.TopicType.ToString();
-                            topic.Exam.UrlImgBanner = tpc.UrlCapa;
-                            topic.Exam.UrlImgTopic = tpc.ImgUrl;
-                            topic.Exam.Comments = listComments;
+                                foreach (Question item in tpc.Question)
+                                {
+                                    QuestionTopicAPI question = new QuestionTopicAPI();
+                                    question.Question = item.TextQuestion;
+                                    question.Options = item.ChoicesAnswer;
+                                    listQuestion.Add(question);
+                                }
+
+                                //TODO topic.Exam.RelatedTopicList = ;
+                                topic.Exam.ShortDescriptionTopic = tpc.Description;
+                                topic.Exam.topic_ID = tpc.Id;
+                                topic.Exam.Questions = listQuestion;
+                                topic.Exam.TopicName = tpc.Title;
+                                topic.Exam.TopicType = tpc.TopicType.ToString();
+                                topic.Exam.UrlImgBanner = tpc.UrlCapa;
+                                topic.Exam.UrlImgTopic = tpc.ImgUrl;
+                                topic.Exam.Comments = listComments;
+                            }
+                            else
+                            {
+                                topic.Exam.examDone = userExam;
+                            }
+                            #endregion
                         }
-                        else if (tpc.TopicType == Nimbus.DB.Enums.TopicType.Exam)
+                        else if ((tpc.TopicType != Nimbus.DB.Enums.TopicType.Exam) 
+                                 && (tpc.TopicType != Nimbus.DB.Enums.TopicType.Add))
                         {
+                            #region topic general
                             //TODO topic.generalTopic.RelatedTopicList = 
                             topic.generalTopic.ShortDescriptionTopic = tpc.Description;
                             topic.generalTopic.topic_ID = tpc.Id;
@@ -270,6 +292,7 @@ namespace Nimbus.Web.API.Controllers
                             topic.generalTopic.UrlImgBanner = tpc.UrlCapa;
                             topic.generalTopic.CountFavorites = db.SelectParam<Nimbus.DB.UserTopicFavorite>(tp => tp.TopicId == topicID && tp.Visible == true).Count();
                             topic.Exam.Comments = listComments;
+                            #endregion
                         }
                        
                     }
@@ -330,6 +353,38 @@ namespace Nimbus.Web.API.Controllers
 
         //TODO: listar tópicos relacionados 
 
+        /// <summary>
+        /// Verifica se o usuario já fez o exame. Se já fez, retornar o objeto com data e nota
+        /// </summary>
+        /// <param name="topicID"></param>
+        /// <param name="organizationID"></param>
+        /// <returns></returns>
+        [NonAction]
+        public UserExamAPI validateExam(int topicID, int organizationID)
+        {
+            UserExamAPI userExam = new UserExamAPI();
+            try
+            {
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {
+                    UserExam exam = new UserExam();                    
+                    exam = db.SelectParam<Nimbus.DB.UserExam>(ex => ex.ExamID == topicID && ex.UserID == NimbusUser.UserId
+                                                                        && ex.OrganizationID == organizationID).FirstOrDefault();
+                    if (exam != null)
+                    {
+                        userExam.dateRealized = exam.RealizedOn;
+                        userExam.ExamID = exam.ExamID;
+                        userExam.Grade = exam.Grade;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                userExam = null;
+                throw ex;
+            }
+            return userExam;
+        }
 
 
 

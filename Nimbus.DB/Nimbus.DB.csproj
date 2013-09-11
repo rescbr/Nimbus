@@ -69,6 +69,7 @@
     <Compile Include="RoleTopic.cs" />
     <Compile Include="TopicReported.cs" />
     <Compile Include="UserChannelReadLater.cs" />
+    <Compile Include="UserExam.cs" />
     <Compile Include="UserReported.cs" />
     <Compile Include="UserBadge.cs" />
     <Compile Include="Comment.cs" />

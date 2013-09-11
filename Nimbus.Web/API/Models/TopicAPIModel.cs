@@ -83,6 +83,7 @@ namespace Nimbus.Web.API.Models.Topic
         public string ShortDescriptionTopic { get; set; }
         public List<RelatedTopicAPI> RelatedTopicList { get; set; }
         public List<CommentAPIModel> Comments { get; set; }
+        public UserExamAPI examDone { get; set; }
     }
 
     /// <summary>
@@ -123,6 +124,15 @@ namespace Nimbus.Web.API.Models.Topic
         public string UrlImgTopic{get;set;}
     }
 
+    /// <summary>
+    /// Método para retornar o aviso que o teste já foi realizado, quando o usuário acessar um tópico do tipo exame
+    /// </summary>
+    public class UserExamAPI
+    {
+        public int Grade { get; set; }
+        public DateTime dateRealized { get; set; }
+        public int ExamID { get; set; }
+    }
     
 
 }
