@@ -8,6 +8,7 @@ using System.Web.Http;
 using ServiceStack.OrmLite;
 using Nimbus.DB;
 using Nimbus.Web.API.Models.Comment;
+using Nimbus.Web.API.Models;
 
 namespace Nimbus.Web.API.Controllers
 {
@@ -145,25 +146,23 @@ namespace Nimbus.Web.API.Controllers
 
             return operation;
         }
-        
-        //abrir o tópico
+
         /// <summary>
-        /// carregar informações gerais de um tópico
+        /// Verifica se o tópico é privado ou pago e se o usuário possui permissão para visualizar o conteúdo
         /// </summary>
+        /// <param name="topicID"></param>
         /// <returns></returns>
-        [Authorize]
-        public ShowTopicAPI showTopic(int topicID)
+        [NonAction]
+        public bool validarShowTopic(int topicID)
         {
-            ShowTopicAPI topic = new ShowTopicAPI();
+            bool allow = false; 
             try
             {
                 //ver permissao p vizualizar => se é pago = ter pagado, se é privado = ser aceito
-                using(var db = DatabaseFactory.OpenDbConnection())
+                using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    bool allow = false;
                     Topic tpc = db.SelectParam<Nimbus.DB.Topic>(tp => tp.Id == topicID).FirstOrDefault();
                     bool chnPrivate = db.SelectParam<Nimbus.DB.Channel>(ch => ch.Id == tpc.ChannelId).Select(ch => ch.IsPrivate).FirstOrDefault();
-
                     if (chnPrivate == false)
                     {
                         allow = true;
@@ -194,9 +193,33 @@ namespace Nimbus.Web.API.Controllers
                             allow = false;
                         }
                     }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return allow;
+        }
+
+        //TODO terminar essa funçao: parte de mostras os topicos relacionados
+        /// <summary>
+        /// carregar informações gerais de um tópico
+        /// </summary>
+        /// <returns></returns>
+        [Authorize]
+        public ShowTopicAPI showTopic(int topicID)
+        {
+            ShowTopicAPI topic = new ShowTopicAPI();
+            try
+            {
+                using(var db = DatabaseFactory.OpenDbConnection())
+                {
+                    bool allow = validarShowTopic(topicID);
 
                     if (allow == true)
                     {
+                        Topic tpc = db.SelectParam<Nimbus.DB.Topic>(tp => tp.Id == topicID).FirstOrDefault();
                         List<Comment> comments = db.SelectParam<Nimbus.DB.Comment>(cm => cm.TopicId == topicID && cm.Visible == true);
                         List<CommentAPIModel> listComments = new List<CommentAPIModel>();
                         foreach (Comment item in comments)
@@ -216,12 +239,19 @@ namespace Nimbus.Web.API.Controllers
                         if (tpc.TopicType == Nimbus.DB.Enums.TopicType.Exam)
                         {
                             List<QuestionTopicAPI> listQuestion = new List<QuestionTopicAPI>();
-                            //TODO listQuestion
+                                                
+                            foreach (Question item in tpc.Question )
+                            {
+                                QuestionTopicAPI question = new QuestionTopicAPI();
+                                question.Question = item.TextQuestion;
+                                question.Options = item.ChoicesAnswer;
+                                listQuestion.Add(question);
+                            }
 
                             //TODO topic.Exam.RelatedTopicList = ;
                             topic.Exam.ShortDescriptionTopic = tpc.Description;
                             topic.Exam.topic_ID = tpc.Id;
-                            topic.Exam.TopicExam = listQuestion;
+                            topic.Exam.Questions = listQuestion;
                             topic.Exam.TopicName = tpc.Title;
                             topic.Exam.TopicType = tpc.TopicType.ToString();
                             topic.Exam.UrlImgBanner = tpc.UrlCapa;
@@ -253,9 +283,53 @@ namespace Nimbus.Web.API.Controllers
             return topic;         
             
         }
-               
-        
+
+        /// <summary>
+        /// Função para pegar os ads por categoria específica ou genérica.
+        /// </summary>
+        /// <param name="idCategory"></param>
+        /// <returns></returns>
+        [Authorize]
+        public List<showAdsAPIModel> showAds(int idCategory)
+        {
+            List<showAdsAPIModel> listAds = new List<showAdsAPIModel>();
+            try
+            {
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {
+                    List<Ad> ads = new List<Ad>();
+                    if (idCategory == -1) //não tem categoria, anuncio generico
+                    {
+                        ads = db.SelectParam<Nimbus.DB.Ad>(ad => ad.Visible == true);                       
+                    }
+                    else
+                    {
+                        ads = db.SelectParam<Nimbus.DB.Ad>(ad => ad.Visible == true && ad.CategoryId == idCategory);
+                    }
+                    foreach (Ad item in ads)
+                    {
+                        showAdsAPIModel dado = new showAdsAPIModel
+                        {
+                            category_id = item.CategoryId,
+                            idAds = item.Id,
+                            ImgUrl = item.ImgUrl,
+                            Url = item.Url
+
+                        };
+                        listAds.Add(dado);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return listAds;
+        }
+
         //TODO: listar tópicos relacionados 
+
 
 
 

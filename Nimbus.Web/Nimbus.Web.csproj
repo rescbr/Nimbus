@@ -81,6 +81,7 @@
     <Compile Include="API\Controllers\ReportAPIController.cs" />
     <Compile Include="API\Controllers\TopicAPIController.cs" />
     <Compile Include="API\Controllers\UserAPIController.cs" />
+    <Compile Include="API\Models\AdsAPIModel.cs" />
     <Compile Include="API\Models\AlertMessageAPIModel.cs" />
     <Compile Include="API\Models\ChannelAPIModel.cs" />
     <Compile Include="API\Models\CommentAPIModel.cs" />

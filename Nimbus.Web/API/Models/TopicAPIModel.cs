@@ -77,7 +77,7 @@ namespace Nimbus.Web.API.Models.Topic
         public int topic_ID { get; set; }
         public string TopicName { get; set; }
         public string TopicType { get; set; }
-        public List<QuestionTopicAPI> TopicExam { get; set; }
+        public List<QuestionTopicAPI> Questions { get; set; }
         public string UrlImgTopic { get; set; }
         public string UrlImgBanner { get; set; }
         public string ShortDescriptionTopic { get; set; }
@@ -107,19 +107,10 @@ namespace Nimbus.Web.API.Models.Topic
     public class QuestionTopicAPI
     {
         public string Question { get; set; }
-        public List<OptionQuestionaPI> Options { get; set; }
+        public Dictionary<int , string> Options { get; set; }
         public int correctOption_ID { get; set; }
-
     }
 
-    /// <summary>
-    /// Todas as opções de uma questão
-    /// </summary>
-    public class OptionQuestionaPI
-    {
-        public string TextOptionQuestion { get; set; }
-        public int question_ID { get; set; }
-    }
 
     /// <summary>
     /// Preenche dados para os tópicos relacionados
