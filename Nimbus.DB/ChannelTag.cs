@@ -7,19 +7,15 @@ using System.Threading.Tasks;
 
 namespace Nimbus.DB
 {
-    //TODO: Terminar
-    public class Ad
+    public class ChannelTag
     {
         [AutoIncrement]
         public int Id { get; set; }
 
-        [References(typeof(Category))]
-        public int CategoryId { get; set; }
+        [References(typeof(Channel))]
+        public int ChannelID { get; set; }
 
-        public string Url { get; set; }
-        public string ImgUrl { get; set; }
+        public string TagName { get; set; }
         public bool Visible { get; set; }
-        public int CountDay { get; set; }
-        public int CountClick { get; set; }
     }
 }

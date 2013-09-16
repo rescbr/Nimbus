@@ -17,19 +17,13 @@ namespace Nimbus.Web.API.Controllers
     {
 
         #region métodos de exibir informações do perfil
-        ///<summary>
-        ///exibir informações perfil visitado
-        /// </summary>
-        public ShowProfile friendProfile(int idUser)
-        {
-
-            return showProfile(idUser);
-        }
 
         ///<summary>
         ///exibir informações perfil usuário logado
         ///</summary>
-        public ShowProfile userProfile()
+        [Authorize]
+        [HttpGet]
+        public ShowProfile showProfile()
         {
             return showProfile(NimbusUser.UserId);
         }
@@ -38,6 +32,7 @@ namespace Nimbus.Web.API.Controllers
         ///método padrão de exibir perfil
         /// </sumary>
         [Authorize]
+        [HttpGet]
         public ShowProfile showProfile(int idUser)
         {
             ShowProfile profile = new ShowProfile();
@@ -75,6 +70,7 @@ namespace Nimbus.Web.API.Controllers
         /// <param name="profile"></param>
         /// <returns>bool</returns>        
         [Authorize]
+        [HttpPost]
         public bool editProfile(EditUserAPIModel profile)
         {
             bool success = false;
@@ -106,32 +102,40 @@ namespace Nimbus.Web.API.Controllers
             return success; 
         }
          
-       
-        //deletar conta
 
-        [HttpPost]
+        [HttpPut]
         public bool createProfile(CreateUserAPIModel newUser)
         {
-            string passwordHash = new Security.PlaintextPassword(newUser.Password).Hash;
-
-            using (var db = DatabaseFactory.OpenDbConnection())
+            bool login = false;
+            try
             {
-                Nimbus.DB.User user = new Nimbus.DB.User()
-                {
-                    FirstName = newUser.FirstName,
-                    LastName = newUser.LastName,
-                    //Falta birthdate
-                    City = newUser.City,
-                    Country = newUser.Country,
-                    Email = newUser.Email,
-                    State = newUser.State,
-                    Password = passwordHash
-                };
+                string passwordHash = new Security.PlaintextPassword(newUser.Password).Hash;
 
-                db.Insert(user);
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {
+                    Nimbus.DB.User user = new Nimbus.DB.User()
+                    {
+                        FirstName = newUser.FirstName,
+                        LastName = newUser.LastName,
+                        BirthDate= newUser.BirthDate,
+                        City = newUser.City,
+                        Country = newUser.Country,
+                        Email = newUser.Email,
+                        State = newUser.State,
+                        Password = passwordHash
+                    };
+
+                    db.Insert(user);
+                    login = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                login = false;
+                throw ex;
             }
 
-            return true;
+            return login;
         }
 
 

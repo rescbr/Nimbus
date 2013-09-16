@@ -22,9 +22,7 @@ namespace Nimbus.Web.API.Models.Message
         public int Channel_ID { get; set; }
         public string Title { get; set; }
         public string Text { get; set; }
-        public int receiver_ID{ get; set; }
     }
-
 
 
 

@@ -25,6 +25,7 @@ namespace Nimbus.DB
         public string Description { get; set; }
         public string ImgUrl { get; set; }
         public DateTime CreatedOn { get; set; }
+        public DateTime LastModification { get; set; }
         public bool OpenToComments { get; set; }
         public bool IsPrivate { get; set; }
         public bool Visible { get; set; }
