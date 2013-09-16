@@ -169,16 +169,24 @@ namespace Nimbus.Web.API.Controllers
         /// </summary>
         /// <returns></returns>
         [Authorize]
-        public List<AbstractChannelAPI> abstractAllChannel()
+        public List<AbstractChannelAPI> abstractAllChannel(int categoryID)
         {
             List<AbstractChannelAPI> listChannel = new List<AbstractChannelAPI>();
             try
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-
-                    List<Nimbus.DB.Channel> chnList = db.Select<Nimbus.DB.Channel>("SELECT Channel.OrganizationId, Channel.Id, Channel.Name, Channel.ImgUrl " +
-                                                                             "FROM Channel WHERE Channel.Visible = true");
+                    List<Nimbus.DB.Channel> chnList = new List<Channel>(); 
+                    if (categoryID > 0)
+                    {
+                        chnList = db.Select<Nimbus.DB.Channel>("SELECT Channel.OrganizationId, Channel.Id, Channel.Name, Channel.ImgUrl " +
+                                                                                 "FROM Channel WHERE Channel.Visible = true AND Channel.CategoryId = {0}", categoryID);
+                    }
+                    else
+                    {
+                        chnList = db.Select<Nimbus.DB.Channel>("SELECT Channel.OrganizationId, Channel.Id, Channel.Name, Channel.ImgUrl " +
+                                                                                 "FROM Channel WHERE Channel.Visible = true");
+                    }
                     foreach (var item in chnList)
                     {
                         AbstractChannelAPI absChannel = new AbstractChannelAPI

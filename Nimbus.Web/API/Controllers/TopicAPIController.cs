@@ -18,21 +18,34 @@ namespace Nimbus.Web.API.Controllers
     public class TopicAPIController : NimbusApiController
     {                
         /// <summary>
-        /// método de exibir tópicos em resumo
+        /// método de exibir tópicos em resumo, filtra por categoriam modificação e popularidade
         /// </summary>
         /// <returns></returns>
         [Authorize]
-        public List<AbstractTopicAPI> abstTopic(int channelID, TopicList viewBy)
+        public List<AbstractTopicAPI> abstTopic(int channelID, TopicList viewBy, int categoryID)
         {
             List<AbstractTopicAPI> list = new List<AbstractTopicAPI>();
             try
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    List<AbstractTopicAPI> tpcList = db.Query<AbstractTopicAPI>("SELECT Topic.Id, Topic.Description, Topic.Title, Topic.TopicType, Topic.ImgUrl, " +
-                                                                                "Topic.LastModified, ViewByTopic.CountView " +
-                                                                                "INNER JOIN ViewByTopic ON ViewByTopic.TopicID = Topic.Id"+
-                                                                                "FROM Topic WHERE Topic.Visible = true && Topic.ChannelId = {0}", channelID);
+                    List<AbstractTopicAPI> tpcList = new List<AbstractTopicAPI>();
+                    if (categoryID > 0)
+                    {
+                        tpcList = db.Query<AbstractTopicAPI>("SELECT Topic.Id, Topic.Description, Topic.Title, Topic.TopicType, Topic.ImgUrl, " +
+                                                                     "Topic.LastModified, ViewByTopic.CountView " +
+                                                                     "INNER JOIN ViewByTopic ON ViewByTopic.TopicID = Topic.Id " +
+                                                                     "INNER JOIN Channel ON Channel.Id = Topic.ChannelId " +
+                                                                     "FROM Topic WHERE Topic.Visible = true AND Topic.ChannelId = @idChannel AND Channel.CategoryId = @idCategory",
+                                                                     new { idChannel = channelID, idCategory = categoryID });
+                    }
+                    else 
+                    {
+                        tpcList = db.Query<AbstractTopicAPI>("SELECT Topic.Id, Topic.Description, Topic.Title, Topic.TopicType, Topic.ImgUrl, " +
+                                                                                    "Topic.LastModified, ViewByTopic.CountView " +
+                                                                                    "INNER JOIN ViewByTopic ON ViewByTopic.TopicID = Topic.Id" +
+                                                                                    "FROM Topic WHERE Topic.Visible = true AND Topic.ChannelId = {0}", channelID);
+                    }
                    
                     foreach (var item in tpcList)
                     {
