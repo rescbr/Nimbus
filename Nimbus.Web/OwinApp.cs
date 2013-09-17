@@ -70,6 +70,11 @@ namespace Nimbus.Web
                 defaults: new { controller = "Login" }
             );
 
+            webApiConfig.Routes.MapHttpRoute(
+                name: "TrendingTopics",
+                routeTemplate: "trendingtopics",
+                defaults: new { controller = "TrendingTopics" }
+            );
 
             webApiConfig.Routes.MapHttpRoute(
                 name: "Home",

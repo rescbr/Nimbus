@@ -75,6 +75,7 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Website\Views\Home.cshtml" />
+    <Content Include="Website\Views\TrendingTopics.cshtml" />
     <None Include="Website\Views\Shared\_Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -103,6 +104,7 @@
     <Compile Include="Security\SecurityUtils.cs" />
     <Compile Include="Security\Token.cs" />
     <Compile Include="Utils.cs" />
+    <Compile Include="Website\Controllers\TrendingTopicsController.cs" />
     <Compile Include="Website\Controllers\HomeController.cs" />
     <Compile Include="Website\Controllers\LoginController.cs" />
     <Compile Include="Website\Controllers\NewAccountController.cs" />
