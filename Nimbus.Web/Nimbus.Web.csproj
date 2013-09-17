@@ -73,6 +73,7 @@
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
+    <None Include="Website\Views\Shared\_Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\Controllers\ChannelAPIController.cs" />
@@ -94,16 +95,18 @@
     <Compile Include="Middleware\NimbusFastViewLocator.cs" />
     <Compile Include="OwinApp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Security\DatabaseLogin.cs" />
     <Compile Include="Security\PasswordHash.cs" />
+    <Compile Include="Security\SecurityUtils.cs" />
     <Compile Include="Security\Token.cs" />
     <Compile Include="Utils.cs" />
+    <Compile Include="Website\Controllers\LoginController.cs" />
     <Compile Include="Website\Controllers\NewAccountController.cs" />
     <Compile Include="Website\Models\LoginModel.cs" />
     <Compile Include="Website\Models\NewAccountModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
-    <Content Include="Admin\Views\Login.cshtml" />
     <Content Include="NimbusSNK.snk" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -113,7 +116,7 @@
     </None>
     <Content Include="Website\Views\Login.cshtml" />
     <Content Include="Website\Views\NewAccount.cshtml" />
-    <Content Include="Website\Views\HttpError.cshtml" />
+    <Content Include="Website\Views\Shared\HttpError.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Dependencies\AspNetWebStack\System.Net.Http.Formatting\System.Net.Http.Formatting.csproj">
@@ -156,6 +159,7 @@
   <ItemGroup>
     <Folder Include="Admin\Controllers\" />
     <Folder Include="Admin\Models\" />
+    <Folder Include="Admin\Views\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

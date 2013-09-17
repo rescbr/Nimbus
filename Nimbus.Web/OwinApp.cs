@@ -32,7 +32,7 @@ namespace Nimbus.Web
         {
             _nimbusAppBus = nimbusAppBus;
 
-            //app.Use(typeof(Middleware.Authentication), _nimbusAppBus);
+            app.Use(typeof(Middleware.Authentication), _nimbusAppBus);
             app.UseErrorPage();
 
             app.Properties["host.AppName"] = "Nimbus";
@@ -62,7 +62,13 @@ namespace Nimbus.Web
                 routeTemplate: "newaccount",
                 defaults: new { controller = "NewAccount" }
             );
-            
+
+            webApiConfig.Routes.MapHttpRoute(
+                name: "Login",
+                routeTemplate: "login",
+                defaults: new { controller = "Login" }
+            );
+
             app.UseWebApi(webApiConfig);
             
             //Owin.AppBuilderExtensions.Run(

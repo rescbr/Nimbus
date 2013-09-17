@@ -23,16 +23,10 @@ namespace Nimbus.Web.Website.Controllers
 
                 //verifica se a senha está correta
                 if (newAccount.Password == newAccount.ConfirmPassword)
-                {
-                    /* AVISO A QUEM PEGAR ESSE CÓDIGO COMO EXEMPLO!
-                     * Não são todos os métodos que podem ser chamados diretamente! 
-                     * TODO: criar clone de request
-                     */
-                    
+                {             
+       
+                    /* Quando for usar uma API internamente, faça o clone antes. */
                     var userapi = ClonedContextInstance<API.Controllers.UserAPIController>();
-                    //var userapi = new API.Controllers.UserAPIController();
-                    //userapi.ControllerContext = this.ControllerContext;
-
                     var newUser = new Nimbus.Web.API.Models.User.CreateUserAPIModel()
                     {
                         City = newAccount.City,

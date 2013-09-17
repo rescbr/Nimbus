@@ -24,29 +24,31 @@ namespace Nimbus.Web.Middleware
         {
             var request = context.Request;
             var response = context.Response;
-            //Caso o WebAPI informe que é necessário autenticar...
-            /*request.OnSendingHeaders(state =>
-            {
-                var resp = (IOwinResponse)state;
 
-                if (resp.StatusCode == 401)
-                    FailLoginRequest(ref resp); //TODO: Pegar path de retorno do login
-            }, response);*/
+            response.OnSendingHeaders((c) =>
+            {
+                var ctx = (IOwinContext)c;
+                if (ctx.Response.StatusCode == 401)
+                {
+                    //apenas faz o redirecionamento caso a request seja de um browser
+                    if (ctx.Request.Accept.Contains("text/html"))
+                    {
+                        string originalUrl = ctx.Request.Uri.PathAndQuery;
+                        //string hmac = Security.SecurityUtils.SmallHmac(_nimbusAppBus, originalUrl); 
+                        ctx.Response.Redirect(String.Format("/login?redirect={0}", Uri.EscapeDataString(originalUrl)));
+                    }
+                    //senão continua com o 401
+                }
+            }, context);
 
             //Lê Cookie
             var cookies = context.Request.Cookies;
-            string sessionToken = null;
-            try
-            {
-                sessionToken = Uri.UnescapeDataString(cookies["nsc-session"]);
-            }
-            catch (Exception)
-            {
-                FailLoginRequest(ref response);
-            }
+            string sessionToken = cookies["nsc-session"];
 
             if (sessionToken != null)
             {
+                sessionToken = Uri.UnescapeDataString(sessionToken);
+
                 Guid tokenGuid;
                 NSCInfo info;
                 if (VerifyToken(sessionToken, out tokenGuid, out info))
@@ -57,7 +59,8 @@ namespace Nimbus.Web.Middleware
                         //TODO!
                         //pega o NimbusUser
                         //algo como NimbusAppBus.Cache.SessionCache etc
-                        var identity = new NimbusUser() { 
+                        var identity = new NimbusUser()
+                        {
                             AvatarUrl = "avatar.png",
                             Name = "Eusébio Testoso",
                             UserId = 1,
@@ -66,26 +69,15 @@ namespace Nimbus.Web.Middleware
                         //request.User = new ClaimsPrincipal(identity);
                         request.User = (IPrincipal)(new NimbusPrincipal(identity));
                     }
-                    else FailLoginRequest(ref response); //token velho
+                    else { } //token velho
                 }
-                else FailLoginRequest(ref response); //token inválido
+                else { } //token inválido
             }
-            else FailLoginRequest(ref response); //token = null
+            else { } //token = null
 
             await Next.Invoke(context);
 
-            //Mesma coisa que o OnSendingHeaders(?)
-            if (context.Response.StatusCode == 401)
-            {
-                var resp = context.Response;
-                FailLoginRequest(ref resp);
-            }
-        }
 
-        private void FailLoginRequest(ref IOwinResponse response)
-        {
-            //TODO: Colocar endereço de retorno
-            response.Redirect("/login");
         }
 
         private string GenerateToken(int userId, out Guid tokenGuid)

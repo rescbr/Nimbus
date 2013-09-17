@@ -1,10 +1,26 @@
-﻿@model Nimbus.Web.API.Models.Channel.AbstractChannelAPI
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <title></title>
-</head>
-<body>
-    Cookie: @Model.
-</body>
-</html>
+﻿@model Nimbus.Web.Website.Models.LoginModel
+@{Layout = "~/Website/Views/Shared/_Layout.cshtml";}
+
+<h2>Login</h2>
+
+<form id="loginForm" method="post" action="/login"
+    enctype="application/x-www-form-urlencoded">
+
+
+    @if (Model.ErrorMessage != null)
+    {
+        <div><h3>@Model.ErrorMessage</h3></div>
+    }
+
+    <label for="Email">E-mail</label>
+    <input name="Email" type="text" value="@Model.Email" /> <br />
+
+    <label for="Password">Password</label>
+    <input name="Password" type="password" /><br />
+
+    <input name="RedirectURL" type="hidden" value="@Model.RedirectURL" />
+    
+
+    <input type="submit" value="Submit" />
+
+</form>
