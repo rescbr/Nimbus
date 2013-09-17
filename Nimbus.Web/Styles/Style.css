@@ -1,0 +1,290 @@
+﻿/* === CSS RESET === */
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+	margin:             0;
+	padding:            0;
+	border:             0;
+	font-size:          1em;
+	font:               inherit;
+	vertical-align:     baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+	display:            block;
+}
+body {
+	line-height:        1;
+}
+ol, ul {
+	list-style:         none;
+}
+blockquote, q {
+	quotes:             none;
+}
+blockquote:before, blockquote:after, q:before, q:after {
+	content:            '';
+	content:            none;
+}
+table {
+	border-collapse:    collapse;
+	border-spacing:     0;
+}
+/* === End of CSS RESET === */
+
+
+body {
+	background:         #FFFFFF;
+	background-size:    auto;
+	color:              #000000;
+	font-size:          1em;
+	font-family:        tahoma, sans-serif;
+	overflow:           hidden;
+	width:              100%;
+	height:             auto;
+}
+
+h1, h2, em, a, a:link, a:visited, a:hover, a:active{
+	color:              #000000;
+	text-decoration:    none;
+}
+
+a, a:link, a:visited, a:hover, a:active {
+	font-weight:        bold;
+}
+
+a:hover {
+	color:              #000000;
+}
+
+::selection {
+	color:              #FFFFFF;
+	background:         #BE1E2D;
+}
+
+h1 {
+
+	font-size:          1.7em;
+	text-align:         left;
+}
+
+p {
+	color:              #000000;
+	text-align:         justify;
+}
+
+/*------------------ começo header --------------------*/
+
+#header {
+	position:           fixed;
+	width:              100%;
+	height:             48px;
+	top:                0px;
+	left:               0px;
+}
+
+.container {
+	width:              960px;
+	height:             48px;
+	margin:             0 auto;
+	border:             2px solid #BE1E2D;
+	clear:              both;
+	line-height:        3em;
+}
+
+nav.logo {
+	width:              192px;
+	height:             48px;
+	float:              left;
+}
+
+div.userlogo {
+	margin-top:         5px;
+	margin-left:        30px;
+	margin-right:       10px;
+    height:             35px;
+    width:              35px;
+    border-radius:      100%;
+    background-color:   #BE1E2D;
+    float:              left;
+}
+
+nav.center {
+	font-weight:        bold;
+	left:               240px;
+	display:            inline;
+}
+
+.center, ul.sbs, ul.sbs li {
+	text-align:         center;
+	display:            inline-block;
+	float:              left;
+}
+
+.center li {
+	width:              96px;
+}
+
+nav.right {
+	display:            inline-block;
+	float:              right;
+	margin-right:       96px;
+}
+
+div.userpic {
+	margin-top:         5px;
+	margin-left:        30px;
+	margin-right:       10px;
+    height:             35px;
+    width:              35px;
+    border:             1px solid #BE1E2D;
+    border-radius:      100%;
+    background-color:   #FFFFFF;
+    float:              left;
+}
+
+div.exitbutton {
+	display:            inline-block;
+	text-align:         center;
+	font-weight:        bold;
+	float:              left;
+	margin-top:         30px;
+	line-height:        15px;
+    height:             15px;
+    width:              15px;
+    border-radius:      100%;
+    background-color:   #BE1E2D;
+}
+
+.center li {
+	width:              100px;
+}
+
+/*------------------ fim header --------------------*/
+
+/*------------------ começo middle --------------------*/
+
+/*
+.wrapper {
+    position:           absolute;
+	width:              100%;
+	top:                48px;
+	left:               0px;
+}
+
+div.container-body {
+	width:              960px;
+	margin:             0 auto;
+	border:             2px solid #BE1E2D;
+	line-height:        3em;
+    top:                48px;
+}
+*/
+
+
+.wrapper {
+	position:           absolute;
+	width:              100%;
+	height:             300px;
+	top:                48px;
+	left:               0px;
+}
+
+.container-body {
+	width:              960px;
+	height:             300px;
+	margin:             0 auto;
+	clear:              none;
+	line-height:        2em;
+}
+
+
+.middle-body {
+	margin:             48px;
+}
+
+
+/*------------------ Trending Topics começo --------------------*/
+
+.content-top {
+	margin-top:         96px;
+	height:             24px;
+}
+
+.cont-left {
+	float:              left;
+}
+
+.cont-left h1 {
+	font-size:          1.5em;
+
+}
+
+.cont-right {
+	float:              right;
+}
+
+.cont-right li {
+	margin-left:        24px;
+	margin-right:       24px;
+}
+
+select.sel{
+	background:         transparent;
+	height:             24px;
+	width:              168px;
+	padding-left:       10px;
+	padding-right:      10px;
+	border:             1px solid #BE1E2D;
+	border-radius:      10px;
+	line-height:        1em;
+	font-size:          0.8em;
+}
+
+.c-lista {
+	margin-top:         8px;
+}
+
+.ret1, .ret2 {
+	margin:             2px;
+	background-color:   #FFFFFF;
+	height:             5px;
+	width:              15px;
+	border:             1px solid #BE1E2D;
+}
+
+.c-grade {
+	margin-top:         8px;
+	width:              24px;
+	height:             24px;
+}
+
+.quad1, .quad2, .quad3, .quad4 {
+	position:           absolute;
+	background-color:   #BE1E2D;
+	height:             5px;
+	width:              5px;
+	border:             1px solid #BE1E2D;
+}
+
+.quad1 {
+	margin-top:         0;
+	margin-left:        0;
+}
+
+.quad2 {
+	margin-top:         0;
+	margin-left:        8px;
+}
+
+.quad3 {
+	margin-top:         8px;
+	margin-left:        0;
+}
+
+.quad4 {
+	margin-top:         8px;
+	margin-left:        8px;
+}
+
+/*------------------ Trending Topics fim --------------------*/
+
+/*------------------ fim middle --------------------*/

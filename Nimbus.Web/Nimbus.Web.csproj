@@ -70,9 +70,11 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Styles\Style.css" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Website\Views\Home.cshtml" />
     <None Include="Website\Views\Shared\_Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -101,6 +103,7 @@
     <Compile Include="Security\SecurityUtils.cs" />
     <Compile Include="Security\Token.cs" />
     <Compile Include="Utils.cs" />
+    <Compile Include="Website\Controllers\HomeController.cs" />
     <Compile Include="Website\Controllers\LoginController.cs" />
     <Compile Include="Website\Controllers\NewAccountController.cs" />
     <Compile Include="Website\Models\LoginModel.cs" />
@@ -165,6 +168,7 @@
     <Folder Include="Admin\Controllers\" />
     <Folder Include="Admin\Models\" />
     <Folder Include="Admin\Views\" />
+    <Folder Include="Scripts\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

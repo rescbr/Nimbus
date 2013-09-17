@@ -70,6 +70,14 @@ namespace Nimbus.Web
                 defaults: new { controller = "Login" }
             );
 
+
+            webApiConfig.Routes.MapHttpRoute(
+                name: "Home",
+                routeTemplate: "",
+                defaults: new { controller = "Home" }
+            );
+
+
             app.UseWebApi(webApiConfig);
 
             app.UseStaticFiles(GetPhysicalSiteRootPath());
