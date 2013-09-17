@@ -18,6 +18,7 @@ namespace Nimbus.Web
     using WebApiContrib.Formatting.Razor;
     using Nimbus.Web.Middleware;
     using System.Web.Http.Filters;
+    using System.Reflection;
     
     
     public class NimbusOwinApp : INimbusOwinApp
@@ -70,7 +71,10 @@ namespace Nimbus.Web
             );
 
             app.UseWebApi(webApiConfig);
+
+            app.UseStaticFiles(GetPhysicalSiteRootPath());
             
+
             //Owin.AppBuilderExtensions.Run(
             //app
                 //.UseWebApi(webApiConfig)
@@ -144,6 +148,16 @@ namespace Nimbus.Web
         // </summary>
         private struct AsyncVoid
         {
+        }
+
+
+        internal static string GetPhysicalSiteRootPath()
+        {
+            return Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase)
+                       .Replace("file:\\", string.Empty)
+                       .Replace("\\bin", string.Empty)
+                       .Replace("\\Debug", string.Empty)
+                       .Replace("\\Release", string.Empty);
         }
     }
 }
