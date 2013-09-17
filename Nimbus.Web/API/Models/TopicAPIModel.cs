@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nimbus.Web.API.Models.Comment;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -10,11 +11,27 @@ namespace Nimbus.Web.API.Models.Topic
     /// </summary>
     public enum TopicType
     {
-        text,
-        video,
-        discussion,
-        exam,
-        add
+        Text,
+        Video,
+        Discussion,
+        Exam,
+        Add
+    }
+
+    /// <summary>
+    /// Tipo de visualizações dos tópicos de um canal
+    /// </summary>
+    public enum TopicList
+    {
+        byAll,
+        byModified,
+        byPopularity
+    }
+
+    public class ShowTopicAPI
+    {    
+        public TopicExamAPI Exam { get; set; }
+        public GeneralTopicAPI generalTopic { get; set; }
     }
 
     /// <summary>
@@ -38,49 +55,18 @@ namespace Nimbus.Web.API.Models.Topic
     /// <summary>
     /// Retorna todas as informações de um tópico de vídeo
     /// </summary>
-    public class TopicVideoAPI
+    public class GeneralTopicAPI
     {
         public int topic_ID {get;set;}
         public string TopicName{get;set;}
-        public TopicType TopicType{get;set;}
-        public string TopicURLVideo {get;set;}
+        public string TopicType{get;set;}
+        public string TopicContent {get;set;}
         public string UrlImgTopic{get;set;}
         public string UrlImgBanner { get; set; }
         public string ShortDescriptionTopic { get; set; }
         public int CountFavorites { get; set; }
         public List<RelatedTopicAPI> RelatedTopicList { get; set; }
-    }
-
-    /// <summary>
-    /// Retorna todas as informações de um tópico de texto
-    /// </summary>
-    public class TopicTextAPI
-    {
-        public int topic_ID { get; set; }
-        public string TopicName { get; set; }
-        public TopicType TopicType { get; set; }
-        public string TopicText { get; set; }
-        public string UrlImgTopic { get; set; }
-        public string UrlImgBanner { get; set; }
-        public string ShortDescriptionTopic { get; set; }
-        public int CountFavorites { get; set; }
-        public List<RelatedTopicAPI> RelatedTopicList { get; set; }
-    }
-
-    /// <summary>
-    /// Retorna todas as informações de um tópico de discussão
-    /// </summary>
-    public class TopicDiscussionAPI
-    {
-        public int topic_ID { get; set; }
-        public string TopicName { get; set; }
-        public TopicType TopicType { get; set; }
-        public string TopicDiscussion { get; set; }
-        public string UrlImgTopic { get; set; }
-        public string UrlImgBanner { get; set; }
-        public string ShortDescriptionTopic { get; set; }
-        public int CountFavorites { get; set; }
-        public List<RelatedTopicAPI> RelatedTopicList { get; set; }
+        public List<CommentAPIModel> Comments { get; set; }
     }
 
     /// <summary>
@@ -90,12 +76,14 @@ namespace Nimbus.Web.API.Models.Topic
     {
         public int topic_ID { get; set; }
         public string TopicName { get; set; }
-        public TopicType TopicType { get; set; }
-        public List<QuestionTopicAPI> TopicExam { get; set; }
+        public string TopicType { get; set; }
+        public List<QuestionTopicAPI> Questions { get; set; }
         public string UrlImgTopic { get; set; }
         public string UrlImgBanner { get; set; }
         public string ShortDescriptionTopic { get; set; }
         public List<RelatedTopicAPI> RelatedTopicList { get; set; }
+        public List<CommentAPIModel> Comments { get; set; }
+        public UserExamAPI examDone { get; set; }
     }
 
     /// <summary>
@@ -108,7 +96,10 @@ namespace Nimbus.Web.API.Models.Topic
         public int topic_ID { get; set; }
         public string UrlImgTopic { get; set; }
         public string shortTextTopic { get; set; }
-        public string UrlAdd { get; set; }
+        public string Title { get; set; }
+        public string Type { get; set; }
+        public int Count { get; set; }
+        public DateTime ModifiedOn { get; set; }
     }
     
     /// <summary>
@@ -117,19 +108,10 @@ namespace Nimbus.Web.API.Models.Topic
     public class QuestionTopicAPI
     {
         public string Question { get; set; }
-        public List<OptionQuestionaPI> Options { get; set; }
+        public Dictionary<int , string> Options { get; set; }
         public int correctOption_ID { get; set; }
-
     }
 
-    /// <summary>
-    /// Todas as opções de uma questão
-    /// </summary>
-    public class OptionQuestionaPI
-    {
-        public string TextOptionQuestion { get; set; }
-        public int question_ID { get; set; }
-    }
 
     /// <summary>
     /// Preenche dados para os tópicos relacionados
@@ -143,14 +125,14 @@ namespace Nimbus.Web.API.Models.Topic
     }
 
     /// <summary>
-    /// retorna uma lista com os comentários feitos para o tópico
+    /// Método para retornar o aviso que o teste já foi realizado, quando o usuário acessar um tópico do tipo exame
     /// </summary>
-    public class CommentTopicAPI 
+    public class UserExamAPI
     {
-        public List<Models.Comment.CommentAPIModel> CommentTopic { get; set; }
+        public int Grade { get; set; }
+        public DateTime dateRealized { get; set; }
+        public int ExamID { get; set; }
     }
-
-
-
+    
 
 }

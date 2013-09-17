@@ -19,7 +19,7 @@ namespace Nimbus.DB
         [References(typeof(Topic))]
         public int TopicId { get; set; }
 
-        public DateTime Date { get; set; }
-        public DateTime ReadOn { get; set; }
+        public bool Visible { get; set; }
+        public DateTime? ReadOn { get; set; }
     }
 }

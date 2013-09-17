@@ -7,12 +7,11 @@ using System.Threading.Tasks;
 
 namespace Nimbus.DB
 {
-    public class OrganizationUser
+    public class ViewByTopic
     {
-        [References(typeof(User))]
-        public int UserId { get; set; }
+        [References (typeof(Topic))]
+        public int TopicID { get; set; }
 
-        [References(typeof(Organization))]
-        public int OrganizationId { get; set; }
+        public int CountView { get; set; }
     }
 }

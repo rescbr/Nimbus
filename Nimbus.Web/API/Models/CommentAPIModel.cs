@@ -10,7 +10,6 @@ namespace Nimbus.Web.API.Models.Comment
     /// </summary>
     public class CommentAPIModel
     {
-        public int Id { get; set; }
         public string AvatarUrl { get; set; }
         public string Name { get; set; }
 
