@@ -125,4 +125,9 @@ namespace Nimbus.Web.API.Models.Channel
         public int IdUser { get; set; }
         public bool? isAccept { get; set; }
     }
+
+    public class InteractionAPI
+    {
+        public int UserID { get; set; }
+    }
 }
