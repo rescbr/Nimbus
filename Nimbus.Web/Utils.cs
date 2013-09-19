@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Nimbus.DB;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Script.Serialization;
+using ServiceStack.OrmLite;
 
 namespace Nimbus.Web
 {
@@ -63,5 +65,7 @@ namespace Nimbus.Web
                 get { return new[] { typeof(byte[]) }; }
             }
         }
+
+       
     }
 }

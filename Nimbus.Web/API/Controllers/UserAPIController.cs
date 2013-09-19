@@ -43,7 +43,7 @@ namespace Nimbus.Web.API.Controllers
                     var user = db.SelectParam<Nimbus.DB.User>(usr => usr.Id == idUser).FirstOrDefault();
                     profile.user_ID = user.Id;
                     profile.UrlImg = user.AvatarUrl;
-                    profile.Name = user.FirstName; //TODO: Arrumar aqui =p
+                    profile.Name = user.FirstName + " " + user.LastName;
                     profile.BirthDate = (DateTime.Now - user.BirthDate).ToString();
                     profile.City = user.City;
                     profile.State = user.State;
