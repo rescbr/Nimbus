@@ -73,6 +73,7 @@
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
+    <None Include="Website\Views\Shared\_Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\Controllers\ChannelAPIController.cs" />
@@ -95,16 +96,18 @@
     <Compile Include="Middleware\NimbusFastViewLocator.cs" />
     <Compile Include="OwinApp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Security\DatabaseLogin.cs" />
     <Compile Include="Security\PasswordHash.cs" />
+    <Compile Include="Security\SecurityUtils.cs" />
     <Compile Include="Security\Token.cs" />
     <Compile Include="Utils.cs" />
+    <Compile Include="Website\Controllers\LoginController.cs" />
     <Compile Include="Website\Controllers\NewAccountController.cs" />
     <Compile Include="Website\Models\LoginModel.cs" />
     <Compile Include="Website\Models\NewAccountModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
-    <Content Include="Admin\Views\Login.cshtml" />
     <Content Include="NimbusSNK.snk" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -114,7 +117,7 @@
     </None>
     <Content Include="Website\Views\Login.cshtml" />
     <Content Include="Website\Views\NewAccount.cshtml" />
-    <Content Include="Website\Views\HttpError.cshtml" />
+    <Content Include="Website\Views\Shared\HttpError.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Dependencies\AspNetWebStack\System.Net.Http.Formatting\System.Net.Http.Formatting.csproj">
@@ -132,6 +135,10 @@
     <ProjectReference Include="..\Dependencies\Microsoft.Owin.Diagnostics\Microsoft.Owin.Diagnostics.csproj">
       <Project>{670915f7-f111-42ff-b004-39379a9d5951}</Project>
       <Name>Microsoft.Owin.Diagnostics</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Dependencies\Microsoft.Owin.StaticFiles\Microsoft.Owin.StaticFiles.csproj">
+      <Project>{f31a42db-2f57-4dac-b2bc-106f2d6f3c82}</Project>
+      <Name>Microsoft.Owin.StaticFiles</Name>
     </ProjectReference>
     <ProjectReference Include="..\Dependencies\Microsoft.Owin\Microsoft.Owin.Net45.csproj">
       <Project>{0db69cae-b0bc-4688-9467-66b4c1023d3f}</Project>
@@ -157,6 +164,7 @@
   <ItemGroup>
     <Folder Include="Admin\Controllers\" />
     <Folder Include="Admin\Models\" />
+    <Folder Include="Admin\Views\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -123,5 +123,6 @@ namespace Nimbus.Web.Security
     {
         public int UserId { get; set; }
         public DateTime TokenGenerationDate { get; set; }
+        public DateTime TokenExpirationDate { get; set; }
     }
 }
