@@ -10,6 +10,7 @@ namespace Nimbus.Web.API
 {
     public class NimbusApiController : ApiController
     {
+
         /// <summary>
         /// Obtém o NimbusAppBus contexto OwinApp.
         /// </summary>
@@ -36,6 +37,7 @@ namespace Nimbus.Web.API
             }
         }
 
+        private IDbConnectionFactory _databaseFactory;
         /// <summary>
         /// Obtém a DatabaseFactory a partir das configurações no NimbusAppBus.
         /// </summary>
@@ -43,9 +45,16 @@ namespace Nimbus.Web.API
         {
             get
             {
-                return new OrmLiteConnectionFactory
+                if(_databaseFactory != null)
+                    return _databaseFactory;
+                else
+                    return new OrmLiteConnectionFactory
                     (NimbusAppBus.Settings.DatabaseConnectionString,
                     SqlServerDialect.Provider);
+            }
+            set
+            {
+                _databaseFactory = value;
             }
         }
 

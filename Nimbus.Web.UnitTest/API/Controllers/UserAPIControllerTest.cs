@@ -2,16 +2,31 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nimbus.Web.API.Controllers;
 using Nimbus.Web.API.Models.User;
+using Nimbus.Plumbing;
+using Nimbus.Plumbing.Interface;
+using System.Web.Http;
+using System.Web.Http.Routing;
+using System.Web.Http.Hosting;
+using System.Net.Http;
+using System.Net;
+using System.Threading;
+using ServiceStack.OrmLite;
 
 namespace Nimbus.Web.UnitTest
 {
     [TestClass]
     public class UserAPIControllerTest
     {
+        [TestInitialize]
+        public void UserAPIControllerTest_Initialize()
+        {
+        }
+
         [TestMethod]
         public void User_RegisterTest()
         {
-            UserAPIController userAPI = new UserAPIController();
+            var controller = new UserAPIController();
+
             CreateUserAPIModel model = new CreateUserAPIModel();
 
             model.BirthDate = DateTime.Now;
@@ -24,7 +39,11 @@ namespace Nimbus.Web.UnitTest
             model.Password = "123123";
             model.State = "SP";
 
-            userAPI.createProfile(model);
+            var response = controller.createProfile(model);
+
+            Assert.AreEqual(HttpStatusCode.Created, true);
+
         }
+        
     }
 }
