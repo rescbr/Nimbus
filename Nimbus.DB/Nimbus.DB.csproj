@@ -65,7 +65,10 @@
     <Compile Include="ChannelUser.cs" />
     <Compile Include="CommentReported.cs" />
     <Compile Include="Message.cs" />
+    <Compile Include="Premium.cs" />
+    <Compile Include="PremiumUser.cs" />
     <Compile Include="ReceiverMessage.cs" />
+    <Compile Include="RoleOrganization.cs" />
     <Compile Include="RoleTopic.cs" />
     <Compile Include="TopicReported.cs" />
     <Compile Include="UserChannelReadLater.cs" />
