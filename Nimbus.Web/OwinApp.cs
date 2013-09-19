@@ -33,9 +33,9 @@ namespace Nimbus.Web
         {
             _nimbusAppBus = nimbusAppBus;
 
-            app.Use(typeof(Middleware.Authentication), _nimbusAppBus);
             app.UseErrorPage();
-
+            app.Use(typeof(Middleware.Authentication), _nimbusAppBus);
+            
             app.Properties["host.AppName"] = "Nimbus";
 
             //WebAPI
