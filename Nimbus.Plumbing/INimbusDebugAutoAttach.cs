@@ -1,5 +1,5 @@
 ﻿using System;
-namespace Nimbus.Plumbing.Interface
+namespace Nimbus.Plumbing
 {
     public interface INimbusDebugAutoAttach
     {

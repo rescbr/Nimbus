@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nimbus.Plumbing.Interface
+namespace Nimbus.Plumbing
 {
     public class NimbusSettings
     {

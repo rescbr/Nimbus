@@ -1,4 +1,4 @@
-﻿using Nimbus.Plumbing.Interface;
+﻿using Nimbus.Plumbing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,24 +7,32 @@ using System.Threading.Tasks;
 
 namespace Nimbus.Plumbing
 {
-    public class NimbusAppBus : Nimbus.Plumbing.Interface.INimbusAppBus
+    public class NimbusAppBus
     {
+        private static NimbusAppBus _instance = null;
+        public static NimbusAppBus Instance
+        {
+            get
+            {
+                if (_instance == null) throw new Exception("Run Init() first.");
+                return _instance;
+            }
+        }
+
+        private NimbusAppBus() { }
+
         private NimbusSettings _settings;
         public NimbusSettings Settings
         {
             get { return _settings; }
+            private set { _settings = value; }
         }
 
-        private INimbusDebugAutoAttach _nimbusDebugAutoAttach;
-        public INimbusDebugAutoAttach NimbusDebugAutoAttach
+        public static void Init(NimbusSettings settings)
         {
-            get { return _nimbusDebugAutoAttach; }
-        }
-
-        public NimbusAppBus(NimbusSettings settings)
-        {
-            _settings = settings;
-            _nimbusDebugAutoAttach = new NimbusDebugAutoAttach(this);
+            if (_instance != null) throw new Exception("NimbusAppBus was already initialized.");
+            _instance = new NimbusAppBus();
+            _instance.Settings = settings;
         }
     }
 }

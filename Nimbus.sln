@@ -14,13 +14,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{E53276
 		.nuget\packages.config = .nuget\packages.config
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nimbus.Plumbing", "Nimbus.Plumbing\Nimbus.Plumbing.csproj", "{89FAE4C8-11E0-4CC0-A0E3-4FFDB400C511}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nimbus.Startup", "Nimbus.Startup\Nimbus.Startup.csproj", "{89FAE4C8-11E0-4CC0-A0E3-4FFDB400C511}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LowLevel", "LowLevel", "{D91FCAA8-07BC-4514-959A-26937409713A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nimbus.Web", "Nimbus.Web\Nimbus.Web.csproj", "{88D9068C-E0CB-4FE5-84EB-4278ACEA5808}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nimbus.Plumbing.Interface", "Nimbus.Plumbing.Interface\Nimbus.Plumbing.Interface.csproj", "{C28F8F7A-C5A2-4CB4-92B1-9507A87D5FFE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nimbus.Plumbing", "Nimbus.Plumbing\Nimbus.Plumbing.csproj", "{C28F8F7A-C5A2-4CB4-92B1-9507A87D5FFE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nimbus.DB", "Nimbus.DB\Nimbus.DB.csproj", "{0D485FA6-60BC-410C-B437-37A7C47CDB70}"
 EndProject

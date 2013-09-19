@@ -6,7 +6,7 @@ using System.Threading;
 using CommandLine;
 using CommandLine.Text;
 using Nimbus.Plumbing;
-using Nimbus.Plumbing.Interface;
+using Nimbus.Plumbing;
 using System.IO;
 
 namespace Nimbus
@@ -85,7 +85,8 @@ namespace Nimbus
                     NimbusSettings = ns
                 };
 
-                NimbusStartup.Init(initOptions);
+                var nimbusStartup = new NimbusStartup();
+                nimbusStartup.Init(initOptions);
 
                 if (cmdline.SleepMode) Thread.Sleep(Timeout.Infinite);
                 else

@@ -1,4 +1,4 @@
-﻿using Nimbus.Plumbing.Interface;
+﻿using Nimbus.Plumbing;
 using ServiceStack.Text;
 using System;
 using System.Collections.Generic;
@@ -22,8 +22,9 @@ namespace Nimbus.Web.Security
         /// <param name="info">dados do usuário NSCInfo</param>
         /// <param name="tokenGuid">saída da GUID gerada (Session ID)</param>
         /// <returns>string nsc:1: contendo o token</returns>
-        public static string GenerateToken(INimbusAppBus nimbusAppBus, NSCInfo info, out Guid tokenGuid)
+        public static string GenerateToken(NSCInfo info, out Guid tokenGuid)
         {
+            var nimbusAppBus = NimbusAppBus.Instance;
 
             Guid token = Guid.NewGuid();
 
@@ -65,8 +66,10 @@ namespace Nimbus.Web.Security
         /// <param name="tokenGuid">saída contendo a GUID do token (Session ID)</param>
         /// <param name="info">saída contendo NSCInfo com dados do usuário</param>
         /// <returns></returns>
-        public static bool VerifyToken(INimbusAppBus nimbusAppBus, string token, out Guid tokenGuid, out NSCInfo info)
+        public static bool VerifyToken(string token, out Guid tokenGuid, out NSCInfo info)
         {
+            var nimbusAppBus = NimbusAppBus.Instance;
+
             tokenGuid = Guid.Empty;
             info = null;
 

@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Nimbus.Plumbing.Interface")]
+[assembly: AssemblyTitle("Nimbus.Plumbing")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Nimbus.Plumbing.Interface")]
+[assembly: AssemblyProduct("Nimbus.Plumbing")]
 [assembly: AssemblyCopyright("Copyright ©  2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("44dd79ab-e184-4bdc-a99a-e0794424e99c")]
+[assembly: Guid("e1fe0041-6a4f-4cb2-9482-dbca9dd949a1")]
 
 // Version information for an assembly consists of the following four values:
 //

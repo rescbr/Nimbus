@@ -49,7 +49,7 @@ namespace Nimbus.Web.Website.Controllers
                     Guid token;
 
                     //Cria token com validade de 7 dias
-                    string authToken = Token.GenerateToken(NimbusAppBus,
+                    string authToken = Token.GenerateToken(
                         new NSCInfo()
                         {
                             TokenGenerationDate = DateTime.Now.ToUniversalTime(),

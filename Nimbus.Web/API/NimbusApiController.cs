@@ -1,4 +1,4 @@
-﻿using Nimbus.Plumbing.Interface;
+﻿using Nimbus.Plumbing;
 using ServiceStack.OrmLite;
 using System;
 using System.Collections.Generic;
@@ -10,16 +10,6 @@ namespace Nimbus.Web.API
 {
     public class NimbusApiController : ApiController
     {
-        /// <summary>
-        /// Obtém o NimbusAppBus contexto OwinApp.
-        /// </summary>
-        public INimbusAppBus NimbusAppBus
-        {
-            get
-            {
-                return base.Configuration.Properties["NimbusAppBus"] as INimbusAppBus;
-            }
-        }
 
         /// <summary>
         /// Obtém o NimbusUser da requisição atual.
@@ -44,7 +34,7 @@ namespace Nimbus.Web.API
             get
             {
                 return new OrmLiteConnectionFactory
-                    (NimbusAppBus.Settings.DatabaseConnectionString,
+                    (NimbusAppBus.Instance.Settings.DatabaseConnectionString,
                     SqlServerDialect.Provider);
             }
         }

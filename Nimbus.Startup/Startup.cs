@@ -1,6 +1,6 @@
 ﻿using Microsoft.Owin.Hosting;
 using Microsoft.Owin.Hosting.Engine;
-using Nimbus.Plumbing.Interface;
+using Nimbus.Plumbing;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,7 +20,7 @@ namespace Nimbus.Plumbing
     {
         #region Startup Options
         public sealed class StartupOptions
-        {
+        { 
             private short _httpPort;
             public short HttpPort
             {
@@ -62,32 +62,10 @@ namespace Nimbus.Plumbing
         }
         #endregion
 
-        #region Singleton
-        private static NimbusStartup instance = null;
-
-        public static NimbusStartup Instance
+        public void Init(StartupOptions initOptions)
         {
-            get
-            {
-                if (instance == null) throw new Exception("Init() first");
-                return instance;
-            }
-        }
-        #endregion
-
-        private INimbusAppBus _nimbusAppBus;
-        public INimbusAppBus NimbusAppBus
-        {
-            get { return _nimbusAppBus; }
-        }
-
-        public static void Init(StartupOptions initOptions)
-        {
-            if (instance != null) throw new Exception("Init() must be called only once.");
-            instance = new NimbusStartup();
-            instance._nimbusAppBus = new NimbusAppBus(initOptions.NimbusSettings);
-
-            instance.StartWebApp(initOptions);
+            NimbusAppBus.Init(initOptions.NimbusSettings);
+            StartWebApp(initOptions);
         }
 
         private void StartWebApp(StartupOptions initOptions)
@@ -119,7 +97,7 @@ namespace Nimbus.Plumbing
             var context = new StartContext(owinStartOptions);
             context.Startup = new Action<Owin.IAppBuilder>
                 ((bld) =>
-                    nimbusOwinApp.Configuration(_nimbusAppBus, bld));
+                    nimbusOwinApp.Configuration(bld));
 
             initOptions.InitLog.Log("StartWebApp", "Taking off...");
             try
@@ -136,10 +114,5 @@ namespace Nimbus.Plumbing
             }
             initOptions.InitLog.Log("StartWebApp", "WebApp initialized.");
         }
-
-
-
-
-
     }
 }

@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{C28F8F7A-C5A2-4CB4-92B1-9507A87D5FFE}</ProjectGuid>
+    <ProjectGuid>{89FAE4C8-11E0-4CC0-A0E3-4FFDB400C511}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Nimbus.Plumbing.Interface</RootNamespace>
-    <AssemblyName>Nimbus.Plumbing.Interface</AssemblyName>
+    <RootNamespace>Nimbus.Startup</RootNamespace>
+    <AssemblyName>Nimbus.Startup</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
@@ -35,6 +35,9 @@
     <Reference Include="Owin">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
+    <Reference Include="Owin.Builder">
+      <HintPath>..\packages\Owin.Builder.0.8.5\lib\net40\Owin.Builder.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -44,16 +47,31 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="INimbusAppBus.cs" />
-    <Compile Include="INimbusDebugAutoAttach.cs" />
-    <Compile Include="INimbusOwinApp.cs" />
-    <Compile Include="INimbusUser.cs" />
-    <Compile Include="ISimpleLog.cs" />
-    <Compile Include="NimbusSettings.cs" />
+    <Compile Include="AssemblyLoader.cs" />
+    <Compile Include="DebugAutoAttach.cs" />
+    <Compile Include="Startup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Dependencies\Microsoft.Owin.Host.HttpListener\Microsoft.Owin.Host.HttpListener45.csproj">
+      <Project>{9f0c72d8-e43f-4f01-9deb-919191911919}</Project>
+      <Name>Microsoft.Owin.Host.HttpListener45</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Dependencies\Microsoft.Owin.Hosting\Microsoft.Owin.Hosting.Net45.csproj">
+      <Project>{c225eb2f-e7a7-463f-b058-1705f204978e}</Project>
+      <Name>Microsoft.Owin.Hosting.Net45</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Dependencies\Microsoft.Owin\Microsoft.Owin.Net45.csproj">
+      <Project>{0db69cae-b0bc-4688-9467-66b4c1023d3f}</Project>
+      <Name>Microsoft.Owin.Net45</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nimbus.Plumbing\Nimbus.Plumbing.csproj">
+      <Project>{c28f8f7a-c5a2-4cb4-92b1-9507a87d5ffe}</Project>
+      <Name>Nimbus.Plumbing</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

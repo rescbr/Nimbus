@@ -1,5 +1,5 @@
 ﻿using Microsoft.Owin;
-using Nimbus.Plumbing.Interface;
+using Nimbus.Plumbing;
 using Nimbus.Web.Security;
 using System;
 using System.Security.Principal;
@@ -12,13 +12,7 @@ namespace Nimbus.Web.Middleware
     /// </summary>
     public class Authentication : OwinMiddleware
     {
-
-
-        private INimbusAppBus _nimbusAppBus;
-        public Authentication(OwinMiddleware next, INimbusAppBus nimbusAppBus)
-            : base(next)
-        { _nimbusAppBus = nimbusAppBus; }
-
+        public Authentication(OwinMiddleware next) : base(next) { }
         //public override async Task Invoke(OwinRequest request, OwinResponse response)
         public override async Task Invoke(IOwinContext context)
         {
@@ -87,12 +81,12 @@ namespace Nimbus.Web.Middleware
                 UserId = userId,
                 TokenGenerationDate = DateTime.Now.ToUniversalTime(),
             };
-            return Token.GenerateToken(_nimbusAppBus, info, out tokenGuid);
+            return Token.GenerateToken(info, out tokenGuid);
         }
 
         private bool VerifyToken(string token, out Guid tokenGuid, out NSCInfo info)
         {
-            return Token.VerifyToken(_nimbusAppBus, token, out tokenGuid, out info);
+            return Token.VerifyToken(token, out tokenGuid, out info);
         }
         
     }
