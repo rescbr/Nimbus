@@ -34,11 +34,12 @@ body {
 	background:         #FFFFFF;
 	background-size:    auto;
 	color:              #000000;
-	font-size:          1em;
+	font-size:          small/*1em*/;
 	font-family:        tahoma, sans-serif;
 	overflow:           hidden;
 	width:              100%;
 	height:             auto;
+    line-height:        normal;
 }
 
 h1, h2, em, a, a:link, a:visited, a:hover, a:active{
@@ -184,6 +185,7 @@ div.exitbutton {
 
 /*------------------ Trending Topics começo --------------------*/
 
+/* top */
 .content-top {
 	margin-top:         96px;
 	height:             24px;
@@ -264,6 +266,71 @@ select.sel{
 .quad4 {
 	margin-top:         8px;
 	margin-left:        8px;
+}
+
+/* content */
+
+div.TrendTopPost {
+    margin-right:       25px;
+    width:              168px;
+    height:             240px;
+    float:              left;
+}
+
+div.TrendTopPostHeader {
+    width:              168px;
+    height:             120px;
+    border:             1px solid #BE1E2D;
+    margin-bottom:      5px;
+}
+
+.TrendTopPostHeader h1 {
+    padding-left:       10px;
+    font-size:          small;
+    font-weight:        bold;
+}
+
+div.TrendTopPostHeImg {
+    width:              auto;
+    height:             96px;
+    border-top:         1px solid #BE1E2D;
+}
+
+div.TrendTopPostContent {
+    margin:             0 auto;
+    height:             94px;
+    width:              168px;
+    padding-top:        5px;
+    padding-bottom:     5px;
+    overflow:           hidden; /* Temporário. Fazer caber X caracteres ali D: */
+}
+
+.TrendTopPostContent p {
+    text-align:         justify;
+    font-size:          small;
+    line-height:        normal;
+}
+
+div.TrendTopPostFooter {
+    margin-top:         5px;
+    width:              168px;
+    height:             24px;
+    border:             1px solid #BE1E2D;
+}
+
+div.TrendTopPostFoBoxL, div.TrendTopPostFoBoxR {
+    width:              82px;
+    height:             24px;
+    float:              left;
+}
+
+.TrendTopPostFoBoxL p, .TrendTopPostFoBoxR p {
+    text-align:         center;
+    font-size:          90%;
+}
+
+div.TrendTopPostFoBoxR {
+    border-left:        1px solid #BE1E2D;
 }
 
 /*------------------ Trending Topics fim --------------------*/
