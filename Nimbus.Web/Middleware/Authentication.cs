@@ -1,7 +1,8 @@
 ﻿using Microsoft.Owin;
-using Nimbus.Plumbing.Interface;
+using Nimbus.Plumbing;
 using Nimbus.Web.Security;
 using System;
+using System.Collections.Generic;
 using System.Security.Principal;
 using System.Threading.Tasks;
 
@@ -12,13 +13,7 @@ namespace Nimbus.Web.Middleware
     /// </summary>
     public class Authentication : OwinMiddleware
     {
-
-
-        private INimbusAppBus _nimbusAppBus;
-        public Authentication(OwinMiddleware next, INimbusAppBus nimbusAppBus)
-            : base(next)
-        { _nimbusAppBus = nimbusAppBus; }
-
+        public Authentication(OwinMiddleware next) : base(next) { }
         //public override async Task Invoke(OwinRequest request, OwinResponse response)
         public override async Task Invoke(IOwinContext context)
         {
@@ -56,24 +51,28 @@ namespace Nimbus.Web.Middleware
                     //Token é válido, continuar verificando se o usuário pode ser logado
                     if (info.TokenGenerationDate.AddDays(7.0) > DateTime.Now.ToUniversalTime())
                     {
-                        //TODO!
-                        //pega o NimbusUser
-                        //algo como NimbusAppBus.Cache.SessionCache etc
-                        var identity = new NimbusUser()
+                        try
                         {
-                            AvatarUrl = "avatar.png",
-                            Name = "Eusébio Testoso",
-                            UserId = 1,
-                            IsAuthenticated = true //sempre!
-                        };
-                        //request.User = new ClaimsPrincipal(identity);
-                        request.User = (IPrincipal)(new NimbusPrincipal(identity));
+                            NimbusPrincipal identity = (NimbusAppBus.Instance.Cache
+                                .SessionPrincipal.Get(sessionToken) as NimbusPrincipal);
+                            request.User = (IPrincipal)(identity);
+                        }
+                        catch (KeyNotFoundException) //caso o usuário não esteja no cache, fazer login de novo!
+                        {
+                        }
                     }
-                    else { } //token velho
+                    else //token velho
+                    {
+                    } 
                 }
-                else { } //token inválido
+                else //token inválido
+                {
+                } 
             }
-            else { } //token = null
+            else //token = null
+            {
+            } 
+
 
             await Next.Invoke(context);
 
@@ -87,13 +86,13 @@ namespace Nimbus.Web.Middleware
                 UserId = userId,
                 TokenGenerationDate = DateTime.Now.ToUniversalTime(),
             };
-            return Token.GenerateToken(_nimbusAppBus, info, out tokenGuid);
+            return Token.GenerateToken(info, out tokenGuid);
         }
 
         private bool VerifyToken(string token, out Guid tokenGuid, out NSCInfo info)
         {
-            return Token.VerifyToken(_nimbusAppBus, token, out tokenGuid, out info);
+            return Token.VerifyToken(token, out tokenGuid, out info);
         }
-        
+
     }
 }

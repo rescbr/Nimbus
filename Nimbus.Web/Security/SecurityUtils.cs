@@ -1,4 +1,4 @@
-﻿using Nimbus.Plumbing.Interface;
+﻿using Nimbus.Plumbing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,9 +16,9 @@ namespace Nimbus.Web.Security
             return null;
         }
 
-        public static string SmallHmac(INimbusAppBus nimbusAppBus, string stringToHmac)
+        public static string SmallHmac(string stringToHmac)
         {
-            HMACMD5 hmac = new HMACMD5(nimbusAppBus.Settings.Cryptography.CookieHMACKey.Take(8).ToArray());
+            HMACMD5 hmac = new HMACMD5(NimbusAppBus.Instance.Settings.Cryptography.CookieHMACKey.Take(8).ToArray());
             byte[] hash = hmac.ComputeHash(Encoding.Unicode.GetBytes(stringToHmac));
 
             return Convert.ToBase64String(hash);

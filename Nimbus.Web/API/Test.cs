@@ -1,4 +1,4 @@
-﻿using Nimbus.Plumbing.Interface;
+﻿using Nimbus.Plumbing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +20,7 @@ namespace Nimbus.Web.API
         public async Task<HttpResponseMessage> Get()
         {
             Guid token;
-            string authToken = Token.GenerateToken(NimbusAppBus,
+            string authToken = Token.GenerateToken(
                 new NSCInfo()
                 {
                     TokenGenerationDate = DateTime.Now.ToUniversalTime(),
