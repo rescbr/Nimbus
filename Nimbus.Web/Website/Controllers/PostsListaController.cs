@@ -11,7 +11,7 @@ using WebApiContrib.Formatting.Html;
 
 namespace Nimbus.Web.Website.Controllers
 {
-    public class PostsLista : NimbusApiController
+    public class PostsListaController : NimbusApiController
     {
         public View Get(string redirect = null)
         {

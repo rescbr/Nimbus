@@ -11,7 +11,7 @@ using WebApiContrib.Formatting.Html;
 
 namespace Nimbus.Web.Website.Controllers
 {
-    public class ProfileBar : NimbusApiController
+    public class ProfileBarController : NimbusApiController
     {
         public View Get(string redirect = null)
         {

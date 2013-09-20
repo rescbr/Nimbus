@@ -89,15 +89,15 @@ namespace Nimbus.Web
             );
 
             webApiConfig.Routes.MapHttpRoute(
-                name: "ProfileBar",
-                routeTemplate: "profilebar",
-                defaults: new { controller = "ProfileBar" }
-            );
-
-            webApiConfig.Routes.MapHttpRoute(
                 name: "UserProfile",
                 routeTemplate: "userprofile",
                 defaults: new { controller = "UserProfile" }
+            );
+
+            webApiConfig.Routes.MapHttpRoute(
+                name: "PrivateProfileTopBar",
+                routeTemplate: "privateprofiletopbar",
+                defaults: new { controller = "PrivateProfileTopBar" }
             );
 
             webApiConfig.Routes.MapHttpRoute(

@@ -419,24 +419,110 @@ div.PostFoBoxR_l {
 
 /*------------------ User Profile --------------------*/
 div.ProBar {
+    margin-left:        20px;
     width:              264px;
     height:             auto;
+    line-height:        20px;
+}
+
+.ProBar h1 {
+    font-size:          115%;
+    font-weight:        bold;
 }
 
 div.ProfileImg {
-    width:              200px;
-    height:             auto;
+    width:              264px;
+    height:             200px;
     border:             1px solid #BE1E2D;
+    margin-bottom:      24px;
 }
 
 
 div.ProfileEdit {
+    margin-top:         5px;
+    position:           absolute;
     width:              24px;
     height:             10px;
     border:             1px solid #BE1E2D;
+    display:            inline-block;
+    font-size:          xx-small;
+	line-height:        10px;
 }
 
 .ProfileEdit p {
-    font-size:          xx-small;
+    text-align:         center;
 }
+
+.SendMessage {
+    margin:             0 auto;
+    width:              200px;
+    border:             1px solid #BE1E2D;
+    text-align:         center;
+}
+
+.SendMessage p {
+    text-align:         center;
+    font-weight:        600;
+    font-size:          120%;
+}
+
+div.AboutUser {
+    margin-bottom:      24px;
+}
+
+.AboutUser p, .AboutUser h1{
+    text-align:         right;
+}
+
+p.AboutUser-other {
+    margin-top:         5px;
+    margin-bottom:      5px;
+}
+
+
+div.Participation {
+    margin-bottom:      24px;
+    margin-top:         24px;
+}
+
+.Participation p {
+    margin-top:         15px;
+    margin-bottom:      15px;
+    text-align:         center;
+    font-size:          xx-large;
+}
+
+div.Channels {
+    width:              200px;
+    margin:             0 auto;
+}
+
+.ChanPaid h1 {
+    margin-top:         15px;
+    margin-bottom:      15px;
+}
+
+div.ChanPaidImg {
+    width:              40px;
+    height:             40px;
+    background:         #000000;
+    margin:             10px;
+    float:              left;
+}
+
+/*------------------ Private Profile Top Bar --------------------*/
+
+/*96px*/
+nav.ProfTopBar {
+    margin:             0 auto;
+    width:              552px;
+    height:             30px;
+    border:             1px solid #BE1E2D;
+}
+
+.ProfTopBar li {
+    width:              109px;
+    text-align:         center;
+}
+
 /*------------------ fim middle --------------------*/
