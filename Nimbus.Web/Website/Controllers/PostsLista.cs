@@ -11,11 +11,11 @@ using WebApiContrib.Formatting.Html;
 
 namespace Nimbus.Web.Website.Controllers
 {
-    public class TrendingTopicsPostsController : NimbusApiController
+    public class PostsLista : NimbusApiController
     {
         public View Get(string redirect = null)
         {
-            return new View("TrendingTopicsPosts", new LoginModel());
+            return new View("PostsLista", new LoginModel());
         }
 
     }

@@ -76,7 +76,10 @@
     </Content>
     <Content Include="Website\Views\Home.cshtml" />
     <Content Include="Website\Views\TrendingTopics.cshtml" />
-    <Content Include="Website\Views\TrendingTopicsPosts.cshtml" />
+    <Content Include="Website\Views\PostsLista.cshtml" />
+    <Content Include="Website\Views\PostsGrade.cshtml" />
+    <Content Include="Website\Views\ProfileBar.cshtml" />
+    <Content Include="Website\Views\UserProfile.cshtml" />
     <None Include="Website\Views\Shared\_Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -105,7 +108,10 @@
     <Compile Include="Security\SecurityUtils.cs" />
     <Compile Include="Security\Token.cs" />
     <Compile Include="Utils.cs" />
-    <Compile Include="Website\Controllers\TrendingTopicsPostsController.cs" />
+    <Compile Include="Website\Controllers\UserProfile.cs" />
+    <Compile Include="Website\Controllers\ProfileBar.cs" />
+    <Compile Include="Website\Controllers\PostsLista.cs" />
+    <Compile Include="Website\Controllers\PostsGrade.cs" />
     <Compile Include="Website\Controllers\TrendingTopicsController.cs" />
     <Compile Include="Website\Controllers\HomeController.cs" />
     <Compile Include="Website\Controllers\LoginController.cs" />

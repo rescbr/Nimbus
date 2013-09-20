@@ -77,9 +77,27 @@ namespace Nimbus.Web
             );
 
             webApiConfig.Routes.MapHttpRoute(
-                name: "TrendingTopicsPosts",
-                routeTemplate: "trendingtopicsposts",
-                defaults: new { controller = "TrendingTopicsPosts" }
+                name: "PostsGrade",
+                routeTemplate: "postsgrade",
+                defaults: new { controller = "PostsGrade" }
+            );
+
+            webApiConfig.Routes.MapHttpRoute(
+                name: "PostsLista",
+                routeTemplate: "postslista",
+                defaults: new { controller = "PostsGrade" }
+            );
+
+            webApiConfig.Routes.MapHttpRoute(
+                name: "ProfileBar",
+                routeTemplate: "profilebar",
+                defaults: new { controller = "ProfileBar" }
+            );
+
+            webApiConfig.Routes.MapHttpRoute(
+                name: "UserProfile",
+                routeTemplate: "userprofile",
+                defaults: new { controller = "UserProfile" }
             );
 
             webApiConfig.Routes.MapHttpRoute(
