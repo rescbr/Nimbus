@@ -36,7 +36,7 @@ body {
 	color:              #000000;
 	font-size:          small/*1em*/;
 	font-family:        tahoma, sans-serif;
-	overflow:           hidden;
+	overflow:           auto;
 	width:              100%;
 	height:             auto;
     line-height:        normal;
@@ -268,68 +268,151 @@ select.sel{
 	margin-left:        8px;
 }
 
-/* content */
+/* content - grade */
 
-div.TrendTopPost {
-    margin-right:       25px;
+div.TrendTopPost_g {
+    margin-right:       40px;
     width:              168px;
     height:             240px;
     float:              left;
 }
 
-div.TrendTopPostHeader {
-    width:              168px;
+div.TrendTopPostHeader_g {
+    width:              auto;
     height:             120px;
     border:             1px solid #BE1E2D;
-    margin-bottom:      5px;
 }
 
-.TrendTopPostHeader h1 {
+.TrendTopPostHeader_g h1 {
     padding-left:       10px;
     font-size:          small;
     font-weight:        bold;
 }
 
-div.TrendTopPostHeImg {
+div.TrendTopPostHeader-img_g {
     width:              auto;
-    height:             96px;
-    border-top:         1px solid #BE1E2D;
+    height:             233px;
+    border:             1px solid #BE1E2D;
 }
 
-div.TrendTopPostContent {
-    margin:             0 auto;
+div.TrendTopPostHeImg_g {
+    width:              auto;
+    height:             auto;
+    border:         1px solid #BE1E2D;
+}
+
+div.TrendTopPostContent_g {
+    margin-top:         5px;
+    margin-bottom:      5px;
     height:             94px;
-    width:              168px;
+    width:              auto;
     padding-top:        5px;
     padding-bottom:     5px;
     overflow:           hidden; /* Temporário. Fazer caber X caracteres ali D: */
 }
 
-.TrendTopPostContent p {
+.TrendTopPostContent_g p {
     text-align:         justify;
     font-size:          small;
     line-height:        normal;
 }
 
-div.TrendTopPostFooter {
-    margin-top:         5px;
-    width:              168px;
+div.TrendTopPostFooter_g {
+    width:              auto;
     height:             24px;
     border:             1px solid #BE1E2D;
 }
 
-div.TrendTopPostFoBoxL, div.TrendTopPostFoBoxR {
+div.TrendTopPostFoBoxL_g, div.TrendTopPostFoBoxR_g {
     width:              82px;
     height:             24px;
     float:              left;
 }
 
-.TrendTopPostFoBoxL p, .TrendTopPostFoBoxR p {
+.TrendTopPostFooter_g p {
     text-align:         center;
     font-size:          90%;
 }
 
-div.TrendTopPostFoBoxR {
+div.TrendTopPostFoBoxR_g {
+    border-left:        1px solid #BE1E2D;
+}
+
+/* content - lista */
+
+div.TrendTopPost_l {
+    margin-bottom:      40px;
+    width:              792px;
+    height:             96px;
+}
+
+div.TrendPost_Right_l {
+    margin-left:        169px;
+    width:              624px;
+    height:             96px;
+    position:           absolute;
+    float:              left;
+}
+
+div.TrendTopPostHeImg_l {
+    width:              168px;
+    height:             106px;
+    border:             1px solid #BE1E2D;
+    float:              left;
+}
+
+div.TrendTopPostHeader-img_l {
+    width:              790px;
+    height:             100px;
+    border:             1px solid #BE1E2D;
+}
+
+div.TrendTopPostHeader_l {
+    width:              auto;
+    height:             24px;
+    border:             1px solid #BE1E2D;
+}
+
+.TrendTopPostHeader_l h1 {
+    padding-left:       10px;
+    font-size:          small;
+    font-weight:        bold;
+}
+
+div.TrendTopPostContent_l {
+    margin-right:       5px;
+    margin-left:        5px;
+    height:             46px;
+    width:              auto;
+    padding-top:        5px;
+    padding-bottom:     5px;
+    overflow:           hidden; /* Temporário. Fazer caber X caracteres ali D: */
+}
+
+.TrendTopPostContent_l p {
+    text-align:         justify;
+    font-size:          small;
+    line-height:        normal;
+}
+
+div.TrendTopPostFooter_l {
+    width:              auto;
+    height:             24px;
+    border:             1px solid #BE1E2D;
+}
+
+div.TrendTopPostFoBoxL_l, div.TrendTopPostFoBoxR_l {
+    width:              310px;
+    height:             24px;
+    float:              left;
+}
+
+.TrendTopPostFooter_l p {
+    text-align:         center;
+    font-size:          90%;
+}
+
+div.TrendTopPostFoBoxR_l {
     border-left:        1px solid #BE1E2D;
 }
 
