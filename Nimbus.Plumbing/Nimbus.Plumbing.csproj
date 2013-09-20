@@ -45,17 +45,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppBus.cs" />
-    <Compile Include="INimbusAppBus.cs" />
-    <Compile Include="INimbusDebugAutoAttach.cs" />
+    <Compile Include="INimbusCacheProvider.cs" />
     <Compile Include="INimbusOwinApp.cs" />
-    <Compile Include="INimbusUser.cs" />
+    <Compile Include="NimbusUser.cs" />
     <Compile Include="ISimpleLog.cs" />
+    <Compile Include="LocalCache\LocalCache.cs" />
+    <Compile Include="NimbusCache.cs" />
     <Compile Include="NimbusSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

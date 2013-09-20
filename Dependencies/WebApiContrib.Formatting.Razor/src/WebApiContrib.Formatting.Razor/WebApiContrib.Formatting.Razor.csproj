@@ -41,15 +41,8 @@
     <AssemblyOriginatorKeyFile>NimbusSNK.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="RazorEngine">
-      <HintPath>..\..\..\..\packages\RazorEngine.3.3.0\lib\net40\RazorEngine.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\..\..\..\packages\Microsoft.AspNet.Razor.2.0.30506.0\lib\net40\System.Web.Razor.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EmbeddedResolver.cs" />
@@ -60,9 +53,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="NimbusSNK.snk" />
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\RazorEngine.Core\RazorEngine.Core.csproj">
+      <Project>{d268f86d-2dab-4329-a75f-3bcf6d5bcdc4}</Project>
+      <Name>RazorEngine.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\WebApiContrib.Formatting.Html\src\WebApiContrib.Formatting.Html\WebApiContrib.Formatting.Html.csproj">
       <Project>{1055bcc1-bbb1-45f2-8260-e00959a6ac89}</Project>
       <Name>WebApiContrib.Formatting.Html</Name>

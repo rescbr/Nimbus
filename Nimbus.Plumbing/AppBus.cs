@@ -1,4 +1,5 @@
 ﻿using Nimbus.Plumbing;
+using Nimbus.Plumbing.Cache;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace Nimbus.Plumbing
 {
     public class NimbusAppBus
     {
+        #region Singleton
         private static NimbusAppBus _instance = null;
         public static NimbusAppBus Instance
         {
@@ -19,7 +21,20 @@ namespace Nimbus.Plumbing
             }
         }
 
+        public static void Init(NimbusSettings settings)
+        {
+            if (_instance != null) throw new Exception("NimbusAppBus was already initialized.");
+            _instance = new NimbusAppBus();
+            _instance._settings = settings;
+
+            /* Inicializa Cache utilizando LocalCache */
+            _instance._cache = new NimbusCache();
+            _instance._cache.Initialize<LocalCache>();
+        }
+
         private NimbusAppBus() { }
+
+        #endregion
 
         private NimbusSettings _settings;
         public NimbusSettings Settings
@@ -28,11 +43,11 @@ namespace Nimbus.Plumbing
             private set { _settings = value; }
         }
 
-        public static void Init(NimbusSettings settings)
+        private NimbusCache _cache;
+        public NimbusCache Cache
         {
-            if (_instance != null) throw new Exception("NimbusAppBus was already initialized.");
-            _instance = new NimbusAppBus();
-            _instance.Settings = settings;
+            get { return _cache; }
         }
+
     }
 }
