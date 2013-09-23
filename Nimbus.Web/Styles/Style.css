@@ -269,12 +269,13 @@ select.sel{
 
 /*------------------ Trending Topics fim --------------------*/
 
-/*------------------ Grade --------------------*/
+/*------------------ Posts Grade --------------------*/
 
 div.Post_g {
-    margin-right:       40px;
+    position:           relative;
+    margin:             20px;
     width:              168px;
-    height:             240px;
+    height:             250px;
     float:              left;
 }
 
@@ -339,7 +340,7 @@ div.PostFoBoxR_g {
     border-left:        1px solid #BE1E2D;
 }
 
-/*------------------ Lista --------------------*/
+/*------------------ Posts Lista --------------------*/
 
 div.Post_l {
     margin-bottom:      40px;
@@ -437,7 +438,6 @@ div.ProfileImg {
     margin-bottom:      24px;
 }
 
-
 div.ProfileEdit {
     margin-top:         5px;
     position:           absolute;
@@ -478,7 +478,6 @@ p.AboutUser-other {
     margin-top:         5px;
     margin-bottom:      5px;
 }
-
 
 div.Participation {
     margin-bottom:      24px;
@@ -524,12 +523,17 @@ nav.ProfTopBar {
     text-align:         center;
 }
 
-/*------------------ Private Profile - Messages --------------------*/
-/*Top*/
-div.WrapperMess {
+/*Tab*/
+div.WrapperUser {
     margin-left:        312px;
 }
 
+div.TabContent {
+    margin-left:        5px;
+    margin-right:       5px;
+}
+
+/*------------------ Private Profile - Messages --------------------*/
 nav.TopMess {
     margin:             0 auto;
     width:              300px;
@@ -604,6 +608,82 @@ div.PostContent_m {
     text-align:         left;
     font-size:          small;
     line-height:        normal;
+}
+
+/*------------------ Private Profile - Att --------------------*/
+
+div.Post_att {
+    margin-bottom:      30px;
+    width:              456px;
+    height:             60px;
+}
+
+div.Post_Right_att {
+    margin-left:        60px;
+    width:              396px;
+    height:             60px;
+    position:           absolute;
+    float:              left;
+}
+
+div.PostHeImg_att {
+    width:              60px;
+    height:             60px;
+    border:             1px solid #BE1E2D;
+    float:              left;
+}
+
+nav.PostFooterLeft_att {
+    width:              auto;
+    height:             24px;
+    padding-left:       5px;
+    float:              left;
+}
+
+nav.PostFooterRight_att {
+    width:              auto;
+    height:             24px;
+    float:              right;
+    display:            inline-block;
+    float:              right;
+}
+
+.PostFooterLeft_att li {
+    padding-left:       5px;
+    padding-right:      5px;
+    font-size:          small;
+}
+
+.PostFooterRight_att li {
+    width:              50px;
+    margin-left:        20px;
+    text-align:         center;
+    font-size:          x-small;
+    font-weight:        bold;
+    border:             1px solid #BE1E2D;
+}
+
+div.PostContent_att {
+    margin-right:       5px;
+    margin-left:        10px;
+    width:              370px;
+}
+
+.PostContent_m att {
+    text-align:         left;
+    font-size:          small;
+    line-height:        normal;
+}
+
+/*------------------ Public Profile --------------------*/
+div.MyChannels, div.ModChannels, div.Channels {
+    padding-top:        40px;
+    padding-bottom:     40px;
+    float:              none;
+}
+
+div.MyChannels h1, div.ModChannels h1{
+    padding-bottom:     20px;
 }
 
 /*------------------ fim middle --------------------*/

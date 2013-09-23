@@ -80,9 +80,12 @@
     <Content Include="Website\Views\PostsGrade.cshtml" />
     <Content Include="Website\Views\UserProfile.cshtml" />
     <Content Include="Website\Views\PrivateProfileTopBar.cshtml" />
-    <Content Include="Website\Views\TopMessages.cshtml" />
+    <Content Include="Website\Views\PrivateTopMessages.cshtml" />
     <Content Include="Website\Views\PostsMessages.cshtml" />
     <Content Include="Website\Views\PostsAtt.cshtml" />
+    <Content Include="Website\Views\PrivateUserAtt.cshtml" />
+    <Content Include="Website\Views\PrivateUserChannel.cshtml" />
+    <Content Include="Website\Views\PublicUserContent.cshtml" />
     <None Include="Website\Views\Shared\_Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -111,13 +114,15 @@
     <Compile Include="Security\SecurityUtils.cs" />
     <Compile Include="Security\Token.cs" />
     <Compile Include="Utils.cs" />
+    <Compile Include="Website\Controllers\PublicUserContentController.cs" />
+    <Compile Include="Website\Controllers\PrivateUserChannelController.cs" />
+    <Compile Include="Website\Controllers\PrivateUserAttController.cs" />
     <Compile Include="Website\Controllers\PostsAttController.cs" />
     <Compile Include="Website\Controllers\PostsMessagesController.cs" />
-    <Compile Include="Website\Controllers\TopMessagesController.cs" />
+    <Compile Include="Website\Controllers\PrivateTopMessagesController.cs" />
     <Compile Include="Website\Controllers\PrivateProfileTopBarController.cs" />
     <Compile Include="Website\Controllers\UserProfileController.cs" />
     <Compile Include="Website\Controllers\PostsGradeController.cs" />
-    <Compile Include="Website\Controllers\ProfileBarController.cs" />
     <Compile Include="Website\Controllers\PostsListaController.cs" />
     <Compile Include="Website\Controllers\TrendingTopicsController.cs" />
     <Compile Include="Website\Controllers\HomeController.cs" />

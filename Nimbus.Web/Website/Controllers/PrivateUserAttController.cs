@@ -11,11 +11,11 @@ using WebApiContrib.Formatting.Html;
 
 namespace Nimbus.Web.Website.Controllers
 {
-    public class TopMessagesController : NimbusApiController
+    public class PrivateUserAttController : NimbusApiController
     {
         public View Get(string redirect = null)
         {
-            return new View("TopMessages", new LoginModel());
+            return new View("PrivateUserAtt", new LoginModel());
         }
 
     }

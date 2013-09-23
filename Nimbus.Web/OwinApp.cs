@@ -101,9 +101,9 @@ namespace Nimbus.Web
             );
 
             webApiConfig.Routes.MapHttpRoute(
-                name: "TopMessages",
-                routeTemplate: "topmessages",
-                defaults: new { controller = "TopMessages" }
+                name: "PrivateTopMessages",
+                routeTemplate: "privatetopmessages",
+                defaults: new { controller = "PrivateTopMessages" }
             );
 
             webApiConfig.Routes.MapHttpRoute(
@@ -116,6 +116,24 @@ namespace Nimbus.Web
                 name: "PostsAtt",
                 routeTemplate: "postsatt",
                 defaults: new { controller = "PostsAtt" }
+            );
+
+            webApiConfig.Routes.MapHttpRoute(
+                name: "PrivateUserAtt",
+                routeTemplate: "privateuseratt",
+                defaults: new { controller = "PrivateUserAtt" }
+            );
+
+            webApiConfig.Routes.MapHttpRoute(
+                name: "PrivateUserChannel",
+                routeTemplate: "privateuserchannel",
+                defaults: new { controller = "PrivateUserChannel" }
+            );
+
+            webApiConfig.Routes.MapHttpRoute(
+                name: "PublicUserContent",
+                routeTemplate: "publicusercontent",
+                defaults: new { controller = "PublicUserContent" }
             );
 
             webApiConfig.Routes.MapHttpRoute(
