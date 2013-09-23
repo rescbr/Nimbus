@@ -526,6 +526,10 @@ nav.ProfTopBar {
 
 /*------------------ Private Profile - Messages --------------------*/
 /*Top*/
+div.WrapperMess {
+    margin-left:        312px;
+}
+
 nav.TopMess {
     margin:             0 auto;
     width:              300px;
@@ -539,9 +543,12 @@ nav.TopMess {
     text-align:         center;
 }
 
+div.MessContent {
+    margin:             0 auto;
+}
+
 /*Content*/
 div.Post_m {
-    margin-left:        312px;
     margin-bottom:      30px;
     width:              456px;
     height:             60px;
