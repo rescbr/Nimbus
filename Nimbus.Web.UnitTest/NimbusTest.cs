@@ -27,7 +27,7 @@ namespace Nimbus.Web.UnitTest
 
             using (var db = controller.DatabaseFactory.OpenDbConnection())
             {
-                db.DropAndCreateTables(new Type[]{
+                db.CreateTables(false, new Type[]{
                     typeof(Nimbus.DB.Category),
                     typeof(Nimbus.DB.Ad), 
                     typeof(Nimbus.DB.Organization),
@@ -68,9 +68,9 @@ namespace Nimbus.Web.UnitTest
                     typeof(Nimbus.DB.Channel),
                     typeof(Nimbus.DB.UserReported),
                     typeof(Nimbus.DB.User),
-                    typeof(Nimbus.DB.Organization),
-                    typeof(Nimbus.DB.Ad), 
-                    typeof(Nimbus.DB.Category)
+                    //typeof(Nimbus.DB.Organization),
+                    typeof(Nimbus.DB.Ad)
+                   // typeof(Nimbus.DB.Category)
                 });
             }
         }

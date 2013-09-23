@@ -53,6 +53,7 @@ namespace Nimbus.Web.API.Models.User
         public string Interest { get; set; }
         public string Experience { get; set; }
         public string About { get; set; }
+        public DateTime BirthDate { get; set; }
     }
 
     ///<sumary>
@@ -63,7 +64,7 @@ namespace Nimbus.Web.API.Models.User
         public int user_ID { get; set; }
         public string UrlImg { get; set; }
         public string Name { get; set; }
-        public string BirthDate { get; set; }
+        public DateTime BirthDate { get; set; }
         public string Occupation { get; set; }
         public string Interest { get; set; }
         public string Experience { get; set; }

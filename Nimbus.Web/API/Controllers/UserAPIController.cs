@@ -44,7 +44,7 @@ namespace Nimbus.Web.API.Controllers
                     profile.user_ID = user.Id;
                     profile.UrlImg = user.AvatarUrl;
                     profile.Name = user.FirstName + " " + user.LastName;
-                    profile.BirthDate = (DateTime.Now - user.BirthDate).ToString();
+                    profile.BirthDate = user.BirthDate;
                     profile.City = user.City;
                     profile.State = user.State;
                     profile.Country = user.Country;
@@ -87,7 +87,8 @@ namespace Nimbus.Web.API.Controllers
                         About = profile.About,
                         City = profile.City,
                         State = profile.State,
-                        Country = profile.Country
+                        Country = profile.Country,
+                        BirthDate = profile.BirthDate
                     };
 
                     db.Update<Nimbus.DB.User>(user, usr => usr.Id == NimbusUser.UserId );
