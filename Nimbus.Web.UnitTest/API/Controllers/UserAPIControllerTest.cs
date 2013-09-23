@@ -15,18 +15,19 @@ using ServiceStack.OrmLite;
 namespace Nimbus.Web.UnitTest
 {
     [TestClass]
-    public class UserAPIControllerTest
+    public class UserAPIControllerTest 
     {
+        UserAPIController controller = new UserAPIController();
+
         [TestInitialize]
         public void UserAPIControllerTest_Initialize()
         {
+            controller.DatabaseFactory = NimbusTest.controller.DatabaseFactory;
         }
 
         [TestMethod]
         public void User_RegisterTest()
         {
-            var controller = new UserAPIController();
-
             CreateUserAPIModel model = new CreateUserAPIModel();
 
             model.BirthDate = DateTime.Now;
@@ -41,7 +42,7 @@ namespace Nimbus.Web.UnitTest
 
             var response = controller.createProfile(model);
 
-            Assert.AreEqual(HttpStatusCode.Created, true);
+            Assert.AreEqual(response, true);
 
         }
         

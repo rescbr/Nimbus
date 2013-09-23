@@ -58,6 +58,7 @@
       <HintPath>..\packages\ServiceStack.Text.3.9.62\lib\net35\ServiceStack.Text.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
   </ItemGroup>
   <Choose>
@@ -75,11 +76,16 @@
   <ItemGroup>
     <Compile Include="API\Controllers\UserAPIControllerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="NimbusTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Dependencies\AspNetWebStack\System.Web.Http\System.Web.Http.csproj">
       <Project>{ddc1ce0c-486e-4e35-bb3b-eab61f8f9440}</Project>
       <Name>System.Web.Http</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nimbus.DB\Nimbus.DB.csproj">
+      <Project>{0d485fa6-60bc-410c-b437-37a7c47cdb70}</Project>
+      <Name>Nimbus.DB</Name>
     </ProjectReference>
     <ProjectReference Include="..\Nimbus.Plumbing.Interface\Nimbus.Plumbing.Interface.csproj">
       <Project>{c28f8f7a-c5a2-4cb4-92b1-9507a87d5ffe}</Project>
