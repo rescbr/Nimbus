@@ -290,16 +290,16 @@ div.PostHeader_g {
     font-weight:        bold;
 }
 
+div.PostHeImg_g {
+    width:              auto;
+    height:             96px;
+    border:             1px solid #BE1E2D;
+}
+
 div.PostHeader-img_g {
     width:              auto;
     height:             233px;
     border:             1px solid #BE1E2D;
-}
-
-div.PostHeImg_g {
-    width:              auto;
-    height:             auto;
-    border:         1px solid #BE1E2D;
 }
 
 div.PostContent_g {

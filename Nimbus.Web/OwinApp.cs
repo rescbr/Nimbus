@@ -85,7 +85,7 @@ namespace Nimbus.Web
             webApiConfig.Routes.MapHttpRoute(
                 name: "PostsLista",
                 routeTemplate: "postslista",
-                defaults: new { controller = "PostsGrade" }
+                defaults: new { controller = "PostsLista" }
             );
 
             webApiConfig.Routes.MapHttpRoute(
