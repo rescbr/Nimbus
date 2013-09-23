@@ -69,6 +69,14 @@ namespace Nimbus.Web.API.Controllers
                     {
                         Nimbus.DB.Channel channel = db.SelectParam<Nimbus.DB.Channel>(chn => chn.Id == channelID && chn.Visible == true).FirstOrDefault();
                         List<ChannelTag> tagList = db.SelectParam<Nimbus.DB.ChannelTag>(tg => tg.ChannelID == channelID && tg.Visible == true).ToList();
+                        
+                        List<InteractionAPI> listComments = db.Select<InteractionAPI>("SELECT Comment.UserId FROM Comment" +
+                                                         "INNER JOIN Topic ON Comment.TopicId = Topic.Id" +
+                                                         "WHERE Topic.ChannelId = {0} AND Comment.Visible = true AND Topic.Visible = true",
+                                                         channelID);
+
+                        int userComment = listComments.Select(c => c.UserID == NimbusUser.UserId).Count();
+                        int allComment = listComments.Count();
 
                         showChannel.ChannelName = channel.Name;
                         showChannel.CountFollowers = channel.Followers.ToString();
@@ -76,7 +84,7 @@ namespace Nimbus.Web.API.Controllers
                         showChannel.owner_ID = channel.OwnerId;
                         showChannel.Price = channel.Price;
                         showChannel.TagList = tagList;
-                        //showChannel.ParticipationChannel = 
+                        showChannel.ParticipationChannel = ((userComment * 100) / allComment).ToString();
                         showChannel.RankingChannel = channel.Ranking.ToString();
                         showChannel.UrlImgChannel = channel.ImgUrl;
                     }

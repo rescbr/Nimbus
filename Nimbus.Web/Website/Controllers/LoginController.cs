@@ -1,4 +1,5 @@
-﻿using Nimbus.Web.API;
+﻿using Nimbus.Plumbing;
+using Nimbus.Web.API;
 using Nimbus.Web.Security;
 using Nimbus.Web.Website.Models;
 using System;
@@ -33,7 +34,7 @@ namespace Nimbus.Web.Website.Controllers
             if (ModelState.IsValid)
             {
                 DatabaseLogin dbLogin = new DatabaseLogin(DatabaseFactory);
-                DB.User loggedInUser;
+                NimbusPrincipal loggedInUser;
 
                 //verifica URL de redirecionamento
                 if (String.IsNullOrWhiteSpace(login.RedirectURL) ||
@@ -49,12 +50,12 @@ namespace Nimbus.Web.Website.Controllers
                     Guid token;
 
                     //Cria token com validade de 7 dias
-                    string authToken = Token.GenerateToken(NimbusAppBus,
+                    string authToken = Token.GenerateToken(
                         new NSCInfo()
                         {
                             TokenGenerationDate = DateTime.Now.ToUniversalTime(),
                             TokenExpirationDate = DateTime.Now.AddDays(7).ToUniversalTime(),
-                            UserId = loggedInUser.Id
+                            UserId = (loggedInUser.Identity as NimbusUser).UserId
                         },
                         out token);
 
@@ -63,6 +64,9 @@ namespace Nimbus.Web.Website.Controllers
                     {
                         Expires = DateTimeOffset.Now.AddDays(7)
                     };
+
+                    //Adiciona cookie de sessão ao cache
+                    NimbusAppBus.Instance.Cache.SessionPrincipal.StoreAndReplicate(authToken, loggedInUser);
 
                     var response = Request.CreateResponse(System.Net.HttpStatusCode.Found);
                     response.Headers.Location = new Uri(login.RedirectURL, UriKind.Relative);
