@@ -101,6 +101,24 @@ namespace Nimbus.Web
             );
 
             webApiConfig.Routes.MapHttpRoute(
+                name: "TopMessages",
+                routeTemplate: "topmessages",
+                defaults: new { controller = "TopMessages" }
+            );
+
+            webApiConfig.Routes.MapHttpRoute(
+                name: "PostsMessages",
+                routeTemplate: "postsmessages",
+                defaults: new { controller = "PostsMessages" }
+            );
+
+            webApiConfig.Routes.MapHttpRoute(
+                name: "PostsAtt",
+                routeTemplate: "postsatt",
+                defaults: new { controller = "PostsAtt" }
+            );
+
+            webApiConfig.Routes.MapHttpRoute(
                 name: "Home",
                 routeTemplate: "",
                 defaults: new { controller = "Home" }

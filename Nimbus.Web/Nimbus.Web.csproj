@@ -80,6 +80,9 @@
     <Content Include="Website\Views\PostsGrade.cshtml" />
     <Content Include="Website\Views\UserProfile.cshtml" />
     <Content Include="Website\Views\PrivateProfileTopBar.cshtml" />
+    <Content Include="Website\Views\TopMessages.cshtml" />
+    <Content Include="Website\Views\PostsMessages.cshtml" />
+    <Content Include="Website\Views\PostsAtt.cshtml" />
     <None Include="Website\Views\Shared\_Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -108,6 +111,9 @@
     <Compile Include="Security\SecurityUtils.cs" />
     <Compile Include="Security\Token.cs" />
     <Compile Include="Utils.cs" />
+    <Compile Include="Website\Controllers\PostsAttController.cs" />
+    <Compile Include="Website\Controllers\PostsMessagesController.cs" />
+    <Compile Include="Website\Controllers\TopMessagesController.cs" />
     <Compile Include="Website\Controllers\PrivateProfileTopBarController.cs" />
     <Compile Include="Website\Controllers\UserProfileController.cs" />
     <Compile Include="Website\Controllers\PostsGradeController.cs" />

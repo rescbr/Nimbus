@@ -510,9 +510,8 @@ div.ChanPaidImg {
     float:              left;
 }
 
-/*------------------ Private Profile Top Bar --------------------*/
+/*------------------ Private Profile - Top Bar --------------------*/
 
-/*96px*/
 nav.ProfTopBar {
     margin:             0 auto;
     width:              552px;
@@ -523,6 +522,81 @@ nav.ProfTopBar {
 .ProfTopBar li {
     width:              109px;
     text-align:         center;
+}
+
+/*------------------ Private Profile - Messages --------------------*/
+/*Top*/
+nav.TopMess {
+    margin:             0 auto;
+    width:              300px;
+    height:             24px;
+    border:             1px solid #BE1E2D;
+    border-radius:      12px;
+}
+
+.TopMess li {
+    width:              145px;
+    text-align:         center;
+}
+
+/*Content*/
+div.Post_m {
+    margin-left:        312px;
+    margin-bottom:      30px;
+    width:              456px;
+    height:             60px;
+    border:             1px solid #BE1E2D;
+}
+
+div.Post_Right_m {
+    margin-left:        60px;
+    width:              396px;
+    height:             60px;
+    position:           absolute;
+    float:              left;
+}
+
+div.PostHeImg_m {
+    width:              60px;
+    height:             60px;
+    border:             1px solid #BE1E2D;
+    float:              left;
+}
+
+nav.PostHeaderLeft_m {
+    width:              auto;
+    height:             24px;
+    float:              left;
+}
+
+nav.PostHeaderRight_m {
+    width:              auto;
+    height:             24px;
+    float:              right;
+    display:            inline-block;
+    float:              right;
+}
+
+.PostHeaderRight_m li, .PostHeaderLeft_m li {
+    padding-left:       10px;
+    padding-right:      10px;
+    font-size:          small;
+    font-weight:        bold;
+}
+
+div.PostContent_m {
+    margin-top:         40px;
+    margin-right:       5px;
+    margin-left:        10px;
+    height:             1em;
+    width:              200px;
+    overflow:           hidden; /* Temporário. Fazer caber X caracteres ali D: */
+}
+
+.PostContent_m p {
+    text-align:         left;
+    font-size:          small;
+    line-height:        normal;
 }
 
 /*------------------ fim middle --------------------*/
