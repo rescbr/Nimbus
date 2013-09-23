@@ -129,8 +129,8 @@ namespace Nimbus.Web.API.Controllers
                 using(var db= DatabaseFactory.OpenDbConnection())
                 {
 
-                    listComments = db.Select<CommentAPIModel>("SELECT User.Id, User.AvatarUrl, User.Name," +
-                                                            "       Comment.Id as comment_ID, Comment.Text, Comment.ParentID, Comment.PostedOn, Comment.TopicId" +
+                    listComments = db.Select<CommentAPIModel>("SELECT User.Id as userID , User.AvatarUrl as AvatarUrl, User.Name as Name," +
+                                                            "       Comment.Id as comment_ID, Comment.Text as Text, Comment.ParentID as ParentID, Comment.PostedOn as PostedOn, Comment.TopicId as TopicId" +
                                                             "FROM User, Comment " +
                                                             "WHERE Comment.Id = {0} AND Comment.Visible = true", topicID
                                                              );
