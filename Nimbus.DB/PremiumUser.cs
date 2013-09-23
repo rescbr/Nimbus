@@ -1,5 +1,4 @@
-﻿using ServiceStack.DataAnnotations;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,11 +8,10 @@ namespace Nimbus.DB
 {
     public class PremiumUser
     {
-        [References(typeof(Premium))]
-        public int PremiumID { get; set; }
+        public virtual int PremiumId { get; set; }
 
-        [References(typeof(User))]
-        public int UserID { get; set; }
+        public virtual int UserId { get; set; }
+
 
         public bool Available { get; set; }
         public DateTime PaidOn { get; set; }

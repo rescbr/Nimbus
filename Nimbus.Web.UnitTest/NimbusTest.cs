@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nimbus.Web.API;
 using ServiceStack.OrmLite;
+using Nimbus.DB.ORM;
 
 namespace Nimbus.Web.UnitTest
 {
@@ -27,22 +28,22 @@ namespace Nimbus.Web.UnitTest
 
             using (var db = controller.DatabaseFactory.OpenDbConnection())
             {
-                db.CreateTables(false, new Type[]{
-                    typeof(Nimbus.DB.Category),
-                    typeof(Nimbus.DB.Ad), 
-                    typeof(Nimbus.DB.Organization),
-                    typeof(Nimbus.DB.User),
-                    typeof(Nimbus.DB.UserReported),
-                    typeof(Nimbus.DB.Channel),
-                    typeof(Nimbus.DB.ChannelReported),
-                    typeof(Nimbus.DB.ChannelUser),
-                    typeof(Nimbus.DB.OrganizationUser),
-                    typeof(Nimbus.DB.Topic),
-                    typeof(Nimbus.DB.TopicReported),
-                    typeof(Nimbus.DB.Comment),
-                    typeof(Nimbus.DB.CommentReported),
-                    typeof(Nimbus.DB.Message),
-                    typeof(Nimbus.DB.UserTopicFavorite)
+                db.DropAndCreateTables( new Type[]{
+                    typeof(Category),
+                    typeof(Ad), 
+                    typeof(Organization),
+                    typeof(User),
+                    typeof(UserReported),
+                    typeof(Channel),
+                    typeof(ChannelReported),
+                    typeof(ChannelUser),
+                    typeof(OrganizationUser),
+                    typeof(Topic),
+                    typeof(TopicReported),
+                    typeof(Comment),
+                    typeof(CommentReported),
+                    typeof(Message),
+                    typeof(UserTopicFavorite)
                 });
             }
         }
@@ -53,26 +54,28 @@ namespace Nimbus.Web.UnitTest
         [AssemblyCleanup]
         public static void AssemblyCleanup()
         {
+            /**/
             using (var db = controller.DatabaseFactory.OpenDbConnection())
             {
                 db.DropTables(new Type[]{
-                    typeof(Nimbus.DB.UserTopicFavorite),
-                    typeof(Nimbus.DB.Message),
-                    typeof(Nimbus.DB.CommentReported),
-                    typeof(Nimbus.DB.Comment),
-                    typeof(Nimbus.DB.TopicReported),
-                    typeof(Nimbus.DB.Topic),
-                    typeof(Nimbus.DB.OrganizationUser),
-                    typeof(Nimbus.DB.ChannelUser),
-                    typeof(Nimbus.DB.ChannelReported),
-                    typeof(Nimbus.DB.Channel),
-                    typeof(Nimbus.DB.UserReported),
-                    typeof(Nimbus.DB.User),
-                    //typeof(Nimbus.DB.Organization),
-                    typeof(Nimbus.DB.Ad)
-                   // typeof(Nimbus.DB.Category)
+                    typeof(UserTopicFavorite),
+                    typeof(Message),
+                    typeof(CommentReported),
+                    typeof(Comment),
+                    typeof(TopicReported),
+                    typeof(Topic),
+                    typeof(OrganizationUser),
+                    typeof(ChannelUser),
+                    typeof(ChannelReported),
+                    typeof(Channel),
+                    typeof(UserReported),
+                    typeof(User),
+                    typeof(Organization),
+                    typeof(Ad),
+                    typeof(Category)
                 });
             }
+            /**/
         }
     }
 }

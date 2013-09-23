@@ -1,5 +1,4 @@
-﻿using ServiceStack.DataAnnotations;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,10 +9,8 @@ namespace Nimbus.DB
     //TODO: Terminar
     public class Ad
     {
-        [AutoIncrement]
         public int Id { get; set; }
 
-        [References(typeof(Category))]
         public int CategoryId { get; set; }
 
         public string Url { get; set; }

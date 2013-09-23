@@ -161,6 +161,10 @@
       <Project>{8c15b0d3-9108-4ea3-ae19-3c9571266c47}</Project>
       <Name>WebApiContrib.Formatting.Razor</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Nimbus.DB.ORM\Nimbus.DB.ORM.csproj">
+      <Project>{7f04ec7a-7fdb-4bb5-b613-c134bc56a48d}</Project>
+      <Name>Nimbus.DB.ORM</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Nimbus.DB\Nimbus.DB.csproj">
       <Project>{0d485fa6-60bc-410c-b437-37a7c47cdb70}</Project>
       <Name>Nimbus.DB</Name>

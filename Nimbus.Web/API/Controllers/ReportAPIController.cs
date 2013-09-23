@@ -31,12 +31,12 @@ namespace Nimbus.Web.API.Controllers
                             //report comment
                             if (dados.typeReport == Models.reportType.comment)
                             {
-                                var report = new Nimbus.DB.CommentReported
+                                var report = new Nimbus.DB.ORM.CommentReported
                                 {
-                                    UserReporter_ID = NimbusUser.UserId,
-                                    UserReported_ID = dados.userReported_id,
+                                    UserReporterId = NimbusUser.UserId,
+                                    UserReportedId = dados.userReported_id,
                                     Justification = dados.Justification,
-                                    CommentReported_ID = dados.idReport
+                                    CommentReportedId = dados.idReport
                                 };
                                 db.Save(report);
                                 reportID = (int)db.GetLastInsertId(); //pega o id criado anteriormente
@@ -44,12 +44,12 @@ namespace Nimbus.Web.API.Controllers
                             //report channel
                             else if (dados.typeReport == Models.reportType.channel)
                             {
-                                var report = new Nimbus.DB.ChannelReported
+                                var report = new Nimbus.DB.ORM.ChannelReported
                                 {
-                                    UserReporter_ID = NimbusUser.UserId,
-                                    UserReported_ID = dados.userReported_id,
+                                    UserReporterId = NimbusUser.UserId,
+                                    UserReportedId = dados.userReported_id,
                                     Justification = dados.Justification,
-                                    ChannelReported_ID = dados.idReport
+                                    ChannelReportedId = dados.idReport
                                 };
                                 db.Save(report);
                                 reportID = (int)db.GetLastInsertId(); //pega o id criado anteriormente
@@ -57,22 +57,22 @@ namespace Nimbus.Web.API.Controllers
                             //report topic
                             else if (dados.typeReport == Models.reportType.topic)
                             {
-                                var report = new Nimbus.DB.TopicReported
+                                var report = new Nimbus.DB.ORM.TopicReported
                                 {
-                                    UserReporter_ID = NimbusUser.UserId,
-                                    UserReported_ID = dados.userReported_id,
+                                    UserReporterId = NimbusUser.UserId,
+                                    UserReportedId = dados.userReported_id,
                                     Justification = dados.Justification,
-                                    TopicReported_ID = dados.idReport
+                                    TopicReportedId = dados.idReport
                                 };
                                 db.Save(report);
                                 reportID = (int)db.GetLastInsertId(); //pega o id criado anteriormente
                             }
                             //report user
-                            var userReported = new Nimbus.DB.UserReported
+                            var userReported = new Nimbus.DB.ORM.UserReported
                             {
-                                UserReported_ID = dados.userReported_id,
-                                UserReporter_ID = NimbusUser.UserId,
-                                Report_ID = reportID,
+                                UserReportedId = dados.userReported_id,
+                                UserReporterId = NimbusUser.UserId,
+                                ReportId = reportID,
                                 Type = DB.Enums.ReportType.comment
                             };
                             db.Insert(userReported);

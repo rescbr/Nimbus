@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using ServiceStack.OrmLite;
+using Nimbus.DB.ORM;
 
 namespace Nimbus.Web.API.Controllers
 {
@@ -40,7 +41,7 @@ namespace Nimbus.Web.API.Controllers
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    var user = db.SelectParam<Nimbus.DB.User>(usr => usr.Id == idUser).FirstOrDefault();
+                    var user = db.SelectParam<User>(usr => usr.Id == idUser).FirstOrDefault();
                     profile.user_ID = user.Id;
                     profile.UrlImg = user.AvatarUrl;
                     profile.Name = user.FirstName + " " + user.LastName;
@@ -78,7 +79,7 @@ namespace Nimbus.Web.API.Controllers
             {
                 using(var db = DatabaseFactory.OpenDbConnection())
                 {
-                    Nimbus.DB.User user = new Nimbus.DB.User()
+                    User user = new User()
                     {
                         Occupation = profile.Occupation,
                         Interest = profile.Interest,
@@ -91,7 +92,7 @@ namespace Nimbus.Web.API.Controllers
                         BirthDate = profile.BirthDate
                     };
 
-                    db.Update<Nimbus.DB.User>(user, usr => usr.Id == NimbusUser.UserId );
+                    db.Update<User>(user, usr => usr.Id == NimbusUser.UserId );
                     db.Save(user);
                     success = true;
                 }
@@ -114,8 +115,9 @@ namespace Nimbus.Web.API.Controllers
 
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    Nimbus.DB.User user = new Nimbus.DB.User()
+                    User user = new User()
                     {
+                        
                         FirstName = newUser.FirstName,
                         LastName = newUser.LastName,
                         BirthDate= newUser.BirthDate,
@@ -124,6 +126,7 @@ namespace Nimbus.Web.API.Controllers
                         Email = newUser.Email,
                         State = newUser.State,
                         Password = passwordHash
+                        
                     };
 
                     db.Insert(user);

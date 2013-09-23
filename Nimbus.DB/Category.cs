@@ -1,5 +1,4 @@
-﻿using ServiceStack.DataAnnotations;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +8,6 @@ namespace Nimbus.DB
 {
     public class Category
     {
-        [AutoIncrement]
         public int Id { get; set; }
         public string Name { get; set; }
         public LocalizedString LocalizedName { get; set; }
