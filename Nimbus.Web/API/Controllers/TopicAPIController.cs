@@ -6,7 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using ServiceStack.OrmLite;
-using Nimbus.DB;
+using Nimbus.DB.ORM;
 using Nimbus.Web.API.Models.Comment;
 using Nimbus.Web.API.Models;
 
@@ -89,8 +89,8 @@ namespace Nimbus.Web.API.Controllers
             {
                 using(var db = DatabaseFactory.OpenDbConnection())
                 {
-                    Nimbus.DB.UserTopicFavorite user = new DB.UserTopicFavorite();
-                    user = db.SelectParam<Nimbus.DB.UserTopicFavorite>(us => us.UserId == NimbusUser.UserId && us.TopicId == idTopic).FirstOrDefault();
+                    UserTopicFavorite user = new UserTopicFavorite();
+                    user = db.SelectParam<UserTopicFavorite>(us => us.UserId == NimbusUser.UserId && us.TopicId == idTopic).FirstOrDefault();
                     UserTopicFavorite usrFavorite = new UserTopicFavorite();
                     if (user == null) //nunca favoritou
                     {
@@ -134,7 +134,7 @@ namespace Nimbus.Web.API.Controllers
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
                     //se ja existir = retirar//se não existir = criar
-                    UserTopicReadLater user = db.SelectParam<Nimbus.DB.UserTopicReadLater>(rl => rl.UserId == NimbusUser.UserId && rl.TopicId == topicID).FirstOrDefault();
+                    UserTopicReadLater user = db.SelectParam<UserTopicReadLater>(rl => rl.UserId == NimbusUser.UserId && rl.TopicId == topicID).FirstOrDefault();
                     if (user != null)
                     {
                         user.Visible = false;
@@ -174,15 +174,15 @@ namespace Nimbus.Web.API.Controllers
                 //ver permissao p vizualizar => se é pago = ter pagado, se é privado = ser aceito
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    Topic tpc = db.SelectParam<Nimbus.DB.Topic>(tp => tp.Id == topicID).FirstOrDefault();
-                    bool chnPrivate = db.SelectParam<Nimbus.DB.Channel>(ch => ch.Id == tpc.ChannelId).Select(ch => ch.IsPrivate).FirstOrDefault();
+                    Topic tpc = db.SelectParam<Topic>(tp => tp.Id == topicID).FirstOrDefault();
+                    bool chnPrivate = db.SelectParam<Channel>(ch => ch.Id == tpc.ChannelId).Select(ch => ch.IsPrivate).FirstOrDefault();
                     if (chnPrivate == false)
                     {
                         allow = true;
                     }
                     else
                     {
-                        bool? pending = db.SelectParam<Nimbus.DB.ChannelUser>(ch => ch.ChannelId == tpc.ChannelId && ch.UserId == NimbusUser.UserId)
+                        bool? pending = db.SelectParam<ChannelUser>(ch => ch.ChannelId == tpc.ChannelId && ch.UserId == NimbusUser.UserId)
                                                                                                         .Select(ch => ch.Pending).FirstOrDefault();
                         if (pending == false && pending != null) //não esta pendente = já foi aceito
                         {
@@ -195,7 +195,7 @@ namespace Nimbus.Web.API.Controllers
                     }
                     if (tpc.Price > 0)
                     {
-                        bool paid = db.SelectParam<Nimbus.DB.RoleTopic>(tp => tp.ChannelID == tpc.ChannelId && tp.TopicID == topicID)
+                        bool paid = db.SelectParam<RoleTopic>(tp => tp.ChannelId == tpc.ChannelId && tp.TopicId == topicID)
                                                                              .Select(tp => tp.Paid).FirstOrDefault();
                         if (paid == true)
                         {
@@ -232,17 +232,17 @@ namespace Nimbus.Web.API.Controllers
 
                     if (allow == true)
                     {
-                        Topic tpc = db.SelectParam<Nimbus.DB.Topic>(tp => tp.Id == topicID).FirstOrDefault();
+                        Topic tpc = db.SelectParam<Topic>(tp => tp.Id == topicID).FirstOrDefault();
 
                         #region comments
-                        List<Comment> comments = db.SelectParam<Nimbus.DB.Comment>(cm => cm.TopicId == topicID && cm.Visible == true);
+                        List<Comment> comments = db.SelectParam<Comment>(cm => cm.TopicId == topicID && cm.Visible == true);
                         List<CommentAPIModel> listComments = new List<CommentAPIModel>();
                         foreach (Comment item in comments)
                         {                                
                             CommentAPIModel dados = new CommentAPIModel();
-                            dados.AvatarUrl = db.SelectParam<Nimbus.DB.User>(us => us.Id == item.UserId).Select(us => us.AvatarUrl).FirstOrDefault();
+                            dados.AvatarUrl = db.SelectParam<User>(us => us.Id == item.UserId).Select(us => us.AvatarUrl).FirstOrDefault();
                             dados.comment_ID = item.Id;
-                            dados.Name = db.SelectParam<Nimbus.DB.User>(us => us.Id == item.UserId).Select(us => us.FirstName + " " + us.LastName).FirstOrDefault();
+                            dados.Name = db.SelectParam<User>(us => us.Id == item.UserId).Select(us => us.FirstName + " " + us.LastName).FirstOrDefault();
                             dados.ParentID = item.ParentId;
                             dados.PostedOn = item.PostedOn;
                             dados.Text = item.Text;
@@ -256,10 +256,10 @@ namespace Nimbus.Web.API.Controllers
                         {
                             #region exam
                             //verificar se o usuario já fez o exame
-                            int ChannelID = db.SelectParam<Nimbus.DB.Channel>(ch => ch.Id == tpc.ChannelId).Select(ch => ch.OrganizationId).FirstOrDefault();
+                            int ChannelID = db.SelectParam<Channel>(ch => ch.Id == tpc.ChannelId).Select(ch => ch.OrganizationId).FirstOrDefault();
                          
                             UserExamAPI userExam = validateExam(tpc.Id, ChannelID);
-                            bool isPrivate = db.SelectParam<Nimbus.DB.Channel>(ch => ch.Id == tpc.ChannelId).Select(ch => ch.IsPrivate).FirstOrDefault();
+                            bool isPrivate = db.SelectParam<Channel>(ch => ch.Id == tpc.ChannelId).Select(ch => ch.IsPrivate).FirstOrDefault();
                             
                             if (userExam == null || isPrivate == false)
                             {
@@ -267,7 +267,7 @@ namespace Nimbus.Web.API.Controllers
                                 //caso seja um teste free, o 'bool' já permite refazer
                                 List<QuestionTopicAPI> listQuestion = new List<QuestionTopicAPI>();
 
-                                foreach (Question item in tpc.Question)
+                                foreach (Nimbus.DB.Question item in tpc.Question)
                                 {
                                     QuestionTopicAPI question = new QuestionTopicAPI();
                                     question.Question = item.TextQuestion;
@@ -303,7 +303,7 @@ namespace Nimbus.Web.API.Controllers
                             topic.generalTopic.TopicType = tpc.TopicType.ToString();
                             topic.generalTopic.UrlImgTopic = tpc.ImgUrl;
                             topic.generalTopic.UrlImgBanner = tpc.UrlCapa;
-                            topic.generalTopic.CountFavorites = db.SelectParam<Nimbus.DB.UserTopicFavorite>(tp => tp.TopicId == topicID && tp.Visible == true).Count();
+                            topic.generalTopic.CountFavorites = db.SelectParam<UserTopicFavorite>(tp => tp.TopicId == topicID && tp.Visible == true).Count();
                             topic.Exam.Comments = listComments;
                             #endregion
                         }
@@ -336,11 +336,11 @@ namespace Nimbus.Web.API.Controllers
                     List<Ad> ads = new List<Ad>();
                     if (idCategory == -1) //não tem categoria, anuncio generico
                     {
-                        ads = db.SelectParam<Nimbus.DB.Ad>(ad => ad.Visible == true);                       
+                        ads = db.SelectParam<Ad>(ad => ad.Visible == true);                       
                     }
                     else
                     {
-                        ads = db.SelectParam<Nimbus.DB.Ad>(ad => ad.Visible == true && ad.CategoryId == idCategory);
+                        ads = db.SelectParam<Ad>(ad => ad.Visible == true && ad.CategoryId == idCategory);
                     }
                     foreach (Ad item in ads)
                     {
@@ -381,12 +381,12 @@ namespace Nimbus.Web.API.Controllers
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
                     UserExam exam = new UserExam();                    
-                    exam = db.SelectParam<Nimbus.DB.UserExam>(ex => ex.ExamID == topicID && ex.UserID == NimbusUser.UserId
-                                                                        && ex.OrganizationID == organizationID).FirstOrDefault();
+                    exam = db.SelectParam<UserExam>(ex => ex.ExamId == topicID && ex.UserId == NimbusUser.UserId
+                                                                        && ex.OrganizationId == organizationID).FirstOrDefault();
                     if (exam != null)
                     {
                         userExam.dateRealized = exam.RealizedOn;
-                        userExam.ExamID = exam.ExamID;
+                        userExam.ExamID = exam.ExamId;
                         userExam.Grade = exam.Grade;
                     }
                 }

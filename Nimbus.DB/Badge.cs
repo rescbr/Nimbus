@@ -1,5 +1,4 @@
-﻿using ServiceStack.DataAnnotations;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,7 +13,6 @@ namespace Nimbus.DB
             LocalizedDescription = new LocalizedString();
         }
 
-        [AutoIncrement]
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }

@@ -7,8 +7,8 @@ using System.Net.Http;
 using System.Web.Http;
 using ServiceStack.OrmLite;
 using Nimbus.Web.API.Models;
-using Nimbus.DB;
 using Nimbus.Web.API.Models.User;
+using Nimbus.DB.ORM;
 
 namespace Nimbus.Web.API.Controllers
 {
@@ -34,12 +34,12 @@ namespace Nimbus.Web.API.Controllers
                 {
                     AlertChannelPay alert = new AlertChannelPay();
                     bool allow = false;
-                    Nimbus.DB.Channel channel2 = db.Query<Nimbus.DB.Channel>("SELECT Channel.Price, Channel.IsPrivate" +
-                                                                             "FROM Channel" +
+                    Channel channel2 = db.Query<Channel>("SELECT Channel.Price, Channel.IsPrivate " +
+                                                                             "FROM Channel " +
                                                                              "WHERE Channel.Id ={0} AND Channel.Visible = true", channelID).FirstOrDefault();
                     if (channel2.Price > 0)
                     {
-                        bool paid = db.SelectParam<Nimbus.DB.Role>(ch => ch.ChannelId == channelID && ch.UserId == NimbusUser.UserId)
+                        bool paid = db.SelectParam<Role>(ch => ch.ChannelId == channelID && ch.UserId == NimbusUser.UserId)
                                                                         .Select(ch => ch.Paid).FirstOrDefault();
                         if (paid == true)
                         { 
@@ -53,7 +53,7 @@ namespace Nimbus.Web.API.Controllers
                     }
                     else if (channel2.IsPrivate == true)
                     {
-                        bool? pending = db.SelectParam<Nimbus.DB.ChannelUser>(ch => ch.ChannelId == channelID && ch.UserId == NimbusUser.UserId)
+                        bool? pending = db.SelectParam<ChannelUser>(ch => ch.ChannelId == channelID && ch.UserId == NimbusUser.UserId)
                                                                                   .Select(ch => ch.Pending).FirstOrDefault();
                         if (pending == false && pending != null)
                         {
@@ -67,8 +67,8 @@ namespace Nimbus.Web.API.Controllers
                     }
                     if (allow == true)
                     {
-                        Nimbus.DB.Channel channel = db.SelectParam<Nimbus.DB.Channel>(chn => chn.Id == channelID && chn.Visible == true).FirstOrDefault();
-                        List<ChannelTag> tagList = db.SelectParam<Nimbus.DB.ChannelTag>(tg => tg.ChannelID == channelID && tg.Visible == true).ToList();
+                        Channel channel = db.SelectParam<Channel>(chn => chn.Id == channelID && chn.Visible == true).FirstOrDefault();
+                        List<ChannelTag> tagList = db.SelectParam<ChannelTag>(tg => tg.ChannelId == channelID && tg.Visible == true).ToList();
                         
                         List<InteractionAPI> listComments = db.Select<InteractionAPI>("SELECT Comment.UserId FROM Comment" +
                                                          "INNER JOIN Topic ON Comment.TopicId = Topic.Id" +
@@ -116,7 +116,7 @@ namespace Nimbus.Web.API.Controllers
                                                        NimbusUser.UserId);
                     foreach (int item in listID)
                     {
-                        Nimbus.DB.Channel chn = db.Select<Nimbus.DB.Channel>("SELECT Channel.Organization, Channel.Id, Channel.Name, Channel.ImgUrl "+
+                        Channel chn = db.Select<Channel>("SELECT Channel.Organization, Channel.Id, Channel.Name, Channel.ImgUrl "+
                                                                                  "FROM Channel WHERE Channel.Id = {0} AND Channel.Visible = true", item).FirstOrDefault();
                         AbstractChannelAPI channel = new AbstractChannelAPI();
                         channel.channel_ID = chn.Id;
@@ -151,7 +151,7 @@ namespace Nimbus.Web.API.Controllers
                                                        NimbusUser.UserId);
                     foreach (int item in listID)
                     {
-                        Nimbus.DB.Channel chn = db.Select<Nimbus.DB.Channel>("SELECT Channel.Organization, Channel.Id, Channel.Name, Channel.ImgUrl " +
+                        Channel chn = db.Select<Channel>("SELECT Channel.Organization, Channel.Id, Channel.Name, Channel.ImgUrl " +
                                                                                  "FROM Channel WHERE Channel.Id = {0} AND Channel.Visible = true",item).FirstOrDefault();
                         if (chn != null)
                         {
@@ -184,15 +184,15 @@ namespace Nimbus.Web.API.Controllers
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    List<Nimbus.DB.Channel> chnList = new List<Channel>(); 
+                    List<Channel> chnList = new List<Channel>(); 
                     if (categoryID > 0)
                     {
-                        chnList = db.Select<Nimbus.DB.Channel>("SELECT Channel.OrganizationId, Channel.Id, Channel.Name, Channel.ImgUrl " +
+                        chnList = db.Select<Channel>("SELECT Channel.OrganizationId, Channel.Id, Channel.Name, Channel.ImgUrl " +
                                                                                  "FROM Channel WHERE Channel.Visible = true AND Channel.CategoryId = {0}", categoryID);
                     }
                     else
                     {
-                        chnList = db.Select<Nimbus.DB.Channel>("SELECT Channel.OrganizationId, Channel.Id, Channel.Name, Channel.ImgUrl " +
+                        chnList = db.Select<Channel>("SELECT Channel.OrganizationId, Channel.Id, Channel.Name, Channel.ImgUrl " +
                                                                                  "FROM Channel WHERE Channel.Visible = true");
                     }
                     foreach (var item in chnList)
@@ -267,7 +267,7 @@ namespace Nimbus.Web.API.Controllers
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    Nimbus.DB.Channel channel2 = db.Query<Nimbus.DB.Channel>("SELECT Channel.Price, Channel.IsPrivate" +
+                    Channel channel2 = db.Query<Channel>("SELECT Channel.Price, Channel.IsPrivate" +
                                                                                 "FROM Channel" +
                                                                                 "WHERE Channel.Id ={0} AND Channel.Visible = true", channelID).FirstOrDefault();
                     bool pending = true;
@@ -275,11 +275,11 @@ namespace Nimbus.Web.API.Controllers
                     {
                         pending = false;
                     }
-                        Nimbus.DB.ChannelUser user = db.SelectParam<Nimbus.DB.ChannelUser>(chn => chn.UserId == NimbusUser.UserId &&
+                        ChannelUser user = db.SelectParam<ChannelUser>(chn => chn.UserId == NimbusUser.UserId &&
                                                                                                   chn.ChannelId == channelID).FirstOrDefault();
                         if (user == null)//novato
                         {
-                            db.Insert<Nimbus.DB.ChannelUser>(new ChannelUser
+                            db.Insert<ChannelUser>(new ChannelUser
                             {
                                 ChannelId = channelID,
                                 Interaction = 0,
@@ -332,17 +332,17 @@ namespace Nimbus.Web.API.Controllers
                         try
                         {
                             bool prox = false;
-                            bool allow = db.SelectParam<Nimbus.DB.Role>(role => role.UserId == NimbusUser.UserId && role.ChannelId == idChannel)
+                            bool allow = db.SelectParam<Role>(role => role.UserId == NimbusUser.UserId && role.ChannelId == idChannel)
                                                                                 .Exists (role => role.IsOwner == true || role.ModeratorManager == true);
 
 
-                            int countModerator = db.SelectParam<Nimbus.DB.Role>(mdr => mdr.ChannelId == idChannel &&
+                            int countModerator = db.SelectParam<Role>(mdr => mdr.ChannelId == idChannel &&
                                                                                       (mdr.ModeratorManager == true || mdr.MessageManager == true
                                                                                        || mdr.ChannelMagager == true || mdr.TopicManager == true 
                                                                                        || mdr.UserManager == true)).Count();
 
                             //organizationId == 0 => nimbus, portanto free
-                            int orgID = db.SelectParam<Nimbus.DB.Channel>(ch => ch.Id == idChannel).Select(ch => ch.OrganizationId).FirstOrDefault();
+                            int orgID = db.SelectParam<Channel>(ch => ch.Id == idChannel).Select(ch => ch.OrganizationId).FirstOrDefault();
 
                             if (allow == true)
                             {
@@ -408,7 +408,7 @@ namespace Nimbus.Web.API.Controllers
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
                     //se ja existir = retirar//se não existir = criar
-                    UserChannelReadLater user = db.SelectParam<Nimbus.DB.UserChannelReadLater>(rl => rl.UserId == NimbusUser.UserId && rl.ChannelId == channelID).FirstOrDefault();
+                    UserChannelReadLater user = db.SelectParam<UserChannelReadLater>(rl => rl.UserId == NimbusUser.UserId && rl.ChannelId == channelID).FirstOrDefault();
                     if (user != null)
                     {
                         user.Visible = false;
@@ -453,8 +453,8 @@ namespace Nimbus.Web.API.Controllers
                     {
                         try
                         {
-                            bool allow = db.SelectParam<Nimbus.DB.Role>(user => user.UserId == NimbusUser.UserId).Select(us => us.IsOwner).FirstOrDefault();
-                            bool isPrivate = db.SelectParam<Nimbus.DB.Channel>(ch => ch.Id == channelID).Select(p => p.IsPrivate).FirstOrDefault();
+                            bool allow = db.SelectParam<Role>(user => user.UserId == NimbusUser.UserId).Select(us => us.IsOwner).FirstOrDefault();
+                            bool isPrivate = db.SelectParam<Channel>(ch => ch.Id == channelID).Select(p => p.IsPrivate).FirstOrDefault();
                             bool allOk = false;
 
                             if (allow == true)//usuario possui permissao
@@ -462,7 +462,7 @@ namespace Nimbus.Web.API.Controllers
                                 //colocar restrição apra canal free
                                 if (isPrivate == false)
                                 {
-                                    int countTag = db.SelectParam<Nimbus.DB.ChannelTag>(ch => ch.ChannelID == channelID).Count();
+                                    int countTag = db.SelectParam<ChannelTag>(ch => ch.ChannelId == channelID).Count();
                                     if (countTag <= 4)
                                     {
                                         tagsList = tagsList.Take(5 - (countTag + 1)).ToList();
@@ -483,7 +483,7 @@ namespace Nimbus.Web.API.Controllers
                                     {
                                         ChannelTag tag = new ChannelTag
                                         {
-                                            ChannelID = channelID,
+                                            ChannelId = channelID,
                                             TagName = item,
                                             Visible = true 
                                         };
@@ -528,15 +528,15 @@ namespace Nimbus.Web.API.Controllers
                     {
                         try
                         {
-                            bool allow = db.SelectParam<Nimbus.DB.Role>(user => user.UserId == NimbusUser.UserId).Select(us => us.IsOwner).FirstOrDefault();
+                            bool allow = db.SelectParam<Role>(user => user.UserId == NimbusUser.UserId).Select(us => us.IsOwner).FirstOrDefault();
 
                             if (allow == true)//usuario possui permissao
                             {
 
                                 foreach (int item in tagList)
                                 {
-                                    var dado = new Nimbus.DB.ChannelTag() { Visible = false };
-                                    db.Update<Nimbus.DB.ChannelTag>(dado, ch => ch.ChannelID == item);
+                                    var dado = new ChannelTag() { Visible = false };
+                                    db.Update<ChannelTag>(dado, ch => ch.ChannelId == item);
                                     db.Save(dado);
                                 }
                                 isOk = true;
@@ -565,20 +565,26 @@ namespace Nimbus.Web.API.Controllers
         /// <param name="newChannel"></param>
         /// <returns></returns>
         [Authorize]
-        public bool newChannel(NewChannelAPI newChannel)
-        {//TODO:Notificação
+        public bool newChannel(Channel channel)
+        {
+            //TODO:Notificação
             bool created = false;
             try
             {
+                channel.CreatedOn = DateTime.Now;
+                channel.Followers = 0;
+                channel.Ranking = 0;
+                channel.LastModification = DateTime.Now;
+
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
                     bool allow = false; //zero = padrao Nimbus
-                    if (newChannel.Organization_ID != 0)
+                    if (channel.OrganizationId != 0)
                     {
-                        int idUser = db.SelectParam<Nimbus.DB.OrganizationUser>(us => us.UserId == NimbusUser.UserId
-                                                                                   && us.OrganizationId == newChannel.Organization_ID).Select(us => us.UserId).FirstOrDefault();
+                        int idUser = db.SelectParam<OrganizationUser>(us => us.UserId == NimbusUser.UserId
+                                                                                   && us.OrganizationId == channel.OrganizationId).Select(us => us.UserId).FirstOrDefault();
 
-                        bool isManager = db.SelectParam<Nimbus.DB.Role>(us => us.UserId == idUser)
+                        bool isManager = db.SelectParam<Role>(us => us.UserId == idUser)
                                                                         .Exists(us => us.IsOwner == true || us.ChannelMagager == true);
                         if (isManager == true)
                         {
@@ -600,30 +606,12 @@ namespace Nimbus.Web.API.Controllers
                         {
                             try
                             {
-                                Nimbus.DB.Channel channel = new Nimbus.DB.Channel()
-                                {
-                                    CategoryId = newChannel.Category_ID,
-                                    CreatedOn = DateTime.Now,
-                                    LastModification = DateTime.Now,
-                                    Description = newChannel.Description,
-                                    Followers = 0,
-                                    ImgUrl = newChannel.ImgUrl,
-                                    IsCourse = newChannel.IsCourse,
-                                    IsPrivate = newChannel.IsPrivate,
-                                    Name = newChannel.Name,
-                                    OpenToComments = newChannel.OpenToComments,
-                                    OrganizationId = newChannel.Organization_ID,
-                                    OwnerId = NimbusUser.UserId,
-                                    Price = newChannel.IsPrivate == true ? newChannel.Price : 0,
-                                    Ranking = 0,
-                                    Visible = true
-                                };
                                 db.Insert(channel);
                                 int channelID = (int)db.GetLastInsertId();
 
-                                Nimbus.DB.VoteChannel vote = new VoteChannel
+                                VoteChannel vote = new VoteChannel
                                 {
-                                    Channel_ID = channelID,
+                                    ChannelId = channelID,
                                     Score = 0
                                 };
                                 db.Insert(vote);
@@ -661,13 +649,13 @@ namespace Nimbus.Web.API.Controllers
             {
                 using(var db = DatabaseFactory.OpenDbConnection())
                 {
-                    bool isOwner = db.SelectParam<Nimbus.DB.Role>(own => own.UserId == NimbusUser.UserId && own.ChannelId == editChannel.Channel_ID)
+                    bool isOwner = db.SelectParam<Role>(own => own.UserId == NimbusUser.UserId && own.ChannelId == editChannel.Channel_ID)
                                                                         .Select(own => own.IsOwner).FirstOrDefault();
-                    bool isManager = db.SelectParam<Nimbus.DB.Role>(mg => mg.UserId == NimbusUser.UserId && mg.ChannelId == editChannel.Channel_ID)
+                    bool isManager = db.SelectParam<Role>(mg => mg.UserId == NimbusUser.UserId && mg.ChannelId == editChannel.Channel_ID)
                                                                         .Select(mg => mg.ChannelMagager).FirstOrDefault();
                     if (isOwner == true || isManager == true)
                     {
-                        Channel channel = db.SelectParam<Nimbus.DB.Channel>(chn => chn.Id == editChannel.Channel_ID && chn.Visible == true).FirstOrDefault();
+                        Channel channel = db.SelectParam<Channel>(chn => chn.Id == editChannel.Channel_ID && chn.Visible == true).FirstOrDefault();
                         channel.Name = editChannel.Name;
                         channel.CategoryId = editChannel.Category_ID;
                         channel.Description = editChannel.Description;
@@ -716,7 +704,7 @@ namespace Nimbus.Web.API.Controllers
                     {
                         try
                         {
-                            var voted = db.SelectParam<Nimbus.DB.ChannelUser>(vt => vt.UserId == NimbusUser.UserId && vt.ChannelId == vote.Channel_ID && vt.Pending == false)
+                            var voted = db.SelectParam<ChannelUser>(vt => vt.UserId == NimbusUser.UserId && vt.ChannelId == vote.Channel_ID && vt.Pending == false)
                                                                                      .Select(vt => vt.Vote).FirstOrDefault();
                             if (voted == null)
                             {
@@ -729,7 +717,7 @@ namespace Nimbus.Web.API.Controllers
                                                                 new { score = vote.Score, channelID = vote.Channel_ID }).FirstOrDefault();
 
                                 ChannelUser chnUser = new ChannelUser { Vote = true, Score = vote.Score };
-                                db.Update<Nimbus.DB.ChannelUser>(chnUser, chn => chn.UserId == NimbusUser.UserId && chn.ChannelId == vote.Channel_ID);
+                                db.Update<ChannelUser>(chnUser, chn => chn.UserId == NimbusUser.UserId && chn.ChannelId == vote.Channel_ID);
 
                                 score = nota;
                                 trans.Commit();
@@ -741,7 +729,7 @@ namespace Nimbus.Web.API.Controllers
                                     Score = vote.Score
                                 };
 
-                                int notaVelha = db.SelectParam<Nimbus.DB.ChannelUser>(vt => vt.ChannelId == vote.Channel_ID && vt.UserId == NimbusUser.UserId)
+                                int notaVelha = db.SelectParam<ChannelUser>(vt => vt.ChannelId == vote.Channel_ID && vt.UserId == NimbusUser.UserId)
                                                                                            .Select(vt => vt.Score).FirstOrDefault();
 
                                 int nota = db.Query<int>("UPDATE VoteChannel SET VoteChannel.Score = VoteChannel.Score + @score OUTPUT INSERTED.Score " +
@@ -750,7 +738,7 @@ namespace Nimbus.Web.API.Controllers
                                                                 new { score = (vote.Score - notaVelha), channelID = vote.Channel_ID, user = NimbusUser.UserId }).FirstOrDefault();
 
                                 ChannelUser chnUser = new ChannelUser { Score = vote.Score };
-                                db.Update<Nimbus.DB.ChannelUser>(chnUser, chn => chn.UserId == NimbusUser.UserId && chn.ChannelId == vote.Channel_ID);
+                                db.Update<ChannelUser>(chnUser, chn => chn.UserId == NimbusUser.UserId && chn.ChannelId == vote.Channel_ID);
 
                                 trans.Commit();
                             }
@@ -784,14 +772,14 @@ namespace Nimbus.Web.API.Controllers
             {
                 using(var db = DatabaseFactory.OpenDbConnection())
                 {
-                    int allow = db.SelectParam<Nimbus.DB.Role>(role => role.UserId == NimbusUser.UserId && 
+                    int allow = db.SelectParam<Role>(role => role.UserId == NimbusUser.UserId && 
                                                                        (role.IsOwner == true || role.ChannelMagager == true || role.UserManager == true)).Count();
                     if (allow > 0)
                     {
-                        List<int> idUsers = db.SelectParam<Nimbus.DB.ChannelUser>(ch => ch.ChannelId == channelID && ch.Pending == true).Select(ch => ch.UserId).ToList();
+                        List<int> idUsers = db.SelectParam<ChannelUser>(ch => ch.ChannelId == channelID && ch.Pending == true).Select(ch => ch.UserId).ToList();
                         foreach (int item in idUsers)
                         {
-                            User user = db.Select<Nimbus.DB.User>("SELECT User.FirstName, User.LastName, User.AvatarUrl " +
+                            User user = db.Select<User>("SELECT User.FirstName, User.LastName, User.AvatarUrl " +
                                                                              "FROM User WHERE User.Id = {0}", item).FirstOrDefault();
                             if(user != null)
                             {
@@ -832,7 +820,7 @@ namespace Nimbus.Web.API.Controllers
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    bool allow = db.SelectParam<Nimbus.DB.Role>(ch => ch.ChannelId == dados.ChannelID && ch.UserId == NimbusUser.UserId)
+                    bool allow = db.SelectParam<Role>(ch => ch.ChannelId == dados.ChannelID && ch.UserId == NimbusUser.UserId)
                                                                         .Exists(ch => ch.IsOwner == true || ch.UserManager == true ||
                                                                                 ch.ChannelMagager == true);
                     if (allow == true)
@@ -844,7 +832,7 @@ namespace Nimbus.Web.API.Controllers
                         {
                             Pending = dados.isAccept
                         };
-                        db.Update<Nimbus.DB.ChannelUser>(channel, ch => ch.UserId == dados.IdUser && ch.ChannelId == dados.ChannelID);
+                        db.Update<ChannelUser>(channel, ch => ch.UserId == dados.IdUser && ch.ChannelId == dados.ChannelID);
 
                         accept = true;
                     }

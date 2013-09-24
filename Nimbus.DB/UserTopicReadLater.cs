@@ -1,5 +1,4 @@
-﻿using ServiceStack.DataAnnotations;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,15 +8,12 @@ namespace Nimbus.DB
 {
     public class UserTopicReadLater
     {
+        public virtual int Id { get; set; }
 
-        [AutoIncrement]
-        public int Id { get; set; }
+        public virtual int UserId { get; set; }
 
-        [References(typeof(User))]
-        public int UserId { get; set; }
+        public virtual int TopicId { get; set; }
 
-        [References(typeof(Topic))]
-        public int TopicId { get; set; }
 
         public bool Visible { get; set; }
         public DateTime? ReadOn { get; set; }

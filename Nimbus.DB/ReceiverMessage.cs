@@ -1,5 +1,4 @@
-﻿using ServiceStack.DataAnnotations;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,15 +8,13 @@ namespace Nimbus.DB
 {
     public class ReceiverMessage
     {
-        [References(typeof(User))]
-        public int UserID { get; set; }
+        public virtual int UserId { get; set; }
 
-        [References(typeof(Message))]
-        public int MessageID { get; set; }
+        public virtual int MessageId { get; set; }
+
 
         public bool  IsOwner { get; set; }
 
-        [References(typeof(User))]
         public string NameUser { get; set; }
 
         public Enums.MessageType Status { get; set; }

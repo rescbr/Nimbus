@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nimbus.DB.ORM;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -18,7 +19,7 @@ namespace Nimbus.Web.API.Models.Channel
         public string RankingChannel { get; set; }
         public string ParticipationChannel { get; set; }
         public string MessageAlert { get; set; }
-        public List<Nimbus.DB.ChannelTag> TagList { get; set; }
+        public List<ChannelTag> TagList { get; set; }
         public decimal Price {get;set;}
         public string UrlImgChannel { get; set; }
         public bool isMember { get; set; }

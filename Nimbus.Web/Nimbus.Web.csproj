@@ -46,17 +46,24 @@
     <Reference Include="Owin.Types">
       <HintPath>..\packages\Owin.Types.0.8.5\lib\net40\Owin.Types.dll</HintPath>
     </Reference>
-    <Reference Include="ServiceStack.Interfaces">
-      <HintPath>..\packages\ServiceStack.Common.3.9.58\lib\net35\ServiceStack.Interfaces.dll</HintPath>
+    <Reference Include="ServiceStack.Common">
+      <HintPath>..\packages\ServiceStack.Common.3.9.62\lib\net35\ServiceStack.Common.dll</HintPath>
     </Reference>
-    <Reference Include="ServiceStack.OrmLite">
-      <HintPath>..\packages\ServiceStack.OrmLite.SqlServer.3.9.58\lib\ServiceStack.OrmLite.dll</HintPath>
+    <Reference Include="ServiceStack.Interfaces, Version=3.9.60.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\ServiceStack.Common.3.9.62\lib\net35\ServiceStack.Interfaces.dll</HintPath>
     </Reference>
-    <Reference Include="ServiceStack.OrmLite.SqlServer">
-      <HintPath>..\packages\ServiceStack.OrmLite.SqlServer.3.9.58\lib\ServiceStack.OrmLite.SqlServer.dll</HintPath>
+    <Reference Include="ServiceStack.OrmLite, Version=3.9.60.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\ServiceStack.OrmLite.SqlServer.3.9.62\lib\net35\ServiceStack.OrmLite.dll</HintPath>
     </Reference>
-    <Reference Include="ServiceStack.Text">
-      <HintPath>..\packages\ServiceStack.Text.3.9.58\lib\net35\ServiceStack.Text.dll</HintPath>
+    <Reference Include="ServiceStack.OrmLite.SqlServer, Version=3.9.60.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\ServiceStack.OrmLite.SqlServer.3.9.62\lib\net35\ServiceStack.OrmLite.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Text, Version=3.9.59.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\ServiceStack.Text.3.9.62\lib\net35\ServiceStack.Text.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http" />
     <Reference Include="System" />
@@ -79,7 +86,7 @@
     <Compile Include="API\Controllers\ReportAPIController.cs" />
     <Compile Include="API\Controllers\SearchAPIController.cs" />
     <Compile Include="API\Controllers\TopicAPIController.cs" />
-    <Compile Include="API\Controllers\UserAPIController.cs" />
+    <Compile Include="API\Controllers\UserController.cs" />
     <Compile Include="API\Models\AdsAPIModel.cs" />
     <Compile Include="API\Models\AlertMessageAPIModel.cs" />
     <Compile Include="API\Models\ChannelAPIModel.cs" />
@@ -153,6 +160,10 @@
     <ProjectReference Include="..\Dependencies\WebApiContrib.Formatting.Razor\src\WebApiContrib.Formatting.Razor\WebApiContrib.Formatting.Razor.csproj">
       <Project>{8c15b0d3-9108-4ea3-ae19-3c9571266c47}</Project>
       <Name>WebApiContrib.Formatting.Razor</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nimbus.DB.ORM\Nimbus.DB.ORM.csproj">
+      <Project>{7f04ec7a-7fdb-4bb5-b613-c134bc56a48d}</Project>
+      <Name>Nimbus.DB.ORM</Name>
     </ProjectReference>
     <ProjectReference Include="..\Nimbus.DB\Nimbus.DB.csproj">
       <Project>{0d485fa6-60bc-410c-b437-37a7c47cdb70}</Project>
