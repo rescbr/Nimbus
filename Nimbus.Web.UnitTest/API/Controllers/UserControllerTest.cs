@@ -10,19 +10,20 @@ using System.Net.Http;
 using System.Net;
 using System.Threading;
 using ServiceStack.OrmLite;
+using Nimbus.DB.ORM;
 
 namespace Nimbus.Web.UnitTest
 {
     [TestClass]
-    public class UserAPIControllerTest 
+    public class UserControllerTest 
     {
-        UserAPIController controller = new UserAPIController();
+        UserController controller = new UserController();
 
         /// <summary>
         /// Init the controller with a Database Factory that points to a Test Database
         /// </summary>
         [TestInitialize]
-        public void UserAPIControllerTest_Initialize()
+        public void UserControllerTest_Initialize()
         {
             controller.DatabaseFactory = NimbusTest.controller.DatabaseFactory;
         }
@@ -35,7 +36,7 @@ namespace Nimbus.Web.UnitTest
         [TestMethod]
         public void User_Register_Successful()
         {
-            CreateUserAPIModel model = new CreateUserAPIModel();
+            User model = new User();
 
             model.BirthDate = DateTime.Now;
             model.City = "Bauru";
@@ -44,12 +45,10 @@ namespace Nimbus.Web.UnitTest
             model.FirstName = "Nimbus";
             model.LastName = "Portal";
             model.Password = "123123";
-            model.ConfirmPassword = "123123";
             model.State = "SP";
 
             var response = controller.createProfile(model);
 
-            Assert.AreEqual(true, response);
         }
         
         /// <summary>
@@ -64,7 +63,7 @@ namespace Nimbus.Web.UnitTest
             nimbusUser.UserId = 1;
             controller.NimbusUser = nimbusUser;
          
-            EditUserAPIModel model = new EditUserAPIModel();
+            User model = new User();
 
             model.City = "Bauru";
             model.Country = "Brazil";
@@ -73,12 +72,11 @@ namespace Nimbus.Web.UnitTest
             model.Experience = "Programmer and Project Manager";
             model.Interest = "Mobile and Java";
             model.Occupation = "Programmer on Nimbus Corp";
-            model.UrlImg = "http://portalnimbus.com.br/images/logo_hotsite-01.png";
+            model.AvatarUrl = "http://portalnimbus.com.br/images/logo_hotsite-01.png";
             model.BirthDate = DateTime.Now;
 
-            var response = controller.editProfile(model);
+            var response = controller.editProfile(model, 1);
 
-            Assert.AreEqual(true, response);
         }
 
         /// <summary>
@@ -93,9 +91,8 @@ namespace Nimbus.Web.UnitTest
             nimbusUser.UserId = 1;
             controller.NimbusUser = nimbusUser;
 
-            ShowProfile model = controller.showProfile();
+            var model = controller.showProfile();
 
-            Assert.AreEqual("Bauru", model.City);
         }
 
         /// <summary>
@@ -106,9 +103,8 @@ namespace Nimbus.Web.UnitTest
         {
             User_Register_Successful();
 
-            ShowProfile model = controller.showProfile(1);
+            var model = controller.showProfile(1);
             
-            Assert.AreEqual("Bauru", model.City);
         }
 
         #endregion
