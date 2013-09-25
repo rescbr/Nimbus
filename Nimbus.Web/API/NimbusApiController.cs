@@ -10,7 +10,10 @@ namespace Nimbus.Web.API
 {
     public class NimbusApiController : ApiController
     {
-
+        /// <summary>
+        /// For test purposes only!
+        /// </summary>
+        private NimbusUser _nimbusUser = null;
         /// <summary>
         /// Obtém o NimbusUser da requisição atual.
         /// </summary>
@@ -18,14 +21,31 @@ namespace Nimbus.Web.API
         {
             get
             {
-                if (User.Identity.AuthenticationType == "NimbusUser")
+                if (_nimbusUser != null)
                 {
-                    return ((User.Identity) as NimbusUser);
+                    return _nimbusUser;
                 }
-                else throw new Exception("User.Identity.AuthenticationType is not NimbusUser.");
+                else
+                {
+                    if (User.Identity.AuthenticationType == "NimbusUser")
+                    {
+                        return ((User.Identity) as NimbusUser);
+                    }
+                    else throw new Exception("User.Identity.AuthenticationType is not NimbusUser.");
+                }
+                
+            }
+
+            set
+            {
+                _nimbusUser = value;
             }
         }
 
+        /// <summary>
+        /// For test purposes only!
+        /// </summary>
+        private IDbConnectionFactory _databaseFactory = null;
         /// <summary>
         /// Obtém a DatabaseFactory a partir das configurações no NimbusAppBus.
         /// </summary>
@@ -33,9 +53,16 @@ namespace Nimbus.Web.API
         {
             get
             {
-                return new OrmLiteConnectionFactory
+                if(_databaseFactory != null)
+                    return _databaseFactory;
+                else
+                    return new OrmLiteConnectionFactory
                     (NimbusAppBus.Instance.Settings.DatabaseConnectionString,
                     SqlServerDialect.Provider);
+            }
+            set
+            {
+                _databaseFactory = value;
             }
         }
 

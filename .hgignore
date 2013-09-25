@@ -42,3 +42,4 @@ _ReSharper*/
 *.sdf
 
 packages/
+Nimbus.sln.orig

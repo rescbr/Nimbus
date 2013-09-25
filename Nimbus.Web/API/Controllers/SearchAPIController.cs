@@ -60,7 +60,7 @@ namespace Nimbus.Web.API.Controllers
                             search.abstractTopic = db.Query<AbstractTopicAPI>("SELECT Topic.Id as topic_ID, Topic.ImgUrl as UrlImgTopic, Topic.Description as shortTexTopic, Topic.Title, "+
                                                                                        "Topic.TopicType as Type, Topic.LastModified as ModifiedOn, COUNT(Favorite.UserId) as Count " +
                                                                                   "FROM Topic" +
-                                                                                  "INNER JOIN Topic ON Topic.ChannelId = Channel.Id" +
+                                                                                  "INNER JOIN Channel ON Channel.Id = Topic.ChannelId " +
                                                                                   "INNER JOIN Category ON Category.Id = Channel.CategoryId " +
                                                                                   "INNER JOIN UserTopicFavorite as Favorite ON Favorite.TopicId = Topic.Id " +
                                                                                   "WHERE Channel.Organization = @orgID AND Channel.Visible = true AND Topic.Visible = true" +
@@ -70,15 +70,43 @@ namespace Nimbus.Web.API.Controllers
                         }
                         else if (typeSearch == SearchType.category)
                         {
+                            search.abstractChannel = db.Query<AbstractChannelAPI>("SELECT Channel.OrganizationId as Organization_ID, Channel.Id as channel_ID, Channel.Name as ChannelName, Channel.ImgUrl as UrlImgChannel " +
+                                                                                  "FROM Channel" +                                                                               
+                                                                                  "INNER JOIN Category ON Category.Id = Channel.CategoryId " +
+                                                                                  "WHERE Channel.Organization = @orgID AND Channel.Visible = true AND Category.Name LIKE @text",
+                                                                                  new { text = text, orgID = idOrg });
+
+                            search.abstractTopic = db.Query<AbstractTopicAPI>("SELECT Topic.Id as topic_ID, Topic.ImgUrl as UrlImgTopic, Topic.Description as shortTexTopic, Topic.Title, " +
+                                                                                       "Topic.TopicType as Type, Topic.LastModified as ModifiedOn, COUNT(Favorite.UserId) as Count " +
+                                                                                  "FROM Topic" +
+                                                                                  "INNER JOIN Channel ON Channel.Id = Topic.ChannelId" +
+                                                                                  "INNER JOIN Category ON Category.Id = Channel.CategoryId " +
+                                                                                  "INNER JOIN UserTopicFavorite as Favorite ON Favorite.TopicId = Topic.Id " +
+                                                                                  "WHERE Channel.Organization = @orgID AND Channel.Visible = true AND Topic.Visible = true" +
+                                                                                  "AND  Category.Name LIKE @text",
+                                                                                  new { text = text, orgID = idOrg });
                         }
                         else if (typeSearch == SearchType.channel)
                         {
+                            search.abstractChannel = db.Query<AbstractChannelAPI>("SELECT Channel.OrganizationId as Organization_ID, Channel.Id as channel_ID, Channel.Name as ChannelName, Channel.ImgUrl as UrlImgChannel " +
+                                                          "FROM Channel" +
+                                                          "WHERE Channel.Organization = @orgID AND Channel.Visible = true AND (Channel.Name LIKE @text OR Channel.Description LIKE @text)",
+                                                          new { text = text, orgID = idOrg });
+
                         }
                         else if (typeSearch == SearchType.tag)
                         {
                         }
                         else if (typeSearch == SearchType.topic)
                         {
+                            search.abstractTopic = db.Query<AbstractTopicAPI>("SELECT Topic.Id as topic_ID, Topic.ImgUrl as UrlImgTopic, Topic.Description as shortTexTopic, Topic.Title, " +
+                                                                                       "Topic.TopicType as Type, Topic.LastModified as ModifiedOn, COUNT(Favorite.UserId) as Count " +
+                                                                                  "FROM Topic" +
+                                                                                  "INNER JOIN Channel ON Channel.Id = Topic.ChannelId "+
+                                                                                  "INNER JOIN UserTopicFavorite as Favorite ON Favorite.TopicId = Topic.Id " +
+                                                                                  "WHERE Channel.Organization = @orgID AND Channel.Visible = true AND Topic.Visible = true" +
+                                                                                  "AND (Topic.Title LIKE @text OR Topic.Text LIKE @text)",
+                                                                                  new { text = text, orgID = idOrg });
                         }
                     }
                 }

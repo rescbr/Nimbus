@@ -1,5 +1,4 @@
-﻿using ServiceStack.DataAnnotations;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,14 +8,12 @@ namespace Nimbus.DB
 {
     public class RoleTopic
     {
-        [References(typeof(Channel))]
-        public int ChannelID { get; set; }
+        public virtual int ChannelId { get; set; }
 
-        [References(typeof(Topic))]
-        public int TopicID { get; set; }
+        public virtual int TopicId { get; set; }
 
-        [References(typeof(User))]
-        public int UserID { get; set; }
+        public virtual int UserId { get; set; }
+
 
         public bool Paid { get; set; }
     }

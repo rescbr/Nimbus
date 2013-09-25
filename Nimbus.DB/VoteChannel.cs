@@ -1,5 +1,4 @@
-﻿using ServiceStack.DataAnnotations;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,8 +8,8 @@ namespace Nimbus.DB
 {
     public class VoteChannel
     {
-        [References(typeof(Channel))]
-        public int Channel_ID { get; set; }
+        public virtual int ChannelId { get; set; }
+
 
         public int Score { get; set; }
     }

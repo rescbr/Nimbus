@@ -42,27 +42,28 @@ namespace Nimbus.Web.API
     }
     public class TestController : NimbusApiController
     {
-        [Authorize]
+        //[Authorize]
         public string Get()
         {
-            //using (var db = DatabaseFactory.OpenDbConnection())
-            //{   db.DropAndCreateTables(new Type[]{
-            //        typeof(Nimbus.DB.Ad), 
-            //        typeof(Nimbus.DB.Category),
-            //        typeof(Nimbus.DB.User),
-            //        typeof(Nimbus.DB.UserReported),
-            //        typeof(Nimbus.DB.Organization),
-            //        typeof(Nimbus.DB.Channel),
-            //        typeof(Nimbus.DB.ChannelReported),
-            //        typeof(Nimbus.DB.ChannelUser),
-            //        typeof(Nimbus.DB.OrganizationUser),
-            //        typeof(Nimbus.DB.Topic),
-            //        typeof(Nimbus.DB.TopicReported),
-            //        typeof(Nimbus.DB.Comment),
-            //        typeof(Nimbus.DB.CommentReported),
-            //        typeof(Nimbus.DB.Message),
-            //        typeof(Nimbus.DB.UserTopicFavorite)});
-            //  }
+            using (var db = DatabaseFactory.OpenDbConnection())
+            {
+                db.DropAndCreateTables(new Type[]{
+                    typeof(Nimbus.DB.ORM.Category),
+                    typeof(Nimbus.DB.ORM.Ad), 
+                    typeof(Nimbus.DB.ORM.Organization),
+                    typeof(Nimbus.DB.ORM.User),
+                    typeof(Nimbus.DB.ORM.UserReported),
+                    typeof(Nimbus.DB.ORM.Channel),
+                    typeof(Nimbus.DB.ORM.ChannelReported),
+                    typeof(Nimbus.DB.ORM.ChannelUser),
+                    typeof(Nimbus.DB.ORM.OrganizationUser),
+                    typeof(Nimbus.DB.ORM.Topic),
+                    typeof(Nimbus.DB.ORM.TopicReported),
+                    typeof(Nimbus.DB.ORM.Comment),
+                    typeof(Nimbus.DB.ORM.CommentReported),
+                    typeof(Nimbus.DB.ORM.Message),
+                    typeof(Nimbus.DB.ORM.UserTopicFavorite)});
+            }
                 return "AvatarURL: ";
         }
     }

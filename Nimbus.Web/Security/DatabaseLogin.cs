@@ -5,6 +5,7 @@ using System.Web;
 using ServiceStack.OrmLite;
 using Nimbus.Web.Security;
 using Nimbus.Plumbing;
+using Nimbus.DB.ORM;
 
 namespace Nimbus.Web.Security
 {
@@ -29,7 +30,7 @@ namespace Nimbus.Web.Security
             principal = null;
             using (var db = _dbFactory.OpenDbConnection())
             {
-                var dbuser = db.Where<Nimbus.DB.User>(u => u.Email == email).FirstOrDefault();
+                var dbuser = db.Where<User>(u => u.Email == email).FirstOrDefault();
                 if(dbuser == null) return false; //Usuário não existe.
                 NSPHash hashedPassword = new NSPHash(dbuser.Password);
                 PlaintextPassword ptPassword = new PlaintextPassword(password);
