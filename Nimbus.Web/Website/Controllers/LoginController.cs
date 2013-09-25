@@ -31,6 +31,7 @@ namespace Nimbus.Web.Website.Controllers
 
         public HttpResponseMessage Post(LoginModel login)
         {
+            const int EXPIRY_DAYS = 7;
             if (ModelState.IsValid)
             {
                 DatabaseLogin dbLogin = new DatabaseLogin(DatabaseFactory);
@@ -54,7 +55,7 @@ namespace Nimbus.Web.Website.Controllers
                         new NSCInfo()
                         {
                             TokenGenerationDate = DateTime.Now.ToUniversalTime(),
-                            TokenExpirationDate = DateTime.Now.AddDays(7).ToUniversalTime(),
+                            TokenExpirationDate = DateTime.Now.AddDays(EXPIRY_DAYS).ToUniversalTime(),
                             UserId = (loggedInUser.Identity as NimbusUser).UserId
                         },
                         out token);
@@ -62,7 +63,7 @@ namespace Nimbus.Web.Website.Controllers
                     //Lembre-se de expirar o cookie também
                     var loginCookie = new CookieHeaderValue("nsc-session", authToken)
                     {
-                        Expires = DateTimeOffset.Now.AddDays(7)
+                        Expires = DateTimeOffset.Now.AddDays(EXPIRY_DAYS)
                     };
 
                     //Adiciona cookie de sessão ao cache
