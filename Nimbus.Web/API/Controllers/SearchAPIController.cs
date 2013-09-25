@@ -74,10 +74,9 @@ namespace Nimbus.Web.API.Controllers
                         }
                     }
                 }
-                catch
+                catch(Exception ex)
                 {
-                    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound,
-                            "this item does not exist"));
+                    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError,ex));
                 }
             }
             else
@@ -138,10 +137,9 @@ namespace Nimbus.Web.API.Controllers
                         }
                     }
                 }
-                catch
+                catch(Exception ex)
                 {
-                    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound,
-                            "this item does not exist"));
+                    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
                 }
             }
             else
