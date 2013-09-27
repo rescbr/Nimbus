@@ -383,7 +383,6 @@ namespace Nimbus.Web.API.Controllers
         }
 
         //TODO: listar tópicos relacionados 
-
         /// <summary>
         /// Verifica se o usuario já fez o exame. Se já fez, retornar o objeto com data e nota
         /// </summary>
