@@ -14,18 +14,18 @@ namespace Nimbus.Web.Website.Controllers
 {
     public class LoginController : NimbusApiController
     {
-        public View Get(string redirect = null)
+        public LoginModel Get(string redirect = null)
         {
             if (redirect != null && Uri.IsWellFormedUriString(redirect, UriKind.Relative))
             {
-                return new View("Login", new LoginModel()
+                return new LoginModel()
                 {
                     RedirectURL = redirect
-                });
+                };
             }
             else
             {
-                return new View("Login", new LoginModel());
+                return new LoginModel();
             }
         }
 
@@ -85,7 +85,7 @@ namespace Nimbus.Web.Website.Controllers
             }
 
             login.Password = ""; //limpa a senha antes de enviar
-            return Request.CreateResponse<View>(new View("Login", login));
+            return Request.CreateResponse<LoginModel>(login);
         }
     }
 }

@@ -11,7 +11,8 @@ namespace Nimbus.Web.Middleware
 {
     public class NimbusFastViewLocator : IViewLocator
     {
-        private ConcurrentDictionary<string, string> _viewPaths = new ConcurrentDictionary<string,string>();
+        private ConcurrentDictionary<string, string> _viewPaths = 
+            new ConcurrentDictionary<string,string>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
         /// Procura por arquivos cshtml e grava seus caminhos em um dicionário
@@ -23,33 +24,63 @@ namespace Nimbus.Web.Middleware
             string[] cshtmlFiles = Directory.GetFiles(sitePath, "*.cshtml", SearchOption.AllDirectories);
             foreach (string cshtmlFile in cshtmlFiles)
             {
-                string viewName = Path.GetFileNameWithoutExtension(cshtmlFile);
-                if (_viewPaths.ContainsKey(viewName.ToLowerInvariant()))
+                string viewName = GetKeyFromViewFile(cshtmlFile);
+                if (_viewPaths.ContainsKey(viewName))
                     throw new Exception(String.Format("{0} is already registered as a View.", viewName));
-                _viewPaths[viewName.ToLowerInvariant()] = cshtmlFile;
+                _viewPaths[viewName] = cshtmlFile;
             }
         }
 
         public string GetView(string siteRootPath, WebApiContrib.Formatting.Html.IView view)
         {
+            //TODO: aqui podemos adicionar um tratador de erro para o tipo HttpError
+
             string viewPath;
+            string viewKey = GetKeyFromModelType(view.ModelType);
             try
             {
-                viewPath = _viewPaths[view.ViewName.ToLowerInvariant()];
+                viewPath = _viewPaths[viewKey];
             }
             catch {
                 throw new Exception(
                     String.Format(
-                    "{0} was not on NimbusFastViewLocator dictionary. Have you added {0} and not restarted Nimbus?",
-                    view.ViewName));
+                    "The view for {0} was not found on NimbusFastViewLocator dictionary. Have you added {0} and not restarted Nimbus?",
+                    viewKey));
             }
             if (File.Exists(viewPath))
                 return File.ReadAllText(viewPath);
             else
                 throw new Exception(
                     String.Format(
-                    "{0} was on NimbusFastViewLocator dictionary, but the file {1} was not found.",
-                    view.ViewName, viewPath));
+                    "The view for {0} was on NimbusFastViewLocator dictionary, but the file {1} was not found.",
+                    viewKey, viewPath));
+        }
+
+        internal static string GetKeyFromModelType(Type modelType)
+        {
+            if (!modelType.Namespace.StartsWith("Nimbus.Web")) return modelType.Name;
+
+            string modelSuffix = "Model";
+            List<string> sepType = modelType.Namespace.Split(Type.Delimiter).ToList();
+            
+            string viewNamespace = sepType[2]; //Nimbus.Web.XXXX
+            string viewName = modelType.Name.Remove(modelType.Name.Length - modelSuffix.Length);
+
+            return String.Format("{0}.{1}", viewNamespace, viewName);
+
+        }
+
+        internal static string GetKeyFromViewFile(string viewPath)
+        {
+            List<string> sepPath = viewPath.Split(Path.DirectorySeparatorChar).ToList();
+            sepPath.RemoveAll(s => s.Contains("View"));
+            string viewName = Path.GetFileNameWithoutExtension(sepPath[sepPath.Count - 1]);
+            string viewNamespace = sepPath[sepPath.Count - 2];
+            
+            if (viewNamespace == "Shared") return viewName;
+
+            return String.Format("{0}.{1}", viewNamespace, viewName);
+           
         }
 
         internal static string GetPhysicalSiteRootPath()

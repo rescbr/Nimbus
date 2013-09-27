@@ -80,6 +80,7 @@
     <None Include="Website\Views\Shared\_Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Admin\Controllers\DatabaseController.cs" />
     <Compile Include="API\Controllers\ChannelAPIController.cs" />
     <Compile Include="API\Controllers\CommentAPIController.cs" />
     <Compile Include="API\Controllers\MessageAPIController.cs" />
@@ -98,7 +99,9 @@
     <Compile Include="API\Models\UserAPIModel.cs" />
     <Compile Include="API\Test.cs" />
     <Compile Include="API\NimbusApiController.cs" />
+    <Compile Include="DatabaseStartup.cs" />
     <Compile Include="Middleware\Authentication.cs" />
+    <Compile Include="Middleware\NamespaceControllerSelector.cs" />
     <Compile Include="Middleware\NimbusFastViewLocator.cs" />
     <Compile Include="OwinApp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -175,9 +178,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Admin\Controllers\" />
     <Folder Include="Admin\Models\" />
     <Folder Include="Admin\Views\" />
+    <Folder Include="images\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

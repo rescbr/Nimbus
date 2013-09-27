@@ -10,6 +10,45 @@ namespace Nimbus.Web.API
 {
     public class NimbusApiController : ApiController
     {
+        private DB.ORM.Organization _nimbusOrg = null;
+        public DB.ORM.Organization NimbusOrganization
+        {
+            get
+            {
+                if (_nimbusOrg != null)
+                {
+                    return _nimbusOrg;
+                }
+                else
+                {
+                    DB.ORM.Organization org;
+                    string host = Request.Headers.Host.Split(':')[0]; //remove porta
+                    try
+                    {
+                        org = (NimbusAppBus.Instance.Cache.OrganizationHosts.Get(host)
+                            as DB.ORM.Organization);
+                    }
+                    catch (KeyNotFoundException)
+                    {
+                        using (var db = DatabaseFactory.OpenDbConnection())
+                        {
+                           org = (db.Where<DB.ORM.Organization>(o => o.Cname == host)
+                               .FirstOrDefault() as DB.ORM.Organization);
+                        }
+                        NimbusAppBus.Instance.Cache.OrganizationHosts.Store(host, org);
+                    }
+
+                    return org;
+                }
+            }
+
+            set
+            {
+                _nimbusOrg = value;
+            }
+        }
+
+
         /// <summary>
         /// For test purposes only!
         /// </summary>
