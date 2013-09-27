@@ -93,7 +93,7 @@ namespace Nimbus.Web.API.Models.Topic
     /// </summary>
     public class AbstractTopicAPI
     {
-        public int topic_ID { get; set; }
+        public int topicId { get; set; }
         public string UrlImgTopic { get; set; }
         public string shortTextTopic { get; set; }
         public string Title { get; set; }

@@ -16,51 +16,68 @@ namespace Nimbus.Web.API.Controllers
     /// Controle sobre todas as funções realizadas para os Tópicos
     /// </summary>
     public class TopicAPIController : NimbusApiController
-    {                
+    {
+        /// <summary>
+        /// método para pegar o nome da organização pelo host e saber se o usuário esta no portal 'nimbus' ou da org
+        /// </summary>
+        /// <returns></returns>
+        public int CurrentOrgID()
+        {
+            int idOrg = 0;
+            using (var db = DatabaseFactory.OpenDbConnection())
+            {
+                try
+                {
+                    string name = Request.Headers.Host;
+                    idOrg = db.SelectParam<Organization>(org => org.Cname == name).Select(o => o.Id).FirstOrDefault();
+                }
+                catch (Exception)
+                {
+                    idOrg = 1; //nimbus
+                }
+            }
+            return idOrg;
+        }
+
         /// <summary>
         /// método de exibir tópicos em resumo, filtra por categoriam modificação e popularidade
         /// </summary>
         /// <returns></returns>
         [Authorize]
-        public List<AbstractTopicAPI> abstTopic(int channelID, TopicList viewBy, int categoryID)
+        public List<AbstractTopicAPI>AbstTopic(int channelID, TopicList viewBy, int categoryID)
         {
-            List<AbstractTopicAPI> list = new List<AbstractTopicAPI>();
+            List<AbstractTopicAPI> tpcList = new List<AbstractTopicAPI>();
             try
             {
+                List<int> idChannel = new List<int>();
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    List<AbstractTopicAPI> tpcList = new List<AbstractTopicAPI>();
-                    if (categoryID > 0)
-                    {
-                        tpcList = db.Query<AbstractTopicAPI>("SELECT Topic.Id, Topic.Description, Topic.Title, Topic.TopicType, Topic.ImgUrl, " +
-                                                                     "Topic.LastModified, ViewByTopic.CountView " +
-                                                                     "INNER JOIN ViewByTopic ON ViewByTopic.TopicID = Topic.Id " +
-                                                                     "INNER JOIN Channel ON Channel.Id = Topic.ChannelId " +
-                                                                     "FROM Topic WHERE Topic.Visible = true AND Topic.ChannelId = @idChannel AND Channel.CategoryId = @idCategory",
-                                                                     new { idChannel = channelID, idCategory = categoryID });
-                    }
-                    else 
-                    {
-                        tpcList = db.Query<AbstractTopicAPI>("SELECT Topic.Id, Topic.Description, Topic.Title, Topic.TopicType, Topic.ImgUrl, " +
-                                                                                    "Topic.LastModified, ViewByTopic.CountView " +
-                                                                                    "INNER JOIN ViewByTopic ON ViewByTopic.TopicID = Topic.Id" +
-                                                                                    "FROM Topic WHERE Topic.Visible = true AND Topic.ChannelId = {0}", channelID);
-                    }
-                   
-                    foreach (var item in tpcList)
-                    {
-                        AbstractTopicAPI absTopic = new AbstractTopicAPI
-                        {
-                            topic_ID = item.topic_ID,
-                            Title = item.Title,
-                            shortTextTopic = item.shortTextTopic,
-                            UrlImgTopic = item.UrlImgTopic,
-                            Type = item.Type.ToString(),
-                            ModifiedOn = item.ModifiedOn,
-                            Count = item.Count
-                        };
-                        list.Add(absTopic);
-                    }
+                   int idOrg = CurrentOrgID();
+                   if (categoryID > 0)
+                   {
+                       idChannel = db.SelectParam<Channel>(ch => ch.OrganizationId == idOrg && ch.Visible == true && ch.CategoryId == categoryID)
+                                                                           .Select(ch => ch.Id).ToList();
+
+                   }
+                   else
+                   {
+                       idChannel = db.SelectParam<Channel>(ch => ch.OrganizationId == idOrg && ch.Visible == true)
+                                                                             .Select(ch => ch.Id).ToList();
+                   }
+
+
+                   tpcList = (from tpc in db.SelectParam<Topic>(tp => tp.Visibility == true && idChannel.Contains(tp.ChannelId))
+                              from count in db.SelectParam<ViewByTopic>(vt => vt.TopicId == tpc.Id).Select(vt => vt.CountView)
+                              select new AbstractTopicAPI()
+                              {
+                                  topicId = tpc.Id,
+                                  shortTextTopic = tpc.Description,
+                                  Title = tpc.Title,
+                                  Type = tpc.TopicType.ToString(),
+                                  UrlImgTopic = tpc.ImgUrl,
+                                  ModifiedOn = tpc.LastModified,
+                                  Count = count
+                              }).ToList();               
                 }
             }
             catch (Exception ex)
@@ -69,11 +86,11 @@ namespace Nimbus.Web.API.Controllers
             }
 
             if (viewBy == TopicList.byModified)
-                return list.OrderBy(tp => tp.ModifiedOn).ToList();
+                return tpcList.OrderBy(tp => tp.ModifiedOn).ToList();
             else if (viewBy == TopicList.byPopularity)
-                return list.OrderBy(tp => tp.Count).ToList();
+               return tpcList.OrderBy(tp => tp.Count).ToList();
             else
-               return list;
+               return tpcList;
         }
              
         /// <summary>
