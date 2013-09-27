@@ -49,7 +49,8 @@ namespace Nimbus.Web.Middleware
                 if (VerifyToken(sessionToken, out tokenGuid, out info))
                 {
                     //Token é válido, continuar verificando se o usuário pode ser logado
-                    if (info.TokenGenerationDate.AddDays(7.0) > DateTime.Now.ToUniversalTime())
+                    //if (info.TokenGenerationDate.AddDays(7.0) > DateTime.Now.ToUniversalTime())
+                    if (info.TokenExpirationDate.ToUniversalTime() > DateTime.Now.ToUniversalTime())
                     {
                         try
                         {
@@ -63,15 +64,13 @@ namespace Nimbus.Web.Middleware
                     }
                     else //token velho
                     {
-                    } 
+                    }
                 }
                 else //token inválido
                 {
-                } 
+                }
             }
-            else //token = null
-            {
-            } 
+            else { } //token = null
 
 
             await Next.Invoke(context);

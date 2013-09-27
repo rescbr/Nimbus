@@ -18,7 +18,8 @@ namespace Nimbus.Web.Website.Controllers
             var hm = new HomeModel()
             {
                 CurrentUser = NimbusUser,
-                CurrentOrganization = "1"
+                CurrentOrganization = NimbusOrganization.Name
+
             };
             return new View("Home", hm);
         }
@@ -28,6 +29,5 @@ namespace Nimbus.Web.Website.Controllers
     {
         public NimbusUser CurrentUser { get; set; }
         public string CurrentOrganization { get; set; }
-
     }
 }

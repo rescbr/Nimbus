@@ -1,30 +1,63 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using Nimbus.Plumbing;
+using Nimbus.Web.Middleware;
 using Owin;
-using Nimbus.Plumbing;
-using Owin.Types;
 using System.IO;
-using System.Threading.Tasks;
+using System.Reflection;
 using System.Web.Http;
-using WebApiContrib.Formatting.Html.Formatters;
+using System.Web.Http.Dispatcher;
 using WebApiContrib.Formatting.Html.Configuration;
+using WebApiContrib.Formatting.Html.Formatters;
+using WebApiContrib.Formatting.Razor;
 
 namespace Nimbus.Web
 {
-    
-    using AppFunc = Func<IDictionary<string, object>, System.Threading.Tasks.Task>;
-    using WebApiContrib.Formatting.Razor;
-    using Nimbus.Web.Middleware;
-    using System.Web.Http.Filters;
-    using System.Reflection;
-    
-    
     public class NimbusOwinApp : INimbusOwinApp
-    {      
+    {
+        private void RegisterWebApis()
+        {
+            _webApiConfig.Routes.MapHttpRoute(
+                name: "ApiNamespace",
+                routeTemplate: "api/{controller}/{id}",
+                defaults: new { 
+                    @namespace = "api", //use @ antes da propriedade pq namespace é keyword.
+                    id = RouteParameter.Optional
+                }
+            );
+
+            _webApiConfig.Routes.MapHttpRoute(
+                name: "AdminNamespace",
+                routeTemplate: "admin/{controller}", 
+                defaults: new { 
+                    @namespace = "admin", //use @ antes da propriedade pq namespace é keyword.
+                }
+            );
+
+            _webApiConfig.Routes.MapHttpRoute(
+                name: "WebsiteNamespace",
+                routeTemplate: "{controller}",
+                defaults: new
+                {
+                    @namespace = "website", //use @ antes da propriedade pq namespace é keyword.
+                }
+            );
+
+            _webApiConfig.Routes.MapHttpRoute(
+                name: "Home",
+                routeTemplate: "",
+                defaults: new {
+                    @namespace = "website",
+                    controller = "Home"
+                }
+            );
+        }
+
+        
+
+        HttpConfiguration _webApiConfig;
         public void Configuration(Owin.IAppBuilder app)
         {
+            
+            DatabaseStartup.CreateDatabaseIfNotThere();
 
             app.UseErrorPage();
             app.Use(typeof(Middleware.Authentication));
@@ -32,50 +65,22 @@ namespace Nimbus.Web
             app.Properties["host.AppName"] = "Nimbus";
 
             //WebAPI
-            HttpConfiguration webApiConfig = new HttpConfiguration();
-            webApiConfig.Formatters.Add(new HtmlMediaTypeViewFormatter()); //adiciona Razor
+            _webApiConfig = new HttpConfiguration();
+            _webApiConfig.Formatters.Add(new HtmlMediaTypeViewFormatter()); //adiciona Razor
             GlobalViews.DefaultViewLocator = new NimbusFastViewLocator();
             GlobalViews.DefaultViewParser = new RazorViewParser();
+            _webApiConfig.Services.Replace(typeof(IHttpControllerSelector), 
+                new NamespaceHttpControllerSelector(_webApiConfig));
             
-
-
-            webApiConfig.Routes.MapHttpRoute(
-                name: "DefaultApi",
-                routeTemplate: "api/{controller}/{id}",
-                defaults: new { id = RouteParameter.Optional }
-            );
-
-            webApiConfig.Routes.MapHttpRoute(
-                name: "Admin",
-                routeTemplate: "admin/{controller}"
-            );
-
-            webApiConfig.Routes.MapHttpRoute(
-                name: "NewAccount",
-                routeTemplate: "newaccount",
-                defaults: new { controller = "NewAccount" }
-            );
-
-            webApiConfig.Routes.MapHttpRoute(
-                name: "Login",
-                routeTemplate: "login",
-                defaults: new { controller = "Login" }
-            );
-
-            webApiConfig.Routes.MapHttpRoute(
-                name: "Home",
-                routeTemplate: "",
-                defaults: new { controller = "Home" }
-            );
-
-            app.UseWebApi(webApiConfig);
+            RegisterWebApis();
+            app.UseWebApi(_webApiConfig);
 
             app.UseStaticFiles(GetPhysicalSiteRootPath());
             
 
             //Owin.AppBuilderExtensions.Run(
             //app
-                //.UseWebApi(webApiConfig)
+                //.UseWebApi(_webApiConfig)
                 //.UseFunc(AutoDebugAttach)
                 //.UseShowExceptions() //Gate.Middleware
                 //.UseFunc(Thrower()) //Owin.Extensions
@@ -92,6 +97,8 @@ namespace Nimbus.Web
                 //.Run(new HelloWorldResponder());
             //;
         }
+
+        
 
         // <summary>
         // Used as the T in a "conversion" of a Task into a Task{T}

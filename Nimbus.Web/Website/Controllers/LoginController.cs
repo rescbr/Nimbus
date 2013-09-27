@@ -14,23 +14,24 @@ namespace Nimbus.Web.Website.Controllers
 {
     public class LoginController : NimbusApiController
     {
-        public View Get(string redirect = null)
+        public LoginModel Get(string redirect = null)
         {
             if (redirect != null && Uri.IsWellFormedUriString(redirect, UriKind.Relative))
             {
-                return new View("Login", new LoginModel()
+                return new LoginModel()
                 {
                     RedirectURL = redirect
-                });
+                };
             }
             else
             {
-                return new View("Login", new LoginModel());
+                return new LoginModel();
             }
         }
 
         public HttpResponseMessage Post(LoginModel login)
         {
+            const int EXPIRY_DAYS = 7;
             if (ModelState.IsValid)
             {
                 DatabaseLogin dbLogin = new DatabaseLogin(DatabaseFactory);
@@ -54,7 +55,7 @@ namespace Nimbus.Web.Website.Controllers
                         new NSCInfo()
                         {
                             TokenGenerationDate = DateTime.Now.ToUniversalTime(),
-                            TokenExpirationDate = DateTime.Now.AddDays(7).ToUniversalTime(),
+                            TokenExpirationDate = DateTime.Now.AddDays(EXPIRY_DAYS).ToUniversalTime(),
                             UserId = (loggedInUser.Identity as NimbusUser).UserId
                         },
                         out token);
@@ -62,7 +63,7 @@ namespace Nimbus.Web.Website.Controllers
                     //Lembre-se de expirar o cookie também
                     var loginCookie = new CookieHeaderValue("nsc-session", authToken)
                     {
-                        Expires = DateTimeOffset.Now.AddDays(7)
+                        Expires = DateTimeOffset.Now.AddDays(EXPIRY_DAYS)
                     };
 
                     //Adiciona cookie de sessão ao cache
@@ -84,7 +85,7 @@ namespace Nimbus.Web.Website.Controllers
             }
 
             login.Password = ""; //limpa a senha antes de enviar
-            return Request.CreateResponse<View>(new View("Login", login));
+            return Request.CreateResponse<LoginModel>(login);
         }
     }
 }
