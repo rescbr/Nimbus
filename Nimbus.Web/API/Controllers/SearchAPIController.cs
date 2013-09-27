@@ -15,27 +15,6 @@ namespace Nimbus.Web.API.Controllers
 {
     public class SearchAPIController:NimbusApiController
     {
-        /// <summary>
-        /// método para pegar o nome da organização pelo host e saber se o usuário esta no portal 'nimbus' ou da org
-        /// </summary>
-        /// <returns></returns>
-        public int CurrentOrgID()
-        {
-            int idOrg = 0;
-            using (var db = DatabaseFactory.OpenDbConnection())
-            {
-                try                    
-                {
-                    string name = Request.Headers.Host;
-                    idOrg = db.SelectParam<Organization>(org => org.Cname == name).Select(o => o.Id).FirstOrDefault();
-                }
-                catch (Exception)
-                {
-                    idOrg = 1; //nimbus
-                }
-            }
-            return idOrg;
-        }
 
         /// <summary>
         /// Retorna os canais encontrados para a palavra/tag buscada 
@@ -49,7 +28,7 @@ namespace Nimbus.Web.API.Controllers
             List<Channel> channel = new List<Channel>();
             if (!string.IsNullOrEmpty(text))
             {
-                int idOrg = CurrentOrgID();
+                int idOrg = NimbusOrganization.Id;
                 try
                 {
                     using (var db = DatabaseFactory.OpenDbConnection())
@@ -98,7 +77,7 @@ namespace Nimbus.Web.API.Controllers
             List<Topic> topic = new List<Topic>();
             if (!string.IsNullOrEmpty(text))
             {
-                int idOrg = CurrentOrgID();
+                int idOrg = NimbusOrganization.Id;
                 try
                 {
                     using (var db = DatabaseFactory.OpenDbConnection())

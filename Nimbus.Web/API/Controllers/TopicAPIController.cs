@@ -18,32 +18,11 @@ namespace Nimbus.Web.API.Controllers
     public class TopicAPIController : NimbusApiController
     {
         /// <summary>
-        /// método para pegar o nome da organização pelo host e saber se o usuário esta no portal 'nimbus' ou da org
-        /// </summary>
-        /// <returns></returns>
-        public int CurrentOrgID()
-        {
-            int idOrg = 0;
-            using (var db = DatabaseFactory.OpenDbConnection())
-            {
-                try
-                {
-                    string name = Request.Headers.Host;
-                    idOrg = db.SelectParam<Organization>(org => org.Cname == name).Select(o => o.Id).FirstOrDefault();
-                }
-                catch (Exception)
-                {
-                    idOrg = 1; //nimbus
-                }
-            }
-            return idOrg;
-        }
-
-        /// <summary>
         /// método de exibir tópicos em resumo, filtra por categoriam modificação e popularidade
         /// </summary>
         /// <returns></returns>
         [Authorize]
+        [HttpGet]
         public List<AbstractTopicAPI>AbstTopic(int channelID, TopicList viewBy, int categoryID)
         {
             List<AbstractTopicAPI> tpcList = new List<AbstractTopicAPI>();
@@ -52,7 +31,7 @@ namespace Nimbus.Web.API.Controllers
                 List<int> idChannel = new List<int>();
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                   int idOrg = CurrentOrgID();
+                   int idOrg = NimbusOrganization.Id ;
                    if (categoryID > 0)
                    {
                        idChannel = db.SelectParam<Channel>(ch => ch.OrganizationId == idOrg && ch.Visible == true && ch.CategoryId == categoryID)
@@ -82,7 +61,7 @@ namespace Nimbus.Web.API.Controllers
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
 
             if (viewBy == TopicList.byModified)
@@ -99,6 +78,7 @@ namespace Nimbus.Web.API.Controllers
         /// <param name="idTopic"></param>
         /// <returns></returns>
         [Authorize]
+        [HttpPost]
         public bool TopicFavorite(int idTopic)
         {
             bool flag = false;
@@ -130,7 +110,7 @@ namespace Nimbus.Web.API.Controllers
             catch (Exception ex)
             {
                 flag = false;
-                throw ex;
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
 
             return flag;
@@ -143,6 +123,7 @@ namespace Nimbus.Web.API.Controllers
         /// <param name="readOn"></param>
         /// <returns></returns>
         [Authorize]
+        [HttpPost]
         public bool ReadChannelLater(int topicID, DateTime readOn)
         {
             bool operation = false;
@@ -171,7 +152,7 @@ namespace Nimbus.Web.API.Controllers
             catch (Exception ex)
             {
                 operation = false;
-                throw;
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
 
             return operation;
@@ -227,20 +208,108 @@ namespace Nimbus.Web.API.Controllers
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
             return allow;
         }
 
+        /// <summary>
+        /// Busca todos os comentarios de um tópico
+        /// </summary>
+        /// <param name="topicID"></param>
+        /// <returns></returns>
+        [Authorize]
+        [HttpGet]
+        public List<CommentAPIModel> showComments(int topicID)
+        {
+            List<CommentAPIModel> listComments = new List<CommentAPIModel>();
+            try
+            {
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {
+                    List<Comment> comments = db.SelectParam<Comment>(cm => cm.TopicId == topicID && cm.Visible == true);
+                    listComments = new List<CommentAPIModel>();
+                    foreach (Comment item in comments)
+                    {
+                        CommentAPIModel dados = new CommentAPIModel();
+                        dados.AvatarUrl = db.SelectParam<User>(us => us.Id == item.UserId).Select(us => us.AvatarUrl).FirstOrDefault();
+                        dados.comment_ID = item.Id;
+                        dados.Name = db.SelectParam<User>(us => us.Id == item.UserId).Select(us => us.FirstName + " " + us.LastName).FirstOrDefault();
+                        dados.ParentID = item.ParentId;
+                        dados.PostedOn = item.PostedOn;
+                        dados.Text = item.Text;
+                        dados.TopicId = item.TopicId;
+
+                        listComments.Add(dados);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+            }
+            return listComments;
+        }
+
+        /// <summary>
+        /// Método de retornar o numero de favoritos de um tópico
+        /// </summary>
+        /// <param name="topicID"></param>
+        /// <returns></returns>
+        [Authorize]
+        [HttpGet]
+        public int CountFavorite(int topicID)
+        {
+            int count = 0;
+            try
+            {
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {
+                    count = db.SelectParam<UserTopicFavorite>(fv => fv.TopicId == topicID && fv.Visible == true).Count();
+                }
+            }
+            catch (Exception ex)
+            {                
+                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+            }
+            return count;
+        }
+
+        /// <summary>
+        /// Retorna as informações da categoria que o tópico pertence
+        /// </summary>
+        /// <param name="channelID"></param>
+        /// <returns></returns>
+        [Authorize]
+        [HttpGet]
+        public Category CategoryTopic(int channelID)
+        {
+            Category category = new Category();
+            try
+            {
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {
+                    int catID = db.SelectParam<Channel>(ch => ch.Id == channelID && ch.Visible == true).Select(ch => ch.CategoryId).FirstOrDefault();
+                    category = db.SelectParam<Category>(ct => ct.Id == catID).FirstOrDefault();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+            }
+            return category;
+        }
+
         //TODO terminar essa funçao: parte de mostras os topicos relacionados
         /// <summary>
-        /// carregar informações gerais de um tópico
+        /// carregar informações gerais de um tópico, chammar a função de comentarios e count favoritos
         /// </summary>
         /// <returns></returns>
         [Authorize]
-        public ShowTopicAPI showTopic(int topicID)
+        [HttpGet]
+        public Topic showTopic(int topicID)
         {
-            ShowTopicAPI topic = new ShowTopicAPI();
+            Topic topic = new Topic();
             try
             {
                 using(var db = DatabaseFactory.OpenDbConnection())
@@ -249,92 +318,36 @@ namespace Nimbus.Web.API.Controllers
 
                     if (allow == true)
                     {
-                        Topic tpc = db.SelectParam<Topic>(tp => tp.Id == topicID).FirstOrDefault();
+                        topic = db.SelectParam<Topic>(tp => tp.Id == topicID).FirstOrDefault();
 
-                        #region comments
-                        List<Comment> comments = db.SelectParam<Comment>(cm => cm.TopicId == topicID && cm.Visible == true);
-                        List<CommentAPIModel> listComments = new List<CommentAPIModel>();
-                        foreach (Comment item in comments)
-                        {                                
-                            CommentAPIModel dados = new CommentAPIModel();
-                            dados.AvatarUrl = db.SelectParam<User>(us => us.Id == item.UserId).Select(us => us.AvatarUrl).FirstOrDefault();
-                            dados.comment_ID = item.Id;
-                            dados.Name = db.SelectParam<User>(us => us.Id == item.UserId).Select(us => us.FirstName + " " + us.LastName).FirstOrDefault();
-                            dados.ParentID = item.ParentId;
-                            dados.PostedOn = item.PostedOn;
-                            dados.Text = item.Text;
-                            dados.TopicId = item.TopicId;
-
-                            listComments.Add(dados);
-                        }
-                        #endregion
-
-                        if (tpc.TopicType == Nimbus.DB.Enums.TopicType.Exam)
+                       if (topic.TopicType == Nimbus.DB.Enums.TopicType.Exam)
                         {
                             #region exam
                             //verificar se o usuario já fez o exame
-                            int ChannelID = db.SelectParam<Channel>(ch => ch.Id == tpc.ChannelId).Select(ch => ch.OrganizationId).FirstOrDefault();
-                         
-                            UserExamAPI userExam = validateExam(tpc.Id, ChannelID);
-                            bool isPrivate = db.SelectParam<Channel>(ch => ch.Id == tpc.ChannelId).Select(ch => ch.IsPrivate).FirstOrDefault();
+                            int ChannelID = db.SelectParam<Channel>(ch => ch.Id == topic.ChannelId).Select(ch => ch.OrganizationId).FirstOrDefault();                         
+                            UserExam userExam = validateExam(topicID, ChannelID);
+
+                            bool isPrivate = db.SelectParam<Channel>(ch => ch.Id == topic.ChannelId).Select(ch => ch.IsPrivate).FirstOrDefault();
                             
                             if (userExam == null || isPrivate == false)
                             {
                                 //se nunca tiver feito o exame, pode fazer. Canal privado = pode limitar. Canal free = sempre aberto 
-                                //caso seja um teste free, o 'bool' já permite refazer
-                                List<QuestionTopicAPI> listQuestion = new List<QuestionTopicAPI>();
-
-                                foreach (Nimbus.DB.Question item in tpc.Question)
+                                //caso seja um teste free, o 'bool' já permite refazer - apagar as respostas
+                                foreach (Nimbus.DB.Question item in topic.Question)
                                 {
-                                    QuestionTopicAPI question = new QuestionTopicAPI();
-                                    question.Question = item.TextQuestion;
-                                    question.Options = item.ChoicesAnswer;
-                                    listQuestion.Add(question);
+                                    item.CorrectAnswer = 0;
                                 }
-
-                                //TODO topic.Exam.RelatedTopicList = ;
-                                topic.Exam.ShortDescriptionTopic = tpc.Description;
-                                topic.Exam.topic_ID = tpc.Id;
-                                topic.Exam.Questions = listQuestion;
-                                topic.Exam.TopicName = tpc.Title;
-                                topic.Exam.TopicType = tpc.TopicType.ToString();
-                                topic.Exam.UrlImgBanner = tpc.UrlCapa;
-                                topic.Exam.UrlImgTopic = tpc.ImgUrl;
-                                topic.Exam.Comments = listComments;
-                            }
-                            else
-                            {
-                                topic.Exam.examDone = userExam;
                             }
                             #endregion
                         }
-                        else if ((tpc.TopicType != Nimbus.DB.Enums.TopicType.Exam) 
-                                 && (tpc.TopicType != Nimbus.DB.Enums.TopicType.Add))
-                        {
-                            #region topic general
-                            //TODO topic.generalTopic.RelatedTopicList = 
-                            topic.generalTopic.ShortDescriptionTopic = tpc.Description;
-                            topic.generalTopic.topic_ID = tpc.Id;
-                            topic.generalTopic.TopicName = tpc.Title;
-                            topic.generalTopic.TopicContent = tpc.Text;
-                            topic.generalTopic.TopicType = tpc.TopicType.ToString();
-                            topic.generalTopic.UrlImgTopic = tpc.ImgUrl;
-                            topic.generalTopic.UrlImgBanner = tpc.UrlCapa;
-                            topic.generalTopic.CountFavorites = db.SelectParam<UserTopicFavorite>(tp => tp.TopicId == topicID && tp.Visible == true).Count();
-                            topic.Exam.Comments = listComments;
-                            #endregion
-                        }
-                       
                     }
                 }
-
             }
             catch (Exception ex)
-            {                
-                throw;
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
-            return topic;         
-            
+            return topic;     
         }
 
         /// <summary>
@@ -343,39 +356,27 @@ namespace Nimbus.Web.API.Controllers
         /// <param name="idCategory"></param>
         /// <returns></returns>
         [Authorize]
-        public List<showAdsAPIModel> showAds(int idCategory)
+        [HttpGet]
+        public List<Ad> showAds(int idCategory)
         {
-            List<showAdsAPIModel> listAds = new List<showAdsAPIModel>();
+            List<Ad> listAds = new List<Ad>();
             try
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    List<Ad> ads = new List<Ad>();
                     if (idCategory == -1) //não tem categoria, anuncio generico
                     {
-                        ads = db.SelectParam<Ad>(ad => ad.Visible == true);                       
+                        listAds = db.SelectParam<Ad>(ad => ad.Visible == true);                                               
                     }
                     else
                     {
-                        ads = db.SelectParam<Ad>(ad => ad.Visible == true && ad.CategoryId == idCategory);
-                    }
-                    foreach (Ad item in ads)
-                    {
-                        showAdsAPIModel dado = new showAdsAPIModel
-                        {
-                            category_id = item.CategoryId,
-                            idAds = item.Id,
-                            ImgUrl = item.ImgUrl,
-                            Url = item.Url
-
-                        };
-                        listAds.Add(dado);
-                    }
+                        listAds = db.SelectParam<Ad>(ad => ad.Visible == true && ad.CategoryId == idCategory);                               
+                    }               
                 }
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
 
             return listAds;
@@ -390,28 +391,22 @@ namespace Nimbus.Web.API.Controllers
         /// <param name="organizationID"></param>
         /// <returns></returns>
         [NonAction]
-        public UserExamAPI validateExam(int topicID, int organizationID)
+        [HttpGet]
+        public UserExam validateExam(int topicID, int organizationID)
         {
-            UserExamAPI userExam = new UserExamAPI();
+            UserExam userExam = new UserExam();
             try
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    UserExam exam = new UserExam();                    
-                    exam = db.SelectParam<UserExam>(ex => ex.ExamId == topicID && ex.UserId == NimbusUser.UserId
+                    userExam = db.SelectParam<UserExam>(ex => ex.ExamId == topicID && ex.UserId == NimbusUser.UserId
                                                                         && ex.OrganizationId == organizationID).FirstOrDefault();
-                    if (exam != null)
-                    {
-                        userExam.dateRealized = exam.RealizedOn;
-                        userExam.ExamID = exam.ExamId;
-                        userExam.Grade = exam.Grade;
-                    }
                 }
             }
             catch (Exception ex)
             {
                 userExam = null;
-                throw ex;
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
             return userExam;
         }
