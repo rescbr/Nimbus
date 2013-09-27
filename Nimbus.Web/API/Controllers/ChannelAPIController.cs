@@ -235,9 +235,9 @@ namespace Nimbus.Web.API.Controllers
                 using(var db = DatabaseFactory.OpenDbConnection())
                 {
                     int idOwner = db.Select<int>("SELECT Channel.OwnerId FROM Channel "+
-                                                                             "INNER JOIN Role ON Channel.Id = Role.ChannelId "+
-                                                                             "WHERE Channel.Id = {0} AND Channel.UserId = {1} AND Channel.Visible = true AND Role.IsOwner = true",
-                                                                              channelID, NimbusUser.UserId).FirstOrDefault();
+                                                  "INNER JOIN Role ON Channel.Id = Role.ChannelId "+
+                                                  "WHERE Channel.Id = {0} AND Channel.UserId = {1} AND Channel.Visible = true AND Role.IsOwner = true",
+                                                  channelID, NimbusUser.UserId).FirstOrDefault();
                     if (idOwner != null && idOwner > 0)
                     {
                         db.UpdateOnly(new Channel { OwnerId = 0 }, chn => chn.OwnerId, chn => chn.Id == channelID);

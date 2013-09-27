@@ -23,7 +23,8 @@ namespace Nimbus.Web.API.Controllers
         /// <param name="message"></param>
         /// <returns></returns>
         [Authorize]
-        public string SendMessageChannel(SendMessageChannelAPI message)
+        [HttpPost]
+        public string SendMessageChannel(Message message)
         {
             AlertSendMessage alert = new AlertSendMessage();
             string msg = alert.ErrorMessage;
@@ -35,19 +36,17 @@ namespace Nimbus.Web.API.Controllers
                     {
                         try
                         {
-                            //Lembrar: se owner = true, quando mostrar na view colocar: Nimbus
-                                                        
+                            //Lembrar: se owner = true, quando mostrar na view colocar: Nimbus     
                             List<Nimbus.DB.Receiver> listReceiver = db.Select<Nimbus.DB.Receiver>("SELECT Role.UserId, Role.IsOwner, User.Name " +
-                                                                                              "FROM Role INNER JOIN User ON Role.UserId = User.Id" +
-                                                                                              "WHERE Role.ChannelId ={0} AND " +
-                                                                                              "(Role.MessageManager = true OR Role.IsOwner = true)",
-                                                                                              message.Channel_ID);
-
-                                //add a  msg                                                 
+                                                                                                  "FROM Role INNER JOIN User ON Role.UserId = User.Id" +
+                                                                                                  "WHERE Role.ChannelId ={0} AND " +
+                                                                                                  "(Role.MessageManager = true OR Role.IsOwner = true)",
+                                                                                                   message.ChannelId);
+                            //add a  msg                                                 
                                 Message dadosMsg = new Message
                                 {
                                     SenderId = NimbusUser.UserId,
-                                    ChannelId = message.Channel_ID,
+                                    ChannelId = message.ChannelId,
                                     Date = DateTime.Now,
                                     ReadStatus = false,
                                     Text = message.Text,
@@ -79,13 +78,10 @@ namespace Nimbus.Web.API.Controllers
                                             NameUser = item.Name,
                                             Status = Nimbus.DB.Enums.MessageType.received
                                         });
-                                    }
-                                                                      
+                                    }                                                                      
                                 }
-
                                 trans.Commit();
                                 msg = alert.SuccessMessage;
-
                         }
                         catch (Exception ex)
                         {
@@ -97,8 +93,8 @@ namespace Nimbus.Web.API.Controllers
                 }
             }
             catch (Exception ex)
-            {                
-                throw ex;
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
             return msg;
         }
@@ -108,24 +104,25 @@ namespace Nimbus.Web.API.Controllers
         /// </summary>
         /// <returns></returns>
         [Authorize]
-        public List<Nimbus.DB.ORM.Message> ReceivedMessages()
+        [HttpGet]
+        public List<Message> ReceivedMessages()
         {
-            List<Nimbus.DB.ORM.Message> listMessage = new List<Nimbus.DB.ORM.Message>();
+            List<Message> listMessage = new List<Message>();
             try
             {
                 using(var db = DatabaseFactory.OpenDbConnection())
                 {
-                    listMessage = db.Select<Message>("SELECT *  "+
-                                                     "FROM Message"+
-                                                     "INNER JOIN ReceiverMessage ON  Message.Id = ReceiverMessage.MessageID" +
-                                                     "WHERE ReceiverMessage.UserID = {0} AND Message.Visible = true AND ReceiverMessage.Status = {1}",
-                                                     NimbusUser.UserId, Nimbus.DB.Enums.MessageType.received);
+                    List<int> listIdMsg = new List<int>();
+                    listIdMsg = db.SelectParam<ReceiverMessage>(r => r.Status == DB.Enums.MessageType.received 
+                                                                               && r.UserId == NimbusUser.UserId)
+                                                                               .Select(r => r.MessageId).ToList();
+
+                    listMessage = db.SelectParam<Message>(m => m.Visible == true && listIdMsg.Contains(m.Id));                  
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                
-                throw;
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
             return listMessage.OrderBy(d => d.Date).ToList();
         }
@@ -135,25 +132,25 @@ namespace Nimbus.Web.API.Controllers
         /// </summary>
         /// <returns></returns>
         [Authorize]
-        public List<Nimbus.DB.ORM.Message> SentMessages()
+        [HttpGet]
+        public List<Message> SentMessages()
         {
-            List<Nimbus.DB.ORM.Message> listMessage = new List<Nimbus.DB.ORM.Message>();
+            List<Message> listMessage = new List<Message>();
             try
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    listMessage = db.Select<Message>("SELECT *  " +
-                                                     "FROM Message" +
-                                                     "INNER JOIN ReceiverMessage ON  Message.Id = ReceiverMessage.MessageID" +
-                                                     "WHERE ReceiverMessage.UserID = {0} AND Message.Visible = true AND ReceiverMessage.Status = {1}",
-                                                      NimbusUser.UserId, Nimbus.DB.Enums.MessageType.send);
+                    List<int> msgSend = new List<int>();
+                    msgSend = db.SelectParam<ReceiverMessage>(rm => rm.Status == Nimbus.DB.Enums.MessageType.send 
+                                                                   && rm.UserId == NimbusUser.UserId)
+                                                                   .Select(rm => rm.MessageId).ToList();
 
+                    listMessage = db.SelectParam<Message>(m => m.Visible == true && (msgSend.Contains(m.Id) || m.SenderId == NimbusUser.UserId));                
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
             return listMessage.OrderBy(d => d.Date).ToList();
         }        
@@ -174,18 +171,20 @@ namespace Nimbus.Web.API.Controllers
                 {
                     foreach (int item in listID)
                     {
-                        db.Query<Nimbus.DB.ORM.Message>("UPDATE Message SET Message.Visible = false " +
-                                                     "INNER JOIN ReceiverMessage ON Message.Id = ReceiverMessage.MessageID " +
-                                                     "WHERE Message.Id = @msgID  AND ReceiverMessage.UserID = @userID ",
-                                                      new{ msgID = item, userID = NimbusUser.UserId});
-                        
+                        Message message = new Message();
+                        //visible= false  quando o usuario mandou ou recebeu a msg
+                        db.Update<Message>(message.Visible = false, m => m.Id == item  
+                                                                             && ( m.Receivers.Exists(r => r.UserId == NimbusUser.UserId) 
+                                                                                  || m.SenderId == NimbusUser.UserId)
+                                                                                  );
+                        db.Save(message);
                     }
                     msg = alert.SuccessMessage;
                 }
             }
             catch (Exception ex)
-            {                
-                throw ex;
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
             return msg; 
         }
