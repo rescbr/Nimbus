@@ -9,6 +9,7 @@ using ServiceStack.OrmLite;
 using Nimbus.Web.API.Models;
 using Nimbus.Web.API.Models.User;
 using Nimbus.DB.ORM;
+using Nimbus.DB.Bags;
 
 namespace Nimbus.Web.API.Controllers
 {
@@ -18,15 +19,86 @@ namespace Nimbus.Web.API.Controllers
     /// </summary>
     public class ChannelAPIController : NimbusApiController
     {
+        /// <summary>
+        /// Verifica se o usuário pagou para ser membro do canal (quando este possui preço maior 0 )
+        /// </summary>
+        /// <param name="channelID"></param>
+        /// <returns></returns>
+        [NonAction]
+        public bool Paid(int channelID)
+        {
+            bool flag = false;
+            try
+            {
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {
+                    flag = db.SelectParam<Role>(ch => ch.ChannelId == channelID && ch.UserId == NimbusUser.UserId).Select(ch => ch.Paid).FirstOrDefault();
+                }
+            }
+            catch (Exception ex)
+            {                
+                throw;
+            }
+            return flag;
+        }
+
+        /// <summary>
+        /// Verifica se o usuário foi aceito no canal (quando este é privado)
+        /// </summary>
+        /// <param name="channelID"></param>
+        /// <returns></returns>
+        [NonAction]
+        public bool isAccepted (int channelID)
+        {
+            bool flag = false;
+            try
+            {
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {
+                    flag = db.SelectParam<ChannelUser>(ch => ch.ChannelId == channelID && ch.UserId == NimbusUser.UserId).Select(ch => ch.Accepted).FirstOrDefault();                                                                                  .Select(ch => ch.Pending).FirstOrDefault();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            return flag;
+        }
+
+        /// <summary>
+        /// Método de retornar todas as tags relacionadas ao canal
+        /// </summary>
+        /// <param name="channelID"></param>
+        /// <returns></returns>
+        [Authorize]
+        [HttpGet]
+        public List<ChannelTag> TagChannel(int channelID)
+        {
+             List<ChannelTag> tagList = new List<ChannelTag> ();
+            try
+            {
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {
+                    tagList = db.SelectParam<ChannelTag>(tg => tg.ChannelId == channelID && tg.Visible == true).ToList();
+                }
+            }
+            catch (Exception ex)
+            {                
+                throw;
+            }
+            return tagList;
+        }
+
         #region métodos de visualização
         /// <summary>
         /// carregar informações gerais do canal
         /// </summary>
         /// <returns></returns>
         [Authorize]
-        public showChannelAPIModel showChannel(int channelID)
+        [HttpGet]
+        public ChannelBag showChannel(int channelID)
         {
-            showChannelAPIModel showChannel = new showChannelAPIModel();
+            ChannelBag showChannel = new ChannelBag();
             try
             {
 
@@ -34,59 +106,49 @@ namespace Nimbus.Web.API.Controllers
                 {
                     AlertChannelPay alert = new AlertChannelPay();
                     bool allow = false;
-                    Channel channel2 = db.Query<Channel>("SELECT Channel.Price, Channel.IsPrivate " +
-                                                                             "FROM Channel " +
-                                                                             "WHERE Channel.Id ={0} AND Channel.Visible = true", channelID).FirstOrDefault();
-                    if (channel2.Price > 0)
+                   
+                    Channel channel = db.SelectParam<Channel>(ch => ch.Visible == true && ch.Id == channelID).FirstOrDefault();
+
+                    #region verifica permissão
+                    if (channel.Price > 0 || channel.IsPrivate == true)
                     {
-                        bool paid = db.SelectParam<Role>(ch => ch.ChannelId == channelID && ch.UserId == NimbusUser.UserId)
-                                                                        .Select(ch => ch.Paid).FirstOrDefault();
-                        if (paid == true)
+                        bool paid = Paid(channelID);
+                        bool accepted = isAccepted(channelID);
+
+                        if (paid == true || accepted == true ) 
                         { 
                             allow = true;
                         }
                         else
                         {
                             allow = false;
-                            showChannel.MessageAlert = alert.AlertPay;
+                            if (paid == false)
+                            {
+                                showChannel.MessageAlert = alert.AlertPay;
+                            }
+                            else if( accepted == false)
+                            {
+                                showChannel.MessageAlert = alert.AlertPrivate;               
+                            }
                         }
                     }
-                    else if (channel2.IsPrivate == true)
-                    {
-                        bool? pending = db.SelectParam<ChannelUser>(ch => ch.ChannelId == channelID && ch.UserId == NimbusUser.UserId)
-                                                                                  .Select(ch => ch.Pending).FirstOrDefault();
-                        if (pending == false && pending != null)
-                        {
-                            allow = true;
-                        }
-                        else
-                        {
-                            allow = false;
-                            showChannel.MessageAlert = alert.AlertPrivate;
-                        }
-                    }
+                    #endregion
+
                     if (allow == true)
-                    {
-                        Channel channel = db.SelectParam<Channel>(chn => chn.Id == channelID && chn.Visible == true).FirstOrDefault();
-                        List<ChannelTag> tagList = db.SelectParam<ChannelTag>(tg => tg.ChannelId == channelID && tg.Visible == true).ToList();
-                        
-                        List<InteractionAPI> listComments = db.Select<InteractionAPI>("SELECT Comment.UserId FROM Comment" +
-                                                         "INNER JOIN Topic ON Comment.TopicId = Topic.Id" +
-                                                         "WHERE Topic.ChannelId = {0} AND Comment.Visible = true AND Topic.Visible = true",
-                                                         channelID);
+                    {                 
+                        int topidID = db.SelectParam<Topic>(tp => tp.ChannelId == channelID && tp.Visibility == true).Select(tp => tp.Id).FirstOrDefault();                    
+                        List<Comment> listComments = db.SelectParam<Comment>(cm => cm.TopicId == topidID &&  cm.Visible == true);
 
-                        int userComment = listComments.Select(c => c.UserID == NimbusUser.UserId).Count();
-                        int allComment = listComments.Count();
+                        int userComment = listComments.Where(us => us.UserId == NimbusUser.UserId).Count();
 
-                        showChannel.ChannelName = channel.Name;
+                        showChannel.Name = channel.Name;
                         showChannel.CountFollowers = channel.Followers.ToString();
-                        showChannel.Organization_ID = channel.OrganizationId;
-                        showChannel.owner_ID = channel.OwnerId;
+                        showChannel.OrganizationId = channel.OrganizationId;
+                        showChannel.OwnerId = channel.OwnerId;
                         showChannel.Price = channel.Price;
-                        showChannel.TagList = tagList;
-                        showChannel.ParticipationChannel = ((userComment * 100) / allComment).ToString();
-                        showChannel.RankingChannel = channel.Ranking.ToString();
-                        showChannel.UrlImgChannel = channel.ImgUrl;
+                        showChannel.ParticipationChannel = ((userComment * 100) / listComments.Count()).ToString();
+                        showChannel.Ranking = channel.Ranking;
+                        showChannel.ImgUrl = channel.ImgUrl;
                     }
                 }
             }

@@ -16,6 +16,6 @@ namespace Nimbus.DB
         public int Score { get; set; }
         public int Interaction { get; set; }
         public bool Follow { get; set; }
-        public bool? Pending { get; set; }
+        public bool Accepted { get; set; }
     }
 }

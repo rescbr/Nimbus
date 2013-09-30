@@ -18,6 +18,30 @@ namespace Nimbus.Web.API.Controllers
     public class TopicAPIController : NimbusApiController
     {
         /// <summary>
+        /// Criar um novo tópico
+        /// </summary>
+        /// <param name="topic"></param>
+        /// <returns></returns>
+        [Authorize]
+        [HttpPut]
+        public Topic newTopic(Topic topic)
+        {
+            try
+            {
+                using(var db = DatabaseFactory.OpenDbConnection())
+                {
+                    db.Insert(topic);
+                    db.Save(topic);
+                }
+                return topic;
+            }
+            catch (Exception)
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+            }
+        }
+
+        /// <summary>
         /// método de exibir tópicos em resumo, filtra por categoriam modificação e popularidade
         /// </summary>
         /// <returns></returns>

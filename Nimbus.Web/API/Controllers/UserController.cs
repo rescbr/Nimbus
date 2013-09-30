@@ -108,7 +108,7 @@ namespace Nimbus.Web.API.Controllers
             catch (Exception ex)
             {
                 login = false;
-                throw ex;
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
 
         }
