@@ -74,13 +74,6 @@ namespace Nimbus.Web.API.Models.User
         public string Country { get; set; }
     }
 
-    public class abstractProfile
-    {
-        public int idUser { get; set; }
-        public string AvatarUrl { get; set; }
-        public string Name { get; set; }
-    }
-
 }
 
 

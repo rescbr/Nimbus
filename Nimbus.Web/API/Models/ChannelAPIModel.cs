@@ -78,15 +78,7 @@ namespace Nimbus.Web.API.Models.Channel
         public decimal Price { get; set; }
     }
 
-    /// <summary>
-    /// Método para add/retirar voto de um canal
-    /// </summary>
-    public class VoteChannelAPI
-    {
-        public int Channel_ID { get; set; }
-        public int Score { get; set; }
-    }
-
+    
     /// <summary>
     /// Api para aceitar/recusar usuario
     /// </summary>
