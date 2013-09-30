@@ -28,7 +28,6 @@ namespace Nimbus.Web.API.Models.Topic
         byPopularity
     }
 
-
     /// <summary>
     /// Criar um novo tópico
     /// </summary>

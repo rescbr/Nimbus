@@ -37,6 +37,11 @@ namespace Nimbus.Web.Middleware
 
             string viewPath;
             string viewKey = GetKeyFromModelType(view.ModelType);
+            if (viewKey == null)
+            {
+                viewKey = view.ViewName;
+            }
+
             try
             {
                 viewPath = _viewPaths[viewKey];
@@ -58,6 +63,7 @@ namespace Nimbus.Web.Middleware
 
         internal static string GetKeyFromModelType(Type modelType)
         {
+            if (modelType == null) return null;
             if (!modelType.Namespace.StartsWith("Nimbus.Web")) return modelType.Name;
 
             string modelSuffix = "Model";

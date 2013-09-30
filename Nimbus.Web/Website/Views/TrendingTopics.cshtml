@@ -1,0 +1,37 @@
+﻿@model Nimbus.Web.Website.Models.LoginModel
+@{Layout = "~/Website/Views/Shared/_Layout.cshtml";}
+
+<div class="content-top">
+	<div class="cont-left">
+		<h1>Trending Topics</h1>
+	</div>
+	<nav class="cont-right">
+		<ul class="sbs">
+			<li><h2>Filtro</h2></li>
+			<li>
+                <form name="checkListForm">
+				    <select class="sel">
+					    <option value="todas">Todas categorias</option>
+					    <option value="quimica">Química</option>
+					    <option value="culinaria">Culinária</option>
+					    <option value="outros">Outros</option>
+				    </select>
+				</form>
+			</li>
+			<li>
+				<div class="c-lista">
+					<div class="ret1"></div>
+					<div class="ret2"></div>
+				</div>
+			</li>
+			<li>
+				<div class="c-grade">
+					<div class="quad1"></div>
+					<div class="quad2"></div>
+					<div class="quad3"></div>
+					<div class="quad4"></div>
+				</div>
+			</li>
+		</ul>
+	</nav>
+</div>
