@@ -28,11 +28,6 @@ namespace Nimbus.Web.API.Models.Topic
         byPopularity
     }
 
-    public class ShowTopicAPI
-    {    
-        public TopicExamAPI Exam { get; set; }
-        public GeneralTopicAPI generalTopic { get; set; }
-    }
 
     /// <summary>
     /// Criar um novo tópico
@@ -44,7 +39,7 @@ namespace Nimbus.Web.API.Models.Topic
         public string TopicText {get;set;}
         public string TopicURLVideo {get;set;}
         public string TopicDiscussion{get;set;}
-        public List<QuestionTopicAPI> TopicQuestionList { get; set; }
+        //public List<QuestionTopicAPI> TopicQuestionList { get; set; }
         public string UrlImgTopic { get; set; }
         public string UrlImgBanne { get; set; }
         public string ShortDescriptionTopic { get; set; }

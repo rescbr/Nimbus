@@ -35,7 +35,7 @@ namespace Nimbus.Web.API.Controllers
                 }
                 return topic;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
@@ -205,7 +205,7 @@ namespace Nimbus.Web.API.Controllers
                     else
                     {
                         bool? pending = db.SelectParam<ChannelUser>(ch => ch.ChannelId == tpc.ChannelId && ch.UserId == NimbusUser.UserId)
-                                                                                                        .Select(ch => ch.Pending).FirstOrDefault();
+                                                                                                        .Select(ch => ch.Accepted).FirstOrDefault();
                         if (pending == false && pending != null) //não esta pendente = já foi aceito
                         {
                             allow = true;
