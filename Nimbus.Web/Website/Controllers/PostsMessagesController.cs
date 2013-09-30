@@ -15,7 +15,7 @@ namespace Nimbus.Web.Website.Controllers
     {
         public View Get(string redirect = null)
         {
-            return new View("PostsMessages", new LoginModel());
+            return new View("Website.PostsMessages", null);
         }
 
     }

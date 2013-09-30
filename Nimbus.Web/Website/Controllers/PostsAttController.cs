@@ -13,9 +13,9 @@ namespace Nimbus.Web.Website.Controllers
 {
     public class PostsAttController : NimbusApiController
     {
-        public View Get(string redirect = null)
+        public View Get()
         {
-            return new View("PostsAtt", new LoginModel());
+            return new View("Website.PostsAtt", null);
         }
 
     }
