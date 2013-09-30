@@ -12,7 +12,7 @@ namespace Nimbus.Web.Website.Controllers
     public class NewAccountController : NimbusApiController
     {
         public View Get() {
-            return new View("NewAccount", null);
+            return new View("NewAccount", new NewAccountModel());
         }
 
         public View Post(NewAccountModel newAccount)
@@ -42,7 +42,7 @@ namespace Nimbus.Web.Website.Controllers
                     userapi.createProfile(newUser);
                     
                     //aqui deveria redirecionar
-                    return new View("NewAccount", null);
+                    return new View("NewAccount", new NewAccountModel());
                 }
                 else //senha confirmada está incorreta.
                 {

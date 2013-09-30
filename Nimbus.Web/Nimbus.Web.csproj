@@ -124,6 +124,7 @@
     <Compile Include="Security\SecurityUtils.cs" />
     <Compile Include="Security\Token.cs" />
     <Compile Include="Utils.cs" />
+    <Compile Include="Website\Controllers\HomeController.cs" />
     <Compile Include="Website\Controllers\PublicUserContentController.cs" />
     <Compile Include="Website\Controllers\PrivateUserChannelController.cs" />
     <Compile Include="Website\Controllers\PrivateUserAttController.cs" />
@@ -135,7 +136,6 @@
     <Compile Include="Website\Controllers\PostsGradeController.cs" />
     <Compile Include="Website\Controllers\PostsListaController.cs" />
     <Compile Include="Website\Controllers\TrendingTopicsController.cs" />
-    <Compile Include="Website\Controllers\HomeController.cs" />
     <Compile Include="Website\Controllers\LoginController.cs" />
     <Compile Include="Website\Controllers\NewAccountController.cs" />
     <Compile Include="Website\Models\LoginModel.cs" />
@@ -203,8 +203,8 @@
   <ItemGroup>
     <Folder Include="Admin\Models\" />
     <Folder Include="Admin\Views\" />
-    <Folder Include="Scripts\" />
     <Folder Include="images\" />
+    <Folder Include="Scripts\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

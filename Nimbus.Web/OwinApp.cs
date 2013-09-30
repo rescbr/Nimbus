@@ -49,6 +49,80 @@ namespace Nimbus.Web
                     controller = "Home"
                 }
             );
+
+            /*
+            _webApiConfig.Routes.MapHttpRoute(
+                name: "TrendingTopics",
+                routeTemplate: "trendingtopics",
+                defaults: new { controller = "TrendingTopics" }
+            );
+
+            _webApiConfig.Routes.MapHttpRoute(
+                name: "PostsGrade",
+                routeTemplate: "postsgrade",
+                defaults: new { controller = "PostsGrade" }
+            );
+
+            _webApiConfig.Routes.MapHttpRoute(
+                name: "PostsLista",
+                routeTemplate: "postslista",
+                defaults: new { controller = "PostsLista" }
+            );
+
+            _webApiConfig.Routes.MapHttpRoute(
+                name: "UserProfile",
+                routeTemplate: "userprofile",
+                defaults: new { controller = "UserProfile" }
+            );
+
+            _webApiConfig.Routes.MapHttpRoute(
+                name: "PrivateProfileTopBar",
+                routeTemplate: "privateprofiletopbar",
+                defaults: new { controller = "PrivateProfileTopBar" }
+            );
+
+            _webApiConfig.Routes.MapHttpRoute(
+                name: "PrivateTopMessages",
+                routeTemplate: "privatetopmessages",
+                defaults: new { controller = "PrivateTopMessages" }
+            );
+
+            _webApiConfig.Routes.MapHttpRoute(
+                name: "PostsMessages",
+                routeTemplate: "postsmessages",
+                defaults: new { controller = "PostsMessages" }
+            );
+
+            _webApiConfig.Routes.MapHttpRoute(
+                name: "PostsAtt",
+                routeTemplate: "postsatt",
+                defaults: new { controller = "PostsAtt" }
+            );
+
+            _webApiConfig.Routes.MapHttpRoute(
+                name: "PrivateUserAtt",
+                routeTemplate: "privateuseratt",
+                defaults: new { controller = "PrivateUserAtt" }
+            );
+
+            _webApiConfig.Routes.MapHttpRoute(
+                name: "PrivateUserChannel",
+                routeTemplate: "privateuserchannel",
+                defaults: new { controller = "PrivateUserChannel" }
+            );
+
+            _webApiConfig.Routes.MapHttpRoute(
+                name: "PublicUserContent",
+                routeTemplate: "publicusercontent",
+                defaults: new { controller = "PublicUserContent" }
+            );
+
+            _webApiConfig.Routes.MapHttpRoute(
+                name: "Home",
+                routeTemplate: "",
+                defaults: new { controller = "Home" }
+            );
+            */
         }
 
         
@@ -69,81 +143,10 @@ namespace Nimbus.Web
             _webApiConfig.Formatters.Add(new HtmlMediaTypeViewFormatter()); //adiciona Razor
             GlobalViews.DefaultViewLocator = new NimbusFastViewLocator();
             GlobalViews.DefaultViewParser = new RazorViewParser();
+
             _webApiConfig.Services.Replace(typeof(IHttpControllerSelector), 
                 new NamespaceHttpControllerSelector(_webApiConfig));
             
-            webApiConfig.Routes.MapHttpRoute(
-                name: "TrendingTopics",
-                routeTemplate: "trendingtopics",
-                defaults: new { controller = "TrendingTopics" }
-            );
-
-            webApiConfig.Routes.MapHttpRoute(
-                name: "PostsGrade",
-                routeTemplate: "postsgrade",
-                defaults: new { controller = "PostsGrade" }
-            );
-
-            webApiConfig.Routes.MapHttpRoute(
-                name: "PostsLista",
-                routeTemplate: "postslista",
-                defaults: new { controller = "PostsLista" }
-            );
-
-            webApiConfig.Routes.MapHttpRoute(
-                name: "UserProfile",
-                routeTemplate: "userprofile",
-                defaults: new { controller = "UserProfile" }
-            );
-
-            webApiConfig.Routes.MapHttpRoute(
-                name: "PrivateProfileTopBar",
-                routeTemplate: "privateprofiletopbar",
-                defaults: new { controller = "PrivateProfileTopBar" }
-            );
-
-            webApiConfig.Routes.MapHttpRoute(
-                name: "PrivateTopMessages",
-                routeTemplate: "privatetopmessages",
-                defaults: new { controller = "PrivateTopMessages" }
-            );
-
-            webApiConfig.Routes.MapHttpRoute(
-                name: "PostsMessages",
-                routeTemplate: "postsmessages",
-                defaults: new { controller = "PostsMessages" }
-            );
-
-            webApiConfig.Routes.MapHttpRoute(
-                name: "PostsAtt",
-                routeTemplate: "postsatt",
-                defaults: new { controller = "PostsAtt" }
-            );
-
-            webApiConfig.Routes.MapHttpRoute(
-                name: "PrivateUserAtt",
-                routeTemplate: "privateuseratt",
-                defaults: new { controller = "PrivateUserAtt" }
-            );
-
-            webApiConfig.Routes.MapHttpRoute(
-                name: "PrivateUserChannel",
-                routeTemplate: "privateuserchannel",
-                defaults: new { controller = "PrivateUserChannel" }
-            );
-
-            webApiConfig.Routes.MapHttpRoute(
-                name: "PublicUserContent",
-                routeTemplate: "publicusercontent",
-                defaults: new { controller = "PublicUserContent" }
-            );
-
-            webApiConfig.Routes.MapHttpRoute(
-                name: "Home",
-                routeTemplate: "",
-                defaults: new { controller = "Home" }
-            );
-
 
             RegisterWebApis();
             app.UseWebApi(_webApiConfig);

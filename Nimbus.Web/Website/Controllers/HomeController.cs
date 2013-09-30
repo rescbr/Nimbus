@@ -1,22 +1,33 @@
-﻿using Nimbus.Web.API;
-using Nimbus.Web.Security;
-using Nimbus.Web.Website.Models;
+﻿using Nimbus.Plumbing;
+using Nimbus.Web.API;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Web;
+using System.Web.Http;
 using WebApiContrib.Formatting.Html;
 
 namespace Nimbus.Web.Website.Controllers
 {
+
     public class HomeController : NimbusApiController
     {
-        public View Get(string redirect = null)
+        [Authorize]
+        public View Get()
         {
-            return new View("Home", new LoginModel());
-        }
+            var hm = new HomeModel()
+            {
+                CurrentUser = NimbusUser,
+                CurrentOrganization = NimbusOrganization.Name
 
+            };
+            return new View("Home", hm);
+        }
+    }
+
+    public class HomeModel
+    {
+        public NimbusUser CurrentUser { get; set; }
+        public string CurrentOrganization { get; set; }
     }
 }
