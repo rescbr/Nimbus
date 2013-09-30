@@ -82,6 +82,7 @@ p {
 }
 
 .container {
+    background:         #FFFFFF;
 	width:              960px;
 	height:             48px;
 	margin:             0 auto;
@@ -272,10 +273,11 @@ select.sel{
 /*------------------ Posts Grade --------------------*/
 
 div.Post_g {
+    background:         #FFFFFF;
     position:           relative;
     margin:             20px;
     width:              168px;
-    height:             250px;
+    height:             260px;
     float:              left;
 }
 
@@ -292,12 +294,14 @@ div.PostHeader_g {
 }
 
 div.PostHeImg_g {
+    background:         url();
     width:              auto;
-    height:             96px;
+    height:             93px;
     border:             1px solid #BE1E2D;
 }
 
 div.PostHeader-img_g {
+    background:         url();
     width:              auto;
     height:             233px;
     border:             1px solid #BE1E2D;
@@ -306,7 +310,7 @@ div.PostHeader-img_g {
 div.PostContent_g {
     margin-top:         5px;
     margin-bottom:      5px;
-    height:             94px;
+    height:             93px;
     width:              auto;
     padding-top:        5px;
     padding-bottom:     5px;
@@ -343,9 +347,10 @@ div.PostFoBoxR_g {
 /*------------------ Posts Lista --------------------*/
 
 div.Post_l {
+    background:         #FFFFFF;
     margin-bottom:      40px;
     width:              792px;
-    height:             96px;
+    height:             108px;
 }
 
 div.Post_Right_l {
@@ -357,6 +362,7 @@ div.Post_Right_l {
 }
 
 div.PostHeImg_l {
+    background:         url();
     width:              168px;
     height:             106px;
     border:             1px solid #BE1E2D;
@@ -364,8 +370,9 @@ div.PostHeImg_l {
 }
 
 div.PostHeader-img_l {
-    width:              790px;
-    height:             100px;
+    background:         url();
+    width:              600px;
+    height:             106px;
     border:             1px solid #BE1E2D;
 }
 
@@ -420,6 +427,7 @@ div.PostFoBoxR_l {
 
 /*------------------ User Profile --------------------*/
 div.ProBar {
+    background:         #FFFFFF;
     margin-left:        20px;
     width:              264px;
     height:             auto;
@@ -432,7 +440,8 @@ div.ProBar {
 }
 
 div.ProfileImg {
-    width:              264px;
+    background:         url();
+    width:              262px;
     height:             200px;
     border:             1px solid #BE1E2D;
     margin-bottom:      24px;
@@ -491,14 +500,19 @@ div.Participation {
     font-size:          xx-large;
 }
 
-div.Channels {
-    width:              200px;
-    margin:             0 auto;
+div.ChaPaid {
+    width:             200px;
+    height:             auto;
 }
 
 .ChanPaid h1 {
     margin-top:         15px;
     margin-bottom:      15px;
+}
+
+div.Channels {
+    width:              200px;
+    margin:             0 auto;
 }
 
 div.ChanPaidImg {
