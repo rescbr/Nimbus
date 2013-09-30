@@ -4,7 +4,6 @@ using System.Linq;
 using System.Web;
 using ServiceStack.OrmLite;
 using Nimbus.Web.API.Models;
-using Nimbus.Web.API.Models.Channel;
 using Nimbus.Web.API.Models.Topic;
 using System.Web.Http;
 using Nimbus.DB.ORM;

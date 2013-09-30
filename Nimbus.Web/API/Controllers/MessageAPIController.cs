@@ -1,5 +1,5 @@
 ﻿using Nimbus.Web.API.Models;
-using Nimbus.Web.API.Models.Channel;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;

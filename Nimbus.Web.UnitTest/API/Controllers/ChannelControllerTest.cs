@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nimbus.Web.API.Controllers;
-using Nimbus.Web.API.Models.Channel;
 using Nimbus.DB.ORM;
 using Nimbus.Plumbing;
 

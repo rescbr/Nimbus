@@ -90,7 +90,6 @@
     <Compile Include="API\Controllers\UserController.cs" />
     <Compile Include="API\Models\AdsAPIModel.cs" />
     <Compile Include="API\Models\AlertMessageAPIModel.cs" />
-    <Compile Include="API\Models\ChannelAPIModel.cs" />
     <Compile Include="API\Models\CommentAPIModel.cs" />
     <Compile Include="API\Models\MessageAPIModel.cs" />
     <Compile Include="API\Models\ReportAPIModel.cs" />

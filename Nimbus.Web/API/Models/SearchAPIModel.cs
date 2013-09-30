@@ -1,4 +1,4 @@
-﻿using Nimbus.Web.API.Models.Channel;
+﻿
 using Nimbus.Web.API.Models.Topic;
 using System;
 using System.Collections.Generic;
