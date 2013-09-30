@@ -516,6 +516,7 @@ div.Channels {
 }
 
 div.ChanPaidImg {
+    background:         url();
     width:              40px;
     height:             40px;
     background:         #000000;
@@ -567,6 +568,7 @@ div.MessContent {
 
 /*Content*/
 div.Post_m {
+    background:         #FFFFFF;
     margin-bottom:      30px;
     width:              456px;
     height:             60px;
@@ -582,6 +584,7 @@ div.Post_Right_m {
 }
 
 div.PostHeImg_m {
+    background:         url();
     width:              60px;
     height:             60px;
     border:             1px solid #BE1E2D;
@@ -627,6 +630,7 @@ div.PostContent_m {
 /*------------------ Private Profile - Att --------------------*/
 
 div.Post_att {
+    background:         #FFFFFF;
     margin-bottom:      30px;
     width:              456px;
     height:             60px;
@@ -641,6 +645,7 @@ div.Post_Right_att {
 }
 
 div.PostHeImg_att {
+    background:         url();
     width:              60px;
     height:             60px;
     border:             1px solid #BE1E2D;
