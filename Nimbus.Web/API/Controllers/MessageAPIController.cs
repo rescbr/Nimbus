@@ -161,6 +161,7 @@ namespace Nimbus.Web.API.Controllers
         /// <param name="listID"></param>
         /// <returns></returns>
         [Authorize]
+        [HttpPost]
         public string DeleteMessages(List<int> listID)
         {
             AlertGeneral alert = new AlertGeneral();
