@@ -17,17 +17,7 @@ namespace Nimbus.Web.API.Models.Channel
         public string ChannelName { get; set; }
         public string UrlImgChannel { get; set; }
     }
-
-    /// <summary>
-    /// Exibe informações básicas para listar canais e patrocínios
-    /// </summary>
-    public class AbstractChannelAPI
-    {
-        public int Organization_ID { get; set; }
-        public int channel_ID { get; set; }
-        public string ChannelName { get; set; }
-        public string UrlImgChannel { get; set; }
-    }
+       
 
     /// <summary>
     /// Lista os moderadores do canal
