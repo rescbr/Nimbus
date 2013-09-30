@@ -94,7 +94,6 @@
     <Compile Include="API\Models\MessageAPIModel.cs" />
     <Compile Include="API\Models\ReportAPIModel.cs" />
     <Compile Include="API\Models\TopicAPIModel.cs" />
-    <Compile Include="API\Models\UserAPIModel.cs" />
     <Compile Include="API\Test.cs" />
     <Compile Include="API\NimbusApiController.cs" />
     <Compile Include="DatabaseStartup.cs" />

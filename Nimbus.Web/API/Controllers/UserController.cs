@@ -1,5 +1,4 @@
-﻿using Nimbus.Web.API.Models.User;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -110,7 +109,6 @@ namespace Nimbus.Web.API.Controllers
                 login = false;
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
-
         }
 
 

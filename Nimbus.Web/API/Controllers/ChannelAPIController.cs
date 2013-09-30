@@ -6,7 +6,6 @@ using System.Net.Http;
 using System.Web.Http;
 using ServiceStack.OrmLite;
 using Nimbus.Web.API.Models;
-using Nimbus.Web.API.Models.User;
 using Nimbus.DB.ORM;
 using Nimbus.DB.Bags;
 
