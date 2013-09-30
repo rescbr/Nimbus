@@ -1,5 +1,4 @@
-﻿using ServiceStack.DataAnnotations;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,17 +8,13 @@ namespace Nimbus.DB
 {
     public class ChannelReported
     {
-        [AutoIncrement]
         public int Id { get; set; }
 
-        [References(typeof(Channel))]
-        public int ChannelReported_ID { get; set; }
+        public int ChannelReportedId { get; set; }
 
-        [References(typeof(User))]
-        public int UserReporter_ID { get; set; }
+        public int UserReporterId { get; set; }
 
-        [References(typeof(User))]
-        public int UserReported_ID { get; set; }
+        public int UserReportedId { get; set; }
 
         public string Justification { get; set; }
 

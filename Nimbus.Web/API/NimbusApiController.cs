@@ -1,4 +1,4 @@
-﻿using Nimbus.Plumbing.Interface;
+﻿using Nimbus.Plumbing;
 using ServiceStack.OrmLite;
 using System;
 using System.Collections.Generic;
@@ -10,17 +10,49 @@ namespace Nimbus.Web.API
 {
     public class NimbusApiController : ApiController
     {
-        /// <summary>
-        /// Obtém o NimbusAppBus contexto OwinApp.
-        /// </summary>
-        public INimbusAppBus NimbusAppBus
+        private DB.ORM.Organization _nimbusOrg = null;
+        public DB.ORM.Organization NimbusOrganization
         {
             get
             {
-                return base.Configuration.Properties["NimbusAppBus"] as INimbusAppBus;
+                if (_nimbusOrg != null)
+                {
+                    return _nimbusOrg;
+                }
+                else
+                {
+                    DB.ORM.Organization org;
+                    string host = Request.Headers.Host.Split(':')[0]; //remove porta
+                    try
+                    {
+                        org = (NimbusAppBus.Instance.Cache.OrganizationHosts.Get(host)
+                            as DB.ORM.Organization);
+                    }
+                    catch (KeyNotFoundException)
+                    {
+                        using (var db = DatabaseFactory.OpenDbConnection())
+                        {
+                           org = (db.Where<DB.ORM.Organization>(o => o.Cname == host)
+                               .FirstOrDefault() as DB.ORM.Organization);
+                        }
+                        NimbusAppBus.Instance.Cache.OrganizationHosts.Store(host, org);
+                    }
+
+                    return org;
+                }
+            }
+
+            set
+            {
+                _nimbusOrg = value;
             }
         }
 
+
+        /// <summary>
+        /// For test purposes only!
+        /// </summary>
+        private NimbusUser _nimbusUser = null;
         /// <summary>
         /// Obtém o NimbusUser da requisição atual.
         /// </summary>
@@ -28,14 +60,31 @@ namespace Nimbus.Web.API
         {
             get
             {
-                if (User.Identity.AuthenticationType == "NimbusUser")
+                if (_nimbusUser != null)
                 {
-                    return ((User.Identity) as NimbusUser);
+                    return _nimbusUser;
                 }
-                else throw new Exception("User.Identity.AuthenticationType is not NimbusUser.");
+                else
+                {
+                    if (User.Identity.AuthenticationType == "NimbusUser")
+                    {
+                        return ((User.Identity) as NimbusUser);
+                    }
+                    else throw new Exception("User.Identity.AuthenticationType is not NimbusUser.");
+                }
+                
+            }
+
+            set
+            {
+                _nimbusUser = value;
             }
         }
 
+        /// <summary>
+        /// For test purposes only!
+        /// </summary>
+        private IDbConnectionFactory _databaseFactory = null;
         /// <summary>
         /// Obtém a DatabaseFactory a partir das configurações no NimbusAppBus.
         /// </summary>
@@ -43,9 +92,16 @@ namespace Nimbus.Web.API
         {
             get
             {
-                return new OrmLiteConnectionFactory
-                    (NimbusAppBus.Settings.DatabaseConnectionString,
+                if(_databaseFactory != null)
+                    return _databaseFactory;
+                else
+                    return new OrmLiteConnectionFactory
+                    (NimbusAppBus.Instance.Settings.DatabaseConnectionString,
                     SqlServerDialect.Provider);
+            }
+            set
+            {
+                _databaseFactory = value;
             }
         }
 

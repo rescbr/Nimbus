@@ -46,21 +46,24 @@
     <Reference Include="Owin.Types">
       <HintPath>..\packages\Owin.Types.0.8.5\lib\net40\Owin.Types.dll</HintPath>
     </Reference>
-    <Reference Include="RazorEngine, Version=3.3.0.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
+    <Reference Include="ServiceStack.Common">
+      <HintPath>..\packages\ServiceStack.Common.3.9.62\lib\net35\ServiceStack.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Interfaces, Version=3.9.60.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\RazorEngine.3.3.0\lib\net40\RazorEngine.dll</HintPath>
+      <HintPath>..\packages\ServiceStack.Common.3.9.62\lib\net35\ServiceStack.Interfaces.dll</HintPath>
     </Reference>
-    <Reference Include="ServiceStack.Interfaces">
-      <HintPath>..\packages\ServiceStack.Common.3.9.58\lib\net35\ServiceStack.Interfaces.dll</HintPath>
+    <Reference Include="ServiceStack.OrmLite, Version=3.9.60.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\ServiceStack.OrmLite.SqlServer.3.9.62\lib\net35\ServiceStack.OrmLite.dll</HintPath>
     </Reference>
-    <Reference Include="ServiceStack.OrmLite">
-      <HintPath>..\packages\ServiceStack.OrmLite.SqlServer.3.9.58\lib\ServiceStack.OrmLite.dll</HintPath>
+    <Reference Include="ServiceStack.OrmLite.SqlServer, Version=3.9.60.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\ServiceStack.OrmLite.SqlServer.3.9.62\lib\net35\ServiceStack.OrmLite.SqlServer.dll</HintPath>
     </Reference>
-    <Reference Include="ServiceStack.OrmLite.SqlServer">
-      <HintPath>..\packages\ServiceStack.OrmLite.SqlServer.3.9.58\lib\ServiceStack.OrmLite.SqlServer.dll</HintPath>
-    </Reference>
-    <Reference Include="ServiceStack.Text">
-      <HintPath>..\packages\ServiceStack.Text.3.9.58\lib\net35\ServiceStack.Text.dll</HintPath>
+    <Reference Include="ServiceStack.Text, Version=3.9.59.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\ServiceStack.Text.3.9.62\lib\net35\ServiceStack.Text.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http" />
     <Reference Include="System" />
@@ -89,27 +92,34 @@
     <None Include="Website\Views\Shared\_Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Admin\Controllers\DatabaseController.cs" />
     <Compile Include="API\Controllers\ChannelAPIController.cs" />
     <Compile Include="API\Controllers\CommentAPIController.cs" />
     <Compile Include="API\Controllers\MessageAPIController.cs" />
     <Compile Include="API\Controllers\ReportAPIController.cs" />
+    <Compile Include="API\Controllers\SearchAPIController.cs" />
     <Compile Include="API\Controllers\TopicAPIController.cs" />
-    <Compile Include="API\Controllers\UserAPIController.cs" />
+    <Compile Include="API\Controllers\UserController.cs" />
     <Compile Include="API\Models\AdsAPIModel.cs" />
     <Compile Include="API\Models\AlertMessageAPIModel.cs" />
     <Compile Include="API\Models\ChannelAPIModel.cs" />
     <Compile Include="API\Models\CommentAPIModel.cs" />
     <Compile Include="API\Models\MessageAPIModel.cs" />
     <Compile Include="API\Models\ReportAPIModel.cs" />
+    <Compile Include="API\Models\SearchAPIModel.cs" />
     <Compile Include="API\Models\TopicAPIModel.cs" />
     <Compile Include="API\Models\UserAPIModel.cs" />
     <Compile Include="API\Test.cs" />
     <Compile Include="API\NimbusApiController.cs" />
+    <Compile Include="DatabaseStartup.cs" />
     <Compile Include="Middleware\Authentication.cs" />
+    <Compile Include="Middleware\NamespaceControllerSelector.cs" />
     <Compile Include="Middleware\NimbusFastViewLocator.cs" />
     <Compile Include="OwinApp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Security\Base32.cs" />
     <Compile Include="Security\DatabaseLogin.cs" />
+    <Compile Include="Security\OneTimePassword.cs" />
     <Compile Include="Security\PasswordHash.cs" />
     <Compile Include="Security\SecurityUtils.cs" />
     <Compile Include="Security\Token.cs" />
@@ -177,20 +187,24 @@
       <Project>{8c15b0d3-9108-4ea3-ae19-3c9571266c47}</Project>
       <Name>WebApiContrib.Formatting.Razor</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Nimbus.DB.ORM\Nimbus.DB.ORM.csproj">
+      <Project>{7f04ec7a-7fdb-4bb5-b613-c134bc56a48d}</Project>
+      <Name>Nimbus.DB.ORM</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Nimbus.DB\Nimbus.DB.csproj">
       <Project>{0d485fa6-60bc-410c-b437-37a7c47cdb70}</Project>
       <Name>Nimbus.DB</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Nimbus.Plumbing.Interface\Nimbus.Plumbing.Interface.csproj">
+    <ProjectReference Include="..\Nimbus.Plumbing\Nimbus.Plumbing.csproj">
       <Project>{c28f8f7a-c5a2-4cb4-92b1-9507a87d5ffe}</Project>
-      <Name>Nimbus.Plumbing.Interface</Name>
+      <Name>Nimbus.Plumbing</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Admin\Controllers\" />
     <Folder Include="Admin\Models\" />
     <Folder Include="Admin\Views\" />
     <Folder Include="Scripts\" />
+    <Folder Include="images\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

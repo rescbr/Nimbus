@@ -14,15 +14,7 @@ namespace Nimbus.Web.API.Models.Message
         send       
     }
     
-    /// <summary>
-    /// Envia a mensagem privada, criada em um canal, para o dono do canal
-    /// </summary>
-    public class SendMessageChannelAPI
-    {
-        public int Channel_ID { get; set; }
-        public string Title { get; set; }
-        public string Text { get; set; }
-    }
+  
 
 
 

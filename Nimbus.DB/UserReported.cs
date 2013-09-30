@@ -1,5 +1,4 @@
-﻿using ServiceStack.DataAnnotations;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,18 +8,16 @@ namespace Nimbus.DB
 {
     public class UserReported
     {
-        [AutoIncrement]
-        public int Id { get; set; }
+        public virtual int Id { get; set; }
 
-        [References(typeof(User))]
-        public int UserReported_ID { get; set; }
+        public virtual int UserReportedId { get; set; }
 
-        [References(typeof(User))]
-        public int UserReporter_ID { get; set; }
+        public virtual int UserReporterId { get; set; }
+
 
         public Enums.ReportType Type { get; set; }
 
-        public int Report_ID { get; set; }
+        public int ReportId { get; set; }
     }
 
 }

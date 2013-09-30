@@ -1,5 +1,4 @@
-﻿using ServiceStack.DataAnnotations;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,11 +8,12 @@ namespace Nimbus.DB
 {
     public class User
     {
-        [AutoIncrement]
-        public int Id { get; set; }
+        public virtual int Id { get; set; }
+
 
         public string Email { get; set; }
         public string Password { get; set; }
+        public string TOTPKey { get; set; }
         
         public DateTime BirthDate { get; set; }
         public string Occupation { get; set; }
@@ -26,6 +26,5 @@ namespace Nimbus.DB
         public string City { get; set; }
         public string State { get; set; }
         public string Country { get; set; }
-
     }
 }

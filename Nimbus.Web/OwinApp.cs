@@ -1,75 +1,77 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using Nimbus.Plumbing;
+using Nimbus.Web.Middleware;
 using Owin;
-using Nimbus.Plumbing.Interface;
-using Owin.Types;
 using System.IO;
-using System.Threading.Tasks;
+using System.Reflection;
 using System.Web.Http;
-using WebApiContrib.Formatting.Html.Formatters;
+using System.Web.Http.Dispatcher;
 using WebApiContrib.Formatting.Html.Configuration;
+using WebApiContrib.Formatting.Html.Formatters;
+using WebApiContrib.Formatting.Razor;
 
 namespace Nimbus.Web
 {
-    
-    using AppFunc = Func<IDictionary<string, object>, System.Threading.Tasks.Task>;
-    using WebApiContrib.Formatting.Razor;
-    using Nimbus.Web.Middleware;
-    using System.Web.Http.Filters;
-    using System.Reflection;
-    
-    
     public class NimbusOwinApp : INimbusOwinApp
     {
-        private INimbusAppBus _nimbusAppBus;
-        public INimbusAppBus NimbusAppBus
+        private void RegisterWebApis()
         {
-            get { return _nimbusAppBus; }
+            _webApiConfig.Routes.MapHttpRoute(
+                name: "ApiNamespace",
+                routeTemplate: "api/{controller}/{id}",
+                defaults: new { 
+                    @namespace = "api", //use @ antes da propriedade pq namespace é keyword.
+                    id = RouteParameter.Optional
+                }
+            );
+
+            _webApiConfig.Routes.MapHttpRoute(
+                name: "AdminNamespace",
+                routeTemplate: "admin/{controller}", 
+                defaults: new { 
+                    @namespace = "admin", //use @ antes da propriedade pq namespace é keyword.
+                }
+            );
+
+            _webApiConfig.Routes.MapHttpRoute(
+                name: "WebsiteNamespace",
+                routeTemplate: "{controller}",
+                defaults: new
+                {
+                    @namespace = "website", //use @ antes da propriedade pq namespace é keyword.
+                }
+            );
+
+            _webApiConfig.Routes.MapHttpRoute(
+                name: "Home",
+                routeTemplate: "",
+                defaults: new {
+                    @namespace = "website",
+                    controller = "Home"
+                }
+            );
         }
+
         
-        public void Configuration(INimbusAppBus nimbusAppBus, IAppBuilder app)
+
+        HttpConfiguration _webApiConfig;
+        public void Configuration(Owin.IAppBuilder app)
         {
-            _nimbusAppBus = nimbusAppBus;
+            
+            DatabaseStartup.CreateDatabaseIfNotThere();
 
-            app.Use(typeof(Middleware.Authentication), _nimbusAppBus);
             app.UseErrorPage();
-
+            app.Use(typeof(Middleware.Authentication));
+            
             app.Properties["host.AppName"] = "Nimbus";
 
             //WebAPI
-            HttpConfiguration webApiConfig = new HttpConfiguration();
-            webApiConfig.Properties["NimbusAppBus"] = nimbusAppBus;
-            webApiConfig.Formatters.Add(new HtmlMediaTypeViewFormatter()); //adiciona Razor
+            _webApiConfig = new HttpConfiguration();
+            _webApiConfig.Formatters.Add(new HtmlMediaTypeViewFormatter()); //adiciona Razor
             GlobalViews.DefaultViewLocator = new NimbusFastViewLocator();
             GlobalViews.DefaultViewParser = new RazorViewParser();
+            _webApiConfig.Services.Replace(typeof(IHttpControllerSelector), 
+                new NamespaceHttpControllerSelector(_webApiConfig));
             
-
-
-            webApiConfig.Routes.MapHttpRoute(
-                name: "DefaultApi",
-                routeTemplate: "api/{controller}/{id}",
-                defaults: new { id = RouteParameter.Optional }
-            );
-
-            webApiConfig.Routes.MapHttpRoute(
-                name: "Admin",
-                routeTemplate: "admin/{controller}"
-            );
-
-            webApiConfig.Routes.MapHttpRoute(
-                name: "NewAccount",
-                routeTemplate: "newaccount",
-                defaults: new { controller = "NewAccount" }
-            );
-
-            webApiConfig.Routes.MapHttpRoute(
-                name: "Login",
-                routeTemplate: "login",
-                defaults: new { controller = "Login" }
-            );
-
             webApiConfig.Routes.MapHttpRoute(
                 name: "TrendingTopics",
                 routeTemplate: "trendingtopics",
@@ -143,14 +145,15 @@ namespace Nimbus.Web
             );
 
 
-            app.UseWebApi(webApiConfig);
+            RegisterWebApis();
+            app.UseWebApi(_webApiConfig);
 
             app.UseStaticFiles(GetPhysicalSiteRootPath());
             
 
             //Owin.AppBuilderExtensions.Run(
             //app
-                //.UseWebApi(webApiConfig)
+                //.UseWebApi(_webApiConfig)
                 //.UseFunc(AutoDebugAttach)
                 //.UseShowExceptions() //Gate.Middleware
                 //.UseFunc(Thrower()) //Owin.Extensions
@@ -168,53 +171,7 @@ namespace Nimbus.Web
             //;
         }
 
-
-        /// <summary>
-        /// Método para tratar o auto-attach do Visual Studio
-        /// </summary>
-        /// <param name="next"></param>
-        /// <returns></returns>
-        AppFunc AutoDebugAttach(AppFunc next)
-        {
-            return env =>
-            {
-                Console.WriteLine("AutoDebugAttach!");
-                var req = new OwinRequest(env);
-                //Request DEBUG /debugattach.aspx
-                if (!req.Path.Equals("/debugattach.aspx", StringComparison.InvariantCultureIgnoreCase)
-                    && !req.Method.Equals("debug", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    return next(env);
-                }
-                Console.WriteLine("AutoDebugAttach2");
-                //Se não estiver em modo debug e modo dev, continua para o handler de 404 responder.
-                if (!(NimbusAppBus.Settings.IsDebug && NimbusAppBus.Settings.IsDevelopment))
-                {
-                    return next(env);
-                }
-                Console.WriteLine("AutoDebugAttach3");
-                string cmd = req.GetHeader("Command");
-                if (cmd == "start-debug")
-                {
-                    Dictionary<string, string> debugParams;
-                    using (StreamReader sr = new StreamReader(req.Body))
-                    {
-                        string p = sr.ReadToEnd();
-                        debugParams = p.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
-                                       .Select(part => part.Split('='))
-                                       .ToDictionary(split => split[0], split => split[1]);
-                    }
-
-                    NimbusAppBus.NimbusDebugAutoAttach.DebugAutoAttach(debugParams["DebugSessionID"]);
-                }
-                Console.WriteLine("AutoDebugAttach4");
-                var res = new OwinResponse(env) { ContentType = "text/plain" };
-                res.Write("OK");
-                Console.WriteLine("AutoDebugAttach5");
-                return new TaskCompletionSource<AsyncVoid>().Task;
-            };
-
-        }
+        
 
         // <summary>
         // Used as the T in a "conversion" of a Task into a Task{T}
@@ -222,7 +179,6 @@ namespace Nimbus.Web
         private struct AsyncVoid
         {
         }
-
 
         internal static string GetPhysicalSiteRootPath()
         {

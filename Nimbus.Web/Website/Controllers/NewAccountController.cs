@@ -26,17 +26,18 @@ namespace Nimbus.Web.Website.Controllers
                 {             
        
                     /* Quando for usar uma API internamente, faça o clone antes. */
-                    var userapi = ClonedContextInstance<API.Controllers.UserAPIController>();
-                    var newUser = new Nimbus.Web.API.Models.User.CreateUserAPIModel()
+                    var userapi = ClonedContextInstance<API.Controllers.UserController>();
+                    var newUser = new Nimbus.DB.ORM.User()
                     {
                         City = newAccount.City,
-                        ConfirmPassword = newAccount.ConfirmPassword,
                         Country = newAccount.Country,
                         Email = newAccount.Email,
                         FirstName = newAccount.FirstName,
                         LastName = newAccount.LastName,
                         Password = newAccount.Password,
                         State = newAccount.State
+
+                        ,BirthDate = DateTime.Now
                     };
                     userapi.createProfile(newUser);
                     
