@@ -67,7 +67,7 @@ namespace Nimbus.Web.API.Controllers
         /// <param name="profile"></param>
         /// <returns>bool</returns>        
         [Authorize]
-        [HttpPost]
+        [HttpPut]
         public User editProfile(User user, int id)
         {
             try
@@ -87,7 +87,7 @@ namespace Nimbus.Web.API.Controllers
         }
          
 
-        [HttpPut]
+        [HttpPost]
         public User createProfile(User user)
         {
             bool login = false;

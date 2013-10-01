@@ -93,18 +93,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\Controllers\DatabaseController.cs" />
-    <Compile Include="API\Controllers\ChannelAPIController.cs" />
-    <Compile Include="API\Controllers\CommentAPIController.cs" />
-    <Compile Include="API\Controllers\MessageAPIController.cs" />
-    <Compile Include="API\Controllers\ReportAPIController.cs" />
-    <Compile Include="API\Controllers\SearchAPIController.cs" />
-    <Compile Include="API\Controllers\TopicAPIController.cs" />
+    <Compile Include="API\Controllers\ChannelController.cs" />
+    <Compile Include="API\Controllers\CommentController.cs" />
+    <Compile Include="API\Controllers\MessageController.cs" />
+    <Compile Include="API\Controllers\ReportController.cs" />
+    <Compile Include="API\Controllers\SearchController.cs" />
+    <Compile Include="API\Controllers\TopicController.cs" />
     <Compile Include="API\Controllers\UserController.cs" />
-    <Compile Include="API\Models\AdsAPIModel.cs" />
-    <Compile Include="API\Models\AlertMessageAPIModel.cs" />
-    <Compile Include="API\Models\MessageAPIModel.cs" />
+    <Compile Include="API\Models\AlertMessageModel.cs" />
     <Compile Include="API\Models\ReportAPIModel.cs" />
-    <Compile Include="API\Models\TopicAPIModel.cs" />
     <Compile Include="API\Test.cs" />
     <Compile Include="API\NimbusApiController.cs" />
     <Compile Include="DatabaseStartup.cs" />

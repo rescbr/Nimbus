@@ -14,7 +14,7 @@ namespace Nimbus.Web.API.Controllers
     /// <summary>
     /// Controle sobre todas as funções realizadas para os comentários de canais e tópicos.
     /// </summary>
-    public class CommentAPIController : NimbusApiController
+    public class CommentController : NimbusApiController
     {
         /// <summary>
         /// Cria um comentario 
@@ -22,8 +22,8 @@ namespace Nimbus.Web.API.Controllers
         /// <param name="comment"></param>
         /// <returns></returns>
         [Authorize]
-        [HttpPut]
-        public Comment newComment(Comment comment )
+        [HttpPost]
+        public Comment NewComment(Comment comment )
         {                
             try
             {
@@ -50,8 +50,8 @@ namespace Nimbus.Web.API.Controllers
         /// <param name="answer"></param>
         /// <returns></returns>
         [Authorize]
-        [HttpPut]
-        public Comment answerComment(Comment answer)
+        [HttpPost]
+        public Comment AnswerComment(Comment answer)
         {            
             try
             {
@@ -78,8 +78,8 @@ namespace Nimbus.Web.API.Controllers
         /// <param name="item_ID"></param>
         /// <returns></returns>
         [Authorize]
-        [HttpPut]
-        public bool deleteComment(int item_ID)
+        [HttpDelete]
+        public bool DeleteComment(int id)
         {
             bool success = false;
             try
@@ -89,7 +89,7 @@ namespace Nimbus.Web.API.Controllers
                     var dado = new Nimbus.DB.Comment()
                                   { Visible = false };
 
-                    db.Update<Nimbus.DB.Comment>(dado, cmt => cmt.Id == item_ID);
+                    db.Update<Nimbus.DB.Comment>(dado, cmt => cmt.Id == id);
                     db.Save(dado);
                     success = true;
                 }
@@ -108,14 +108,14 @@ namespace Nimbus.Web.API.Controllers
         /// <returns></returns>
         [Authorize]
         [HttpGet]
-        public List<CommentBag> showComment(int topicID)
+        public List<CommentBag> ShowComment(int id)
         {
             List<CommentBag> listComments = new List<CommentBag>();
             try
             {
                 using(var db= DatabaseFactory.OpenDbConnection())
                 {
-                    List<Comment> comment = db.SelectParam<Comment>(cmt => cmt.TopicId == topicID && cmt.Visible == true);
+                    List<Comment> comment = db.SelectParam<Comment>(cmt => cmt.TopicId == id && cmt.Visible == true);
 
                     foreach (Comment item in comment)
                     {
