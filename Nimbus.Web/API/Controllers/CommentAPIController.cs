@@ -1,5 +1,4 @@
 ﻿using Nimbus.Web.API.Models;
-using Nimbus.Web.API.Models.Comment;
 using System;
 using System.Collections.Generic;
 using System.Linq;

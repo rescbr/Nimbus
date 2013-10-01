@@ -7,8 +7,8 @@ using System.Net.Http;
 using System.Web.Http;
 using ServiceStack.OrmLite;
 using Nimbus.DB.ORM;
-using Nimbus.Web.API.Models.Comment;
 using Nimbus.Web.API.Models;
+using Nimbus.DB.Bags;
 
 namespace Nimbus.Web.API.Controllers
 {
@@ -236,45 +236,7 @@ namespace Nimbus.Web.API.Controllers
             }
             return allow;
         }
-
-        /// <summary>
-        /// Busca todos os comentarios de um tópico
-        /// </summary>
-        /// <param name="topicID"></param>
-        /// <returns></returns>
-        [Authorize]
-        [HttpGet]
-        public List<CommentAPIModel> showComments(int topicID)
-        {
-            List<CommentAPIModel> listComments = new List<CommentAPIModel>();
-            try
-            {
-                using (var db = DatabaseFactory.OpenDbConnection())
-                {
-                    List<Comment> comments = db.SelectParam<Comment>(cm => cm.TopicId == topicID && cm.Visible == true);
-                    listComments = new List<CommentAPIModel>();
-                    foreach (Comment item in comments)
-                    {
-                        CommentAPIModel dados = new CommentAPIModel();
-                        dados.AvatarUrl = db.SelectParam<User>(us => us.Id == item.UserId).Select(us => us.AvatarUrl).FirstOrDefault();
-                        dados.comment_ID = item.Id;
-                        dados.Name = db.SelectParam<User>(us => us.Id == item.UserId).Select(us => us.FirstName + " " + us.LastName).FirstOrDefault();
-                        dados.ParentID = item.ParentId;
-                        dados.PostedOn = item.PostedOn;
-                        dados.Text = item.Text;
-                        dados.TopicId = item.TopicId;
-
-                        listComments.Add(dados);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
-            }
-            return listComments;
-        }
-
+              
         /// <summary>
         /// Método de retornar o numero de favoritos de um tópico
         /// </summary>
