@@ -7,6 +7,8 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using ServiceStack.OrmLite;
+using Nimbus.DB.ORM;
+using Nimbus.DB.Bags;
 
 namespace Nimbus.Web.API.Controllers
 {
@@ -21,34 +23,26 @@ namespace Nimbus.Web.API.Controllers
         /// <param name="comment"></param>
         /// <returns></returns>
         [Authorize]
-        public string newComment(newCommentAPIModel comment )
-        {
-            AlertGeneral  msg = new AlertGeneral();
-            string alert = msg.ErrorMessage;
-
+        [HttpPut]
+        public Comment newComment(Comment comment )
+        {                
             try
             {
-                using(var db = DatabaseFactory.OpenDbConnection())
+                using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    var dados = new Nimbus.DB.Comment 
-                                               {
-                                                   ParentId = 0,
-                                                   PostedOn = DateTime.Now,
-                                                   Text = comment.Comment,
-                                                   TopicId = comment.topic_ID,
-                                                   UserId  = NimbusUser.UserId,
-                                                   Visible = true
-                                               };
-                    db.Insert(dados);
-                    alert = string.Empty;
+                    comment.ParentId = 0;
+                    comment.PostedOn = DateTime.Now;
+                    comment.UserId = NimbusUser.UserId;
+                    comment.Visible = true;
+                    db.Insert(comment);
                 }
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
 
-            return alert;
+            return comment;
         }
         
         /// <summary>
@@ -57,34 +51,26 @@ namespace Nimbus.Web.API.Controllers
         /// <param name="answer"></param>
         /// <returns></returns>
         [Authorize]
-        public string answerComment(answerCommentAPIModel answer)
-        {
-            AlertGeneral msg = new AlertGeneral();
-            string alert = msg.ErrorMessage;
-
+        [HttpPut]
+        public Comment answerComment(Comment answer)
+        {            
             try
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    var dados = new Nimbus.DB.Comment
-                    {
-                        ParentId = answer.parent_ID,
-                        PostedOn = DateTime.Now,
-                        Text = answer.Comment,
-                        TopicId = answer.topic_ID,
-                        UserId = NimbusUser.UserId,
-                        Visible = true
-                    };
-                    db.Insert(dados);
-                    alert = string.Empty;
+                    answer.PostedOn = DateTime.Now;
+                    answer.UserId = NimbusUser.UserId;
+                    answer.Visible = true;
+                    
+                    db.Insert(answer);
                 }
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
 
-            return alert;
+            return answer;
         }
         
         /// <summary>
@@ -93,6 +79,7 @@ namespace Nimbus.Web.API.Controllers
         /// <param name="item_ID"></param>
         /// <returns></returns>
         [Authorize]
+        [HttpPut]
         public bool deleteComment(int item_ID)
         {
             bool success = false;
@@ -109,8 +96,8 @@ namespace Nimbus.Web.API.Controllers
                 }
             }
             catch (Exception ex)
-            {                
-                throw ex;
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
             return success;
         }
@@ -121,33 +108,42 @@ namespace Nimbus.Web.API.Controllers
         /// <param name="topicID"></param>
         /// <returns></returns>
         [Authorize]
-        public List<CommentAPIModel> showComment(int topicID)
+        [HttpGet]
+        public List<CommentBag> showComment(int topicID)
         {
-            List<CommentAPIModel> listComments = new List<CommentAPIModel>();
+            List<CommentBag> listComments = new List<CommentBag>();
             try
             {
                 using(var db= DatabaseFactory.OpenDbConnection())
                 {
+                    List<Comment> comment = db.SelectParam<Comment>(cmt => cmt.TopicId == topicID && cmt.Visible == true);
 
-                    listComments = db.Select<CommentAPIModel>("SELECT User.Id as userID , User.AvatarUrl as AvatarUrl, User.Name as Name," +
-                                                            "       Comment.Id as comment_ID, Comment.Text as Text, Comment.ParentID as ParentID, Comment.PostedOn as PostedOn, Comment.TopicId as TopicId" +
-                                                            "FROM User, Comment " +
-                                                            "WHERE Comment.Id = {0} AND Comment.Visible = true", topicID
-                                                             );
+                    foreach (Comment item in comment)
+                    {
+                        User user = db.Select<User>("SELECT User.Id, User.AvatarUrl, User.FirstName, User.LastName FROM User WHERE User.Id = {0}", item.UserId).FirstOrDefault();
+                        CommentBag bag = new CommentBag()
+                        {
+                            AvatarUrl = user.AvatarUrl,
+                            Name = user.FirstName + " " + user.LastName,
+                            UserId = user.Id,
+                            Id = item.Id,
+                            Text = item.Text,
+                            ParentId = item.ParentId,
+                            PostedOn = item.PostedOn,
+                            TopicId = item.TopicId
+                        };
+                        listComments.Add(bag);
+                    }
                 }
             }
             catch (Exception ex)
-            {                
-                throw ex;
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
             return listComments;
         }
         
       
-
-
-
-
 
     }
 }
