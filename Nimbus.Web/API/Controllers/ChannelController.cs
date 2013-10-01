@@ -120,14 +120,14 @@ namespace Nimbus.Web.API.Controllers
         /// <returns></returns>
         [Authorize]
         [HttpGet]
-        public List<ChannelTag> ShowTagChannel(int id)
+        public List<TagChannel> ShowTagChannel(int id)
         {
-             List<ChannelTag> tagList = new List<ChannelTag> ();
+            List<TagChannel> tagList = new List<TagChannel>();
             try
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    tagList = db.SelectParam<ChannelTag>(tg => tg.ChannelId == id && tg.Visible == true).ToList();
+                    tagList = db.SelectParam<TagChannel>(tg => tg.ChannelId == id && tg.Visible == true).ToList();
                 }
             }
             catch (Exception ex)
@@ -568,7 +568,7 @@ namespace Nimbus.Web.API.Controllers
                                 //colocar restrição para canal free
                                 if (isPrivate == false)
                                 {
-                                    int countTag = db.SelectParam<ChannelTag>(ch => ch.ChannelId == id).Count();
+                                    int countTag = db.SelectParam<TagChannel>(ch => ch.ChannelId == id).Count();
                                     if (countTag <= 4)
                                     {
                                         tagsList = tagsList.Take(5 - (countTag + 1)).ToList();
@@ -587,19 +587,34 @@ namespace Nimbus.Web.API.Controllers
                                 //add as tags
                                 if (allOk == true)
                                 {
+                                    string text = string.Empty;
                                     foreach (string item in tagsList)
                                     {
-                                        ChannelTag tag = new ChannelTag
+                                        int i = 0;
+                                        text = item;
+                                        while (text.StartsWith("#"))
                                         {
-                                            ChannelId = id,
-                                            TagName = item,
-                                            Visible = true 
+                                            text = text.Substring(i + 1);
+                                            i++;
+                                        }
+                                        Tag tag = new Tag
+                                        {
+                                            TagName = text
                                         };
                                         db.Save(tag);
+
+                                        TagChannel tagChannel = new TagChannel
+                                        {
+                                            ChannelId = id,
+                                            TagId = (int)db.GetLastInsertId(),
+                                            Visible = true
+                                        };
+                                        db.Save(tagChannel);
                                     }
                                     flag = true;
                                 }
                             }
+                            trans.Commit();
                         }
                         catch (Exception ex)
                         {
@@ -644,8 +659,8 @@ namespace Nimbus.Web.API.Controllers
                             {
                                 foreach (int item in tagList)
                                 {
-                                    var dado = new ChannelTag() { Visible = false };
-                                    db.Update<ChannelTag>(dado, ch => ch.ChannelId == item);
+                                    var dado = new TagChannel() { Visible = false };
+                                    db.Update<TagChannel>(dado, ch => ch.ChannelId == item);
                                     db.Save(dado);
                                 }
                                 flag = true;

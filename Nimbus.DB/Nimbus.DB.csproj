@@ -49,7 +49,6 @@
     <Compile Include="Category.cs" />
     <Compile Include="Channel.cs" />
     <Compile Include="ChannelReported.cs" />
-    <Compile Include="ChannelTag.cs" />
     <Compile Include="ChannelUser.cs" />
     <Compile Include="CommentReported.cs" />
     <Compile Include="Message.cs" />
@@ -58,6 +57,9 @@
     <Compile Include="ReceiverMessage.cs" />
     <Compile Include="RoleOrganization.cs" />
     <Compile Include="RoleTopic.cs" />
+    <Compile Include="Tag.cs" />
+    <Compile Include="TagChannel.cs" />
+    <Compile Include="TagTopic.cs" />
     <Compile Include="TopicReported.cs" />
     <Compile Include="UserChannelReadLater.cs" />
     <Compile Include="UserExam.cs" />
