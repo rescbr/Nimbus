@@ -195,7 +195,6 @@ namespace Nimbus.Web.API.Controllers
                         showChannel.OwnerId = channel.OwnerId;
                         showChannel.Price = channel.Price;
                         showChannel.participationChannel = ((userComment * 100) / listComments.Count()).ToString();
-                        showChannel.Ranking = channel.Ranking;
                         showChannel.ImgUrl = channel.ImgUrl;
                     }
                 }
@@ -683,7 +682,6 @@ namespace Nimbus.Web.API.Controllers
             {
                 channel.CreatedOn = DateTime.Now;
                 channel.Followers = 0;
-                channel.Ranking = 0;
                 channel.LastModification = DateTime.Now;
 
                 using (var db = DatabaseFactory.OpenDbConnection())
@@ -954,6 +952,34 @@ namespace Nimbus.Web.API.Controllers
             }
 
             return accept;
+        }
+
+        /// <summary>
+        /// Retorna a posição do channel no ranking 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [Authorize]
+        [HttpGet]
+        public int RankingChannel(int id)
+        {
+            int ranking = 0;
+            try
+            {
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {
+                    int score = db.SelectParam<VoteChannel>(vt => vt.ChannelId == id).Select(vt => vt.Score).FirstOrDefault();
+                    ranking = db.Select<int>("WITH Rankings AS (SELECT VoteChannel.ChannelId, Ranking = Dense_Rank() OVER(ORDER BY VoteChannel.Score DESC) " +
+                                                                "FROM VoteChannel) "+
+                                              "SELECT Ranking FROM Rankings "+
+                                              "Where VoteChannel.ChannelId= {0}", id).FirstOrDefault();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+            }
+            return ranking;
         }
 
         #endregion

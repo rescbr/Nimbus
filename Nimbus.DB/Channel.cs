@@ -26,7 +26,6 @@ namespace Nimbus.DB
         public bool Visible { get; set; }
         public bool IsCourse { get; set; }
         public decimal Price { get; set; }
-        public int Ranking { get; set; }
         public int Followers { get; set; }
 
 

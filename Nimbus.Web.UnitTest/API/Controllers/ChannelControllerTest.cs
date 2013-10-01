@@ -45,7 +45,6 @@ namespace Nimbus.Web.UnitTest.API.Controllers
             model.OpenToComments = true;
 
             model.Price = 0;
-            model.Ranking = 0;
 
             controller.NewChannel(model);
             
