@@ -17,6 +17,60 @@ namespace Nimbus.Web.API.Controllers
     public class TopicController : NimbusApiController
     {
         /// <summary>
+        /// Verifica se o usuário é dono do canalque possui o tópico
+        /// </summary>
+        /// <param name="topicID"></param>
+        /// <returns></returns>
+        [NonAction]
+        public bool IsOwner(int id)
+        {
+            bool allow = false;
+            try
+            {
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {
+                    int channelId = db.SelectParam<Topic>(tp => tp.Id == id && tp.Visibility == true).Select(tp => tp.ChannelId).FirstOrDefault();
+
+                    allow = db.SelectParam<Role>(own => own.UserId == NimbusUser.UserId && own.ChannelId == channelId)
+                                                                        .Select(own => own.IsOwner).FirstOrDefault();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+            return allow;
+        }
+
+        /// <summary>
+        /// Verifica se o usuário é adm do canal que possui o topico
+        /// </summary>
+        /// <param name="topicID"></param>
+        /// <returns></returns>
+        [NonAction]
+        public bool IsManager(int id)
+        {
+            bool allow = false;
+            try
+            {
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {
+                    int channelId = db.SelectParam<Topic>(tp => tp.Id == id && tp.Visibility == true).Select(tp => tp.ChannelId).FirstOrDefault();
+
+                    allow = db.SelectParam<Role>(mg => mg.UserId == NimbusUser.UserId && mg.ChannelId == id)
+                                                                         .Exists(mg => mg.ChannelMagager == true || mg.TopicManager == true);
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+            return allow;
+        }
+
+        /// <summary>
         /// Criar um novo tópico
         /// </summary>
         /// <param name="topic"></param>
@@ -29,8 +83,13 @@ namespace Nimbus.Web.API.Controllers
             {
                 using(var db = DatabaseFactory.OpenDbConnection())
                 {
-                    db.Insert(topic);
-                    db.Save(topic);
+                    bool isOwner = IsOwner(topic.Id);
+                    bool isManager = IsManager(topic.Id);
+                    if (isOwner == true || isManager == true)
+                    {
+                        db.Insert(topic);
+                        db.Save(topic);
+                    }
                 }
                 return topic;
             }
@@ -412,6 +471,150 @@ namespace Nimbus.Web.API.Controllers
             return userExam;
         }
 
+        /// <summary>
+        /// Add tags para os topicos
+        /// </summary>
+        /// <param name="topicID"></param>
+        /// <param name="tagsList"></param>
+        /// <returns></returns>
+        [Authorize]
+        [HttpPost]
+        public bool AddTagsTopic(int id, List<string> tagsList)
+        {
+            bool flag = false;
+            try
+            {
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {
+                    using (var trans = db.OpenTransaction(System.Data.IsolationLevel.ReadCommitted))
+                    {
+                        try
+                        {
+                            bool isOwner = IsOwner(id);
+                            bool isManager = IsManager(id);
+                            int channelID = db.SelectParam<Topic>(tp => tp.Id == id && tp.Visibility==true).Select(tp => tp.ChannelId).FirstOrDefault();
+
+                            bool isPrivate = db.SelectParam<Channel>(ch => ch.Id == channelID).Select(p => p.IsPrivate).FirstOrDefault();
+                            bool allOk = false;
+
+                            if (isOwner == true || isManager == true)//usuario possui permissao
+                            {
+                                //colocar restrição para canal free
+                                if (isPrivate == false)
+                                {
+                                    int countTag = db.SelectParam<TagTopic>(tp=> tp.TopicId == id).Count();
+                                    if (countTag <= 4)
+                                    {
+                                        tagsList = tagsList.Take(5 - (countTag + 1)).ToList();
+                                        allOk = true;
+                                    }
+                                    else
+                                    {
+                                        allOk = false;
+                                    }
+                                }
+                                else
+                                {
+                                    allOk = true;
+                                }
+
+                                //add as tags
+                                if (allOk == true)
+                                {
+                                    List<Tag> tagsExist = new List<Tag>();
+                                    tagsExist = ValidateTag(tagsList); //retorna as tags já existentes no sistema
+
+                                    foreach (string item in tagsList)
+                                    {
+                                        if (tagsExist.Exists(tg => tg.TagName.ToLower() == item.ToLower()))
+                                        {
+                                            //já existe
+                                            TagTopic tagChannel = new TagTopic
+                                            {
+                                                TopicId = id,
+                                                TagId = tagsExist.Where(t=> t.TagName.ToLower() == item.ToLower()).Select(t => t.Id).First(),
+                                                Visible = true
+                                            };
+                                            db.Save(tagChannel);
+                                        }
+                                        else
+                                        {
+                                            //criar uma nova tag na tabela
+                                            Tag tag = new Tag
+                                            {
+                                                TagName = item
+                                            };
+                                            db.Save(tag);
+
+                                            TagTopic tagChannel = new TagTopic
+                                            {
+                                                TopicId = id,
+                                                TagId = (int)db.GetLastInsertId(),
+                                                Visible = true
+                                            };
+                                            db.Save(tagChannel);
+                                        }
+                                    }
+
+                                    flag = true;
+                                }
+                            }
+                            trans.Commit();
+                        }
+                        catch (Exception ex)
+                        {
+                            trans.Rollback();
+                            flag = false;
+                            throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                flag = false;
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+            }
+            return flag;
+        }
+
+        /// <summary>
+        /// verifica se a tag já existe e valida a tag retirando o '#'
+        /// </summary>
+        /// <param name="listtag"></param>
+        /// <returns>Lista de tags existentes</returns>
+        [NonAction]
+        [HttpGet]
+        public List<Tag> ValidateTag(List<string> listtag)
+        {
+            List<Tag> returntags = new List<Tag>();
+            try
+            {
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {
+                    string text = string.Empty;
+                    foreach (string item in listtag)
+                    {
+                        int i = 0;
+                        text = item;
+                        while (text.StartsWith("#"))
+                        {
+                            text = text.Substring(i + 1);
+                            i++;
+                        }
+                        Tag tag = new Tag();
+                        tag = db.SelectParam<Tag>(tg => tg.TagName.ToLower() == text.ToLower()).FirstOrDefault();
+                        if (tag != null)
+                            returntags.Add(tag);
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+            }
+            return returntags;
+        }
 
 
     }

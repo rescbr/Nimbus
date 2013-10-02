@@ -114,6 +114,45 @@ namespace Nimbus.Web.API.Controllers
         }
 
         /// <summary>
+        /// verifica se a tag já existe e valida a tag retirando o '#'
+        /// </summary>
+        /// <param name="listtag"></param>
+        /// <returns>Lista de tags existentes</returns>
+        [NonAction]
+        [HttpGet]
+        public List<Tag> ValidateTag(List<string> listtag)
+        {
+            List<Tag> returntags = new List<Tag>();
+            try
+            {
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {
+                    string text = string.Empty;
+                    foreach (string item in listtag)
+                    {
+                        int i = 0;
+                        text = item;
+                        while (text.StartsWith("#"))
+                        {
+                            text = text.Substring(i + 1);
+                            i++;
+                        }
+                        Tag tag = new Tag();
+                        tag = db.SelectParam<Tag>(tg => tg.TagName.ToLower() == text.ToLower()).FirstOrDefault();
+                        if (tag != null)
+                            returntags.Add(tag);
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+            }
+            return returntags;
+        }
+
+
+        /// <summary>
         /// Método de retornar todas as tags relacionadas ao canal
         /// </summary>
         /// <param name="channelID"></param>
@@ -587,31 +626,41 @@ namespace Nimbus.Web.API.Controllers
                                 //add as tags
                                 if (allOk == true)
                                 {
-                                    string text = string.Empty;
+                                    List<Tag> tagsExist = new List<Tag>();
+                                    tagsExist = ValidateTag(tagsList); //retorna as tags já existentes no sistema
+
                                     foreach (string item in tagsList)
                                     {
-                                        int i = 0;
-                                        text = item;
-                                        while (text.StartsWith("#"))
+                                        if (tagsExist.Exists(tg => tg.TagName.ToLower() == item.ToLower()))
                                         {
-                                            text = text.Substring(i + 1);
-                                            i++;
+                                            //já existe
+                                            TagChannel tagChannel = new TagChannel
+                                            {
+                                                ChannelId = id,
+                                                TagId = tagsExist.Where(t => t.TagName.ToLower() == item.ToLower()).Select(t => t.Id).First(),
+                                                Visible = true
+                                            };
+                                            db.Save(tagChannel);
                                         }
-                                        Tag tag = new Tag
+                                        else
                                         {
-                                            TagName = text
-                                        };
-                                        db.Save(tag);
+                                            //criar uma nova tag na tabela
+                                            Tag tag = new Tag
+                                            {
+                                                TagName = item
+                                            };
+                                            db.Save(tag);
 
-                                        TagChannel tagChannel = new TagChannel
-                                        {
-                                            ChannelId = id,
-                                            TagId = (int)db.GetLastInsertId(),
-                                            Visible = true
-                                        };
-                                        db.Save(tagChannel);
+                                            TagChannel tagChannel = new TagChannel
+                                            {
+                                                ChannelId = id,
+                                                TagId = (int)db.GetLastInsertId(),
+                                                Visible = true
+                                            };
+                                            db.Save(tagChannel);
+                                        }
+                                        flag = true;
                                     }
-                                    flag = true;
                                 }
                             }
                             trans.Commit();

@@ -9,8 +9,8 @@ namespace Nimbus.DB.ORM
 {
     public class TagTopic: Nimbus.DB.TagTopic
     {
-        [AutoIncrement]
-        public int Id { get; set; }
+       [References(typeof(Tag))]
+        public int TagId { get; set; }
 
         [References(typeof(Topic))]
         public int TopicId { get; set; }

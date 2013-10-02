@@ -9,8 +9,8 @@ namespace Nimbus.DB.ORM
 {
     public class TagChannel : Nimbus.DB.TagChannel
     {
-        [AutoIncrement]
-        public int Id { get; set; }
+       [References(typeof(TagChannel))]
+        public int TagId { get; set; }
 
         [References(typeof(Channel))]
         public int ChannelId { get; set; }
