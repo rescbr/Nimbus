@@ -100,6 +100,7 @@
     <Compile Include="API\Controllers\SearchController.cs" />
     <Compile Include="API\Controllers\TopicController.cs" />
     <Compile Include="API\Controllers\UserController.cs" />
+    <Compile Include="API\DataMining\ChannelMining.cs" />
     <Compile Include="API\Models\AlertMessageModel.cs" />
     <Compile Include="API\Models\ReportAPIModel.cs" />
     <Compile Include="API\Test.cs" />
