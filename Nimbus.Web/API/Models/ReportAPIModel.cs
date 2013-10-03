@@ -6,20 +6,13 @@ using System.Web;
 
 namespace Nimbus.Web.API.Models
 {
-    public enum reportType
-    {
-        comment,
-        topic,
-        channel
-    }
-
-    public class ReportAPIModel
+    public class ReportModel
     {
         [References(typeof(Nimbus.DB.User))]
         public int userReported_id{get;set;}
 
-        public string Justification { get; set; }
-        public reportType typeReport { get; set; }
+        public string justification { get; set; }
+        public string typeReport { get; set; }
         public int idReport { get; set; }
     }
 }

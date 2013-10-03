@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nimbus.Web.API.Controllers;
-using Nimbus.Web.API.Models.User;
 using Nimbus.Plumbing;
 using System.Web.Http;
 using System.Web.Http.Routing;

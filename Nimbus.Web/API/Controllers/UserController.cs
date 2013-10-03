@@ -1,5 +1,4 @@
-﻿using Nimbus.Web.API.Models.User;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -68,7 +67,7 @@ namespace Nimbus.Web.API.Controllers
         /// <param name="profile"></param>
         /// <returns>bool</returns>        
         [Authorize]
-        [HttpPost]
+        [HttpPut]
         public User editProfile(User user, int id)
         {
             try
@@ -88,7 +87,7 @@ namespace Nimbus.Web.API.Controllers
         }
          
 
-        [HttpPut]
+        [HttpPost]
         public User createProfile(User user)
         {
             bool login = false;
@@ -108,9 +107,8 @@ namespace Nimbus.Web.API.Controllers
             catch (Exception ex)
             {
                 login = false;
-                throw ex;
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
-
         }
 
 

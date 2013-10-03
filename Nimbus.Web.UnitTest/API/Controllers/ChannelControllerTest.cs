@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nimbus.Web.API.Controllers;
-using Nimbus.Web.API.Models.Channel;
 using Nimbus.DB.ORM;
 using Nimbus.Plumbing;
 
@@ -10,7 +9,7 @@ namespace Nimbus.Web.UnitTest.API.Controllers
     [TestClass]
     public class ChannelControllerTest
     {
-        ChannelAPIController controller = new ChannelAPIController();
+        ChannelController controller = new ChannelController();
 
         /// <summary>
         /// Init the controller with a Database Factory that points to a Test Database
@@ -46,9 +45,8 @@ namespace Nimbus.Web.UnitTest.API.Controllers
             model.OpenToComments = true;
 
             model.Price = 0;
-            model.Ranking = 0;
 
-            controller.newChannel(model);
+            controller.NewChannel(model);
             
         }
     }

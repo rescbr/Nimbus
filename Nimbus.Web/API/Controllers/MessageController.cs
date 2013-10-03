@@ -1,5 +1,4 @@
 ﻿using Nimbus.Web.API.Models;
-using Nimbus.Web.API.Models.Channel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +6,6 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using ServiceStack.OrmLite;
-using Nimbus.Web.API.Models.Message;
 using Nimbus.DB.ORM;
 
 namespace Nimbus.Web.API.Controllers
@@ -15,7 +13,7 @@ namespace Nimbus.Web.API.Controllers
     /// <summary>
     /// Controle sobre todas as funções realizadas para as Mensagens
     /// </summary>
-    public class MessageAPIController : NimbusApiController
+    public class MessageController : NimbusApiController
     {              
         /// <summary>
         /// enviar mensagem através de um canal
@@ -161,7 +159,7 @@ namespace Nimbus.Web.API.Controllers
         /// <param name="listID"></param>
         /// <returns></returns>
         [Authorize]
-        [HttpPost]
+        [HttpDelete]
         public string DeleteMessages(List<int> listID)
         {
             AlertGeneral alert = new AlertGeneral();

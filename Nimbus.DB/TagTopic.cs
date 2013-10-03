@@ -6,13 +6,10 @@ using System.Threading.Tasks;
 
 namespace Nimbus.DB
 {
-    public class ChannelTag
+    public class TagTopic
     {
-        public int Id { get; set; }
-
-        public int ChannelId { get; set; }
-
-        public string TagName { get; set; }
+        public int TagId { get; set; }
+        public int TopicId { get; set; }
         public bool Visible { get; set; }
     }
 }

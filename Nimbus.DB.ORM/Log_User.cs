@@ -7,13 +7,14 @@ using System.Threading.Tasks;
 
 namespace Nimbus.DB.ORM
 {
-    public class ChannelTag : Nimbus.DB.ChannelTag
+    public class Log_User: Nimbus.DB.Log_User
     {
         [AutoIncrement]
-        public int Id { get; set; }
+        public override int Id { get; set; }
 
-        [References(typeof(Channel))]
-        public int ChannelId { get; set; }
+        [References(typeof(User))]
+        public override int UserId { get; set; }
+
 
     }
 }
