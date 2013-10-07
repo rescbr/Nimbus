@@ -93,6 +93,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\Controllers\DatabaseController.cs" />
+    <Compile Include="API\Controllers\AdController.cs" />
     <Compile Include="API\Controllers\ChannelController.cs" />
     <Compile Include="API\Controllers\CommentController.cs" />
     <Compile Include="API\Controllers\MessageController.cs" />

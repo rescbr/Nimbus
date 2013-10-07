@@ -10,11 +10,11 @@ namespace Nimbus.DB
     {
         public enum TopicType
         {
-            Text,
-            Video,
-            Discussion,
-            Exam,
-            Add
+            text,
+            video,
+            discussion,
+            exam,
+            ads
         }
 
         public enum MessageType
@@ -29,6 +29,12 @@ namespace Nimbus.DB
             topic,
             channel,
             user
+        }
+
+        public enum TypeAds
+        {
+            sponsor,
+            ads
         }
     }
 }

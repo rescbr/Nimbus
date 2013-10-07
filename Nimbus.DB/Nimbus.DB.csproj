@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Ad.cs" />
     <Compile Include="Badge.cs" />
+    <Compile Include="Bags\AdsBag.cs" />
     <Compile Include="Bags\ChannelBag.cs" />
     <Compile Include="Bags\CommentBag.cs" />
     <Compile Include="Bags\TopicBag.cs" />
@@ -54,6 +55,7 @@
     <Compile Include="Message.cs" />
     <Compile Include="Premium.cs" />
     <Compile Include="PremiumUser.cs" />
+    <Compile Include="Prices.cs" />
     <Compile Include="ReceiverMessage.cs" />
     <Compile Include="RoleOrganization.cs" />
     <Compile Include="RoleTopic.cs" />
@@ -61,8 +63,10 @@
     <Compile Include="TagChannel.cs" />
     <Compile Include="TagTopic.cs" />
     <Compile Include="TopicReported.cs" />
+    <Compile Include="UserAds.cs" />
     <Compile Include="UserChannelReadLater.cs" />
     <Compile Include="UserExam.cs" />
+    <Compile Include="UserInfoPayment.cs" />
     <Compile Include="UserReported.cs" />
     <Compile Include="UserBadge.cs" />
     <Compile Include="Comment.cs" />

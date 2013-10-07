@@ -381,7 +381,7 @@ namespace Nimbus.Web.API.Controllers
                     {
                         topic = db.SelectParam<Topic>(tp => tp.Id == id).FirstOrDefault();
 
-                       if (topic.TopicType == Nimbus.DB.Enums.TopicType.Exam)
+                       if (topic.TopicType == Nimbus.DB.Enums.TopicType.exam)
                         {
                             #region exam
                             //verificar se o usuario já fez o exame
