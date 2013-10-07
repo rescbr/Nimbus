@@ -24,7 +24,7 @@ namespace Nimbus.Web.API.Controllers
         [Authorize]
         [HttpPost]
         public Comment NewComment(Comment comment )
-        {                
+        {
             try
             {
                 using (var db = DatabaseFactory.OpenDbConnection())

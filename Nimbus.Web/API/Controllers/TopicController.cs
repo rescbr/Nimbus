@@ -89,9 +89,13 @@ namespace Nimbus.Web.API.Controllers
                     {
                         db.Insert(topic);
                         db.Save(topic);
+                        return topic;
+                    }
+                    else
+                    {
+                        throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotAcceptable, "erro ao criar item"));
                     }
                 }
-                return topic;
             }
             catch (Exception ex)
             {
@@ -479,9 +483,8 @@ namespace Nimbus.Web.API.Controllers
         /// <returns></returns>
         [Authorize]
         [HttpPost]
-        public bool AddTagsTopic(int id, List<string> tagsList)
+        public List<string> AddTagsTopic(int id, List<string> tagsList)
         {
-            bool flag = false;
             try
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
@@ -502,7 +505,7 @@ namespace Nimbus.Web.API.Controllers
                                 //colocar restrição para canal free
                                 if (isPrivate == false)
                                 {
-                                    int countTag = db.SelectParam<TagTopic>(tp=> tp.TopicId == id).Count();
+                                    int countTag = db.SelectParam<TagTopic>(tp => tp.TopicId == id).Count();
                                     if (countTag <= 4)
                                     {
                                         tagsList = tagsList.Take(5 - (countTag + 1)).ToList();
@@ -532,7 +535,7 @@ namespace Nimbus.Web.API.Controllers
                                             TagTopic tagChannel = new TagTopic
                                             {
                                                 TopicId = id,
-                                                TagId = tagsExist.Where(t=> t.TagName.ToLower() == item.ToLower()).Select(t => t.Id).First(),
+                                                TagId = tagsExist.Where(t => t.TagName.ToLower() == item.ToLower()).Select(t => t.Id).First(),
                                                 Visible = true
                                             };
                                             db.Save(tagChannel);
@@ -555,16 +558,17 @@ namespace Nimbus.Web.API.Controllers
                                             db.Save(tagChannel);
                                         }
                                     }
-
-                                    flag = true;
                                 }
+                            }
+                            else
+                            {
+                                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotAcceptable, "sem permissao"));
                             }
                             trans.Commit();
                         }
                         catch (Exception ex)
                         {
                             trans.Rollback();
-                            flag = false;
                             throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
                         }
                     }
@@ -572,10 +576,9 @@ namespace Nimbus.Web.API.Controllers
             }
             catch (Exception ex)
             {
-                flag = false;
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
-            return flag;
+            return tagsList;
         }
 
         /// <summary>

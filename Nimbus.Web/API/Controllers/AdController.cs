@@ -13,6 +13,12 @@ namespace Nimbus.Web.API.Controllers
 {
     public class AdController:NimbusApiController
     {
+        /// <summary>
+        /// Método de adicionar/comprar um ads 
+        /// </summary>
+        /// <param name="adDados"></param>
+        /// <returns></returns>
+        [Authorize]
         [HttpPost]
         public AdsBag SaleAd(AdsBag adDados)
         {
@@ -59,5 +65,7 @@ namespace Nimbus.Web.API.Controllers
             
             return adDados;
         }
+
+
     }
 }

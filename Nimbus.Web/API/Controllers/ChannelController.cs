@@ -362,10 +362,9 @@ namespace Nimbus.Web.API.Controllers
         /// <returns></returns>
         [Authorize]
         [HttpDelete]
-        public string DeleteChannel(int id)
+        public bool DeleteChannel(int id)
         {
-            AlertGeneral alert = new AlertGeneral();
-            string message = alert.ErrorMessage;
+            bool flag = false;
             try
             {
                 using(var db = DatabaseFactory.OpenDbConnection())
@@ -375,10 +374,10 @@ namespace Nimbus.Web.API.Controllers
                                                   "WHERE Channel.Id = {0} AND Channel.UserId = {1} AND Channel.Visible = true AND Role.IsOwner = true",
                                                   id, NimbusUser.UserId).FirstOrDefault();
 
-                    if (idOwner != null && idOwner > 0)
+                    if (idOwner > 0)
                     {
                         db.UpdateOnly(new Channel { OwnerId = 0 }, chn => chn.OwnerId, chn => chn.Id == id);
-                        message = alert.SuccessMessage;
+                        flag = true;
                     }
                     
                 }
@@ -387,7 +386,7 @@ namespace Nimbus.Web.API.Controllers
             {
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
-            return message;
+            return flag;
  
         }
                  
@@ -459,11 +458,9 @@ namespace Nimbus.Web.API.Controllers
         /// <returns></returns>
         [Authorize]
         [HttpPost]
-        public string AddModerator(List<Role> userModerator, int id)
+        public List<Role> AddModerator(List<Role> userModerator, int id)
         {
             //TODO: notificação
-            AlertGeneral alert = new AlertGeneral();
-            string msg = alert.ErrorMessage;
             try
             {
                 using(var db = DatabaseFactory.OpenDbConnection())
@@ -509,12 +506,11 @@ namespace Nimbus.Web.API.Controllers
                                 foreach (Role item in userModerator)
                                 {
                                     db.Save(item);
-                                }
-                                msg = alert.SuccessMessage;
+                                }                               
                             }
                             else
                             {
-                                msg = alert.NotAllowed;
+                                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotAcceptable, "limite de moderador completo"));
                             }
                             trans.Commit();
                         }
@@ -530,7 +526,7 @@ namespace Nimbus.Web.API.Controllers
             {
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
-            return msg;
+            return userModerator;
         }
 
         /// <summary>
@@ -585,9 +581,8 @@ namespace Nimbus.Web.API.Controllers
         /// <returns></returns>
         [Authorize]
         [HttpPost]
-        public bool AddTagsChannel(int id, List<string> tagsList)
+        public List<string> AddTagsChannel(int id, List<string> tagsList)
         {
-            bool flag = false;
             try
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
@@ -659,16 +654,18 @@ namespace Nimbus.Web.API.Controllers
                                             };
                                             db.Save(tagChannel);
                                         }
-                                        flag = true;
                                     }
                                 }
+                            }
+                            else
+                            {
+                                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotAcceptable, "sem permissao"));
                             }
                             trans.Commit();
                         }
                         catch (Exception ex)
                         {
                             trans.Rollback();
-                            flag = false;
                             throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
                         }
                     }
@@ -676,10 +673,9 @@ namespace Nimbus.Web.API.Controllers
             }
             catch (Exception ex)
             {
-                flag = false;
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
-            return flag;
+            return tagsList;
         }
 
         /// <summary>
@@ -690,9 +686,8 @@ namespace Nimbus.Web.API.Controllers
         /// <returns></returns>
         [Authorize]
         [HttpDelete]
-        public bool DeleteTagChannel(int id, List<int> tagList)
+        public List<int> DeleteTagChannel(int id, List<int> tagList)
         {
-            bool flag = false;
             try
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
@@ -712,13 +707,15 @@ namespace Nimbus.Web.API.Controllers
                                     db.Update<TagChannel>(dado, ch => ch.ChannelId == item);
                                     db.Save(dado);
                                 }
-                                flag = true;
+                            }
+                            else
+                            {
+                                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotAcceptable, "sem permissao"));
                             }
                         }
                         catch (Exception ex)
                         {
                             trans.Rollback();
-                            flag = false;
                             throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
                         }
                     }
@@ -726,10 +723,9 @@ namespace Nimbus.Web.API.Controllers
             }
             catch (Exception ex)
             {
-                flag = false;
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
-            return flag;
+            return tagList;
         }
 
         /// <summary>
@@ -788,14 +784,18 @@ namespace Nimbus.Web.API.Controllers
                                 };
                                 db.Insert(vote);
                                 trans.Commit();
-                               
+
                             }
                             catch (Exception ex)
-                            {                             
+                            {
                                 trans.Rollback();
                                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
                             }
                         }
+                    }
+                    else
+                    {
+                        throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotAcceptable, "sem permissao"));
                     }
                 }
             }
@@ -846,7 +846,7 @@ namespace Nimbus.Web.API.Controllers
                     }
                     else 
                     {
-                        channel = null;
+                        throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotAcceptable, "sem permissao"));
                     }
                 }
             }
@@ -983,9 +983,8 @@ namespace Nimbus.Web.API.Controllers
         /// <returns></returns>
         [Authorize]
         [HttpPut]
-        public bool AcceptUser(ChannelBag dados)
-        {
-            bool accept = false;
+        public ChannelBag AcceptUser(ChannelBag dados)
+        {            
             try
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
@@ -999,23 +998,20 @@ namespace Nimbus.Web.API.Controllers
                         {
                            Accepted = dados.isAccept
                         };
-                        db.Update<ChannelUser>(channel, ch => ch.UserId == dados.userID && ch.ChannelId == dados.Id);
-
-                        accept = true;
+                        db.Update<ChannelUser>(channel, ch => ch.UserId == dados.userID && ch.ChannelId == dados.Id);                       
                     }
                     else
                     {
-                        accept = false;
+                        throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotAcceptable, "sem permissao"));
                     }
                 }                
             }
             catch (Exception ex)
             {
-                accept = false;
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
 
-            return accept;
+            return dados;
         }
 
         /// <summary>

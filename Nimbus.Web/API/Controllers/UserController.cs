@@ -68,7 +68,7 @@ namespace Nimbus.Web.API.Controllers
         /// <returns>bool</returns>        
         [Authorize]
         [HttpPut]
-        public User editProfile(User user, int id)
+        public User EditProfile(User user, int id)
         {
             try
             {
@@ -81,16 +81,15 @@ namespace Nimbus.Web.API.Controllers
                 return user;
             }
             catch (Exception ex)
-            {                
-                throw ex;
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
         }
          
 
         [HttpPost]
-        public User createProfile(User user)
+        public User CreateProfile(User user)
         {
-            bool login = false;
             try
             {
                 string passwordHash = new Security.PlaintextPassword(user.Password).Hash;
@@ -98,20 +97,39 @@ namespace Nimbus.Web.API.Controllers
 
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    db.Insert(user);
-                    login = true;
+                    db.Insert(user);                    
                 }
 
                 return user;
             }
             catch (Exception ex)
             {
-                login = false;
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
         }
 
-
+        /// <summary>
+        /// Método para completar as informações do usuário para que ele possa comprar/vender itens
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        [Authorize]
+        [HttpPost]
+        public UserInfoPayment CreateInfoUser(UserInfoPayment user)
+        {
+            try
+            {
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {
+                    db.Insert(user);
+                    return user;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+            }
+        }
     }
 
 
