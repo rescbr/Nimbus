@@ -66,6 +66,30 @@ namespace Nimbus.Web.API.Controllers
             return adDados;
         }
 
-
+        /// <summary>
+        /// Método para pegar os ADs do usuario e mostrar todas as informações
+        /// </summary>
+        /// <returns></returns>
+        [Authorize]
+        [HttpGet]
+        public List<UserAdsBag> ShowInfo()
+        {
+            try
+            {
+                using(var db = DatabaseFactory.OpenDbConnection())
+                {
+                    List<UserAdsBag> info = db.SelectParam<UserAdsBag>(us => us.UserId == NimbusUser.UserId && us.IsPaid == true).ToList();
+                    foreach (UserAdsBag item in info)
+                    {
+                        item.Ads = db.SelectParam<Ad>(ad => ad.Id == item.AdsId).FirstOrDefault();
+                    }
+                    return info;
+                }
+            }
+            catch (Exception ex)
+            {                
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+            }
+        }
     }
 }
