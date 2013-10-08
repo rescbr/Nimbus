@@ -282,6 +282,38 @@ namespace Nimbus.Web.API.Controllers
             return listChannel;
         }
 
+        [Authorize]
+        [HttpGet]
+        public List<Channel> UserChannelPaid(int id)
+        {
+            List<Channel> listChannel = new List<Channel>();
+            try
+            {
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {
+                    List<int> idsChannel = db.SelectParam<Role>(rl => rl.Paid == true && rl.Accepted == true &&  rl.UserId == id).Select(rl => rl.ChannelId).ToList();
+
+                    foreach (int item in idsChannel)
+                    {
+                        Channel channel = (from chn in db.SelectParam<Channel>(chn => chn.Visible == true && chn.Id == item)
+                                           select new Channel()
+                                           {
+                                               Id = chn.Id,
+                                               Name = chn.Name,
+                                               OrganizationId = chn.OrganizationId,
+                                               ImgUrl = chn.ImgUrl
+                                           }).FirstOrDefault();
+                        listChannel.Add(channel);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+            }
+            return listChannel;
+        }
+
        /// <summary>
        ///visualizar canais moderados
        /// </summary>

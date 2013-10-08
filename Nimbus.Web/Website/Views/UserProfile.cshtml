@@ -1,68 +1,71 @@
-﻿@model Nimbus.Web.Website.Models.LoginModel
-@{Layout = "~/Website/Views/Shared/_Layout.cshtml";}
+﻿@model Nimbus.Web.Website.Models.UserProfileModel
+@{
+    ViewBag.Title = "Home";
+    Layout = "~/Website/Views/Shared/_Layout.cshtml";
+    }
 
 <div class="ProBar">
     <div class="ProfileImg">
-        <!-- <img src="blablabla.png" alt="blabla" title="blabla" /> -->
+        <img src="@Model.user.AvatarUrl" alt="@Model.user.FirstName" <!--title="blabla" -->/>
     </div>
 
     @*Se for o usuário do perfil*@
+    @if(Model.user.Id == Model.CurrentUser.UserId)
+    {
     <div class="ProfileEdit">
-        <p>Edit</p>
+        <p>Edit</p><!--clicavel-->
     </div>
-
+    }
     <div class="AboutUser">
-        <h1>Nome do Usuário</h1>
-        <p>Idade</p>
-        <p>Local</p>
-        <p>Profissão</p>
-        <p>Interesses</p>
-        <p>Experiências</p>
-        <p>Outras informações</p>
-
-        <p class="AboutUser-other">bla bal abl ba lab alba lbalab alba lab albalba la alba lbalabla alb</p>
+        <h1>@Model.user.FirstName @Model.user.LastName</h1>
+        <p>@Model.user.Age</p>
+       @if(!string.IsNullOrEmpty(Model.user.City) && !string.IsNullOrEmpty(Model.user.State))
+       {
+           <p>@Model.user.City - @Model.user.State</p>
+       } 
+         @if(!string.IsNullOrEmpty(Model.user.Occupation))
+         {  
+            <p>Profissão:@Model.user.Occupation</p>
+         }
+         @if(!string.IsNullOrEmpty(Model.user.Interest))
+         {
+            <p>Interesses: @Model.user.Interest</p>
+         }
+         @if(!string.IsNullOrEmpty(Model.user.Experience))
+         {
+            <p>Experiências: @Model.user.Experience</p>
+         }
+         @if(!string.IsNullOrEmpty(Model.user.About))
+         {
+             <p>Outras informações: </p>
+             <p class="AboutUser-other">@Model.user.About</p>
+         }
+        
     </div>
 
     @*Se não for o usuário*@
+    @if(Model.user.Id != Model.CurrentUser.UserId)
+    {
     <div class="SendMessage">
-        <p>Enviar Mensagem</p>
+        <p>Enviar Mensagem</p> <!-- clicavel -->
     </div>
-
+    }
+    else
+    {
     <div class="Participation">
         <h1>Participação</h1>
-        <p>20%</p>
+        <p>@Model.user.Interaction %</p>
     </div>
-
+    }
     <div class="ChanPaid">
         <h1>Canais Pagos</h1>
         <div class="Channels">
-            <div class="ChanPaidImg">
-                <!-- <img src="blablabla.png" alt="blabla" title="blabla" /> -->
-            </div>
-            <div class="ChanPaidImg">
-                <!-- <img src="blablabla.png" alt="blabla" title="blabla" /> -->
-            </div>
-            <div class="ChanPaidImg">
-                <!-- <img src="blablabla.png" alt="blabla" title="blabla" /> -->
-            </div>
-            <div class="ChanPaidImg">
-                <!-- <img src="blablabla.png" alt="blabla" title="blabla" /> -->
-            </div>
-            <div class="ChanPaidImg">
-                <!-- <img src="blablabla.png" alt="blabla" title="blabla" /> -->
-            </div>
-            <div class="ChanPaidImg">
-                <!-- <img src="blablabla.png" alt="blabla" title="blabla" /> -->
-            </div>
-            <div class="ChanPaidImg">
-                <!-- <img src="blablabla.png" alt="blabla" title="blabla" /> -->
-            </div>
-            <div class="ChanPaidImg">
-                <!-- <img src="blablabla.png" alt="blabla" title="blabla" /> -->
-            </div>
-            <div class="ChanPaidImg">
-                <!-- <img src="blablabla.png" alt="blabla" title="blabla" /> -->
-            </div>
+            @foreach (var item in Model.Channel)
+            {             
+                 <div class="ChanPaidImg">
+                     <img src="@item.ImgUrl" alt="@item.Name" <!--title="blabla-->" /> 
+                 </div>              
+            }
         </div>
     </div>
 

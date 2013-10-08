@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace Nimbus.DB.Bags
 {
-    public class UserAdsBag : UserAds
+    public class UserBag : User
     {
-        public Ad Ads { get; set; }
-
-        
+        public int  Age {get;set;}
+        public int Interaction { get; set; }
     }
 }

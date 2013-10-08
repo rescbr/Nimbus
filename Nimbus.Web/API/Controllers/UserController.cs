@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Web.Http;
 using ServiceStack.OrmLite;
 using Nimbus.DB.ORM;
+using Nimbus.DB.Bags;
 
 namespace Nimbus.Web.API.Controllers
 {
@@ -23,7 +24,7 @@ namespace Nimbus.Web.API.Controllers
         ///</summary>
         [Authorize]
         [HttpGet]
-        public User showProfile()
+        public UserBag showProfile()
         {
             return showProfile(NimbusUser.UserId);
         }
@@ -33,13 +34,15 @@ namespace Nimbus.Web.API.Controllers
         /// </sumary>
         //[Authorize]
         [HttpGet]
-        public User showProfile(int id)
+        public UserBag showProfile(int id)
         {
             try
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    var user = db.SelectParam<User>(usr => usr.Id == id).FirstOrDefault();
+                    var user = db.SelectParam<UserBag>(usr => usr.Id == id).FirstOrDefault();                    
+                    user.Age = (int)Math.Floor((DateTime.Now.Subtract(user.BirthDate).Days)/365.25);
+                    user.Interaction = 0; //TODO: arrumar p valor certo - pensar nas regras
 
                     //throw http exception
                     if (user == null)
@@ -56,8 +59,7 @@ namespace Nimbus.Web.API.Controllers
             {
                 throw ex;
             }
-        }        
-        
+        }
 
         #endregion
 

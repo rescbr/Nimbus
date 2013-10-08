@@ -135,6 +135,7 @@
     <Compile Include="Website\Controllers\NewAccountController.cs" />
     <Compile Include="Website\Models\LoginModel.cs" />
     <Compile Include="Website\Models\NewAccountModel.cs" />
+    <Compile Include="Website\Models\UserProfileModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

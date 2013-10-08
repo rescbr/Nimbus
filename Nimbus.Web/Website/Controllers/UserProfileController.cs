@@ -15,8 +15,17 @@ namespace Nimbus.Web.Website.Controllers
     {
         public View Get(string redirect = null)
         {
-            return new View("Website.UserProfile", null);
+            var channelApi = ClonedContextInstance<API.Controllers.ChannelController>(); 
+            var userApi = ClonedContextInstance<API.Controllers.UserController>();
+            var userprofile = new UserProfileModel()
+            {
+                CurrentUser = NimbusUser,
+                Channel = channelApi.UserChannelPaid(NimbusUser.UserId),
+                user = userApi.showProfile()
+            };
+            return new View("Website.UserProfile", userprofile);
         }
 
+        //fazer a parte de post: enviar mensagem e editar perfil
     }
 }
