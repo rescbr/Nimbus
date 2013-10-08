@@ -6,45 +6,45 @@
 
 <div class="ProBar">
     <div class="ProfileImg">
-        <img src="@Model.user.AvatarUrl" alt="@Model.user.FirstName" <!--title="blabla" -->/>
+        <img src="@Model.User.AvatarUrl" alt="@Model.User.FirstName" <!--title="blabla" --> />
     </div>
 
     @*Se for o usuário do perfil*@
-    @if(Model.user.Id == Model.CurrentUser.UserId)
+    @if(Model.User.Id == Model.CurrentUser.UserId)
     {
     <div class="ProfileEdit">
         <p>Edit</p><!--clicavel-->
     </div>
     }
     <div class="AboutUser">
-        <h1>@Model.user.FirstName @Model.user.LastName</h1>
-        <p>@Model.user.Age</p>
-       @if(!string.IsNullOrEmpty(Model.user.City) && !string.IsNullOrEmpty(Model.user.State))
+        <h1>@Model.User.FirstName @Model.User.LastName</h1>
+        <p>@Model.User.Age</p>
+       @if(!string.IsNullOrEmpty(Model.User.City) && !string.IsNullOrEmpty(Model.User.State))
        {
-           <p>@Model.user.City - @Model.user.State</p>
+           <p>@Model.User.City - @Model.User.State</p>
        } 
-         @if(!string.IsNullOrEmpty(Model.user.Occupation))
+         @if(!string.IsNullOrEmpty(Model.User.Occupation))
          {  
-            <p>Profissão:@Model.user.Occupation</p>
+            <p>Profissão:@Model.User.Occupation</p>
          }
-         @if(!string.IsNullOrEmpty(Model.user.Interest))
+         @if(!string.IsNullOrEmpty(Model.User.Interest))
          {
-            <p>Interesses: @Model.user.Interest</p>
+            <p>Interesses: @Model.User.Interest</p>
          }
-         @if(!string.IsNullOrEmpty(Model.user.Experience))
+         @if(!string.IsNullOrEmpty(Model.User.Experience))
          {
-            <p>Experiências: @Model.user.Experience</p>
+            <p>Experiências: @Model.User.Experience</p>
          }
-         @if(!string.IsNullOrEmpty(Model.user.About))
+         @if(!string.IsNullOrEmpty(Model.User.About))
          {
              <p>Outras informações: </p>
-             <p class="AboutUser-other">@Model.user.About</p>
+             <p class="AboutUser-other">@Model.User.About</p>
          }
         
     </div>
 
     @*Se não for o usuário*@
-    @if(Model.user.Id != Model.CurrentUser.UserId)
+    @if(Model.User.Id != Model.CurrentUser.UserId)
     {
     <div class="SendMessage">
         <p>Enviar Mensagem</p> <!-- clicavel -->
@@ -54,7 +54,7 @@
     {
     <div class="Participation">
         <h1>Participação</h1>
-        <p>@Model.user.Interaction %</p>
+        <p>@Model.User.Interaction %</p>
     </div>
     }
     <div class="ChanPaid">

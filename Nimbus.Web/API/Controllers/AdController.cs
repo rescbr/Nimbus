@@ -31,7 +31,16 @@ namespace Nimbus.Web.API.Controllers
 
                         if (db.Exists<UserInfoPayment>(NimbusUser.UserId))
                         {
-                            db.Insert(adDados);
+                            Ad ad = new Ad
+                            {
+                                CategoryId = adDados.CategoryId,
+                                ChannelId = adDados.ChannelId,
+                                ImgUrl = adDados.ImgUrl,
+                                TypeAd = adDados.TypeAd,
+                                Url = adDados.Url,
+                                Visible = false
+                            };
+                            db.Insert(ad);
 
                             int idAds = (int)db.GetLastInsertId();
                             double priceAd = db.SelectParam<Prices>(p => p.Id == adDados.PriceId).Select(p => p.Price).FirstOrDefault();
@@ -78,12 +87,26 @@ namespace Nimbus.Web.API.Controllers
             {
                 using(var db = DatabaseFactory.OpenDbConnection())
                 {
-                    List<UserAdsBag> info = db.SelectParam<UserAdsBag>(us => us.UserId == NimbusUser.UserId && us.IsPaid == true).ToList();
-                    foreach (UserAdsBag item in info)
+                    List<UserAds> info = db.SelectParam<UserAds>(us => us.UserId == NimbusUser.UserId && us.IsPaid == true).ToList();
+
+                    List<UserAdsBag> listAds = new List<UserAdsBag>();
+                    foreach (UserAds item in info)
                     {
-                        item.Ads = db.SelectParam<Ad>(ad => ad.Id == item.AdsId).FirstOrDefault();
+                        UserAdsBag bag = new UserAdsBag
+                        {
+                            Ads = db.SelectParam<Ad>(ad => ad.Id == item.AdsId).FirstOrDefault(),
+                            AdsId = item.AdsId,
+                            CountClick = item.CountClick,
+                            CountDay = item.CountDay,
+                            CountLeft = item.CountLeft,
+                            Credits = item.Credits,
+                            DatePayment = item.DatePayment,
+                            IsPaid = item.IsPaid,
+                            UserId = item.UserId
+                        };
+                        listAds.Add(bag);
                     }
-                    return info;
+                    return listAds;
                 }
             }
             catch (Exception ex)

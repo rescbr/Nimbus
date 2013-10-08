@@ -282,6 +282,11 @@ namespace Nimbus.Web.API.Controllers
             return listChannel;
         }
 
+        /// <summary>
+        /// Método que retorna os canais pagos que o usuário comprou
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [Authorize]
         [HttpGet]
         public List<Channel> UserChannelPaid(int id)

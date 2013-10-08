@@ -74,7 +74,7 @@ namespace Nimbus.Web.UnitTest
             model.AvatarUrl = "http://portalnimbus.com.br/images/logo_hotsite-01.png";
             model.BirthDate = DateTime.Now;
 
-            var response = controller.EditProfile(model, 1);
+            var response = controller.EditProfile(model);
 
         }
 

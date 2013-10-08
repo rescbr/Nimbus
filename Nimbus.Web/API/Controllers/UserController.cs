@@ -40,19 +40,31 @@ namespace Nimbus.Web.API.Controllers
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    var user = db.SelectParam<UserBag>(usr => usr.Id == id).FirstOrDefault();                    
-                    user.Age = (int)Math.Floor((DateTime.Now.Subtract(user.BirthDate).Days)/365.25);
-                    user.Interaction = 0; //TODO: arrumar p valor certo - pensar nas regras
-
+                    var user = db.SelectParam<User>(usr => usr.Id == id).FirstOrDefault();      
+                    UserBag userBag = new UserBag();
+                    userBag.About = user.About;
+                    userBag.AvatarUrl = userBag.AvatarUrl;
+                    userBag.BirthDate = user.BirthDate;
+                    userBag.City = user.City;
+                    userBag.Country = user.Country;
+                    userBag.Experience = user.Experience;
+                    userBag.FirstName = user.FirstName;
+                    userBag.Interest = user.Interest;
+                    userBag.LastName = user.LastName;
+                    userBag.Occupation = user.Occupation;
+                    userBag.State = user.State;
+                    userBag.Age =(int)Math.Floor((DateTime.Now.Subtract(user.BirthDate).Days)/365.25);
+                    userBag.Interaction = 0;//TODO: arrumar p valor certo - pensar nas regras
+               
                     //throw http exception
-                    if (user == null)
+                    if (userBag == null)
                     {
                         throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, 
                             "this item does not exist"));
                     }
 
                     user.Password = "";
-                    return user;
+                    return userBag;
                 }
             }
             catch (Exception ex)
@@ -70,13 +82,13 @@ namespace Nimbus.Web.API.Controllers
         /// <returns>bool</returns>        
         [Authorize]
         [HttpPut]
-        public User EditProfile(User user, int id)
+        public User EditProfile(User user)
         {
             try
             {
                 using(var db = DatabaseFactory.OpenDbConnection())
                 {
-                    db.Update<User>(user, usr => usr.Id == id );
+                    db.Update<User>(user, usr => usr.Id == NimbusUser.UserId);
                     db.Save(user);
                 }
 

@@ -7,7 +7,7 @@ namespace Nimbus.Web.Website.Models
 {
     public class UserProfileModel
     {
-        public UserBag user { get; set; }
+        public UserBag User { get; set; }
 
         public NimbusUser CurrentUser {get;set;}
 
