@@ -18,7 +18,7 @@
     }
     <div class="AboutUser">
         <h1>@Model.User.FirstName @Model.User.LastName</h1>
-        <p>@Model.User.Age</p>
+        <p>Idade: @Model.User.Age</p>
        @if(!string.IsNullOrEmpty(Model.User.City) && !string.IsNullOrEmpty(Model.User.State))
        {
            <p>@Model.User.City - @Model.User.State</p>
@@ -69,4 +69,8 @@
         </div>
     </div>
 
+</div>
+
+<div style="float:right;">
+    @RenderPage("~/Website/Views/PrivateProfileTopBar.cshtml")
 </div>

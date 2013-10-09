@@ -42,6 +42,7 @@ namespace Nimbus.Web.API.Controllers
                 {
                     var user = db.SelectParam<User>(usr => usr.Id == id).FirstOrDefault();      
                     UserBag userBag = new UserBag();
+                    userBag.Id = user.Id;
                     userBag.About = user.About;
                     userBag.AvatarUrl = userBag.AvatarUrl;
                     userBag.BirthDate = user.BirthDate;
