@@ -22,10 +22,8 @@ namespace Nimbus.Web.API.Controllers
         /// <returns></returns>
         [Authorize]
         [HttpPost]
-        public string SendMessageChannel(Message message)
-        {
-            AlertSendMessage alert = new AlertSendMessage();
-            string msg = alert.ErrorMessage;
+        public Message SendMessageChannel(Message message)
+        {           
             try
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
@@ -79,13 +77,11 @@ namespace Nimbus.Web.API.Controllers
                                     }                                                                      
                                 }
                                 trans.Commit();
-                                msg = alert.SuccessMessage;
                         }
                         catch (Exception ex)
                         {
                             trans.Rollback();
-                            msg = alert.ErrorMessage;
-                            throw ex; 
+                            throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex)); 
                         }
                     }
                 }
@@ -94,7 +90,7 @@ namespace Nimbus.Web.API.Controllers
             {
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
-            return msg;
+            return message;
         }
     
         /// <summary>
@@ -160,32 +156,29 @@ namespace Nimbus.Web.API.Controllers
         /// <returns></returns>
         [Authorize]
         [HttpDelete]
-        public string DeleteMessages(List<int> listID)
+        public List<int> DeleteMessages(List<int> listID)
         {
-            AlertGeneral alert = new AlertGeneral();
-            string msg = alert.ErrorMessage;
             try
             {
-                using(var db = DatabaseFactory.OpenDbConnection())
+                using (var db = DatabaseFactory.OpenDbConnection())
                 {
                     foreach (int item in listID)
                     {
                         Message message = new Message();
                         //visible= false  quando o usuario mandou ou recebeu a msg
-                        db.Update<Message>(message.Visible = false, m => m.Id == item  
-                                                                             && ( m.Receivers.Exists(r => r.UserId == NimbusUser.UserId) 
+                        db.Update<Message>(message.Visible = false, m => m.Id == item
+                                                                             && (m.Receivers.Exists(r => r.UserId == NimbusUser.UserId)
                                                                                   || m.SenderId == NimbusUser.UserId)
                                                                                   );
                         db.Save(message);
                     }
-                    msg = alert.SuccessMessage;
                 }
             }
             catch (Exception ex)
             {
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
-            return msg; 
+            return listID; 
         }
 
         

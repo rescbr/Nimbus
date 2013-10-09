@@ -29,13 +29,15 @@ namespace Nimbus.Web
                         typeof(Channel),
                         typeof(ChannelReported),
                         typeof(ChannelUser),
+                        typeof(Role),
                         typeof(OrganizationUser),
                         typeof(Topic),
                         typeof(TopicReported),
                         typeof(Comment),
                         typeof(CommentReported),
                         typeof(Message),
-                        typeof(UserTopicFavorite)
+                        typeof(UserTopicFavorite),
+                        
                     });
 
                     var nimbusorg = new Nimbus.DB.ORM.Organization()

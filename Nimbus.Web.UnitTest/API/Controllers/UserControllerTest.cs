@@ -46,7 +46,7 @@ namespace Nimbus.Web.UnitTest
             model.Password = "123123";
             model.State = "SP";
 
-            var response = controller.createProfile(model);
+            var response = controller.CreateProfile(model);
 
         }
         
@@ -74,7 +74,7 @@ namespace Nimbus.Web.UnitTest
             model.AvatarUrl = "http://portalnimbus.com.br/images/logo_hotsite-01.png";
             model.BirthDate = DateTime.Now;
 
-            var response = controller.editProfile(model, 1);
+            var response = controller.EditProfile(model);
 
         }
 

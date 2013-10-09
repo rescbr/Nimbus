@@ -39,7 +39,7 @@ namespace Nimbus.Web.Website.Controllers
 
                         ,BirthDate = DateTime.Now
                     };
-                    userapi.createProfile(newUser);
+                    userapi.CreateProfile(newUser);
                     
                     //aqui deveria redirecionar
                     return new View("Website.NewAccount", new NewAccountModel());

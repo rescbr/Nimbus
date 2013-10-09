@@ -93,6 +93,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\Controllers\DatabaseController.cs" />
+    <Compile Include="API\Controllers\AdController.cs" />
     <Compile Include="API\Controllers\ChannelController.cs" />
     <Compile Include="API\Controllers\CommentController.cs" />
     <Compile Include="API\Controllers\MessageController.cs" />
@@ -135,6 +136,7 @@
     <Compile Include="Website\Controllers\NewAccountController.cs" />
     <Compile Include="Website\Models\LoginModel.cs" />
     <Compile Include="Website\Models\NewAccountModel.cs" />
+    <Compile Include="Website\Models\UserProfileModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

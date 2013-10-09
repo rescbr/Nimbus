@@ -19,9 +19,8 @@ namespace Nimbus.Web.API.Controllers
         /// <returns></returns>
         [Authorize]
         [HttpPost]
-        public bool ReportComment(ReportModel dados )
+        public ReportModel ReportComment(ReportModel dados )
         {
-
             try
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
@@ -94,7 +93,7 @@ namespace Nimbus.Web.API.Controllers
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
 
-            return false;
+            return dados;
         }
 
     }

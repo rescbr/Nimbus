@@ -7,14 +7,9 @@ using System.Threading.Tasks;
 
 namespace Nimbus.DB.ORM
 {
-    //TODO: Terminar
-    public class Ad : Nimbus.DB.Ad
+    public class Prices : Nimbus.DB.Prices
     {
-        [AutoIncrement]
+        [References(typeof(Prices))]
         public int Id { get; set; }
-
-        [References(typeof(Category))]
-        public int CategoryId { get; set; }
-
     }
 }

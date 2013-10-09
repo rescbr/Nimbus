@@ -69,6 +69,7 @@
     <Compile Include="OrganizationUser.cs" />
     <Compile Include="Premium.cs" />
     <Compile Include="PremiumUser.cs" />
+    <Compile Include="Prices.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReceiverMessage.cs" />
     <Compile Include="Role.cs" />
@@ -80,9 +81,11 @@
     <Compile Include="Topic.cs" />
     <Compile Include="TopicReported.cs" />
     <Compile Include="User.cs" />
+    <Compile Include="UserAds.cs" />
     <Compile Include="UserBadge.cs" />
     <Compile Include="UserChannelReadLater.cs" />
     <Compile Include="UserExam.cs" />
+    <Compile Include="UserInfoPayment.cs" />
     <Compile Include="UserReported.cs" />
     <Compile Include="UserTopicFavorite.cs" />
     <Compile Include="UserTopicReadLater.cs" />
