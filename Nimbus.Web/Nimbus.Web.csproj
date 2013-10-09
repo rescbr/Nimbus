@@ -106,6 +106,7 @@
     <Compile Include="API\Test.cs" />
     <Compile Include="API\NimbusApiController.cs" />
     <Compile Include="DatabaseStartup.cs" />
+    <Compile Include="ExtensionMethods.cs" />
     <Compile Include="Middleware\Authentication.cs" />
     <Compile Include="Middleware\NamespaceControllerSelector.cs" />
     <Compile Include="Middleware\NimbusFastViewLocator.cs" />
