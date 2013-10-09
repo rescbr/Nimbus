@@ -66,6 +66,5 @@ namespace Nimbus.Web
             }
         }
 
-       
     }
 }
