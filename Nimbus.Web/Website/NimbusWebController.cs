@@ -1,4 +1,5 @@
 ﻿using Nimbus.Plumbing;
+using Nimbus.Web.API;
 using ServiceStack.OrmLite;
 using System;
 using System.Collections.Generic;
@@ -105,11 +106,13 @@ namespace Nimbus.Web.Website
         /// <typeparam name="T">Tipo da nova instância ApiController</typeparam>
         /// <returns>Nova instância da ApiController T com o mesmo contexto da requisição atual.</returns>
         [NonAction]
-        public T ClonedContextInstance<T>() where T : System.Web.Http.ApiController, new()
+        public T ClonedContextInstance<T>() where T : NimbusApiController, new()
         {
             T instance = new T();
             //instance.ControllerContext = this.ControllerContext;
-            instance.ControllerContext = new System.Web.Http.Controllers.HttpControllerContext();
+            //instance.ControllerContext = new System.Web.Http.Controllers.HttpControllerContext();
+            instance.NimbusUser = this.NimbusUser;
+            instance.NimbusOrganization = this.NimbusOrganization;
 
             return instance;
         }
@@ -126,12 +129,17 @@ namespace Nimbus.Web.Website
         }
         protected internal new ViewResult View(string viewName)
         {
+            if (viewName.StartsWith("~"))
+                return base.View(viewName);
+
             return base.View(String.Format("{0}/{1}.cshtml",
                 GetNamespacePathFromType(this.GetType()), viewName));
         }
         protected internal new ViewResult View(string viewName, object model)
         {
             if (model == null) return View(viewName);
+            if (viewName.StartsWith("~"))
+                return base.View(viewName, model);
 
             return base.View(String.Format("{0}/{1}.cshtml",
                 GetNamespacePathFromType(this.GetType()), viewName), model);
