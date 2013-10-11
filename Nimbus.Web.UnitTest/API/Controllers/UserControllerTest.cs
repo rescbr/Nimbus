@@ -2,9 +2,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nimbus.Web.API.Controllers;
 using Nimbus.Plumbing;
-using System.Web.Http;
-using System.Web.Http.Routing;
-using System.Web.Http.Hosting;
 using System.Net.Http;
 using System.Net;
 using System.Threading;

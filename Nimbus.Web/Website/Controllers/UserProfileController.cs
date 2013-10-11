@@ -15,11 +15,13 @@ namespace Nimbus.Web.Website.Controllers
             var userprofile = new UserProfileModel()
             {
                 CurrentUser = NimbusUser,
-                Channel = channelApi.UserChannelPaid(NimbusUser.UserId),
-                User = userApi.showProfile()
+                ChannelPaid = channelApi.UserChannelPaid(NimbusUser.UserId),
+                User = userApi.showProfile(),
+                ChannelFollow = channelApi.FollowsChannel(NimbusOrganization.Id),
+                MyChannels = channelApi.MyChannel()
+                
             };
             return View("UserProfile", userprofile);
-            //return View();
         }
 
 

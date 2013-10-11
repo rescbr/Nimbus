@@ -4,13 +4,127 @@
 <div class="WrapperUser">
     <nav class="ProfTopBar">
         <ul class="sbs">
-		    <li>Atualizações</li>
-		    <li>Meus Canais</li>
-		    <li>Favoritos</li>
-		    <li>Marcados</li>
-		    <li>Mensagens</li>		
+		    <li><a onclick="">Atualizações</a></li>
+		    <li><a onclick="">Meus Canais</a></li>
+		    <li><a onclick="">Favoritos</a></li>
+		    <li><a onclick="">Marcados</a></li>
+		    <li><a onclick="">Mensagens</a></li>		
 	    </ul>
     </nav>
+
+    <div id="divNotification">
+        @*para cada item da lista que ele recber//TODO*@
+        <p>
+            <img id="imgNotification" src="#" />
+            texto generico
+        </p>
+        <p>
+            hora x     data x
+            <button id="btnAccept" onclick="#">Aceitar</button>
+            <button id="btnDecline" onclick="#">Recusar</button>
+        </p>
+    </div>
+
+    <div id="divMyChannels">
+        @if (Model.CurrentUser.UserId == Model.User.Id)
+        {
+            foreach (var item in Model.MyChannels)
+            {
+                    @*Imagem e texto*@
+                        <div class="Post_g">
+                            <div class="PostHeader_g">
+                                <h1>@item.Name</h1>
+                                    <div class="PostHeImg_g">
+                                        <img src="@item.ImgUrl" alt="blabla" title="blabla">
+                                    </div>
+                            </div>
+                                <div class="PostContent_g">
+                                    <p>
+                                        @item.Description
+                                        </p>
+                                </div>
+                                    <div class="PostFooter_g">
+                                        <div class="PostFoBoxL_g">
+                                            <p onclick="unFollow(@item.Id);">Desfavoritar</p> @*chamar js passando item.id*@
+                                            </div>
+                                            <div class="PostFoBoxR_g">
+                                                <p onclick="openChannel(@item.Id);">Ler</p>
+                                            </div>
+                                    </div>
+                        </div>
+
+            }
+        }
+    </div>
+
+    <div id="divChannelFollows">
+        @if(Model.CurrentUser.UserId == Model.User.Id)
+        {
+            foreach (var item in Model.ChannelFollow)
+            {
+                @*Imagem e texto*@
+            <div class="Post_g">
+                <div class="PostHeader_g">
+                    <h1>@item.Name</h1>
+                    <div class="PostHeImg_g">
+                       <img src="@item.ImgUrl" alt="blabla" title="blabla">
+                    </div>
+                </div>
+                <div class="PostContent_g">
+                    <p>
+                        @item.Description
+                    </p>
+                </div>
+                <div class="PostFooter_g">
+                    <div class="PostFoBoxL_g">
+                        <p onclick="unFollow(@item.Id);">Desfavoritar</p> @*chamar js passando item.id*@
+                    </div>
+                    <div class="PostFoBoxR_g">
+                        <p onclick="openChannel(@item.Id);">Ler</p> 
+                    </div>
+                </div>
+            </div>
+                   
+            }        
+        }
+    </div>
+
+    @*arrumar ainda - precisei desligar o pc*@
+    <div id="divReadLater">
+        @if (Model.CurrentUser.UserId == Model.User.Id)
+        {
+            foreach (var item in Model.MyChannels)
+            {
+                    @*Imagem e texto*@
+                        <div class="Post_g">
+                            <div class="PostHeader_g">
+                                <h1>@item.Name</h1>
+                                    <div class="PostHeImg_g">
+                                        <img src="@item.ImgUrl" alt="blabla" title="blabla">
+                                    </div>
+                                </div>
+                                <div class="PostContent_g">
+                                    <p>
+                                        @item.Description
+                                        </p>
+                                    </div>
+                                    <div class="PostFooter_g">
+                                        <div class="PostFoBoxL_g">
+                                            <p onclick="unFollow(@item.Id);">Desfavoritar</p> @*chamar js passando item.id*@
+                                            </div>
+                                            <div class="PostFoBoxR_g">
+                                                <p onclick="openChannel(@item.Id);">Ler</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+            }
+        }
+    </div>
+
+    <div id="divMessages">
+
+    </div>
 
     @*Tab*@
 

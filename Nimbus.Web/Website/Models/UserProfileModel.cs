@@ -11,6 +11,12 @@ namespace Nimbus.Web.Website.Models
 
         public NimbusUser CurrentUser {get;set;}
 
-        public List<Channel> Channel { get; set; }
+        public List<Channel> ChannelPaid { get; set; }
+
+        public List<Channel> ChannelFollow { get; set; }
+
+        public List<Channel> MyChannels { get; set; }
+
+        public List<Channel> ReadLater { get; set; }
     }
 }

@@ -361,7 +361,7 @@ namespace Nimbus.Web.API.Controllers
         /// <returns></returns>
         [Authorize]
         [HttpGet]
-        public List<Channel> AbstractAllChannel(int id)
+        public List<Channel> AllChannel(int id)
         {
             List<Channel> listChannel = new List<Channel>();
             try
@@ -386,6 +386,70 @@ namespace Nimbus.Web.API.Controllers
             }
             return listChannel;
         }
+
+        /// <summary>
+        /// retorna uma lista com todos os canais follow do usuário dentro da org
+        /// </summary>
+        /// <returns></returns>
+        [Authorize]
+        [HttpGet]
+        public List<Channel> FollowsChannel(int id)
+        {
+            List<Channel> listChannel = new List<Channel>();
+            List<int> listUserChannel = new List<int>();
+            try
+            {
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {                    
+                    listUserChannel = db.SelectParam<ChannelUser>(ch => ch.UserId == NimbusUser.UserId && ch.Visible == true && ch.Follow == true)
+                                                                 .Select(ch => ch.ChannelId).ToList();
+                    if (listUserChannel.Count > 0)
+                    {
+                        foreach (int item in listUserChannel)
+                        {
+                            Channel channel = new Channel();
+                            channel = db.SelectParam<Channel>(ch => ch.Visible == true && ch.OrganizationId == id && ch.Id == item).First();
+                            listChannel.Add(channel);
+                        }
+                    }                    
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+            }
+            return listChannel;
+        }
+
+        //[Authorize]
+        //[HttpGet]
+        //public List<Channel> ReadLaterChannel(int id)
+        //{
+        //    List<Channel> listChannel = new List<Channel>();
+        //    List<int> listUserChannel = new List<int>();
+        //    try
+        //    {
+        //        using (var db = DatabaseFactory.OpenDbConnection())
+        //        {
+        //            listUserChannel = db.SelectParam<Chan>(ch => ch.UserId == NimbusUser.UserId && ch.Visible == true && ch.Follow == true)
+        //                                                         .Select(ch => ch.ChannelId).ToList();
+        //            if (listUserChannel.Count > 0)
+        //            {
+        //                foreach (int item in listUserChannel)
+        //                {
+        //                    Channel channel = new Channel();
+        //                    channel = db.SelectParam<Channel>(ch => ch.Visible == true && ch.OrganizationId == id && ch.Id == item).First();
+        //                    listChannel.Add(channel);
+        //                }
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+        //    }
+        //    return listChannel;
+        //}
 
         #endregion
 
