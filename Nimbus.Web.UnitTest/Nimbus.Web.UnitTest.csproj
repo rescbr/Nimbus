@@ -80,10 +80,6 @@
     <Compile Include="NimbusTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Dependencies\AspNetWebStack\System.Web.Http\System.Web.Http.csproj">
-      <Project>{ddc1ce0c-486e-4e35-bb3b-eab61f8f9440}</Project>
-      <Name>System.Web.Http</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Nimbus.DB.ORM\Nimbus.DB.ORM.csproj">
       <Project>{7f04ec7a-7fdb-4bb5-b613-c134bc56a48d}</Project>
       <Name>Nimbus.DB.ORM</Name>
@@ -102,6 +98,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <Choose>

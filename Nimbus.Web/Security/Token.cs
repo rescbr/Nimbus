@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Web.Configuration;
 
 namespace Nimbus.Web.Security
 {
@@ -18,13 +19,11 @@ namespace Nimbus.Web.Security
         /// <summary>
         /// Gera um Token nsc:1:
         /// </summary>
-        /// <param name="nimbusAppBus">NimbusAppBus</param>
         /// <param name="info">dados do usuário NSCInfo</param>
         /// <param name="tokenGuid">saída da GUID gerada (Session ID)</param>
         /// <returns>string nsc:1: contendo o token</returns>
         public static string GenerateToken(NSCInfo info, out Guid tokenGuid)
         {
-            var nimbusAppBus = NimbusAppBus.Instance;
 
             Guid token = Guid.NewGuid();
 
@@ -39,7 +38,7 @@ namespace Nimbus.Web.Security
 
             byte[] bHmacMsg = NSC_BYTES.Concat(BitConverter.GetBytes(NSC_VERSION_1)).Concat(bGuidToken).Concat(bNscInfo).ToArray();
 
-            HMACSHA512 hmac = new HMACSHA512(nimbusAppBus.Settings.Cryptography.CookieHMACKey);
+            HMACSHA512 hmac = new HMACSHA512(NimbusConfig.CookieHMACKey);
             hmac.ComputeHash(bHmacMsg);
 
             string b64info = Convert.ToBase64String(bNscInfo);
@@ -61,15 +60,12 @@ namespace Nimbus.Web.Security
         /// <summary>
         /// Verifica Token de autenticação (nsc:1:)
         /// </summary>
-        /// <param name="nimbusAppBus">NimbusAppBus</param>
         /// <param name="token">string do token nsc:1:</param>
         /// <param name="tokenGuid">saída contendo a GUID do token (Session ID)</param>
         /// <param name="info">saída contendo NSCInfo com dados do usuário</param>
         /// <returns></returns>
         public static bool VerifyToken(string token, out Guid tokenGuid, out NSCInfo info)
         {
-            var nimbusAppBus = NimbusAppBus.Instance;
-
             tokenGuid = Guid.Empty;
             info = null;
 
@@ -92,7 +88,7 @@ namespace Nimbus.Web.Security
                     IEnumerable<byte> bHmacMsg = NSC_BYTES.Concat(BitConverter.GetBytes(nscVersion)).Concat(bToken).Concat(bInfo);
 
                     //calcula HMAC
-                    HMACSHA512 hmac = new HMACSHA512(nimbusAppBus.Settings.Cryptography.CookieHMACKey);
+                    HMACSHA512 hmac = new HMACSHA512(NimbusConfig.CookieHMACKey);
                     hmac.ComputeHash(bHmacMsg.ToArray());
 
                     //se HMACs baterem, token é valido
@@ -119,12 +115,11 @@ namespace Nimbus.Web.Security
             return false;
         }
 
-
     }
     [Serializable]
     public class NSCInfo
     {
-        public int UserId { get; set; }
+        public NimbusUser User { get; set; }
         public DateTime TokenGenerationDate { get; set; }
         public DateTime TokenExpirationDate { get; set; }
     }

@@ -8,28 +8,34 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Web;
-using WebApiContrib.Formatting.Html;
+using System.Web.Mvc;
+
 
 namespace Nimbus.Web.Website.Controllers
 {
-    public class LoginController : NimbusApiController
+    public class LoginController : NimbusWebController
     {
-        public LoginModel Get(string redirect = null)
+        // GET: /login
+        [HttpGet]
+        [ActionName("Index")]
+        public ActionResult Get(string redirect = null)
         {
             if (redirect != null && Uri.IsWellFormedUriString(redirect, UriKind.Relative))
             {
-                return new LoginModel()
+                return View("Login", new LoginModel()
                 {
                     RedirectURL = redirect
-                };
+                });
             }
             else
             {
-                return new LoginModel();
+                return View(new LoginModel());
             }
         }
 
-        public HttpResponseMessage Post(LoginModel login)
+        [HttpPost]
+        [ActionName("Index")]
+        public ActionResult Post(LoginModel login)
         {
             const int EXPIRY_DAYS = 7;
             if (ModelState.IsValid)
@@ -56,36 +62,29 @@ namespace Nimbus.Web.Website.Controllers
                         {
                             TokenGenerationDate = DateTime.Now.ToUniversalTime(),
                             TokenExpirationDate = DateTime.Now.AddDays(EXPIRY_DAYS).ToUniversalTime(),
-                            UserId = (loggedInUser.Identity as NimbusUser).UserId
+                            User = (loggedInUser.Identity as NimbusUser)
                         },
                         out token);
 
                     //Lembre-se de expirar o cookie também
-                    var loginCookie = new CookieHeaderValue("nsc-session", authToken)
+                    var loginCookie = new HttpCookie("nsc-session", authToken)
                     {
-                        Expires = DateTimeOffset.Now.AddDays(EXPIRY_DAYS)
+                        Expires = DateTime.Now.AddDays(EXPIRY_DAYS)
                     };
 
-                    //Adiciona cookie de sessão ao cache
-                    NimbusAppBus.Instance.Cache.SessionPrincipal.StoreAndReplicate(authToken, loggedInUser);
-
-                    var response = Request.CreateResponse(System.Net.HttpStatusCode.Found);
-                    response.Headers.Location = new Uri(login.RedirectURL, UriKind.Relative);
-                    response.Headers.AddCookies(new CookieHeaderValue[] {
-                        loginCookie
-                    });
-                    return response;
+                    Response.Cookies.Add(loginCookie);
+                    return Redirect(login.RedirectURL);
 
                 }
                 else
                 {
                     //joga mensagem de erro
-                    login.ErrorMessage = "LOCALIZAR: Usuário ou senha inválidos.";
+                    login.ErrorMessage = "Usuário ou senha inválidos.";
                 }
             }
 
             login.Password = ""; //limpa a senha antes de enviar
-            return Request.CreateResponse<LoginModel>(login);
+            return View(login);
         }
     }
 }

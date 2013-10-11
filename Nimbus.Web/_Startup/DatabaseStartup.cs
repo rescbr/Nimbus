@@ -13,7 +13,7 @@ namespace Nimbus.Web
         public static void CreateDatabaseIfNotThere()
         {
             var dbFactory = new OrmLiteConnectionFactory
-                    (NimbusAppBus.Instance.Settings.DatabaseConnectionString,
+                    (NimbusConfig.DatabaseConnection,
                     SqlServerDialect.Provider);
             using (var db = dbFactory.OpenDbConnection())
             {

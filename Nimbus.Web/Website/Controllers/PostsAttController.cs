@@ -7,15 +7,16 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Web;
-using WebApiContrib.Formatting.Html;
+using System.Web.Mvc;
+
 
 namespace Nimbus.Web.Website.Controllers
 {
-    public class PostsAttController : NimbusApiController
+    public class PostsAttController : NimbusWebController
     {
-        public View Get()
+        public ActionResult Get()
         {
-            return new View("Website.PostsAtt", null);
+            return View("PostsAtt", null);
         }
 
     }

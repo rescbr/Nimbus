@@ -29,7 +29,6 @@ namespace Nimbus.Web.Middleware
                     if (ctx.Request.Accept.Contains("text/html"))
                     {
                         string originalUrl = ctx.Request.Uri.PathAndQuery;
-                        //string hmac = Security.SecurityUtils.SmallHmac(_nimbusAppBus, originalUrl); 
                         ctx.Response.Redirect(String.Format("/login?redirect={0}", Uri.EscapeDataString(originalUrl)));
                     }
                     //senão continua com o 401
@@ -42,25 +41,17 @@ namespace Nimbus.Web.Middleware
 
             if (sessionToken != null)
             {
-                sessionToken = Uri.UnescapeDataString(sessionToken);
+                sessionToken = Uri.UnescapeDataString(sessionToken.Replace(' ', '+'));
 
                 Guid tokenGuid;
                 NSCInfo info;
-                if (VerifyToken(sessionToken, out tokenGuid, out info))
+                if (Token.VerifyToken(sessionToken, out tokenGuid, out info))
                 {
                     //Token é válido, continuar verificando se o usuário pode ser logado
                     //if (info.TokenGenerationDate.AddDays(7.0) > DateTime.Now.ToUniversalTime())
                     if (info.TokenExpirationDate.ToUniversalTime() > DateTime.Now.ToUniversalTime())
                     {
-                        try
-                        {
-                            NimbusPrincipal identity = (NimbusAppBus.Instance.Cache
-                                .SessionPrincipal.Get(sessionToken) as NimbusPrincipal);
-                            request.User = (IPrincipal)(identity);
-                        }
-                        catch (KeyNotFoundException) //caso o usuário não esteja no cache, fazer login de novo!
-                        {
-                        }
+                        request.User = new NimbusPrincipal(info.User);
                     }
                     else //token velho
                     {
@@ -77,21 +68,5 @@ namespace Nimbus.Web.Middleware
 
 
         }
-
-        private string GenerateToken(int userId, out Guid tokenGuid)
-        {
-            NSCInfo info = new NSCInfo()
-            {
-                UserId = userId,
-                TokenGenerationDate = DateTime.Now.ToUniversalTime(),
-            };
-            return Token.GenerateToken(info, out tokenGuid);
-        }
-
-        private bool VerifyToken(string token, out Guid tokenGuid, out NSCInfo info)
-        {
-            return Token.VerifyToken(token, out tokenGuid, out info);
-        }
-
     }
 }
