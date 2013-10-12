@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Web.Http;
 using ServiceStack.OrmLite;
 using Nimbus.DB.ORM;
+using Nimbus.DB.Bags;
 
 namespace Nimbus.Web.API.Controllers
 {
@@ -94,14 +95,14 @@ namespace Nimbus.Web.API.Controllers
         }
     
         /// <summary>
-        /// mensangens recebidas
+        /// mostra todas as mensagens recebidas mensangens recebidas
         /// </summary>
         /// <returns></returns>
         [Authorize]
         [HttpGet]
-        public List<Message> ReceivedMessages()
+        public List<MessageBag> ReceivedMessages()
         {
-            List<Message> listMessage = new List<Message>();
+            List<MessageBag> listMessage = new List<MessageBag>();
             try
             {
                 using(var db = DatabaseFactory.OpenDbConnection())
@@ -111,7 +112,25 @@ namespace Nimbus.Web.API.Controllers
                                                                                && r.UserId == NimbusUser.UserId)
                                                                                .Select(r => r.MessageId).ToList();
 
-                    listMessage = db.SelectParam<Message>(m => m.Visible == true && listIdMsg.Contains(m.Id));                  
+                    foreach (int item in listIdMsg)
+                    {
+                        MessageBag bag = new MessageBag();
+                        Message msg  = db.SelectParam<Message>(m => m.Visible == true && m.Id == item).First();
+                        bag.ChannelId = msg.ChannelId;
+                        bag.Date = msg.Date;
+                        bag.Id = msg.Id;
+                        bag.ReadStatus = msg.ReadStatus;
+                        bag.Receivers = msg.Receivers;
+                        bag.SenderId = msg.SenderId;
+                        bag.Text = msg.Text;
+                        bag.Title = msg.Title;
+                        bag.Visible = msg.Visible;
+                        bag.UserName = db.SelectParam<User>(u => u.Id == msg.SenderId).Select(u => u.FirstName).FirstOrDefault() 
+                                       + " " + db.SelectParam<User>(u => u.Id == msg.SenderId).Select(u => u.LastName).FirstOrDefault() ;
+                        bag.AvatarUrl = db.SelectParam<User>(u => u.Id == msg.SenderId).Select(u => u.AvatarUrl).FirstOrDefault() ;
+                        
+                        listMessage.Add(bag);
+                    } 
                 }
             }
             catch (Exception ex)
@@ -181,6 +200,5 @@ namespace Nimbus.Web.API.Controllers
             return listID; 
         }
 
-        
     }
 }

@@ -46,6 +46,7 @@
     <Compile Include="Bags\AdsBag.cs" />
     <Compile Include="Bags\ChannelBag.cs" />
     <Compile Include="Bags\CommentBag.cs" />
+    <Compile Include="Bags\MessageBag.cs" />
     <Compile Include="Bags\TopicBag.cs" />
     <Compile Include="Bags\UserAdsBag.cs" />
     <Compile Include="Bags\UserBag.cs" />

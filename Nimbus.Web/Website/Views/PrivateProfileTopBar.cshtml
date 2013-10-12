@@ -6,7 +6,7 @@
         <ul class="sbs">
 		    <li><a onclick="">Atualizações</a></li>
 		    <li><a onclick="">Meus Canais</a></li>
-		    <li><a onclick="">Favoritos</a></li>
+		    <li><a onclick="">Canais Seguidos</a></li>
 		    <li><a onclick="">Marcados</a></li>
 		    <li><a onclick="">Mensagens</a></li>		
 	    </ul>
@@ -89,11 +89,10 @@
         }
     </div>
 
-    @*arrumar ainda - precisei desligar o pc*@
     <div id="divReadLater">
         @if (Model.CurrentUser.UserId == Model.User.Id)
         {
-            foreach (var item in Model.MyChannels)
+            foreach (var item in Model.ReadLater)
             {
                     @*Imagem e texto*@
                         <div class="Post_g">
@@ -110,10 +109,10 @@
                                     </div>
                                     <div class="PostFooter_g">
                                         <div class="PostFoBoxL_g">
-                                            <p onclick="unFollow(@item.Id);">Desfavoritar</p> @*chamar js passando item.id*@
+                                            <p onclick="unReadLater(@item.Id);">Desmarcar</p> @*chamar js passando item.id*@
                                             </div>
                                             <div class="PostFoBoxR_g">
-                                                <p onclick="openChannel(@item.Id);">Ler</p>
+                                                <p>Ler</p> @*redirecionar pagina*@
                                             </div>
                                         </div>
                                     </div>
@@ -123,7 +122,34 @@
     </div>
 
     <div id="divMessages">
-
+        @if(Model.CurrentUser.UserId == Model.User.Id)
+        {
+            foreach (var item in Model.Messages)
+            {
+                 <div class="Post_m">
+                        <div class="PostHeImg_m">
+                           <img src=@item.AvatarUrl alt="blabla" title="blabla">
+                        </div>
+                       <div class="Post_Right_m">
+                            <nav class="PostHeaderLeft_m">
+                                <ul class="sbs">
+                                    <li>@item.UserName/li>
+                                    <li>@item.Title</li>
+                               </ul>
+                            </nav>
+                            <nav class="PostHeaderRight_m">
+                                 <ul class="sbs">
+                                     <li>@string.Format("{0:d/M/yyyy}",item.Date)</li>
+                                     <li>@string.Format("{0:HH:mm}", item.Date)</li>
+                                 </ul>
+                            </nav>
+                            <div class="PostContent_m">
+                                <p>@item.Text </p>
+                            </div>
+                       </div>
+                 </div>
+            }
+        }
     </div>
 
     @*Tab*@
