@@ -426,12 +426,11 @@ namespace Nimbus.Web.API.Controllers
         public List<Channel> showReadLaterChannel(int id)
         {
             List<Channel> listChannel = new List<Channel>();
-            List<int> listUserChannel = new List<int>();
             try
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    listUserChannel = db.SelectParam<UserChannelReadLater>(ch => ch.UserId == NimbusUser.UserId && ch.Visible == true)
+                    List<int> listUserChannel = db.SelectParam<UserChannelReadLater>(ch => ch.UserId == NimbusUser.UserId && ch.Visible == true)
                                                                  .Select(ch => ch.ChannelId).ToList();
                     if (listUserChannel.Count > 0)
                     {

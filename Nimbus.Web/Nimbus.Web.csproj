@@ -148,6 +148,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
+    <Content Include="Scripts\UserUtils.js" />
     <Content Include="Styles\Style.css" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -248,7 +249,6 @@
     <Folder Include="Admin\Models\" />
     <Folder Include="Admin\Views\" />
     <Folder Include="images\" />
-    <Folder Include="Scripts\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

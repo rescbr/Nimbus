@@ -1,18 +1,24 @@
 ﻿@model Nimbus.Web.Website.Models.UserProfileModel
 
 
+<script>
+ //global
+    currentDiv = 'divNotification';
+</script>
+@Scripts.Render(("~/Scripts/UserUtils.js"))
+
 <div class="WrapperUser">
     <nav class="ProfTopBar">
         <ul class="sbs">
-		    <li><a onclick="">Atualizações</a></li>
-		    <li><a onclick="">Meus Canais</a></li>
-		    <li><a onclick="">Canais Seguidos</a></li>
-		    <li><a onclick="">Marcados</a></li>
-		    <li><a onclick="">Mensagens</a></li>		
+		    <li><a name="divNotification" onclick="ChangeDiv(this.name);">Atualizações</a></li>
+		    <li><a name="divMyChannels" onclick="ChangeDiv(this.name);">Meus Canais</a></li>
+		    <li><a name="divChannelFollows" onclick="ChangeDiv(this.name);">Canais Seguidos</a></li>
+		    <li><a name="divReadLater" onclick="ChangeDiv(this.name);">Marcados</a></li>
+		    <li><a name="divMessages" onclick="ChangeDiv(this.name);">Mensagens</a></li>		
 	    </ul>
     </nav>
 
-    <div id="divNotification">
+    <div id="divNotification" style="display:block; background-color:aliceblue;">
         @*para cada item da lista que ele recber//TODO*@
         <p>
             <img id="imgNotification" src="#" />
@@ -25,129 +31,129 @@
         </p>
     </div>
 
-    <div id="divMyChannels">
+    <div id="divMyChannels" style="display:none; background-color:AppWorkspace;">
         @if (Model.CurrentUser.UserId == Model.User.Id)
         {
             foreach (var item in Model.MyChannels)
             {
-                    @*Imagem e texto*@
-                        <div class="Post_g">
-                            <div class="PostHeader_g">
-                                <h1>@item.Name</h1>
-                                    <div class="PostHeImg_g">
-                                        <img src="@item.ImgUrl" alt="blabla" title="blabla">
-                                    </div>
-                            </div>
-                                <div class="PostContent_g">
-                                    <p>
-                                        @item.Description
-                                        </p>
-                                </div>
-                                    <div class="PostFooter_g">
-                                        <div class="PostFoBoxL_g">
-                                            <p onclick="unFollow(@item.Id);">Desfavoritar</p> @*chamar js passando item.id*@
-                                            </div>
-                                            <div class="PostFoBoxR_g">
-                                                <p onclick="openChannel(@item.Id);">Ler</p>
-                                            </div>
-                                    </div>
+                @*Imagem e texto*@
+                <div class="Post_g">
+                    <div class="PostHeader_g">
+                        <h1>@item.Name</h1>
+                        <div class="PostHeImg_g">
+                            <img src="@item.ImgUrl" alt="blabla" title="blabla">
                         </div>
+                    </div>
+                    <div class="PostContent_g">
+                        <p>
+                            @item.Description
+                        </p>
+                    </div>
+                    <div class="PostFooter_g">
+                        <div class="PostFoBoxL_g">
+                            <p onclick="unFollow(@item.Id);">Desfavoritar</p> @*chamar js passando item.id*@
+                        </div>
+                        <div class="PostFoBoxR_g">
+                            <p onclick="openChannel(@item.Id);">Ler</p>
+                        </div>
+                    </div>
+                </div>
 
             }
         }
     </div>
 
-    <div id="divChannelFollows">
-        @if(Model.CurrentUser.UserId == Model.User.Id)
+    <div id="divChannelFollows" style="display:none; background-color:azure;">
+        @if (Model.CurrentUser.UserId == Model.User.Id)
         {
             foreach (var item in Model.ChannelFollow)
             {
                 @*Imagem e texto*@
-            <div class="Post_g">
-                <div class="PostHeader_g">
-                    <h1>@item.Name</h1>
-                    <div class="PostHeImg_g">
-                       <img src="@item.ImgUrl" alt="blabla" title="blabla">
+                <div class="Post_g">
+                    <div class="PostHeader_g">
+                        <h1>@item.Name</h1>
+                        <div class="PostHeImg_g">
+                            <img src="@item.ImgUrl" alt="blabla" title="blabla">
+                        </div>
+                    </div>
+                    <div class="PostContent_g">
+                        <p>
+                            @item.Description
+                        </p>
+                    </div>
+                    <div class="PostFooter_g">
+                        <div class="PostFoBoxL_g">
+                            <p onclick="unFollow(@item.Id);">Desfavoritar</p> @*chamar js passando item.id*@
+                        </div>
+                        <div class="PostFoBoxR_g">
+                            <p onclick="openChannel(@item.Id);">Ler</p>
+                        </div>
                     </div>
                 </div>
-                <div class="PostContent_g">
-                    <p>
-                        @item.Description
-                    </p>
-                </div>
-                <div class="PostFooter_g">
-                    <div class="PostFoBoxL_g">
-                        <p onclick="unFollow(@item.Id);">Desfavoritar</p> @*chamar js passando item.id*@
-                    </div>
-                    <div class="PostFoBoxR_g">
-                        <p onclick="openChannel(@item.Id);">Ler</p> 
-                    </div>
-                </div>
-            </div>
-                   
-            }        
-        }
-    </div>
-
-    <div id="divReadLater">
-        @if (Model.CurrentUser.UserId == Model.User.Id)
-        {
-            foreach (var item in Model.ReadLater)
-            {
-                    @*Imagem e texto*@
-                        <div class="Post_g">
-                            <div class="PostHeader_g">
-                                <h1>@item.Name</h1>
-                                    <div class="PostHeImg_g">
-                                        <img src="@item.ImgUrl" alt="blabla" title="blabla">
-                                    </div>
-                                </div>
-                                <div class="PostContent_g">
-                                    <p>
-                                        @item.Description
-                                        </p>
-                                    </div>
-                                    <div class="PostFooter_g">
-                                        <div class="PostFoBoxL_g">
-                                            <p onclick="unReadLater(@item.Id);">Desmarcar</p> @*chamar js passando item.id*@
-                                            </div>
-                                            <div class="PostFoBoxR_g">
-                                                <p>Ler</p> @*redirecionar pagina*@
-                                            </div>
-                                        </div>
-                                    </div>
 
             }
         }
     </div>
 
-    <div id="divMessages">
-        @if(Model.CurrentUser.UserId == Model.User.Id)
+    <div id="divReadLater" style="display:none; background-color:burlywood;">
+        @if (Model.CurrentUser.UserId == Model.User.Id)
+        {
+            foreach (var item in Model.ReadLater)
+            {
+                @*Imagem e texto*@
+                <div class="Post_g">
+                    <div class="PostHeader_g">
+                        <h1>@item.Name</h1>
+                        <div class="PostHeImg_g">
+                            <img src="@item.ImgUrl" alt="blabla" title="blabla">
+                        </div>
+                    </div>
+                    <div class="PostContent_g">
+                        <p>
+                            @item.Description
+                        </p>
+                    </div>
+                    <div class="PostFooter_g">
+                        <div class="PostFoBoxL_g">
+                            <p onclick="unReadLater(@item.Id);">Desmarcar</p> @*chamar js passando item.id*@
+                        </div>
+                        <div class="PostFoBoxR_g">
+                            <p>Ler</p> @*redirecionar pagina*@
+                        </div>
+                    </div>
+                </div>
+
+            }
+        }
+    </div>
+
+    <div id="divMessages" style="display:none; background-color:chartreuse;">
+        @if (Model.CurrentUser.UserId == Model.User.Id)
         {
             foreach (var item in Model.Messages)
             {
-                 <div class="Post_m">
-                        <div class="PostHeImg_m">
-                           <img src=@item.AvatarUrl alt="blabla" title="blabla">
+                <div class="Post_m">
+                    <div class="PostHeImg_m">
+                        <img src=@item.AvatarUrl alt="blabla" title="blabla">
+                    </div>
+                    <div class="Post_Right_m">
+                        <nav class="PostHeaderLeft_m">
+                            <ul class="sbs">
+                                <li>@item.UserName/li>
+                                <li>@item.Title</li>
+                            </ul>
+                        </nav>
+                        <nav class="PostHeaderRight_m">
+                            <ul class="sbs">
+                                <li>@string.Format("{0:d/M/yyyy}",item.Date)</li>
+                                <li>@string.Format("{0:HH:mm}", item.Date)</li>
+                            </ul>
+                        </nav>
+                        <div class="PostContent_m">
+                            <p>@item.Text </p>
                         </div>
-                       <div class="Post_Right_m">
-                            <nav class="PostHeaderLeft_m">
-                                <ul class="sbs">
-                                    <li>@item.UserName/li>
-                                    <li>@item.Title</li>
-                               </ul>
-                            </nav>
-                            <nav class="PostHeaderRight_m">
-                                 <ul class="sbs">
-                                     <li>@string.Format("{0:d/M/yyyy}",item.Date)</li>
-                                     <li>@string.Format("{0:HH:mm}", item.Date)</li>
-                                 </ul>
-                            </nav>
-                            <div class="PostContent_m">
-                                <p>@item.Text </p>
-                            </div>
-                       </div>
-                 </div>
+                    </div>
+                </div>
             }
         }
     </div>
