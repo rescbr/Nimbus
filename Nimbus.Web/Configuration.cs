@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.WindowsAzure;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -13,7 +14,12 @@ namespace Nimbus.Web
             get
             {
                 //mudar para CloudConfigurationManager
-                return Convert.FromBase64String(WebConfigurationManager.AppSettings["CookieHMACKey"]);
+                string setting;
+                if(Microsoft.WindowsAzure.ServiceRuntime.RoleEnvironment.IsAvailable)
+                    setting = CloudConfigurationManager.GetSetting("CookieHMACKey");
+                else
+                    setting = WebConfigurationManager.AppSettings["CookieHMACKey"];
+                return Convert.FromBase64String(setting);
             }
         }
 
@@ -21,7 +27,12 @@ namespace Nimbus.Web
         {
             get
             {
-                return WebConfigurationManager.AppSettings["DatabaseConnectionString"];
+                string setting;
+                if (Microsoft.WindowsAzure.ServiceRuntime.RoleEnvironment.IsAvailable)
+                    setting = CloudConfigurationManager.GetSetting("DatabaseConnectionString");
+                else
+                    setting = WebConfigurationManager.AppSettings["DatabaseConnectionString"];
+                return setting;
             }
         }
     }

@@ -110,6 +110,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\ServiceStack.Text.3.9.62\lib\net35\ServiceStack.Text.dll</HintPath>
     </Reference>
+    <Reference Include="System.Data.Services.Client" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System" />
@@ -163,6 +164,7 @@
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.0.0-rc1\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
     <Reference Include="System.XML" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="WebGrease">
       <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
     </Reference>
@@ -186,7 +188,7 @@
     <Content Include="Website\Views\PrivateUserAtt.cshtml" />
     <Content Include="Website\Views\PrivateUserChannel.cshtml" />
     <Content Include="Website\Views\PublicUserContent.cshtml" />
-    <None Include="Website\Views\Shared\_Layout.cshtml" />
+    <Content Include="Website\Views\Shared\_Layout.cshtml" />
     <Content Include="Website\Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
