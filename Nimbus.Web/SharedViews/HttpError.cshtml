@@ -1,0 +1,20 @@
+﻿@model System.Web.Http.HttpError
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Error</title>
+</head>
+<body>
+    <h2>
+        Sorry, an error occurred while processing your request.
+    </h2>
+    <img src="images/erro500.jpg" />
+    <pre>
+        @foreach( var value in Model.Values) {
+            @value
+        }
+    </pre>
+
+</body>
+</html>

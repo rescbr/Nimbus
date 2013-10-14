@@ -558,7 +558,13 @@
         /// <returns>The resolved template.</returns>
         public ITemplate Resolve(string cacheName, object model)
         {
-            string storeCacheName = cacheName + ":" + model.GetType().Name;
+            string modelTypeName;
+            if (model == null)
+                modelTypeName = "null";
+            else
+                modelTypeName = model.GetType().Name;
+
+            string storeCacheName = cacheName + ":" + modelTypeName;
 
             CachedTemplateItem cachedItem;
             ITemplate instance = null;

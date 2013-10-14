@@ -77,7 +77,7 @@ namespace Nimbus.Plumbing
             var httpListener = typeof(Microsoft.Owin.Host.HttpListener.OwinServerFactory);
             owinStartOptions.ServerFactory = httpListener.Namespace; //"Microsoft.Owin.Host.HttpListener";
             owinStartOptions.Urls.Add("http://+:" + initOptions.HttpPort.ToString());
-
+                
             initOptions.InitLog.Log("StartWebApp", "Trying to load N.Web from " + initOptions.NimbusWebAssemblyFile);
 
             INimbusOwinApp nimbusOwinApp =

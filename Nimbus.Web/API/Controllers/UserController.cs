@@ -1,5 +1,4 @@
-﻿using Nimbus.Web.API.Models.User;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -7,6 +6,7 @@ using System.Net.Http;
 using System.Web.Http;
 using ServiceStack.OrmLite;
 using Nimbus.DB.ORM;
+using Nimbus.DB.Bags;
 
 namespace Nimbus.Web.API.Controllers
 {
@@ -24,7 +24,7 @@ namespace Nimbus.Web.API.Controllers
         ///</summary>
         [Authorize]
         [HttpGet]
-        public User showProfile()
+        public UserBag showProfile()
         {
             return showProfile(NimbusUser.UserId);
         }
@@ -34,31 +34,45 @@ namespace Nimbus.Web.API.Controllers
         /// </sumary>
         //[Authorize]
         [HttpGet]
-        public User showProfile(int id)
+        public UserBag showProfile(int id)
         {
             try
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    var user = db.SelectParam<User>(usr => usr.Id == id).FirstOrDefault();
-
+                    var user = db.SelectParam<User>(usr => usr.Id == id).FirstOrDefault();      
+                    UserBag userBag = new UserBag();
+                    userBag.Id = user.Id;
+                    userBag.About = user.About;
+                    userBag.AvatarUrl = userBag.AvatarUrl;
+                    userBag.BirthDate = user.BirthDate;
+                    userBag.City = user.City;
+                    userBag.Country = user.Country;
+                    userBag.Experience = user.Experience;
+                    userBag.FirstName = user.FirstName;
+                    userBag.Interest = user.Interest;
+                    userBag.LastName = user.LastName;
+                    userBag.Occupation = user.Occupation;
+                    userBag.State = user.State;
+                    userBag.Age =(int)Math.Floor((DateTime.Now.Subtract(user.BirthDate).Days)/365.25);
+                    userBag.Interaction = 0;//TODO: arrumar p valor certo - pensar nas regras
+               
                     //throw http exception
-                    if (user == null)
+                    if (userBag == null)
                     {
                         throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, 
                             "this item does not exist"));
                     }
 
                     user.Password = "";
-                    return user;
+                    return userBag;
                 }
             }
             catch (Exception ex)
             {
                 throw ex;
             }
-        }        
-        
+        }
 
         #endregion
 
@@ -68,30 +82,29 @@ namespace Nimbus.Web.API.Controllers
         /// <param name="profile"></param>
         /// <returns>bool</returns>        
         [Authorize]
-        [HttpPost]
-        public User editProfile(User user, int id)
+        [HttpPut]
+        public User EditProfile(User user)
         {
             try
             {
                 using(var db = DatabaseFactory.OpenDbConnection())
                 {
-                    db.Update<User>(user, usr => usr.Id == id );
+                    db.Update<User>(user, usr => usr.Id == NimbusUser.UserId);
                     db.Save(user);
                 }
 
                 return user;
             }
             catch (Exception ex)
-            {                
-                throw ex;
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
         }
          
 
-        [HttpPut]
-        public User createProfile(User user)
+        [HttpPost]
+        public User CreateProfile(User user)
         {
-            bool login = false;
             try
             {
                 string passwordHash = new Security.PlaintextPassword(user.Password).Hash;
@@ -99,21 +112,39 @@ namespace Nimbus.Web.API.Controllers
 
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    db.Insert(user);
-                    login = true;
+                    db.Insert(user);                    
                 }
 
                 return user;
             }
             catch (Exception ex)
             {
-                login = false;
-                throw ex;
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
-
         }
 
-
+        /// <summary>
+        /// Método para completar as informações do usuário para que ele possa comprar/vender itens
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        [Authorize]
+        [HttpPost]
+        public UserInfoPayment CreateInfoUser(UserInfoPayment user)
+        {
+            try
+            {
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {
+                    db.Insert(user);
+                    return user;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+            }
+        }
     }
 
 

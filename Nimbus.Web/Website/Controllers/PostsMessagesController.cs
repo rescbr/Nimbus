@@ -7,15 +7,16 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Web;
-using WebApiContrib.Formatting.Html;
+using System.Web.Mvc;
+
 
 namespace Nimbus.Web.Website.Controllers
 {
-    public class PostsMessagesController : NimbusApiController
+    public class PostsMessagesController : NimbusWebController
     {
-        public View Get(string redirect = null)
+        public ActionResult Get(string redirect = null)
         {
-            return new View("PostsMessages", new LoginModel());
+            return View("PostsMessages", null);
         }
 
     }

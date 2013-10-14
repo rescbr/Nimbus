@@ -23,21 +23,11 @@ namespace Nimbus.Web.API
                 {
                     DB.ORM.Organization org;
                     string host = Request.Headers.Host.Split(':')[0]; //remove porta
-                    try
+                    using (var db = DatabaseFactory.OpenDbConnection())
                     {
-                        org = (NimbusAppBus.Instance.Cache.OrganizationHosts.Get(host)
-                            as DB.ORM.Organization);
+                        org = (db.Where<DB.ORM.Organization>(o => o.Cname == host)
+                            .FirstOrDefault() as DB.ORM.Organization);
                     }
-                    catch (KeyNotFoundException)
-                    {
-                        using (var db = DatabaseFactory.OpenDbConnection())
-                        {
-                           org = (db.Where<DB.ORM.Organization>(o => o.Cname == host)
-                               .FirstOrDefault() as DB.ORM.Organization);
-                        }
-                        NimbusAppBus.Instance.Cache.OrganizationHosts.Store(host, org);
-                    }
-
                     return org;
                 }
             }
@@ -72,7 +62,7 @@ namespace Nimbus.Web.API
                     }
                     else throw new Exception("User.Identity.AuthenticationType is not NimbusUser.");
                 }
-                
+
             }
 
             set
@@ -86,17 +76,17 @@ namespace Nimbus.Web.API
         /// </summary>
         private IDbConnectionFactory _databaseFactory = null;
         /// <summary>
-        /// Obtém a DatabaseFactory a partir das configurações no NimbusAppBus.
+        /// Obtém a DatabaseFactory a partir das configurações.
         /// </summary>
         public IDbConnectionFactory DatabaseFactory
         {
             get
             {
-                if(_databaseFactory != null)
+                if (_databaseFactory != null)
                     return _databaseFactory;
                 else
                     return new OrmLiteConnectionFactory
-                    (NimbusAppBus.Instance.Settings.DatabaseConnectionString,
+                    (NimbusConfig.DatabaseConnection,
                     SqlServerDialect.Provider);
             }
             set

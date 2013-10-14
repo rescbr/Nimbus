@@ -12,18 +12,12 @@ namespace Nimbus.Plumbing
         //IIdentity
         public string AuthenticationType { get { return "NimbusUser"; } }
         public bool IsAuthenticated { get; set; }
-
         public string Name { get { return FirstName + " " + LastName; } }
-
         public int UserId { get; set; }
         public string Email { get; set; }
-        public string TOTPKey { get; set; }
-
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string AvatarUrl { get; set; }
-
-
     }
 
     public class NimbusPrincipal : IPrincipal

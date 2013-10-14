@@ -15,5 +15,6 @@ namespace Nimbus.DB.ORM
 
         [References(typeof(Category))]
         public int CategoryId { get; set; }
+
     }
 }

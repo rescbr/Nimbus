@@ -5,17 +5,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Web;
-using WebApiContrib.Formatting.Html;
+using System.Web.Mvc;
+
 
 namespace Nimbus.Web.Website.Controllers
 {
-    public class NewAccountController : NimbusApiController
+    public class NewAccountController : NimbusWebController
     {
-        public View Get() {
-            return new View("NewAccount", new NewAccountModel());
+        [HttpGet]
+        [ActionName("Index")]
+        public ActionResult Get() {
+            return View("NewAccount", null);
         }
 
-        public View Post(NewAccountModel newAccount)
+        [HttpPost]
+        [ActionName("Index")]
+        public ActionResult Post(NewAccountModel newAccount)
         {
             if (ModelState.IsValid)
             {
@@ -39,10 +44,10 @@ namespace Nimbus.Web.Website.Controllers
 
                         ,BirthDate = DateTime.Now
                     };
-                    userapi.createProfile(newUser);
+                    userapi.CreateProfile(newUser);
                     
                     //aqui deveria redirecionar
-                    return new View("NewAccount", new NewAccountModel());
+                    return View("NewAccount", new NewAccountModel());
                 }
                 else //senha confirmada está incorreta.
                 {
@@ -50,7 +55,7 @@ namespace Nimbus.Web.Website.Controllers
                 }
             }
 
-            return new View("NewAccount", null); //null => model de errro
+            return View("NewAccount", null); //null => model de errro
         }
     }
 }

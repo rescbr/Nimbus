@@ -1,11 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nimbus.Web.API.Controllers;
-using Nimbus.Web.API.Models.User;
 using Nimbus.Plumbing;
-using System.Web.Http;
-using System.Web.Http.Routing;
-using System.Web.Http.Hosting;
 using System.Net.Http;
 using System.Net;
 using System.Threading;
@@ -47,7 +43,7 @@ namespace Nimbus.Web.UnitTest
             model.Password = "123123";
             model.State = "SP";
 
-            var response = controller.createProfile(model);
+            var response = controller.CreateProfile(model);
 
         }
         
@@ -75,7 +71,7 @@ namespace Nimbus.Web.UnitTest
             model.AvatarUrl = "http://portalnimbus.com.br/images/logo_hotsite-01.png";
             model.BirthDate = DateTime.Now;
 
-            var response = controller.editProfile(model, 1);
+            var response = controller.EditProfile(model);
 
         }
 

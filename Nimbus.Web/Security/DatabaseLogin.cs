@@ -41,12 +41,10 @@ namespace Nimbus.Web.Security
                     principal = new NimbusPrincipal(new NimbusUser()
                     {
                         IsAuthenticated = true,
-                        AvatarUrl = dbuser.AvatarUrl,
                         Email = dbuser.Email,
                         FirstName = dbuser.FirstName,
                         UserId = dbuser.Id,
                         LastName = dbuser.LastName,
-                       // TOTPKey = dbuser.TOTPKey
                     });
                     return true;
                 } 

@@ -7,15 +7,16 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Web;
-using WebApiContrib.Formatting.Html;
+using System.Web.Mvc;
+
 
 namespace Nimbus.Web.Website.Controllers
 {
-    public class TrendingTopicsController : NimbusApiController
+    public class TrendingTopicsController : NimbusWebController
     {
-        public View Get(string redirect = null)
+        public ActionResult Get(string redirect = null)
         {
-            return new View("TrendingTopics", new LoginModel());
+            return View("TrendingTopics", null);
         }
 
     }

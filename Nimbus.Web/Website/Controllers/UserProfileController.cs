@@ -1,22 +1,31 @@
 ﻿using Nimbus.Web.API;
-using Nimbus.Web.Security;
 using Nimbus.Web.Website.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Web;
-using WebApiContrib.Formatting.Html;
+using System.Web.Mvc;
+
 
 namespace Nimbus.Web.Website.Controllers
 {
-    public class UserProfileController : NimbusApiController
+    public class UserProfileController : NimbusWebController
     {
-        public View Get(string redirect = null)
+        [Authorize]
+        public ActionResult Index()
         {
-            return new View("Website.UserProfile", null);
+            var channelApi = ClonedContextInstance<API.Controllers.ChannelController>(); 
+            var userApi = ClonedContextInstance<API.Controllers.UserController>();
+            var msgApi = ClonedContextInstance<API.Controllers.MessageController>();
+            var userprofile = new UserProfileModel()
+            {
+                CurrentUser = NimbusUser,
+                ChannelPaid = channelApi.UserChannelPaid(NimbusUser.UserId),
+                User = userApi.showProfile(),
+                ChannelFollow = channelApi.FollowsChannel(NimbusOrganization.Id),
+                MyChannels = channelApi.MyChannel(),
+                ReadLater = channelApi.showReadLaterChannel(NimbusOrganization.Id),
+                Messages = msgApi.ReceivedMessages()
+            };
+            return View("UserProfile", userprofile);
         }
+
 
     }
 }

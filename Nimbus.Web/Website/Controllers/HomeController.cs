@@ -4,16 +4,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using System.Web.Http;
-using WebApiContrib.Formatting.Html;
+using System.Web.Mvc;
+
 
 namespace Nimbus.Web.Website.Controllers
 {
 
-    public class HomeController : NimbusApiController
+    public class HomeController : NimbusWebController
     {
         [Authorize]
-        public View Get()
+        public ActionResult Index()
         {
             var hm = new HomeModel()
             {
@@ -21,7 +21,7 @@ namespace Nimbus.Web.Website.Controllers
                 CurrentOrganization = NimbusOrganization.Name
 
             };
-            return new View("Home", hm);
+            return View("Home", hm);
         }
     }
 
