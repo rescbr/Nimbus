@@ -4,6 +4,14 @@
     Layout = "~/Website/Views/Shared/_Layout.cshtml";
     }
 
+@Scripts.Render(("~/Scripts/modal.js"))
+@Styles.Render(("~/Styles/modal.css"))
+
+
+<div class="SendMessage">
+    <p><a href="#modal-text" class="call-modal">Enviar Mensagem</a></p> <!-- clicavel -->
+</div>
+
 <div class="ProBar">
     <div class="ProfileImg">
         <img src="@Model.User.AvatarUrl" alt="@Model.User.FirstName"  />
@@ -47,7 +55,7 @@
     @if(Model.User.Id != Model.CurrentUser.UserId)
     {
     <div class="SendMessage">
-        <p>Enviar Mensagem</p> <!-- clicavel -->
+        <p><a href="#modal-text" class="call-modal">Enviar Mensagem</a></p> <!-- clicavel -->
     </div>
     }
     else
@@ -70,6 +78,30 @@
     </div>
 
 </div>
+
+@*Modal section*@
+<section class="semantic-content" id="modal-text" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
+    <div class="modal-inner">
+        <header id="modal-label"><!-- Header --></header>
+        <div class="modal-content">
+        <!-- The modals content -->
+            <p>Para: @Model.User.FirstName @Model.User.LastName</p>
+            <p>Assunto:
+                <input name="inpTitleMsg" type="text" maxlength="100" />
+            </p>
+            <p>
+                <textarea name="txtTextMsg" rows="10" cols="60" required wrap="hard" ></textarea>
+            </p>
+        </div>
+        <footer>
+        <!-- Footer -->
+            <button>Enviar</button>
+        </footer>
+    </div>
+
+    <a href="#!" class="modal-close" title="Close this modal" data-close="Close"
+       data-dismiss="modal">×</a>
+</section>
 
 <div style="float:right;">
     @RenderPage("~/Website/Views/PrivateProfileTopBar.cshtml")
