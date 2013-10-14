@@ -8,5 +8,6 @@ namespace Nimbus.DB
 {
     public class RoleOrganization
     {
+
     }
 }
