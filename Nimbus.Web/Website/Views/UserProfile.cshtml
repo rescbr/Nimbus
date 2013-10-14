@@ -5,6 +5,7 @@
     }
 
 @Scripts.Render(("~/Scripts/modal.js"))
+@Scripts.Render(("~/Scripts/ckeditor/ckeditor.js"))
 @Styles.Render(("~/Styles/modal.css"))
 
 
@@ -90,7 +91,7 @@
                 <input name="inpTitleMsg" type="text" maxlength="100" />
             </p>
             <p>
-                <textarea name="txtTextMsg" rows="10" cols="60" required wrap="hard" ></textarea>
+                <textarea id="txtTextMsg" name="txtTextMsg" rows="10" cols="60" required class="ckeditor"></textarea>
             </p>
         </div>
         <footer>
@@ -106,3 +107,15 @@
 <div style="float:right;">
     @RenderPage("~/Website/Views/PrivateProfileTopBar.cshtml")
 </div>
+
+@*Sempre tem que ser no fim da página*@
+<script type="text/javascript">
+    CKEDITOR.replace('txtTextMsg', {
+        toolbar: [
+            { name: 'document', items: ['Source', '-', 'NewPage', 'Preview', '-', 'Templates'] },	// Defines toolbar group with name (used to create voice label) and items in 3 subgroups.
+            ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo'],			// Defines toolbar group without name.
+            '/',																					// Line break - next group will be placed in new line.
+            { name: 'basicstyles', items: ['Bold', 'Italic'] }
+        ]
+    });
+</script>
