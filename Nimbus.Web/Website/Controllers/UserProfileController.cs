@@ -38,6 +38,10 @@ namespace Nimbus.Web.Website.Controllers
             var nomeOriginal = Request.Files[0].FileName;
             var nomeFinal = "../uploads/imagem" + Path.GetExtension(nomeOriginal);
             var pathFinal = Server.MapPath(nomeFinal);
+            //pega o nome do arquivo
+            //nome final = onde vai ser armazendo
+            //pega o caminho da pasta que vai ser gravado o arquivo e sava
+            //retorna a img JA salva  para o json colocar na tela 
 
             Request.Files[0].SaveAs(pathFinal);
             return Json(new { url = nomeFinal });            
@@ -53,6 +57,7 @@ namespace Nimbus.Web.Website.Controllers
             var y1 = int.Parse(Request.Form["y1"]);
             var y2 = int.Parse(Request.Form["y2"]);
 
+            //caso o cara corte a imagem, mudar o nome do arquivo a ser salvo
             var nomeFinal = "../uploads/imagem_crop" + Path.GetExtension(imagem_url);
             
             using (var response = new StreamReader(Server.MapPath(imagem_url)))
@@ -68,6 +73,8 @@ namespace Nimbus.Web.Website.Controllers
                 using (Graphics g = Graphics.FromImage(target))
                 {
                     g.DrawImage(imagem, new Rectangle(0, 0, largura, altura), cropRect, GraphicsUnit.Pixel);
+                    //aqui deve chamar a função que 'compacta' a imagem corretamente
+                    //aqui deve salvar no jeito certo -> no azure
                     using (var fileStream = new FileStream(Server.MapPath(nomeFinal), FileMode.OpenOrCreate))
                     {
                         target.Save(fileStream, imagem.RawFormat);
@@ -76,6 +83,7 @@ namespace Nimbus.Web.Website.Controllers
 
                 }
             }
+            //depois que salvar no azure retorna por json p mostrar na tela a imagem final
             return Json(new { imagem_recortada = nomeFinal });
         }
 

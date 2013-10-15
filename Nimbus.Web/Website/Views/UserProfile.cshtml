@@ -126,7 +126,7 @@
         <div class="modal-content">
             <!-- The modals content -->  
             <form action='@Url.Action("Upload")' method="post" enctype="multipart/form-data" name="imagem_original">
-                     <input type="file" name="imagem" />
+                <input type="file" name="imagem" />
                 <input type="submit" value="Salvar" class="hidden" id="upload" />             
             </form>
             @using (Html.BeginForm("Crop", "Upload", null, FormMethod.Post, new { enctype = "multipart/form-data", name = "crop" }))
@@ -148,7 +148,6 @@
             <!-- Footer -->
         </footer>
     </div>
-
     <a href="#!" class="modal-close" title="Close this modal" data-close="Close"
        data-dismiss="modal">×</a>
 </section>
