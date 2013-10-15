@@ -1,7 +1,10 @@
 ﻿using Nimbus.Web.API;
+using Nimbus.Web.Utils;
 using Nimbus.Web.Website.Models;
 using System.Drawing;
 using System.IO;
+using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 
 
@@ -33,11 +36,11 @@ namespace Nimbus.Web.Website.Controllers
         public ActionResult Upload()
         {
             var nomeOriginal = Request.Files[0].FileName;
-            var nomeFinal = "../Uploads/imagem" + Path.GetExtension(nomeOriginal);
+            var nomeFinal = "../uploads/imagem" + Path.GetExtension(nomeOriginal);
             var pathFinal = Server.MapPath(nomeFinal);
 
             Request.Files[0].SaveAs(pathFinal);
-            return Json(new { url = nomeFinal });
+            return Json(new { url = nomeFinal });            
         }
 
         [Authorize]
@@ -49,8 +52,9 @@ namespace Nimbus.Web.Website.Controllers
             var x2 = int.Parse(Request.Form["x2"]);
             var y1 = int.Parse(Request.Form["y1"]);
             var y2 = int.Parse(Request.Form["y2"]);
-            var nomeFinal = "../uploads/imagem_crop" + Path.GetExtension(imagem_url);
 
+            var nomeFinal = "../uploads/imagem_crop" + Path.GetExtension(imagem_url);
+            
             using (var response = new StreamReader(Server.MapPath(imagem_url)))
             {
                 Bitmap imagem = new Bitmap(response.BaseStream);
@@ -69,6 +73,7 @@ namespace Nimbus.Web.Website.Controllers
                         target.Save(fileStream, imagem.RawFormat);
                         fileStream.Flush();
                     }
+
                 }
             }
             return Json(new { imagem_recortada = nomeFinal });
