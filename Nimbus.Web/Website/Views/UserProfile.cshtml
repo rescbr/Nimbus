@@ -14,8 +14,15 @@
 </div>
 
 <div class="ProBar">
-    <div class="ProfileImg">
-        <img src="@Model.User.AvatarUrl" alt="@Model.User.FirstName"  />
+    <div class="ProfileImg">             
+        @if (Model.User.Id == Model.CurrentUser.UserId)
+        {
+            <a href="#modal-img" class="call-modal"><img src="@Model.User.AvatarUrl" alt="Editar avatar" title="Avatar"/></a>                
+        }
+        else
+        {
+              <img src="@Model.User.AvatarUrl" alt="@Model.User.FirstName" title="Avatar"  />
+        }
     </div>
 
     @*Se for o usuário do perfil*@
@@ -104,11 +111,31 @@
        data-dismiss="modal">×</a>
 </section>
 
+<section class="semantic-content" id="modal-img" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
+    <div class="modal-inner">
+        <header id="modal-label">
+            <!-- Header -->
+            Editar avatar
+        </header>
+        <div class="modal-content">
+            <!-- The modals content -->
+           
+        </div>
+        <footer>
+            <!-- Footer -->
+            <button>Salvar</button>
+        </footer>
+    </div>
+
+    <a href="#!" class="modal-close" title="Close this modal" data-close="Close"
+       data-dismiss="modal">×</a>
+</section>
+
 <div style="float:right;">
     @RenderPage("~/Website/Views/PrivateProfileTopBar.cshtml")
 </div>
 
-@*Sempre tem que ser no fim da página*@
+@*Sempre manter no fim da página*@
 <script type="text/javascript">
     CKEDITOR.replace('txtTextMsg', {
         toolbar: [
