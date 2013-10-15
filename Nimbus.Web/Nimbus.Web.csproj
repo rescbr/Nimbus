@@ -180,6 +180,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
+    <Content Include="images\Utils\Jcrop.gif" />
     <Content Include="Scripts\ckeditor\ckeditor.js" />
     <Content Include="Scripts\ckeditor\config.js" />
     <Content Include="Scripts\ckeditor\contents.css" />
@@ -561,13 +562,18 @@
     <Content Include="Scripts\ckeditor\skins\kama\images\sprites_ie6.png" />
     <Content Include="Scripts\ckeditor\skins\kama\images\toolbar_start.gif" />
     <Content Include="Scripts\ckeditor\styles.js" />
-    <None Include="Scripts\jquery-1.6.4-vsdoc.js" />
-    <Content Include="Scripts\jquery-1.6.4.js" />
-    <Content Include="Scripts\jquery-1.6.4.min.js" />
+    <None Include="Scripts\jquery-1.7.2.intellisense.js" />
+    <Content Include="Scripts\jquery-1.7.2.js" />
+    <Content Include="Scripts\jquery-1.7.2.min.js" />
+    <Content Include="Scripts\jquery.form.js" />
+    <Content Include="Scripts\jquery.form.min.js" />
+    <Content Include="Scripts\jquery.Jcrop.js" />
+    <Content Include="Scripts\jquery.Jcrop.min.js" />
     <Content Include="Scripts\jquery.signalR-1.1.3.js" />
     <Content Include="Scripts\jquery.signalR-1.1.3.min.js" />
     <Content Include="Scripts\modal.js" />
     <Content Include="Scripts\UserUtils.js" />
+    <Content Include="Styles\jquery.Jcrop.css" />
     <Content Include="Styles\modal.css" />
     <Content Include="Styles\Style.css" />
     <Content Include="Web.config">
@@ -670,7 +676,7 @@
   <ItemGroup>
     <Folder Include="Admin\Models\" />
     <Folder Include="Admin\Views\" />
-    <Folder Include="images\" />
+    <Folder Include="Uploads\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
