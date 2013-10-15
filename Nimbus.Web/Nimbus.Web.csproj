@@ -562,9 +562,9 @@
     <Content Include="Scripts\ckeditor\skins\kama\images\sprites_ie6.png" />
     <Content Include="Scripts\ckeditor\skins\kama\images\toolbar_start.gif" />
     <Content Include="Scripts\ckeditor\styles.js" />
-    <None Include="Scripts\jquery-1.7.2.intellisense.js" />
-    <Content Include="Scripts\jquery-1.7.2.js" />
-    <Content Include="Scripts\jquery-1.7.2.min.js" />
+    <None Include="Scripts\jquery-2.0.3.intellisense.js" />
+    <Content Include="Scripts\jquery-2.0.3.js" />
+    <Content Include="Scripts\jquery-2.0.3.min.js" />
     <Content Include="Scripts\jquery.form.js" />
     <Content Include="Scripts\jquery.form.min.js" />
     <Content Include="Scripts\jquery.Jcrop.js" />
@@ -649,6 +649,7 @@
   <ItemGroup>
     <Content Include="packages.config" />
     <Content Include="NimbusSNK.snk" />
+    <Content Include="Scripts\jquery-2.0.3.min.map" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

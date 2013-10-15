@@ -8,7 +8,7 @@
 @Styles.Render(("~/Styles/modal.css"))
 
 @Scripts.Render(("~/Scripts/ckeditor/ckeditor.js"))
-@Scripts.Render(("~/Scripts/jquery-1.7.2.js"))
+@Scripts.Render(("~/Scripts/jquery-2.0.3.js"))
 @Scripts.Render(("~/Scripts/jquery.form.js"))
 
 @Scripts.Render(("~/Scripts/jquery.Jcrop.js"))
@@ -127,8 +127,7 @@
             <!-- The modals content -->  
             <form action='@Url.Action("Upload")' method="post" enctype="multipart/form-data" name="imagem_original">
                      <input type="file" name="imagem" />
-                     <input type="submit" value="upload to server" class="hidden" id="upload" />
-                
+                <input type="submit" value="Salvar" class="hidden" id="upload" />             
             </form>
             @using (Html.BeginForm("Crop", "Upload", null, FormMethod.Post, new { enctype = "multipart/form-data", name = "crop" }))
             {
@@ -139,15 +138,14 @@
                         <input type="hidden" name="y2" id="y2" />
                         <input type="submit" value="Recortar" class="hidden" id="recortar" />
             }
-            <div class="progress">
+        <img src="" class="hidden" id="imagem_crop" />  
+            <div class="progress" style="align-content:center;">
                     <div class="bar"></div>
                     <div class="percent">0%</div>                
             </div>
-            <img src="" class="hidden" id="imagem_crop" />  
         </div>
         <footer>
             <!-- Footer -->
-            <button>Salvar</button>
         </footer>
     </div>
 
@@ -179,7 +177,7 @@
         var percent = $('.percent');
         var status = $('#status');
 
-        $('input[name=imagem]').live('change', function () {
+        $(document).on('change','input[name=imagem]', function () {
             $("#upload").click();
         });
 
