@@ -17,8 +17,10 @@ namespace Nimbus.Web
         protected void Application_Start(object sender, EventArgs e)
         {
             GlobalFilters.Filters.Add(new HandleErrorAttribute());
+            NimbusRouting.RegisterSignalR(RouteTable.Routes);
             NimbusRouting.RegisterWebAPIRoutes(GlobalConfiguration.Configuration);
             NimbusRouting.RegisterMVCRoutes(RouteTable.Routes);
+            
             AreaRegistration.RegisterAllAreas();
 
             DatabaseStartup.CreateDatabaseIfNotThere();
