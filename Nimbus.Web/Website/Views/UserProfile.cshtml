@@ -171,7 +171,8 @@
 
 <script type="text/javascript">
     var jcrop;
-    (function () {
+
+    $(document).ready(function () {
         var bar = $('.bar');
         var percent = $('.percent');
         var status = $('#status');
@@ -214,7 +215,7 @@
                 $("#imagem_final").removeClass("hidden");
             }
         });
-    })();
+    });
 
     function showCoords(c) {
         $("#x1").val(c.x);
@@ -228,6 +229,7 @@
     function ativarJCrop() {
         $('#imagem_crop').Jcrop({
             bgColor: 'black',
+            minSize: [100,100],
             bgOpacity: .4,
             aspectRatio: 1,
             onSelect: showCoords
