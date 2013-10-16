@@ -1,11 +1,15 @@
 ﻿using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Nimbus.Web.API;
+using Nimbus.Web.Security;
 using Nimbus.Web.Website.Models;
+using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web.Mvc;
@@ -51,19 +55,16 @@ namespace Nimbus.Web.Website.Controllers
                 return Json(new { error = "Too Large" });
             }
 
+            var nomeFinal = "fullsize-" + NimbusUser.UserId;
 
-            var nomeOriginal = Request.Files[0].FileName.Trim(new char[]{' ', '"' });
-            var nomeFinal = "fullsize-" + NimbusUser.UserId + "-" +
-                RenameToValidName(Path.GetFileNameWithoutExtension(nomeOriginal)) +
-                Path.GetExtension(nomeOriginal);
-
+            HMACMD5 md5 = new HMACMD5(NimbusConfig.GeneralHMACKey);
+            md5.ComputeHash(Encoding.Unicode.GetBytes(nomeFinal));
+            nomeFinal = Base32.ToString(md5.Hash) + nomeFinal + ".jpg";
+            
+            //3x o tamanho máximo
             var imageStream = ResizeImage(Request.Files[0].InputStream, 786, 786);
 
-            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(NimbusConfig.StorageAccount);
-            CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
-            CloudBlobContainer container = blobClient.GetContainerReference("avatarupload");
-            CloudBlockBlob blockBlob = container.GetBlockBlobReference(nomeFinal);
-            blockBlob.UploadFromStream(imageStream);
+            var blockBlob = UploadStreamToAzure("avatarupload", nomeFinal, imageStream);
             
             var pathFinal = blockBlob.Uri.AbsoluteUri.Replace("https://", "http://");
 
@@ -78,18 +79,21 @@ namespace Nimbus.Web.Website.Controllers
         [HttpPost]
         public ActionResult Crop()
         { //262 x 100
-            var imagem_url = Request.Form["url"];
             var x1 = int.Parse(Request.Form["x1"]);
             var x2 = int.Parse(Request.Form["x2"]);
             var y1 = int.Parse(Request.Form["y1"]);
             var y2 = int.Parse(Request.Form["y2"]);
-
-            //caso o cara corte a imagem, mudar o nome do arquivo a ser salvo
-            var nomeFinal = "../uploads/imagem_crop" + Path.GetExtension(imagem_url);
             
-            using (var response = new StreamReader(Server.MapPath(imagem_url)))
+            //pega a imagem do azure
+            var nomeImagemOriginal = "fullsize-" + NimbusUser.UserId;
+
+            HMACMD5 md5 = new HMACMD5(NimbusConfig.GeneralHMACKey);
+            md5.ComputeHash(Encoding.Unicode.GetBytes(nomeImagemOriginal));
+            nomeImagemOriginal = Base32.ToString(md5.Hash) + nomeImagemOriginal + ".jpg";
+
+            using (var streamImgOrig = GetStreamFromAzure("avatarupload", nomeImagemOriginal))
             {
-                Bitmap imagem = new Bitmap(response.BaseStream);
+                Bitmap imagem = new Bitmap(streamImgOrig);
 
                 int largura = x2 - x1;
                 int altura = y2 - y1;
@@ -132,7 +136,14 @@ namespace Nimbus.Web.Website.Controllers
             return str;
         }
 
-        Stream ResizeImage(Stream input, int cropWidth, int cropHeight)
+        /// <summary>
+        /// Redimensiona imagem mantendo as proporções
+        /// </summary>
+        /// <param name="input">Stream da imagem original</param>
+        /// <param name="resizeMaxWidth">Largura máxima</param>
+        /// <param name="resizeMaxHeight">Altura máxima</param>
+        /// <returns>Stream contendo imagem JPEG</returns>
+        Stream ResizeImage(Stream input, int resizeMaxWidth, int resizeMaxHeight)
         {
             // Declare variable for the conversion
             float ratio;
@@ -145,17 +156,17 @@ namespace Nimbus.Web.Website.Controllers
             int height = (int)thisImage.Height;
 
             // Ratio and conversion for new size
-            if (width > cropWidth)
+            if (width > resizeMaxWidth)
             {
-                ratio = (float)width / (float)cropWidth;
+                ratio = (float)width / (float)resizeMaxWidth;
                 width = (int)(width / ratio);
                 height = (int)(height / ratio);
             }
 
             // Ratio and conversion for new size
-            if (height > cropHeight)
+            if (height > resizeMaxHeight)
             {
-                ratio = (float)height / (float)cropHeight;
+                ratio = (float)height / (float)resizeMaxHeight;
                 height = (int)(height / ratio);
                 width = (int)(width / ratio);
             }
@@ -181,7 +192,7 @@ namespace Nimbus.Web.Website.Controllers
 
             ImageCodecInfo iciJpeg = GetEncoderInfo("image/jpeg");
 
-            Encoder encQuality = Encoder.Quality;
+            System.Drawing.Imaging.Encoder encQuality = System.Drawing.Imaging.Encoder.Quality;
             EncoderParameters encParams = new EncoderParameters(1);
             EncoderParameter paramQuality = new EncoderParameter(encQuality, 90L);
             encParams.Param[0] = paramQuality;
@@ -207,6 +218,28 @@ namespace Nimbus.Web.Website.Controllers
                     return encoders[j];
             }
             return null;
+        }
+
+        private CloudBlockBlob UploadStreamToAzure(string container, string filename, Stream stream)
+        {
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(NimbusConfig.StorageAccount);
+            CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+            CloudBlobContainer ct = blobClient.GetContainerReference(container);
+            CloudBlockBlob blockBlob = ct.GetBlockBlobReference(filename);
+            blockBlob.UploadFromStream(stream);
+            return blockBlob;
+        }
+
+        private Stream GetStreamFromAzure(string container, string filename)
+        {
+            Stream outStream = new MemoryStream();
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(NimbusConfig.StorageAccount);
+            CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+            CloudBlobContainer ct = blobClient.GetContainerReference(container);
+            CloudBlockBlob blockBlob = ct.GetBlockBlobReference(filename);
+            blockBlob.DownloadToStream(outStream);
+            outStream.Seek(0, SeekOrigin.Begin);
+            return outStream;
         }
     }
 }

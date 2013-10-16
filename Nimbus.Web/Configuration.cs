@@ -15,10 +15,10 @@ namespace Nimbus.Web
             {
                 //mudar para CloudConfigurationManager
                 string setting;
-                if(Microsoft.WindowsAzure.ServiceRuntime.RoleEnvironment.IsAvailable)
+                //if(Microsoft.WindowsAzure.ServiceRuntime.RoleEnvironment.IsAvailable)
                     setting = CloudConfigurationManager.GetSetting("CookieHMACKey");
-                else
-                    setting = WebConfigurationManager.AppSettings["CookieHMACKey"];
+                //else
+                //    setting = WebConfigurationManager.AppSettings["CookieHMACKey"];
                 return Convert.FromBase64String(setting);
             }
         }
@@ -28,10 +28,10 @@ namespace Nimbus.Web
             get
             {
                 string setting;
-                if (Microsoft.WindowsAzure.ServiceRuntime.RoleEnvironment.IsAvailable)
+                //if (Microsoft.WindowsAzure.ServiceRuntime.RoleEnvironment.IsAvailable)
                     setting = CloudConfigurationManager.GetSetting("DatabaseConnectionString");
-                else
-                    setting = WebConfigurationManager.AppSettings["DatabaseConnectionString"];
+                //else
+                //    setting = WebConfigurationManager.AppSettings["DatabaseConnectionString"];
                 return setting;
             }
         }
@@ -41,6 +41,14 @@ namespace Nimbus.Web
             get
             { 
                 return CloudConfigurationManager.GetSetting("StorageAccount");
+            }
+        }
+
+        public static byte[] GeneralHMACKey
+        {
+            get
+            {
+                return Convert.FromBase64String(CloudConfigurationManager.GetSetting("GeneralHMACKey"));
             }
         }
     }
