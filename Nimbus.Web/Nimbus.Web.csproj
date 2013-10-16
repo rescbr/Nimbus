@@ -612,6 +612,8 @@
     <Compile Include="API\Models\ReportAPIModel.cs" />
     <Compile Include="API\NimbusApiController.cs" />
     <Compile Include="Configuration.cs" />
+    <Compile Include="Utils\AzureBlob.cs" />
+    <Compile Include="Utils\ImageManipulation.cs" />
     <Compile Include="_Startup\DatabaseStartup.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="Global.asax.cs">
@@ -626,7 +628,6 @@
     <Compile Include="Security\OneTimePassword.cs" />
     <Compile Include="Security\PasswordHash.cs" />
     <Compile Include="Security\Token.cs" />
-    <Compile Include="Utils.cs" />
     <Compile Include="Website\Controllers\HomeController.cs" />
     <Compile Include="Website\Controllers\PublicUserContentController.cs" />
     <Compile Include="Website\Controllers\PrivateUserChannelController.cs" />
