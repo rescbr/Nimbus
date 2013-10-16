@@ -35,5 +35,13 @@ namespace Nimbus.Web
                 return setting;
             }
         }
+
+        public static string StorageAccount
+        {
+            get
+            { 
+                return CloudConfigurationManager.GetSetting("StorageAccount");
+            }
+        }
     }
 }
