@@ -15,5 +15,9 @@ namespace Nimbus.DB.Bags
         public bool isAccept { get; set; }
         public int userID { get; set; }
 
+        public string OwnerName { get; set; }
+
+        public int CountVotes { get; set; }
+
     }
 }

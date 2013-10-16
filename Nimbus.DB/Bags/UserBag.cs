@@ -10,5 +10,7 @@ namespace Nimbus.DB.Bags
     {
         public int  Age {get;set;}
         public int Interaction { get; set; }
+
+               
     }
 }
