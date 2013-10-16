@@ -575,6 +575,7 @@
     <Content Include="Scripts\modal.js" />
     <Content Include="Scripts\UserUtils.js" />
     <Content Include="Styles\jquery.Jcrop.css" />
+    <Content Include="Styles\jquery.Jcrop.min.css" />
     <Content Include="Styles\modal.css" />
     <Content Include="Styles\Style.css" />
     <Content Include="Web.config">
