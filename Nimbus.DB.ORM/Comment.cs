@@ -18,6 +18,9 @@ namespace Nimbus.DB.ORM
         [References(typeof(User))]
         public int UserId { get; set; }
 
+        [References(typeof(Channel))]
+        public int ChannelId { get; set; }
+
         [References(typeof(Topic))]
         public int TopicId { get; set; }
         

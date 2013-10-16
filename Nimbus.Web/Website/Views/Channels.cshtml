@@ -1,0 +1,41 @@
+﻿@model Nimbus.Web.Website.Models.ChannelModel
+@{
+    ViewBag.Title = "Canal";
+    Layout = "~/Website/Views/Shared/_Layout.cshtml";
+}
+
+
+<div id="divCapa">
+    <img src="@Model.CurrentChannel.ImgUrl" id="imgCapa" height="864" alt="" width="192"/>
+</div>
+
+<div id="divInfCanal">
+<p>
+    @Model.CurrentChannel.Name
+    @Model.CurrentChannel.OwnerName
+    @foreach (var item in Model.Moderators)
+    { 
+    <a href="/userprofile/@item.Id"> @item.FirstName + @item.LastName</a>
+    }
+    @if (Model.RolesCurrentUser.Contains("moderatormanager")
+         || Model.CurrentChannel.OwnerId == Model.CurrentUser.UserId)
+    {
+       <button>Editar</button>                                                          
+    }
+        
+    @Model.CurrentChannel.countFollowers
+    @Model.CurrentChannel.CountVotes
+    @Model.CurrentChannel.participationChannel
+
+    @foreach (var item in Model.Tags)
+	{
+         <label>#@item.TagName</label>
+	}
+
+   @if (Model.RolesCurrentUser.Contains("channelmanager")
+         || Model.CurrentChannel.OwnerId == Model.CurrentUser.UserId)
+    {
+       <button>Editar Tags</button>                                                          
+    }
+</p>
+</div>

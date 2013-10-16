@@ -159,21 +159,101 @@ namespace Nimbus.Web.API.Controllers
         /// <returns></returns>
         [Authorize]
         [HttpGet]
-        public List<TagChannel> ShowTagChannel(int id)
+        public List<Tag> ShowTagChannel(int id = 0)
         {
-            List<TagChannel> tagList = new List<TagChannel>();
+            List<int> tagList = new List<int>();
+            List<Tag> tagChannel = new List<Tag> ();
             try
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    tagList = db.SelectParam<TagChannel>(tg => tg.ChannelId == id && tg.Visible == true).ToList();
+                    tagList = db.SelectParam<TagChannel>(tg => tg.ChannelId == id && tg.Visible == true).Select(tg => tg.TagId).ToList();
+                    foreach (int item in tagList)
+                    {		               
+                        Tag tag = db.SelectParam<Tag>(tg => tg.Id == item).FirstOrDefault();
+                        if(tag != null)
+                        {
+                            tagChannel.Add(tag);
+                        }
+                    }
                 }
             }
             catch (Exception ex)
             {
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
-            return tagList;
+            return tagChannel;
+        }
+
+        /// <summary>
+        /// Método retorna todos os moderadores do canal
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [Authorize]
+        [HttpGet]
+        public List<User> ShowModerators(int id = 0)
+        {
+            List<int> idList = new List<int>();
+            List<User> moderators = new List<User>();
+            try
+            {
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {
+                    idList = db.SelectParam<Role>(rl => rl.ChannelId == id).Where(rl => rl.ChannelMagager == true ||
+                                                                                        rl.MessageManager == true ||
+                                                                                        rl.ModeratorManager == true ||
+                                                                                        rl.TopicManager == true ||
+                                                                                        rl.UserManager == true).Select(user => user.UserId).ToList();
+                    foreach (int item in idList)
+                    {
+                        User user = db.SelectParam<User>(us => us.Id == item).FirstOrDefault();
+                        if (user != null)
+                        {
+                            moderators.Add(user);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+            }
+            return moderators;
+        }
+
+        /// <summary>
+        /// método para retornar em string as permissoes do current user
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [Authorize]
+        [HttpGet]
+        public List<string> ReturnRolesUser(int id = 0)
+        {
+            List<string> roles = new List<string>();
+            try
+            {
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {
+                    Role role = db.SelectParam<Role>(rl => rl.ChannelId == id && rl.UserId == NimbusUser.UserId).FirstOrDefault();
+                    if (role.ChannelMagager == true)
+                        roles.Add("channelmanager");
+                    if (role.MessageManager == true)
+                        roles.Add("messagemanager");
+                    if (role.ModeratorManager == true)
+                        roles.Add("moderatormanager");
+                    if (role.TopicManager == true)
+                        roles.Add("topicmanager");
+                    if (role.UserManager == true)
+                        roles.Add("usermanager");                        
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+            }
+            return roles;
         }
 
         #region métodos de visualização
@@ -183,7 +263,7 @@ namespace Nimbus.Web.API.Controllers
         /// <returns></returns>
         [Authorize]
         [HttpGet]
-        public ChannelBag ShowChannel(int id)
+        public ChannelBag ShowChannel(int id = 0)
         {
             ChannelBag showChannel = new ChannelBag();
             try
@@ -227,7 +307,8 @@ namespace Nimbus.Web.API.Controllers
                         List<Comment> listComments = db.SelectParam<Comment>(cm => cm.TopicId == topidID &&  cm.Visible == true);
 
                         int userComment = listComments.Where(us => us.UserId == NimbusUser.UserId).Count();
-
+                        string firstName = db.SelectParam<User>(us => us.Id == channel.OwnerId).Select(us => us.FirstName).FirstOrDefault();
+                        string lastName = db.SelectParam<User>(us => us.Id == channel.OwnerId).Select(us => us.LastName).FirstOrDefault();
                         showChannel.Name = channel.Name;
                         showChannel.countFollowers = channel.Followers.ToString();
                         showChannel.OrganizationId = channel.OrganizationId;
@@ -235,6 +316,9 @@ namespace Nimbus.Web.API.Controllers
                         showChannel.Price = channel.Price;
                         showChannel.participationChannel = ((userComment * 100) / listComments.Count()).ToString();
                         showChannel.ImgUrl = channel.ImgUrl;
+                        showChannel.OwnerName = firstName + " " + lastName;
+                        showChannel.CountVotes = db.SelectParam<VoteChannel>(vt => vt.ChannelId == id).Select(vt => vt.Score).Count();
+                        
                     }
                 }
             }
@@ -246,6 +330,9 @@ namespace Nimbus.Web.API.Controllers
             return showChannel;
         }
                
+        
+       
+                   
         /// <summary>
         /// visualizar 'meus canais'
         /// </summary>

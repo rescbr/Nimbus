@@ -180,6 +180,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
+    <Content Include="images\person_icon.png" />
     <Content Include="images\Utils\Jcrop.gif" />
     <Content Include="Scripts\ckeditor\ckeditor.js" />
     <Content Include="Scripts\ckeditor\config.js" />
@@ -596,6 +597,7 @@
     <Content Include="Website\Views\Shared\_Layout.cshtml" />
     <Content Include="Scripts\ckeditor\skins\kama\readme.md" />
     <Content Include="Website\Views\Web.config" />
+    <Content Include="Website\Views\Channels.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\Controllers\DatabaseController.cs" />
@@ -614,6 +616,8 @@
     <Compile Include="Configuration.cs" />
     <Compile Include="Utils\AzureBlob.cs" />
     <Compile Include="Utils\ImageManipulation.cs" />
+    <Compile Include="Website\Controllers\ChannelController.cs" />
+    <Compile Include="Website\Models\ChannelModel.cs" />
     <Compile Include="_Startup\DatabaseStartup.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="Global.asax.cs">

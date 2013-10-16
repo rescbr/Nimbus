@@ -40,9 +40,9 @@ namespace Nimbus.Web.Website.Controllers
                         FirstName = newAccount.FirstName,
                         LastName = newAccount.LastName,
                         Password = newAccount.Password,
-                        State = newAccount.State
-
-                        ,BirthDate = DateTime.Now
+                        State = newAccount.State,
+                        AvatarUrl = "http://www.portalnimbus.com.br/images/person_icon.png",
+                        BirthDate = DateTime.Now
                     };
                     userapi.CreateProfile(newUser);
                     

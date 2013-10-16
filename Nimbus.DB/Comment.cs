@@ -14,11 +14,14 @@ namespace Nimbus.DB
 
         public int UserId { get; set; }
 
+        public int ChannelId { get; set; }
+
         public int TopicId { get; set; }
 
         public DateTime PostedOn { get; set; }
         public bool Visible { get; set; }
         public string Text { get; set; }
 
+       
     }
 }
