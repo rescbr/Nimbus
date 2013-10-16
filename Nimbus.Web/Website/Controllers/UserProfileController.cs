@@ -71,7 +71,7 @@ namespace Nimbus.Web.Website.Controllers
             //nome final = onde vai ser armazendo
             //pega o caminho da pasta que vai ser gravado o arquivo e sava
             //retorna a img JA salva  para o json colocar na tela 
-            return Json(new { url = nomeFinal });            
+            return Json(new { url = pathFinal });            
         }
 
         [Authorize]
