@@ -271,16 +271,20 @@ namespace Nimbus.Web.API.Controllers
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
                     Role role = db.SelectParam<Role>(rl => rl.ChannelId == id && rl.UserId == NimbusUser.UserId).FirstOrDefault();
-                    if (role.ChannelMagager == true)
-                        roles.Add("channelmanager");
-                    if (role.MessageManager == true)
-                        roles.Add("messagemanager");
-                    if (role.ModeratorManager == true)
-                        roles.Add("moderatormanager");
-                    if (role.TopicManager == true)
-                        roles.Add("topicmanager");
-                    if (role.UserManager == true)
-                        roles.Add("usermanager");                        
+                    if (role != null)
+                    {
+                        if (role.ChannelMagager == true)
+                            roles.Add("channelmanager");
+                        if (role.MessageManager == true)
+                            roles.Add("messagemanager");
+                        if (role.ModeratorManager == true)
+                            roles.Add("moderatormanager");
+                        if (role.TopicManager == true)
+                            roles.Add("topicmanager");
+                        if (role.UserManager == true)
+                            roles.Add("usermanager");
+                    }
+                      
                 }
             }
             catch (Exception ex)
@@ -311,28 +315,34 @@ namespace Nimbus.Web.API.Controllers
                     Channel channel = db.SelectParam<Channel>(ch => ch.Visible == true && ch.Id == id).FirstOrDefault();
 
                     #region verifica permissão
-                    if (channel.Price > 0 || channel.IsPrivate == true)
+                    if (channel != null)
                     {
-                        bool paid = Paid(id);
-                        bool accepted = IsAccepted(id);
-
-                        if (paid == true || accepted == true ) 
-                        { 
-                            allow = true;
-                        }
-                        else
+                        if (channel.Price > 0 || channel.IsPrivate == true)
                         {
-                            allow = false;
-                            if (paid == false)
+                            bool paid = Paid(id);
+                            bool accepted = IsAccepted(id);
+
+                            if (paid == true || accepted == true)
                             {
-                                showChannel.messageAlert = alert.AlertPay;
+                                allow = true;
                             }
-                            else if( accepted == false)
+                            else
                             {
-                                showChannel.messageAlert = alert.AlertPrivate;               
+                                allow = false;
+                                if (paid == false)
+                                {
+                                    showChannel.messageAlert = alert.AlertPay;
+                                }
+                                else if (accepted == false)
+                                {
+                                    showChannel.messageAlert = alert.AlertPrivate;
+                                }
                             }
                         }
-                    }
+                        else 
+                        allow = true;
+                    
+                    } 
                     #endregion
 
                     if (allow == true)
@@ -348,7 +358,12 @@ namespace Nimbus.Web.API.Controllers
                         showChannel.OrganizationId = channel.OrganizationId;
                         showChannel.OwnerId = channel.OwnerId;
                         showChannel.Price = channel.Price;
-                        showChannel.participationChannel = ((userComment * 100) / listComments.Count()).ToString();
+                        if (userComment > 0 && listComments.Count > 0)
+                        {
+                            showChannel.participationChannel = ((userComment * 100) / listComments.Count()).ToString();
+                        }
+                        else
+                            showChannel.participationChannel = "0%";
                         showChannel.ImgUrl = channel.ImgUrl;
                         showChannel.OwnerName = firstName + " " + lastName;
                         showChannel.CountVotes = db.SelectParam<VoteChannel>(vt => vt.ChannelId == id).Select(vt => vt.Score).Count();

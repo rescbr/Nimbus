@@ -119,7 +119,7 @@ namespace Nimbus.Web.API.Controllers
                 {
                    int idOrg = NimbusOrganization.Id ;
 
-                   //busca todos topicos do canal da organizacao
+                   //verifica se o canal que esta tentando acessar é válido e existe
                    if (channelID > 0)
                    {
                        bool isValid = db.SelectParam<Channel>(ch => ch.Id == channelID && ch.Visible == true && ch.OrganizationId == idOrg)
@@ -133,33 +133,43 @@ namespace Nimbus.Web.API.Controllers
                            idChannel = null;
                        }
                    }
-                   //busca todos os topicos da categoria da organizacao
+                   //busca todos os canais da categoria da organizacao
                    else if (categoryID > 0)
                    {
 
                        idChannel = db.SelectParam<Channel>(ch => ch.OrganizationId == idOrg && ch.Visible == true && ch.CategoryId == categoryID)
                                                                            .Select(ch => ch.Id).ToList();
                    }
-                   //busca todos os topicos em geral da organizacao                      
+                   //busca todos os canais em geral da organizacao                      
                    else
                    {
                        idChannel = db.SelectParam<Channel>(ch => ch.OrganizationId == idOrg && ch.Visible == true)
                                                                              .Select(ch => ch.Id).ToList();
                    }
-                                                    
 
-                   tpcList = (from tpc in db.SelectParam<Topic>(tp => tp.Visibility == true && idChannel.Contains(tp.ChannelId))
-                              from count in db.SelectParam<ViewByTopic>(vt => vt.TopicId == tpc.Id).Select(vt => vt.CountView)
-                              select new TopicBag()
-                              {
-                                  Id = tpc.Id,
-                                  Description = tpc.Description,
-                                  Title = tpc.Title,
-                                  TopicType = tpc.TopicType,
-                                  ImgUrl = tpc.ImgUrl,
-                                  LastModified = tpc.LastModified,
-                                  Count = count
-                              }).ToList();               
+                   if (idChannel.Count > 0)
+                   {
+                       List<Topic> topic = db.SelectParam<Topic>(tp => tp.Visibility == true).Where(t => idChannel.Contains(t.Id)).ToList();
+                                                                      
+                       if (topic.Count > 0)
+                       {
+                           foreach (var item in topic)
+                           {
+                               int count = db.SelectParam<ViewByTopic>(vt => vt.TopicId == item.Id).Select(vt => vt.CountView).FirstOrDefault();
+                               TopicBag bag = new TopicBag()
+                               {
+                                   Id = item.Id,
+                                   Description = item.Description,
+                                   Title = item.Title,
+                                   TopicType = item.TopicType,
+                                   ImgUrl = item.ImgUrl,
+                                   LastModified = item.LastModified,
+                                   Count = count
+                               };
+                               tpcList.Add(bag);
+                           }
+                       }
+                   }   
                 }
             }
             catch (Exception ex)
