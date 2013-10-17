@@ -4,11 +4,6 @@
     Layout = "~/Website/Views/Shared/_Layout.cshtml";
     }
 
-@Scripts.Render(("~/Scripts/modal.js"))
-@Styles.Render(("~/Styles/modal.css"))
-
-@Scripts.Render(("~/Scripts/ckeditor/ckeditor.js"))
-@Scripts.Render(("~/Scripts/jquery-2.0.3.js"))
 @Scripts.Render(("~/Scripts/jquery.form.js"))
 
 @Scripts.Render(("~/Scripts/jquery.Jcrop.js"))
@@ -157,18 +152,6 @@
 </div>
 
 @*Sempre manter no fim da página*@
-<script type="text/javascript">
-    CKEDITOR.replace('txtTextMsg', {
-        toolbar: [
-            { name: 'document', items: ['Source', '-', 'NewPage', 'Preview', '-', 'Templates'] },	// Defines toolbar group with name (used to create voice label) and items in 3 subgroups.
-            ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo'],			// Defines toolbar group without name.
-            '/',																					// Line break - next group will be placed in new line.
-            { name: 'basicstyles', items: ['Bold', 'Italic'] }
-        ]
-    });
-</script>
-
-
 <script type="text/javascript">
     var jcrop;
 
