@@ -427,6 +427,7 @@ div.PostFoBoxR_l {
 
 /*------------------ User Profile --------------------*/
 div.ProBar {
+    float:              left;
     background:         #FFFFFF;
     margin-left:        20px;
     width:              264px;
@@ -442,7 +443,7 @@ div.ProBar {
 div.ProfileImg {
     background:         url();
     width:              262px;
-    height:             200px;
+    height:             262px;
     border:             1px solid #BE1E2D;
     margin-bottom:      24px;
 }
@@ -540,7 +541,7 @@ nav.ProfTopBar {
 
 /*Tab*/
 div.WrapperUser {
-    margin-left:        312px;
+    float:              left;
 }
 
 div.TabContent {
