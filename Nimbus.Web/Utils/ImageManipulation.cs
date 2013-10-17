@@ -11,6 +11,8 @@ namespace Nimbus.Web.Utils
 {
     public class ImageManipulation
     {
+        public int Width { get { return img.Width; } }
+        public int Height { get { return img.Height; } }
         Image img;
 
         public ImageManipulation(Stream input)

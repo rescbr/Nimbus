@@ -1,16 +1,15 @@
-﻿using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Blob;
-using Nimbus.Web.Security;
+﻿using Nimbus.Web.Security;
 using Nimbus.Web.Utils;
 using Nimbus.Web.Website.Models;
-using System.Drawing;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
-using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Web.Mvc;
-
-
+using ServiceStack.OrmLite;
+using Nimbus.DB.ORM;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Nimbus.Web.Website.Controllers
 {
@@ -37,7 +36,7 @@ namespace Nimbus.Web.Website.Controllers
 
         [Authorize]
         [HttpPost]
-        public ActionResult Upload()
+        public async Task<ActionResult> Upload()
         {
             if (Request.Files.Count != 1)
             {
@@ -51,38 +50,60 @@ namespace Nimbus.Web.Website.Controllers
                 return Json(new { error = "Too Large" });
             }
 
-            var nomeFinal = "fullsize-" + NimbusUser.UserId;
+            var nomeFinal = "-fullsize-" + NimbusUser.UserId;
 
             HMACMD5 md5 = new HMACMD5(NimbusConfig.GeneralHMACKey);
             md5.ComputeHash(Encoding.Unicode.GetBytes(nomeFinal));
-            nomeFinal = Base32.ToString(md5.Hash) + nomeFinal + ".jpg";
-            
+            nomeFinal = Base32.ToString(md5.Hash).ToLower() + nomeFinal + ".jpg";
+
             //3x o tamanho máximo
             var image = new ImageManipulation(Request.Files[0].InputStream);
-            image.Resize(800, 600);
+            if (image.Width <= 262 && image.Height <= 262)
+            {
+                //aumenta a imagem, mesmo perdendo definição
+                image.Resize(262, 262);
+            }
+            else if (image.Width <= 600 && image.Height <= 450)
+            {
+                //mantém a imagem no tamanho original
+            }
+            else { 
+                //reduz a imagem
+                image.Resize(600, 450);
+            }
 
             var imageStream = image.SaveToJpeg();
 
             var blob = new AzureBlob("avatarupload", nomeFinal);
             blob.UploadStreamToAzure(imageStream);
-            
+
             var pathFinal = blob.BlockBlob.Uri.AbsoluteUri.Replace("https://", "http://");
 
             //pega o nome do arquivo
             //nome final = onde vai ser armazendo
             //pega o caminho da pasta que vai ser gravado o arquivo e sava
             //retorna a img JA salva  para o json colocar na tela 
-            return Json(new { url = pathFinal });            
+            return Json(new { url = pathFinal });
         }
 
         [Authorize]
         [HttpPost]
-        public ActionResult Crop()
+        public async Task<ActionResult> Crop()
         { //262 x 100
-            var x1 = int.Parse(Request.Form["x1"]);
-            var x2 = int.Parse(Request.Form["x2"]);
-            var y1 = int.Parse(Request.Form["y1"]);
-            var y2 = int.Parse(Request.Form["y2"]);
+            int x1, x2, y1, y2 = 0;
+
+            try
+            {
+                x1 = int.Parse(Request.Form["x1"]);
+                x2 = int.Parse(Request.Form["x2"]);
+                y1 = int.Parse(Request.Form["y1"]);
+                y2 = int.Parse(Request.Form["y2"]);
+            }
+            catch
+            {
+                Response.StatusCode = (int)System.Net.HttpStatusCode.BadRequest;
+                return Json(new { error = "Invalid size" });
+            }
 
             int largura = x2 - x1;
             int altura = y2 - y1;
@@ -101,11 +122,11 @@ namespace Nimbus.Web.Website.Controllers
             }
 
             //pega a imagem do azure
-            var nomeImagemOriginal = "fullsize-" + NimbusUser.UserId;
+            var nomeImagemOriginal = "-fullsize-" + NimbusUser.UserId;
 
             HMACMD5 md5 = new HMACMD5(NimbusConfig.GeneralHMACKey);
             md5.ComputeHash(Encoding.Unicode.GetBytes(nomeImagemOriginal));
-            nomeImagemOriginal = Base32.ToString(md5.Hash) + nomeImagemOriginal + ".jpg";
+            nomeImagemOriginal = Base32.ToString(md5.Hash).ToLower() + nomeImagemOriginal + ".jpg";
 
             Stream imgResize = null;
             var origBlob = new AzureBlob("avatarupload", nomeImagemOriginal);
@@ -120,17 +141,24 @@ namespace Nimbus.Web.Website.Controllers
 
             origBlob.Delete();
 
-            var nomeImgAvatar = "avatar-" + NimbusUser.UserId;
+            var nomeImgAvatar = "-avatar-" + NimbusUser.UserId;
             md5.ComputeHash(Encoding.Unicode.GetBytes(nomeImagemOriginal));
-            nomeImgAvatar = Base32.ToString(md5.Hash) + nomeImagemOriginal + ".jpg";
+            nomeImgAvatar = Base32.ToString(md5.Hash).ToLower() + nomeImgAvatar + ".jpg";
 
             var blob = new AzureBlob("avatarupload", nomeImgAvatar);
             blob.UploadStreamToAzure(imgResize);
 
             var pathFinal = blob.BlockBlob.Uri.AbsoluteUri.Replace("https://", "http://");
 
+            using (var db = DatabaseFactory.OpenDbConnection())
+            {
+                var user = db.Where<User>(u => u.Id == NimbusUser.UserId).FirstOrDefault();
+                user.AvatarUrl = pathFinal;
+                db.Save(user);
+            }
+
             //depois que salvar no azure retorna por json p mostrar na tela a imagem final
-            return Json(new { imagem_recortada = pathFinal });
+            return Json(new { url = pathFinal });
         }
     }
 }
