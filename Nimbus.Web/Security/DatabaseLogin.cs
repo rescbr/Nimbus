@@ -45,6 +45,7 @@ namespace Nimbus.Web.Security
                         FirstName = dbuser.FirstName,
                         UserId = dbuser.Id,
                         LastName = dbuser.LastName,
+                        AvatarUrl = dbuser.AvatarUrl
                     });
                     return true;
                 } 

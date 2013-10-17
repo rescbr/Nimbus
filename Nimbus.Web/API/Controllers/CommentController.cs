@@ -59,7 +59,7 @@ namespace Nimbus.Web.API.Controllers
                 {
                     answer.PostedOn = DateTime.Now;
                     answer.UserId = NimbusUser.UserId;
-                    answer.Visible = true;
+                    answer.Visible = true;                   
                     
                     db.Insert(answer);
                 }
@@ -108,7 +108,7 @@ namespace Nimbus.Web.API.Controllers
         /// <returns></returns>
         [Authorize]
         [HttpGet]
-        public List<CommentBag> ShowComment(int id)
+        public List<CommentBag> ShowTopicComment(int id)
         {
             List<CommentBag> listComments = new List<CommentBag>();
             try
@@ -129,7 +129,8 @@ namespace Nimbus.Web.API.Controllers
                             Text = item.Text,
                             ParentId = item.ParentId,
                             PostedOn = item.PostedOn,
-                            TopicId = item.TopicId
+                            TopicId = item.TopicId,
+                            ChannelId = item.ChannelId
                         };
                         listComments.Add(bag);
                     }
@@ -141,8 +142,43 @@ namespace Nimbus.Web.API.Controllers
             }
             return listComments;
         }
-        
-      
+
+        [Authorize]
+        [HttpGet]
+        public List<CommentBag> ShowChannelComment(int id)
+        {
+            List<CommentBag> listComments = new List<CommentBag>();
+            try
+            {
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {
+                    List<Comment> comment = db.SelectParam<Comment>(cmt => cmt.Visible == true && cmt.ChannelId == id);
+
+                    foreach (Comment item in comment)
+                    {
+                        User user = db.Select<User>("SELECT User.Id, User.AvatarUrl, User.FirstName, User.LastName FROM User WHERE User.Id = {0}", item.UserId).FirstOrDefault();
+                        CommentBag bag = new CommentBag()
+                        {
+                            AvatarUrl = user.AvatarUrl,
+                            Name = user.FirstName + " " + user.LastName,
+                            UserId = user.Id,
+                            Id = item.Id,
+                            Text = item.Text,
+                            ParentId = item.ParentId,
+                            PostedOn = item.PostedOn,
+                            TopicId = item.TopicId,
+                            ChannelId = item.ChannelId                            
+                        };
+                        listComments.Add(bag);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+            }
+            return listComments;
+        }
 
     }
 }

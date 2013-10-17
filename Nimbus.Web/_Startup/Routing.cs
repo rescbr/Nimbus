@@ -12,6 +12,11 @@ namespace Nimbus.Web.Startup
 {
     public static class NimbusRouting
     {
+        public static void RegisterSignalR(RouteCollection routes)
+        {
+            routes.MapHubs();
+        }
+
         public static void RegisterWebAPIRoutes(HttpConfiguration httpConfiguration)
         {
             httpConfiguration.Services.Replace(typeof(IHttpControllerSelector),

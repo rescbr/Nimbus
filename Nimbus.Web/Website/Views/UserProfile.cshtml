@@ -2,75 +2,214 @@
 @{
     ViewBag.Title = "Home";
     Layout = "~/Website/Views/Shared/_Layout.cshtml";
-    }
+}
+
+@Scripts.Render(("~/Scripts/modal.js"))
+@Styles.Render(("~/Styles/modal.css"))
+
+@Scripts.Render(("~/Scripts/ckeditor/ckeditor.js"))
+@Scripts.Render(("~/Scripts/jquery-2.0.3.js"))
+@Scripts.Render(("~/Scripts/jquery.form.js"))
+
+@Scripts.Render(("~/Scripts/jquery.Jcrop.js"))
+@Styles.Render(("~/Styles/jquery.Jcrop.css"))
+
+
+<div class="SendMessage">
+    <p><a href="#modal-text" class="call-modal">Enviar Mensagem</a></p> <!-- clicavel -->
+</div>
 
 <div class="ProBar">
     <div class="ProfileImg">
-        <img src="@Model.User.AvatarUrl" alt="@Model.User.FirstName" <!--title="blabla" --> />
+        @if (Model.User.Id == Model.CurrentUser.UserId)
+        {
+            <a href="#modal-img" class="call-modal"><img src="@Model.User.AvatarUrl" alt="Avatar" title="Editar Avatar" id="useravatar" /></a>
+        }
+        else
+        {
+            <img src="@Model.User.AvatarUrl" alt="@Model.User.FirstName" title="Avatar" id="useravatar" />
+        }
     </div>
 
     @*Se for o usuário do perfil*@
-    @if(Model.User.Id == Model.CurrentUser.UserId)
+    @if (Model.User.Id == Model.CurrentUser.UserId)
     {
-    <div class="ProfileEdit">
-        <p>Edit</p><!--clicavel-->
-    </div>
+        <div class="ProfileEdit">
+            <p>Edit</p><!--clicavel-->
+        </div>
     }
     <div class="AboutUser">
         <h1>@Model.User.FirstName @Model.User.LastName</h1>
         <p>Idade: @Model.User.Age</p>
-       @if(!string.IsNullOrEmpty(Model.User.City) && !string.IsNullOrEmpty(Model.User.State))
-       {
-           <p>@Model.User.City - @Model.User.State</p>
-       } 
-         @if(!string.IsNullOrEmpty(Model.User.Occupation))
-         {  
+        @if (!string.IsNullOrEmpty(Model.User.City) && !string.IsNullOrEmpty(Model.User.State))
+        {
+            <p>@Model.User.City - @Model.User.State</p>
+        }
+        @if (!string.IsNullOrEmpty(Model.User.Occupation))
+        {
             <p>Profissão:@Model.User.Occupation</p>
-         }
-         @if(!string.IsNullOrEmpty(Model.User.Interest))
-         {
+        }
+        @if (!string.IsNullOrEmpty(Model.User.Interest))
+        {
             <p>Interesses: @Model.User.Interest</p>
-         }
-         @if(!string.IsNullOrEmpty(Model.User.Experience))
-         {
+        }
+        @if (!string.IsNullOrEmpty(Model.User.Experience))
+        {
             <p>Experiências: @Model.User.Experience</p>
-         }
-         @if(!string.IsNullOrEmpty(Model.User.About))
-         {
-             <p>Outras informações: </p>
-             <p class="AboutUser-other">@Model.User.About</p>
-         }
-        
+        }
+        @if (!string.IsNullOrEmpty(Model.User.About))
+        {
+            <p>Outras informações: </p>
+            <p class="AboutUser-other">@Model.User.About</p>
+        }
+
     </div>
 
     @*Se não for o usuário*@
-    @if(Model.User.Id != Model.CurrentUser.UserId)
+    @if (Model.User.Id != Model.CurrentUser.UserId)
     {
-    <div class="SendMessage">
-        <p>Enviar Mensagem</p> <!-- clicavel -->
-    </div>
+        <div class="SendMessage">
+            <p><a href="#modal-text" class="call-modal">Enviar Mensagem</a></p> <!-- clicavel -->
+        </div>
     }
     else
     {
-    <div class="Participation">
-        <h1>Participação</h1>
-        <p>@Model.User.Interaction %</p>
-    </div>
+        <div class="Participation">
+            <h1>Participação</h1>
+            <p>@Model.User.Interaction %</p>
+        </div>
     }
     <div class="ChanPaid">
         <h1>Canais Pagos</h1>
         <div class="Channels">
             @foreach (var item in Model.ChannelPaid)
-            {             
-                 <div class="ChanPaidImg">
-                     <img src="@item.ImgUrl" alt="@item.Name" <!--title="blabla-->" /> 
-                 </div>              
+            {
+                <div class="ChanPaidImg">
+                    <img src="@item.ImgUrl" alt="@item.Name"><!--title="blabla-->" />
+                </div>
             }
         </div>
     </div>
 
 </div>
 
+@*Modal section*@
+<section class="semantic-content" id="modal-text" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
+    <div class="modal-inner">
+        <header id="modal-label"><!-- Header --></header>
+        <div class="modal-content">
+            <!-- The modals content -->
+            <p>Para: @Model.User.FirstName @Model.User.LastName</p>
+            <p>
+                Assunto:
+                <input name="inpTitleMsg" type="text" maxlength="100" />
+            </p>
+            <p>
+                <textarea id="txtTextMsg" name="txtTextMsg" rows="10" cols="60" required class="ckeditor"></textarea>
+            </p>
+        </div>
+        <footer>
+            <!-- Footer -->
+            <button>Enviar</button>
+        </footer>
+    </div>
+
+    <a href="#!" class="modal-close" title="Close this modal" data-close="Close"
+       data-dismiss="modal">×</a>
+</section>
+
+<section class="semantic-content" id="modal-img" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
+    <div class="modal-inner">
+        <header id="modal-label">
+            <!-- Header -->
+            Editar avatar
+        </header>
+        <div class="modal-content">
+            <!-- The modals content -->
+            <form action='@Url.Action("Upload")' method="post" enctype="multipart/form-data" name="imagem_original">
+                <input type="file" name="imagem" />
+                <input type="submit" value="Salvar" class="hidden" id="upload" />
+            </form>
+            <form action='@Url.Action("Crop")' method="post" enctype="multipart/form-data" name="crop">
+                <input type="hidden" name="url" />
+                <input type="hidden" name="x1" id="x1" />
+                <input type="hidden" name="x2" id="x2" />
+                <input type="hidden" name="y1" id="y1" />
+                <input type="hidden" name="y2" id="y2" />
+                <input type="submit" value="Recortar" class="hidden" id="recortar" />
+            </form>
+            <img src="" class="hidden" id="imagem_crop" />
+        </div>
+        <footer>
+            <!-- Footer -->
+        </footer>
+    </div>
+    <a href="#!" class="modal-close" title="Close this modal" data-close="Close"
+       data-dismiss="modal">×</a>
+</section>
+
 <div style="float:right;">
     @RenderPage("~/Website/Views/PrivateProfileTopBar.cshtml")
 </div>
+
+@*Sempre manter no fim da página*@
+<script type="text/javascript">
+    CKEDITOR.replace('txtTextMsg', {
+        toolbar: [
+            { name: 'document', items: ['Source', '-', 'NewPage', 'Preview', '-', 'Templates'] },	// Defines toolbar group with name (used to create voice label) and items in 3 subgroups.
+            ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo'],			// Defines toolbar group without name.
+            '/',																					// Line break - next group will be placed in new line.
+            { name: 'basicstyles', items: ['Bold', 'Italic'] }
+        ]
+    });
+</script>
+
+
+<script type="text/javascript">
+    var jcrop;
+
+    $(document).ready(function () {
+
+        $(document).on('change', 'input[name=imagem]', function () {
+            $("#upload").click();
+        });
+
+        $('form[name=imagem_original]').ajaxForm({
+            dataType: 'json',
+            success: function (data) {
+                $('input[name=url]').val(data.url);
+                $("#imagem_crop").attr("src", data.url);
+                $("#imagem_crop").removeClass("hidden");
+                ativarJCrop();
+            }
+        });
+        $('form[name=crop]').ajaxForm({
+            dataType: 'json',
+            success: function (data) {
+                //jcrop.destroy();
+                $("#useravatar").attr("src", data.url);
+                //document.getElementById("useravatar").src = data.url;
+                //fechar modal aqui
+            }
+        });
+    });
+
+    function showCoords(c) {
+        $("#x1").val(c.x);
+        $("#x2").val(c.x2);
+        $("#y1").val(c.y);
+        $("#y2").val(c.y2);
+
+        $("#recortar").removeClass("hidden");
+    }
+
+    function ativarJCrop() {
+        $('#imagem_crop').Jcrop({
+            bgColor: 'black',
+            minSize: [262, 262],
+            bgOpacity: .4,
+            aspectRatio: 1,
+            onSelect: showCoords
+        });
+    }
+</script>
