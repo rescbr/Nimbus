@@ -27,6 +27,7 @@ namespace Nimbus.Web.Website.Models
 
         public List<string> RolesCurrentUser { get; set; }
 
+        public List<User> CcMessageReceiver { get; set; }
         
     }
 }

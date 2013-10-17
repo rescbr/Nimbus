@@ -223,6 +223,40 @@ namespace Nimbus.Web.API.Controllers
         }
 
         /// <summary>
+        /// Método que retorna os usuarios que moderam o canal com permissao p/ ver/responder as mensagens
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [Authorize]
+        [HttpGet]
+        public List<User> GetMessageModerators(int id = 0)
+        {
+            List<int> idList = new List<int>();
+            List<User> moderators = new List<User>();
+            try
+            {
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {
+                    idList = db.SelectParam<Role>(rl => rl.ChannelId == id).Where(rl => rl.ChannelMagager == true ||
+                                                                                        rl.MessageManager == true).Select(user => user.UserId).ToList();
+                    foreach (int item in idList)
+                    {
+                        User user = db.SelectParam<User>(us => us.Id == item).FirstOrDefault();
+                        if (user != null)
+                        {
+                            moderators.Add(user);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+            }
+            return moderators;
+        }
+
+        /// <summary>
         /// método para retornar em string as permissoes do current user
         /// </summary>
         /// <param name="id"></param>

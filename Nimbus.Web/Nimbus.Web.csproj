@@ -599,6 +599,8 @@
     <Content Include="Scripts\ckeditor\skins\kama\readme.md" />
     <Content Include="Website\Views\Web.config" />
     <Content Include="Website\Views\Channels.cshtml" />
+    <Content Include="Website\Views\ChannelPrivateTopBar.cshtml" />
+    <Content Include="Website\Views\ChannelPublicTopBar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\Controllers\DatabaseController.cs" />

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using ServiceStack.OrmLite;
 
 namespace Nimbus.Web.Website.Controllers
 {
@@ -17,7 +18,7 @@ namespace Nimbus.Web.Website.Controllers
             var msgApi = ClonedContextInstance<API.Controllers.MessageController>();
             var topicApi = ClonedContextInstance<API.Controllers.TopicController>();
             var commentApi = ClonedContextInstance<API.Controllers.CommentController>();
-                        
+                                    
             var channel = new ChannelModel()
             {
                 Tags = channelApi.ShowTagChannel(channelId),
@@ -27,8 +28,8 @@ namespace Nimbus.Web.Website.Controllers
                 Messages = msgApi.ChannelReceivedMessages(channelId),
                 Comments = commentApi.ShowChannelComment(channelId),
                 CurrentUser = NimbusUser,
-                RolesCurrentUser = channelApi.ReturnRolesUser(channelId)
-                
+                RolesCurrentUser = channelApi.ReturnRolesUser(channelId),
+                CcMessageReceiver = channelApi.GetMessageModerators(channelId)
             };
             return View("Channels", channel);
         }

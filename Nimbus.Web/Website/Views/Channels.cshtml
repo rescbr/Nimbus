@@ -55,8 +55,50 @@
     {
        <button>Editar Tags</button>                                                          
     }
-    
+      
     <div id="divCanaisRelacionados">
         @*TODO*@
     </div>
 </div>
+
+<div style="float:right;">
+    @if (Model.CurrentChannel.OwnerId == Model.CurrentUser.UserId || Model.RolesCurrentUser.Contains("channelmanager") || Model.RolesCurrentUser.Contains("topicmanager")
+        || Model.RolesCurrentUser.Contains("usermanager") || Model.RolesCurrentUser.Contains("messagemanager"))
+    { 
+         @RenderPage("~/Website/Views/ChannelPrivateTopBar.cshtml")
+    }
+    else
+    {
+        @RenderPage("~/Website/Views/ChannelPublicTopBar.cshtml")                                                      
+    }
+</div>
+
+<section class="semantic-content" id="modal-text" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
+    <div class="modal-inner">
+        <header id="modal-label"><!-- Header --></header>
+        <div class="modal-content">
+            <!-- The modals content -->
+            <p>Para: @Model.CurrentChannel.OwnerName</p>
+            <p>Cc:
+             @foreach (var item in Model.Moderators)
+             {
+                 @item.FirstName @item.LastName
+             }
+            </p>
+            <p>
+                Assunto:
+                <input name="inpTitleMsg" type="text" maxlength="100" />
+            </p><br />
+            <p>
+                <textarea id="txtTextMsg" name="txtTextMsg" rows="10" cols="60" required class="ckeditor"></textarea>
+            </p>
+        </div>
+        <footer>
+            <!-- Footer -->
+            <button>Enviar</button>
+        </footer>
+    </div>
+
+    <a href="#!" class="modal-close" title="Close this modal" data-close="Close"
+       data-dismiss="modal">×</a>
+</section>
