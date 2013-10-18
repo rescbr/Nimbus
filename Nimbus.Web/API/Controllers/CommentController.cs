@@ -123,14 +123,15 @@ namespace Nimbus.Web.API.Controllers
                         CommentBag bag = new CommentBag()
                         {
                             AvatarUrl = user.AvatarUrl,
-                            Name = user.FirstName + " " + user.LastName,
+                            UserName = user.FirstName + " " + user.LastName,
                             UserId = user.Id,
                             Id = item.Id,
                             Text = item.Text,
                             ParentId = item.ParentId,
                             PostedOn = item.PostedOn,
                             TopicId = item.TopicId,
-                            ChannelId = item.ChannelId
+                            ChannelId = item.ChannelId,
+                            TopicName =db.SelectParam<Topic>(t => t.Id == item.TopicId).Select(t => t.Title).FirstOrDefault()
                         };
                         listComments.Add(bag);
                     }
