@@ -76,13 +76,46 @@ namespace Nimbus.Web
                             BirthDate = DateTime.Now
                         };
                         db.Save(sysuser);
-
+                                               
                         var orguser = new DB.ORM.OrganizationUser()
                         {
                             OrganizationId = 1,
                             UserId = 1
                         };
                         db.Save(orguser);
+
+                        var categoria = new DB.ORM.Category()
+                        {
+                            Id = 1,
+                            ImageUrl = "images/Category/saude.png" ,
+                            Name = "Saude",
+                            ColorCode = "green"
+                            
+                        };
+                        db.Save(categoria);
+
+                        var channel = new DB.ORM.Channel()
+                        {
+                            Id = 1,
+                            CategoryId =1,
+                            CreatedOn = DateTime.Now,
+                            Description = "Primeiro channel criado para testes",
+                            Followers = 0,
+                            ImgUrl = "images/Category/saude.png",
+                            IsCourse = false,
+                            IsPrivate= false,
+                            LastModification = DateTime.Now,
+                            Name = "Channel Teste Saude",
+                            OpenToComments = true,
+                            OrganizationId = 1,
+                            OwnerId = 1,
+                            Price = 0,
+                            Visible = true
+
+                        };
+                        db.Save(channel);
+
+
                         trans.Commit();
                     }
                     
