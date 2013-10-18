@@ -119,7 +119,7 @@ namespace Nimbus.Web.Security
     [Serializable]
     public class NSCInfo
     {
-        public NimbusUser User { get; set; }
+        public int UserId { get; set; }
         public DateTime TokenGenerationDate { get; set; }
         public DateTime TokenExpirationDate { get; set; }
     }

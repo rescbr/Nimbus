@@ -62,15 +62,18 @@ namespace Nimbus.Web.Website.Controllers
                         {
                             TokenGenerationDate = DateTime.Now.ToUniversalTime(),
                             TokenExpirationDate = DateTime.Now.AddDays(EXPIRY_DAYS).ToUniversalTime(),
-                            User = (loggedInUser.Identity as NimbusUser)
+                            UserId = (loggedInUser.Identity as NimbusUser).UserId
                         },
                         out token);
-
+                    
                     //Lembre-se de expirar o cookie também
                     var loginCookie = new HttpCookie("nsc-session", authToken)
                     {
                         Expires = DateTime.Now.AddDays(EXPIRY_DAYS)
                     };
+                    
+                    //adiciona objeto do usuário logado à sessão
+                    Session["user"] = loggedInUser;
 
                     Response.Cookies.Add(loginCookie);
                     return Redirect(login.RedirectURL);

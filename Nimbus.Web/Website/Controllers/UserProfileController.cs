@@ -157,6 +157,7 @@ namespace Nimbus.Web.Website.Controllers
                 db.Save(user);
             }
 
+
             //depois que salvar no azure retorna por json p mostrar na tela a imagem final
             return Json(new { url = pathFinal });
         }
