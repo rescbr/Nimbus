@@ -152,24 +152,28 @@ namespace Nimbus.Web.API.Controllers
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    List<Comment> comment = db.SelectParam<Comment>(cmt => cmt.Visible == true && cmt.ChannelId == id);
-
-                    foreach (Comment item in comment)
+                    if (db.SelectParam<Channel>(c => c.Visible == true).Exists(c => c.Id == id))
                     {
-                        User user = db.Select<User>("SELECT User.Id, User.AvatarUrl, User.FirstName, User.LastName FROM User WHERE User.Id = {0}", item.UserId).FirstOrDefault();
-                        CommentBag bag = new CommentBag()
+                        List<Comment> comment = db.SelectParam<Comment>(cmt => cmt.Visible == true && cmt.ChannelId == id);
+
+                        foreach (Comment item in comment)
                         {
-                            AvatarUrl = user.AvatarUrl,
-                            Name = user.FirstName + " " + user.LastName,
-                            UserId = user.Id,
-                            Id = item.Id,
-                            Text = item.Text,
-                            ParentId = item.ParentId,
-                            PostedOn = item.PostedOn,
-                            TopicId = item.TopicId,
-                            ChannelId = item.ChannelId                            
-                        };
-                        listComments.Add(bag);
+                            User user = db.Select<User>("SELECT User.Id, User.AvatarUrl, User.FirstName, User.LastName FROM User WHERE User.Id = {0}", item.UserId).FirstOrDefault();
+                            CommentBag bag = new CommentBag()
+                            {
+                                AvatarUrl = user.AvatarUrl,
+                                UserName = user.FirstName + " " + user.LastName,
+                                UserId = user.Id,
+                                Id = item.Id,
+                                Text = item.Text,
+                                ParentId = item.ParentId,
+                                PostedOn = item.PostedOn,
+                                TopicId = item.TopicId,
+                                ChannelId = item.ChannelId,
+                                TopicName = db.SelectParam<Topic>(t => t.Id == item.TopicId).Select(t => t.Title).FirstOrDefault()
+                            };
+                            listComments.Add(bag);
+                        }
                     }
                 }
             }

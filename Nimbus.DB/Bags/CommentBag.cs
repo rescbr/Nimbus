@@ -9,6 +9,8 @@ namespace Nimbus.DB.Bags
     public class CommentBag:Comment
     {
         public string AvatarUrl { get; set; }
-        public string Name { get; set; }
+        public string UserName { get; set; }
+
+        public string TopicName { get; set; }
     }
 }

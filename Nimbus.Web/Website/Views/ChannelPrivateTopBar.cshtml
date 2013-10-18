@@ -1,4 +1,6 @@
-﻿<script type="text/javascript">
+﻿@model Nimbus.Web.Website.Models.ChannelModel
+
+<script type="text/javascript">
     //global
     currentDiv = 'divNotification';
 </script>
@@ -11,3 +13,69 @@
   Novo Tópico
   Mensagens
 *@
+
+<div id="divBarPublicChannel">
+
+</div>
+
+<div>
+    <div id="divNotifications">
+        @*ultimos topicos + ultimos comentarios*@
+    </div>
+
+    <div id="divPopularTopics">
+       @foreach (var item in Model.AllTopics.OrderByDescending(m => m.Count))
+       {
+           <div class="Post_g">
+                <div class="PostHeader_g">
+                     <h1>@item.Title</h1>
+                     <div class="PostHeImg_g">
+                         <img src="/@item.ImgUrl" alt="@item.TopicType.ToString()" title="@item.Title"> -->
+                     </div>
+                </div>
+            <div class="PostContent_g">
+                 <p>@item.Description </p>
+            </div>
+             <div class ="PostFooter_g">
+                 <div class="PostFoBoxL_g">
+                    <a>Ler mais tarde</a>
+                </div>
+                <div class="PostFoBoxR_g">
+                    <a href="/topic/@item.Id">Ler</a>
+                </div>
+            </div>
+          </div>
+
+       }
+        @if(Model.Comments.Count > 0)
+        { 
+        <div id="divComments">
+            <p>Novos Comentários</p>
+            @foreach (var item in Model.Comments)
+            {
+                <div>
+                    <input type="hidden" value="@item.Id"/>
+                    <img id="user+@item.UserId" src="@item.AvatarUrl"/>
+                    @item.UserName
+                    @item.TopicName
+                    @item.PostedOn
+                    @item.Text
+                    <a>Responder</a> @*chamar um script q cria a div abaixo desse comentario*@
+                </div>
+            }
+        </div>
+        }
+    </div>
+
+    <div id="divAllTopics">
+
+    </div>
+
+    <div id="divNewTopic">
+
+    </div>
+
+    <div id="divMessages">
+
+    </div>
+</div>
