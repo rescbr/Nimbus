@@ -21,6 +21,50 @@
 <div>
     <div id="divNotifications">
         @*ultimos topicos + ultimos comentarios*@
+        @*TODO:colocar script p 'ver mais' index de pagina*@
+        <p>Últimos tópicos</p>
+        @foreach (var item in Model.AllTopics.Take(15).OrderByDescending(m => m.LastModified))
+        {
+                <div class="Post_g">
+                    <div class="PostHeader_g">
+                        <h1>@item.Title</h1>
+                            <div class="PostHeImg_g">
+                                <img src="/@item.ImgUrl" alt="@item.TopicType.ToString()" title="@item.Title"> -->
+                            </div>
+                        </div>
+                        <div class="PostContent_g">
+                            <p>@item.Description </p>
+                            </div>
+                            <div class="PostFooter_g">
+                                <div class="PostFoBoxL_g">
+                                    <a>Ler mais tarde</a>
+                                </div>
+                                <div class="PostFoBoxR_g">
+                                    <a href="/topic/@item.Id">Ler</a>
+                                </div>
+                            </div>
+                        </div>
+
+        }
+
+        @if (Model.Comments.Count > 0)
+        {
+                <div id="divComments">
+                    <p>Novos Comentários</p>
+                    @foreach (var item in Model.Comments.Take(10).OrderByDescending(c => c.PostedOn))
+                    {
+                            <div>
+                                <input type="hidden" value="@item.Id" />
+                                <img id="user+@item.UserId" src="@item.AvatarUrl" />
+                                @item.UserName
+                                    @item.TopicName
+                                        @item.PostedOn
+                                            @item.Text
+                                                <a>Responder</a> @*chamar um script q cria a div abaixo desse comentario*@
+                                                </div>
+                    }
+                    </div>
+        }
     </div>
 
     <div id="divPopularTopics">
@@ -44,38 +88,96 @@
                     <a href="/topic/@item.Id">Ler</a>
                 </div>
             </div>
-          </div>
-
+          </div>           
+           
        }
-        @if(Model.Comments.Count > 0)
-        { 
-        <div id="divComments">
-            <p>Novos Comentários</p>
-            @foreach (var item in Model.Comments)
-            {
-                <div>
-                    <input type="hidden" value="@item.Id"/>
-                    <img id="user+@item.UserId" src="@item.AvatarUrl"/>
-                    @item.UserName
-                    @item.TopicName
-                    @item.PostedOn
-                    @item.Text
-                    <a>Responder</a> @*chamar um script q cria a div abaixo desse comentario*@
-                </div>
-            }
-        </div>
-        }
+     
     </div>
 
     <div id="divAllTopics">
+        @foreach (var item in Model.AllTopics.OrderByDescending(m => m.LastModified))
+        {
+                <div class="Post_g">
+                    <div class="PostHeader_g">
+                        <h1>@item.Title</h1>
+                            <div class="PostHeImg_g">
+                                <img src="/@item.ImgUrl" alt="@item.TopicType.ToString()" title="@item.Title"> -->
+                            </div>
+                        </div>
+                        <div class="PostContent_g">
+                            <p>@item.Description </p>
+                            </div>
+                            <div class="PostFooter_g">
+                                <div class="PostFoBoxL_g">
+                                    <a>Ler mais tarde</a>
+                                </div>
+                                <div class="PostFoBoxR_g">
+                                    <a href="/topic/@item.Id">Ler</a>
+                                </div>
+                            </div>
+                        </div>
 
+        }
     </div>
 
     <div id="divNewTopic">
+        <p>
+            Nome do tópico:
+           <input type="text" maxlength="50" min="5" required name="txtNameTopic" />
+        </p>
+        <p>
+            Imagem:
+            <label>Imagem de no máx. 5MB</label>
+        </p>
+        <p>
+            Resumo:
+            <textarea cols="10" rows="5" maxlength="150" required name="txtaDescription"></textarea>
+        </p>
+        <p>
+            Tipo:
+            <div>
+                <label id="lblVideo">Vídeo</label>
+                <label id="lblText">Artigo</label>
+                <label id="lblDiscussion">Discussão</label>
+                <label id="lblExam">Avaliação</label>
+            </div>
+        </p>
 
+        <div id="divVideo" style="display:block;"></div>
+        <div id="divText" style="display:none;"></div>
+        <div id="divDiscussion" style="display:none;"></div>
+        <div id="divExam" style="display:none;"></div>
     </div>
 
-    <div id="divMessages">
-
+   
+    <div id="divMessages" style="display:none; background-color:chartreuse;">
+            @if (Model.RolesCurrentUser.Contains("messagemanager"))
+            {
+                foreach (var item in Model.Messages)
+                {
+                        <div class="Post_m">
+                            <div class="PostHeImg_m">
+                                <img src=@item.AvatarUrl alt="blabla" title="blabla">
+                            </div>
+                            <div class="Post_Right_m">
+                                <nav class="PostHeaderLeft_m">
+                                    <ul class="sbs">
+                                        <li>@item.UserName/li>
+                                            <li>@item.Title</li>
+                                            </ul>
+                                        </nav>
+                                        <nav class="PostHeaderRight_m">
+                                            <ul class="sbs">
+                                                <li>@string.Format("{0:d/M/yyyy}", item.Date)</li>
+                                                    <li>@string.Format("{0:HH:mm}", item.Date)</li>
+                                                    </ul>
+                                                </nav>
+                                                <div class="PostContent_m">
+                                                    <p>@item.Text </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+            }
+            }
+            </div>
     </div>
-</div>
