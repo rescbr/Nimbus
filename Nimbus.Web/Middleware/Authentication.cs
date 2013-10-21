@@ -53,8 +53,8 @@ namespace Nimbus.Web.Middleware
                     if (info.TokenExpirationDate.ToUniversalTime() > DateTime.Now.ToUniversalTime())
                     {
                         //tenta pegar do cache de sessão
-                        var sessionUser = (System.Web.HttpContext.Current.Session["user"]
-                            as NimbusPrincipal);
+                        var sessionUser = (System.Web.HttpContext.Current
+                            .Session[Const.UserSession] as NimbusPrincipal);
                         if (sessionUser != null)
                         {
                             request.User = sessionUser;

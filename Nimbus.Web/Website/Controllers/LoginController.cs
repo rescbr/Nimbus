@@ -73,7 +73,7 @@ namespace Nimbus.Web.Website.Controllers
                     };
                     
                     //adiciona objeto do usuário logado à sessão
-                    Session["user"] = loggedInUser;
+                    Session[Const.UserSession] = loggedInUser;
 
                     Response.Cookies.Add(loginCookie);
                     return Redirect(login.RedirectURL);

@@ -38,6 +38,9 @@ namespace Nimbus.Web.Website.Controllers
         [HttpPost]
         public async Task<ActionResult> Upload()
         {
+            //se alterar aqui nao esqueça de mudar no metodo Crop()
+            const int dimensaoMax = 130;
+
             if (Request.Files.Count != 1)
             {
                 Response.StatusCode = (int)System.Net.HttpStatusCode.BadRequest;
@@ -58,10 +61,10 @@ namespace Nimbus.Web.Website.Controllers
 
             //3x o tamanho máximo
             var image = new ImageManipulation(Request.Files[0].InputStream);
-            if (image.Width <= 262 && image.Height <= 262)
+            if (image.Width <= dimensaoMax && image.Height <= dimensaoMax)
             {
                 //aumenta a imagem, mesmo perdendo definição
-                image.Resize(262, 262);
+                image.Resize(dimensaoMax, dimensaoMax);
             }
             else if (image.Width <= 600 && image.Height <= 450)
             {
@@ -89,7 +92,10 @@ namespace Nimbus.Web.Website.Controllers
         [Authorize]
         [HttpPost]
         public async Task<ActionResult> Crop()
-        { //262 x 100
+        { 
+            //se alterar aqui nao esqueça de mudar no metodo Crop()
+            const int dimensaoMax = 130;
+
             int x1, x2, y1, y2 = 0;
 
             try
@@ -109,10 +115,10 @@ namespace Nimbus.Web.Website.Controllers
             int altura = y2 - y1;
 
             //de acordo com o estilo no css
-            if (largura < 262 || altura < 262)
+            if (largura < dimensaoMax || altura < dimensaoMax)
             {
                 Response.StatusCode = (int)System.Net.HttpStatusCode.BadRequest;
-                return Json(new { error = "Image should be at least 262x262" });
+                return Json(new { error = "Image should be at least 130x130" });
             }
 
             if (largura != altura)
@@ -135,7 +141,7 @@ namespace Nimbus.Web.Website.Controllers
             {
                 var img = new ImageManipulation(streamImgOrig);
                 img.Crop(x1, y1, x2, y2);
-                img.Resize(262, 262);
+                img.Resize(dimensaoMax, dimensaoMax);
                 imgResize = img.SaveToJpeg();
             }
 
@@ -155,9 +161,12 @@ namespace Nimbus.Web.Website.Controllers
                 var user = db.Where<User>(u => u.Id == NimbusUser.UserId).FirstOrDefault();
                 user.AvatarUrl = pathFinal;
                 db.Save(user);
+
+                //ATENÇÃO! Ao alterar informações presentes no NimbusUser, 
+                //lembre-se de atualizar no cache também!
+                Session[Const.UserSession] = DatabaseLogin.GetNimbusPrincipal(user);
             }
-
-
+            
             //depois que salvar no azure retorna por json p mostrar na tela a imagem final
             return Json(new { url = pathFinal });
         }
