@@ -1,8 +1,10 @@
-﻿<script type="text/javascript">
+﻿@model Nimbus.Web.Website.Models.ChannelModel
+
+<script type="text/javascript">
     //global
-    currentDiv = 'divNotification';
+    currentDiv = 'divNotifications';
+    divTipoTopic = '';
 </script>
-@Scripts.Render(("~/Scripts/UserUtils.js"))
 
 @*
   Atualizações
@@ -11,3 +13,193 @@
   Novo Tópico
   Mensagens
 *@
+
+<nav class="ProfTopBar">
+    <ul class="sbs">
+        <li><a name="divNotifications" onclick="ChangeDiv(this.name);">Atualizações</a></li>
+        <li><a name="divPopularTopics" onclick="ChangeDiv(this.name);">Mais svistos</a></li>
+        <li><a name="divAllTopics" onclick="ChangeDiv(this.name);">Todos</a></li>
+        <li><a name="divNewTopic" onclick="ChangeDiv(this.name);">Novo tópico</a></li>
+        <li><a name="divMessages" onclick="ChangeDiv(this.name);">Mensagens</a></li>
+    </ul>
+</nav>
+<div>
+    <div id="divNotifications" style="display:block;">
+        @*ultimos topicos + ultimos comentarios*@
+        @*TODO:colocar script p 'ver mais' index de pagina*@
+        <p>Últimos tópicos</p>
+        @foreach (var item in Model.AllTopics.Take(15).OrderByDescending(m => m.LastModified))
+        {
+                <div class="Post_g">
+                    <div class="PostHeader_g">
+                        <h1>@item.Title</h1>
+                            <div class="PostHeImg_g">
+                                <img src="/@item.ImgUrl" alt="@item.TopicType.ToString()" title="@item.Title"> -->
+                            </div>
+                        </div>
+                        <div class="PostContent_g">
+                            <p>@item.Description </p>
+                            </div>
+                            <div class="PostFooter_g">
+                                <div class="PostFoBoxL_g">
+                                    <a>Ler mais tarde</a>
+                                </div>
+                                <div class="PostFoBoxR_g">
+                                    <a href="/topic/@item.Id">Ler</a>
+                                </div>
+                            </div>
+                        </div>
+
+        }
+
+        @if (Model.Comments.Count > 0)
+        {
+                <div id="divComments">
+                    <p>Novos Comentários</p>
+                    @foreach (var item in Model.Comments.Take(10).OrderByDescending(c => c.PostedOn))
+                    {
+                            <div>
+                                <input type="hidden" value="@item.Id" />
+                                <img id="user+@item.UserId" src="@item.AvatarUrl" />
+                                @item.UserName
+                                    @item.TopicName
+                                        @item.PostedOn
+                                            @item.Text
+                                                <a>Responder</a> @*chamar um script q cria a div abaixo desse comentario*@
+                                                </div>
+                    }
+                    </div>
+        }
+    </div>
+
+    <div id="divPopularTopics" style="display:none;">
+        @foreach (var item in Model.AllTopics.OrderByDescending(m => m.Count))
+        {
+            <div class="Post_g">
+                <div class="PostHeader_g">
+                    <h1>@item.Title</h1>
+                    <div class="PostHeImg_g">
+                        <img src="/@item.ImgUrl" alt="@item.TopicType.ToString()" title="@item.Title"> -->
+                    </div>
+                </div>
+                <div class="PostContent_g">
+                    <p>@item.Description </p>
+                </div>
+                <div class="PostFooter_g">
+                    <div class="PostFoBoxL_g">
+                        <a>Ler mais tarde</a>
+                    </div>
+                    <div class="PostFoBoxR_g">
+                        <a href="/topic/@item.Id">Ler</a>
+                    </div>
+                </div>
+            </div>
+
+        }
+
+    </div>
+
+    <div id="divAllTopics" style="display:none;">
+        @foreach (var item in Model.AllTopics.OrderByDescending(m => m.LastModified))
+        {
+            <div class="Post_g">
+                <div class="PostHeader_g">
+                    <h1>@item.Title</h1>
+                    <div class="PostHeImg_g">
+                        <img src="/@item.ImgUrl" alt="@item.TopicType.ToString()" title="@item.Title"> -->
+                    </div>
+                </div>
+                <div class="PostContent_g">
+                    <p>@item.Description </p>
+                </div>
+                <div class="PostFooter_g">
+                    <div class="PostFoBoxL_g">
+                        <a>Ler mais tarde</a>
+                    </div>
+                    <div class="PostFoBoxR_g">
+                        <a href="/topic/@item.Id">Ler</a>
+                    </div>
+                </div>
+            </div>
+
+        }
+    </div>
+
+    <div id="divNewTopic" style="display:none;">
+        <p>
+            Nome do tópico:
+            <input type="text" maxlength="50" min="5" required name="txtNameTopic" />
+        </p>
+        <p>
+            Imagem:
+            <label>Imagem de no máx. 5MB</label>
+        </p>
+        <p>
+            Resumo:<br />
+            <textarea cols="30" rows="5" maxlength="150" required name="txtaDescription"></textarea>
+        </p>
+        <p>
+            Tipo:
+            <div>
+                <label id="lblVideo" onclick="EnableDiv('divVideo');">Vídeo</label>
+                <label id="lblText" onclick="EnableDiv('divText');">Artigo</label>
+                <label id="lblDiscussion" onclick="EnableDiv('divDiscussion');">Discussão</label>
+                <label id="lblExam" onclick="EnableDiv('divExam');">Avaliação</label>
+            </div>
+        </p>
+
+        <div id="divVideo" style="display:none;">
+            <input type="text" name="iptnamevideo" value="URL do vídeo" />
+            <label>Sites aceitos: youtube, vimeo</label>
+        </div>
+
+        <div id="divText" style="display:none;">
+            <textarea id="txtArticle" required class="ckeditor"></textarea>
+        </div>
+
+        <div id="divDiscussion" style="display:none;">
+            <p>
+                Questão em debate:
+                <textarea id="txtTextMsg" required class="ckeditor"></textarea>
+            </p>
+        </div>
+
+        <div id="divExam" style="display:none;">
+            <p>
+                Ainda precisa ver como vai ser
+            </p>
+        </div>
+    </div>
+
+   
+    <div id="divMessages" style="display:none;">
+            @if (Model.RolesCurrentUser.Contains("messagemanager"))
+            {
+                foreach (var item in Model.Messages)
+                {
+                        <div class="Post_m">
+                            <div class="PostHeImg_m">
+                                <img src=@item.AvatarUrl alt="blabla" title="blabla">
+                            </div>
+                            <div class="Post_Right_m">
+                                <nav class="PostHeaderLeft_m">
+                                    <ul class="sbs">
+                                        <li>@item.UserName/li>
+                                            <li>@item.Title</li>
+                                            </ul>
+                                        </nav>
+                                        <nav class="PostHeaderRight_m">
+                                            <ul class="sbs">
+                                                <li>@string.Format("{0:d/M/yyyy}", item.Date)</li>
+                                                    <li>@string.Format("{0:HH:mm}", item.Date)</li>
+                                                    </ul>
+                                                </nav>
+                                                <div class="PostContent_m">
+                                                    <p>@item.Text </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+            }
+            }
+            </div>
+    </div>

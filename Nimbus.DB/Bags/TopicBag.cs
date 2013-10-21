@@ -9,5 +9,6 @@ namespace Nimbus.DB.Bags
     public class TopicBag:Topic
     {
         public int Count { get; set; }
+
     }
 }

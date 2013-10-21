@@ -164,7 +164,8 @@ namespace Nimbus.Web.API.Controllers
                                    TopicType = item.TopicType,
                                    ImgUrl = item.ImgUrl,
                                    LastModified = item.LastModified,
-                                   Count = count
+                                   Count = count                                  
+                                  
                                };
                                tpcList.Add(bag);
                            }

@@ -31,12 +31,12 @@ namespace Nimbus.Web
                 {
                     _databaseConnection = GetSetting("DatabaseConnectionString");
                     //Verifica se estamos no LTIA
-                    try
-                    {
-                        Dns.GetHostEntry("_are_we_at.ltia.***REMOVED***");
-                        _databaseConnection = GetSetting("LTIADatabaseConnectionString");
-                    }
-                    catch { }
+                    //try
+                    //{
+                    //    Dns.GetHostEntry("_are_we_at.ltia.***REMOVED***");
+                    //    _databaseConnection = GetSetting("LTIADatabaseConnectionString");
+                    //}
+                    //catch { }
                     
                 }
                 return _databaseConnection;

@@ -14,6 +14,7 @@ namespace Nimbus.DB
 
         public virtual int UserId { get; set; }
 
+        public bool EnableComment { get; set; }
 
         public bool Paid { get; set; }
     }

@@ -22,8 +22,7 @@
           <p>
              <a href="/userprofile/@item.Id"> @item.FirstName + @item.LastName</a>
           </p>
-        }
-   
+        }  
 
     
     <p>
@@ -103,3 +102,15 @@
     <a href="#!" class="modal-close" title="Close this modal" data-close="Close"
        data-dismiss="modal">×</a>
 </section>
+
+@*Sempre manter no fim da página*@
+<script type="text/javascript">
+    CKEDITOR.replace('txtTextMsg', {
+        toolbar: [
+            { name: 'document', items: ['Source', '-', 'NewPage', 'Preview', '-', 'Templates'] },	// Defines toolbar group with name (used to create voice label) and items in 3 subgroups.
+            ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo'],			// Defines toolbar group without name.
+            '/',																					// Line break - next group will be placed in new line.
+            { name: 'basicstyles', items: ['Bold', 'Italic'] }
+        ]
+    });
+</script>
