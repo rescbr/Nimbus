@@ -148,43 +148,44 @@ namespace Nimbus.Web.API.Controllers
         [Authorize]
         [HttpGet]
         public List<MessageBag> ChannelReceivedMessages(int id = 0)
-        {
-            //List<MessageBag> listMessage = new List<MessageBag>();
-            //try
-            //{
-            //    using (var db = DatabaseFactory.OpenDbConnection())
-            //    {
-            //        List<int> listIdMsg = db.SelectParam<Message>(r => r.ChannelId == id && r.Visible == true)
-            //                                                                   .Select(r => r.Id).ToList();
+        {          
 
-            //        foreach (int item in listIdMsg)
-            //        {
-            //            MessageBag bag = new MessageBag();
-            //            Message msg = db.SelectParam<Message>(m => m.Visible == true && m.Id == item).First();
-            //            bag.ChannelId = msg.ChannelId;
-            //            bag.Date = msg.Date;
-            //            bag.Id = msg.Id;
-            //            bag.ReadStatus = msg.ReadStatus;
-            //            bag.Receivers = msg.Receivers;
-            //            bag.SenderId = msg.SenderId;
-            //            bag.Text = msg.Text;
-            //            bag.Title = msg.Title;
-            //            bag.Visible = msg.Visible;
-            //            bag.UserName = db.SelectParam<User>(u => u.Id == msg.SenderId).Select(u => u.FirstName).FirstOrDefault()
-            //                           + " " + db.SelectParam<User>(u => u.Id == msg.SenderId).Select(u => u.LastName).FirstOrDefault();
-            //            bag.AvatarUrl = db.SelectParam<User>(u => u.Id == msg.SenderId).Select(u => u.AvatarUrl).FirstOrDefault();
+            List<MessageBag> listMessage = new List<MessageBag>();
+            try
+            {
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {
+                    List<int> listIdMsg = db.SelectParam<Message>(r => r.ChannelId == id && r.Visible == true)
+                                                                               .Select(r => r.Id).ToList();
 
-            //            listMessage.Add(bag);
-            //        }
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
-            //}
-            //if (listMessage.Count > 0)
-            //    return listMessage.OrderBy(d => d.Date).ToList();
-            //else
+                    foreach (int item in listIdMsg)
+                    {
+                        MessageBag bag = new MessageBag();
+                        Message msg = db.SelectParam<Message>(m => m.Visible == true && m.Id == item).First();
+                        bag.ChannelId = msg.ChannelId;
+                        bag.Date = msg.Date;
+                        bag.Id = msg.Id;
+                        bag.ReadStatus = msg.ReadStatus;
+                        bag.Receivers = msg.Receivers;
+                        bag.SenderId = msg.SenderId;
+                        bag.Text = msg.Text;
+                        bag.Title = msg.Title;
+                        bag.Visible = msg.Visible;
+                        bag.UserName = db.SelectParam<User>(u => u.Id == msg.SenderId).Select(u => u.FirstName).FirstOrDefault()
+                                       + " " + db.SelectParam<User>(u => u.Id == msg.SenderId).Select(u => u.LastName).FirstOrDefault();
+                        bag.AvatarUrl = db.SelectParam<User>(u => u.Id == msg.SenderId).Select(u => u.AvatarUrl).FirstOrDefault();
+
+                        listMessage.Add(bag);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+            }
+            if (listMessage.Count > 0)
+                return listMessage.OrderBy(d => d.Date).ToList();
+            else
                 return null;
         }
 
