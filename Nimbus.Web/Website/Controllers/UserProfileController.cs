@@ -10,6 +10,7 @@ using ServiceStack.OrmLite;
 using Nimbus.DB.ORM;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace Nimbus.Web.Website.Controllers
 {
@@ -39,7 +40,7 @@ namespace Nimbus.Web.Website.Controllers
         public async Task<ActionResult> Upload()
         {
             //se alterar aqui nao esqueça de mudar no metodo Crop()
-            const int dimensaoMax = 130;
+            const int dimensaoMax = 200;
 
             if (Request.Files.Count != 1)
             {
@@ -53,11 +54,11 @@ namespace Nimbus.Web.Website.Controllers
                 return Json(new { error = "Too Large" });
             }
 
-            var nomeFinal = "-fullsize-" + NimbusUser.UserId;
+            var nomeFinal = "fullsize-" + NimbusUser.UserId;
 
             HMACMD5 md5 = new HMACMD5(NimbusConfig.GeneralHMACKey);
             md5.ComputeHash(Encoding.Unicode.GetBytes(nomeFinal));
-            nomeFinal = Base32.ToString(md5.Hash).ToLower() + nomeFinal + ".jpg";
+            nomeFinal = Base32.ToString(md5.Hash).ToLower() + ".jpg";
 
             //3x o tamanho máximo
             var image = new ImageManipulation(Request.Files[0].InputStream);
@@ -81,11 +82,14 @@ namespace Nimbus.Web.Website.Controllers
             blob.UploadStreamToAzure(imageStream);
 
             var pathFinal = blob.BlockBlob.Uri.AbsoluteUri.Replace("https://", "http://");
+            //adiciona query string para atrapalhar o cache =)
+            pathFinal += "?x=" + DateTime.Now.ToFileTime().ToString();
 
             //pega o nome do arquivo
             //nome final = onde vai ser armazendo
             //pega o caminho da pasta que vai ser gravado o arquivo e sava
             //retorna a img JA salva  para o json colocar na tela 
+
             return Json(new { url = pathFinal });
         }
 
@@ -94,7 +98,7 @@ namespace Nimbus.Web.Website.Controllers
         public async Task<ActionResult> Crop()
         { 
             //se alterar aqui nao esqueça de mudar no metodo Crop()
-            const int dimensaoMax = 130;
+            const int dimensaoMax = 200;
 
             int x1, x2, y1, y2 = 0;
 
@@ -128,11 +132,11 @@ namespace Nimbus.Web.Website.Controllers
             }
 
             //pega a imagem do azure
-            var nomeImagemOriginal = "-fullsize-" + NimbusUser.UserId;
+            var nomeImagemOriginal = "fullsize-" + NimbusUser.UserId;
 
             HMACMD5 md5 = new HMACMD5(NimbusConfig.GeneralHMACKey);
             md5.ComputeHash(Encoding.Unicode.GetBytes(nomeImagemOriginal));
-            nomeImagemOriginal = Base32.ToString(md5.Hash).ToLower() + nomeImagemOriginal + ".jpg";
+            nomeImagemOriginal = Base32.ToString(md5.Hash).ToLower() + ".jpg";
 
             Stream imgResize = null;
             var origBlob = new AzureBlob("avatarupload", nomeImagemOriginal);
@@ -147,9 +151,9 @@ namespace Nimbus.Web.Website.Controllers
 
             origBlob.Delete();
 
-            var nomeImgAvatar = "-avatar-" + NimbusUser.UserId;
-            md5.ComputeHash(Encoding.Unicode.GetBytes(nomeImagemOriginal));
-            nomeImgAvatar = Base32.ToString(md5.Hash).ToLower() + nomeImgAvatar + ".jpg";
+            var nomeImgAvatar = DateTime.Now.ToFileTime().ToString() + "avatar-" + NimbusUser.UserId;
+            md5.ComputeHash(Encoding.Unicode.GetBytes(nomeImgAvatar));
+            nomeImgAvatar = Base32.ToString(md5.Hash).ToLower() + ".jpg";
 
             var blob = new AzureBlob("avatarupload", nomeImgAvatar);
             blob.UploadStreamToAzure(imgResize);
@@ -159,6 +163,13 @@ namespace Nimbus.Web.Website.Controllers
             using (var db = DatabaseFactory.OpenDbConnection())
             {
                 var user = db.Where<User>(u => u.Id == NimbusUser.UserId).FirstOrDefault();
+
+                //apaga imagem antiga
+                var uriAntigo = new Uri(user.AvatarUrl).Segments;
+                var blobAntigo = new AzureBlob("avatarupload", uriAntigo[uriAntigo.Length - 1]);
+                try { blobAntigo.Delete(); }
+                catch { }
+                
                 user.AvatarUrl = pathFinal;
                 db.Save(user);
 
@@ -168,6 +179,9 @@ namespace Nimbus.Web.Website.Controllers
             }
             
             //depois que salvar no azure retorna por json p mostrar na tela a imagem final
+            
+            //adiciona query string para atrapalhar o cache =)
+            pathFinal += "?x=" + DateTime.Now.ToFileTime().ToString();
             return Json(new { url = pathFinal });
         }
     }

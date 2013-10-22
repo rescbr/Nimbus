@@ -9,9 +9,10 @@ namespace Nimbus.DB.ORM
 {
     public class Role  : Nimbus.DB.Role
     {        
-        [References (typeof(User))]
+        [PrimaryKey()]
+        [References(typeof(User))]
         public override int UserId { get; set; }
-
+        [PrimaryKey()]
         [References(typeof(Channel))]
         public override int ChannelId { get; set; }
 

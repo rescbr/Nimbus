@@ -15,3 +15,30 @@ function EnableDiv(newDiv) {
     document.getElementById(newDiv).style.display = 'block';
     divTipoTopic = newDiv;
 }
+
+function getUrlVideo(nomecampo, nomeframe)
+{
+    var text = document.getElementById(nomecampo).value;
+    var queryurl;
+    if (text.length >= 11)
+    {
+        if (text.indexOf("youtube.be/") > 0)
+        {
+            var params = text.search.substr(text.search.indexof("be/")+3);
+            queryurl = "//www.youtube.com/embed/" + params;           
+        }
+         else     
+        if (text.indexOf("youtube.com"))
+        {
+            var params = text.search("v=");
+            params = text.slice(params + 2);
+            queryurl = "//www.youtube.com/embed/" + params;            
+        }
+        if (queryurl.length > 34) {
+            document.getElementsByTagName("IFRAME")[0].setAttribute('src', queryurl);
+        }
+    }
+    
+}
+
+
