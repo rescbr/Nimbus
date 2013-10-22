@@ -9,15 +9,15 @@
 <div class="WrapperUser">
     <nav class="ProfTopBar">
         <ul class="sbs">
-            <li class="press"><a name="divNotification" onclick="ChangeDiv(this.name);">Atualizações</a></li>
-            <li class="press"><a name="divMyChannels" onclick="ChangeDiv(this.name);">Meus Canais</a></li>
-            <li class="press"><a name="divChannelFollows" onclick="ChangeDiv(this.name);">Canais Seguidos</a></li>
-            <li class="press"><a name="divReadLater" onclick="ChangeDiv(this.name);">Marcados</a></li>
-            <li class="press"><a name="divMessages" onclick="ChangeDiv(this.name);">Mensagens</a></li>		
+            <li class="press"><a name="divNotification" onclick="EnableDiv(this.name,'currentDiv');">Atualizações</a></li>
+            <li class="press"><a name="divMyChannels" onclick="EnableDiv(this.name, 'currentDiv');">Meus Canais</a></li>
+            <li class="press"><a name="divChannelFollows" onclick="EnableDiv(this.name, 'currentDiv');">Canais Seguidos</a></li>
+            <li class="press"><a name="divReadLater" onclick="EnableDiv(this.name, 'currentDiv');">Marcados</a></li>
+            <li class="press"><a name="divMessages" onclick="EnableDiv(this.name, 'currentDiv');">Mensagens</a></li>		
 	    </ul>
     </nav>
 
-    <div id="divNotification" style="display:block; background-color:aliceblue;">
+    <div id="divNotification" style="display:block;">
         @*para cada item da lista que ele recber//TODO*@
         <p>
             <img id="imgNotification" src="#" />
@@ -39,7 +39,7 @@
         </div>
     </div>
 
-    <div id="divMyChannels" style="display:none; background-color:AppWorkspace;">
+    <div id="divMyChannels" style="display:none;">
         @if (Model.CurrentUser.UserId == Model.User.Id)
         {
             foreach (var item in Model.MyChannels)
@@ -71,7 +71,7 @@
         }
     </div>
 
-    <div id="divChannelFollows" style="display:none; background-color:azure;">
+    <div id="divChannelFollows" style="display:none;">
 
         @*Aparecer o exemplo*@
         <div class="Post_g">
@@ -129,7 +129,7 @@
         }
     </div>
 
-    <div id="divReadLater" style="display:none; background-color:burlywood;">
+    <div id="divReadLater" style="display:none;">
         @*Aparecer o exemplo*@
         <div class="Post_g">
             <div class="PostHeader_g">
@@ -187,7 +187,7 @@
         }
     </div>
 
-    <div id="divMessages" style="display:none; background-color:chartreuse;">
+    <div id="divMessages" style="display:none;">
         @*Aparecer o exemplo*@
         <div class="press Post_m">
             <div class="PostHeImg_m">
