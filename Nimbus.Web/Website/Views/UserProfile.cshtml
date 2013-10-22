@@ -9,10 +9,8 @@
 @Scripts.Render(("~/Scripts/jquery.Jcrop.js"))
 @Styles.Render(("~/Styles/jquery.Jcrop.css"))
 
+@Scripts.Render(("~/Scripts/UserUtilis.js"))
 
-<div class="SendMessage">
-    <p><a href="#modal-text" class="call-modal">Enviar Mensagem</a></p> <!-- clicavel -->
-</div>
 
 <div class="ProBar">
     <div class="ProfileImg">
@@ -28,11 +26,11 @@
 
     @*Se for o usuário do perfil*@
     @if (Model.User.Id == Model.CurrentUser.UserId)
-    {
-        <div class="ProfileEdit">
-            <p>Edit</p><!--clicavel-->
-        </div>
-    }
+{
+    <div class="press" id="ProfileEdit">
+        <p>Edit</p>
+    </div>
+}
     <div class="AboutUser">
         <h1>@Model.User.FirstName @Model.User.LastName</h1>
         <p>Idade: @Model.User.Age</p>
