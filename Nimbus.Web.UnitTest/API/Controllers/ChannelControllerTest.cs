@@ -3,6 +3,11 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nimbus.Web.API.Controllers;
 using Nimbus.DB.ORM;
 using Nimbus.Plumbing;
+using System.Net.Http;
+using System.Web.Http;
+using System.Net;
+using System.Threading;
+using ServiceStack.OrmLite;
 
 namespace Nimbus.Web.UnitTest.API.Controllers
 {
