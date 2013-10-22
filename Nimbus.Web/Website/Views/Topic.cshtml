@@ -9,17 +9,21 @@
 </div>
 
 
-<div id="divInfTopic" style="top: -30px">
-    <img src="/@Model.Category.ImageUrl" id="imgTopic" height="192" alt="" width="864" />
-    <h3>@Model.CurrentTopic.Title</h3>
-    <p>@Model.CurrentTopic.Description</p>
-   
-    <p>
-        @*colocar icone pontuaçao*@
-        @Model.NumFavorites
-    </p>
+<div id="divInfTopic" style="margin: -30px 20px 0px 20px; float:left; width: 200px;">
 
-    <p>
+    <div style="width: 150px; margin: 0 auto;">
+        <img src="/@Model.Category.ImageUrl" id="imgTopic" height="100" alt="" width="150" />
+    </div>
+
+    <h1 style="text-align: center; margin-top:5px;">@Model.CurrentTopic.Title</h1>
+    <p>@Model.CurrentTopic.Description</p>
+
+    <h1 style="margin: 20px 10px 20px 10px;">
+        <img src="/images/favorite_topic_icon.png" style="margin: 0px 0px -5px 10px;"/>
+        @Model.NumFavorites
+    </h1>
+
+    <p style="text-align: center; border: solid;">
         @*Categoria*@
         @Model.Category.Name
     </p>
@@ -30,7 +34,7 @@
 </div>
 
 
-<div style="float:right;">
+<div style="float:right; width: 600px;">
 
     @*Topico em formato texto*@
     @if (Model.CurrentTopic.TopicType == Nimbus.DB.Enums.TopicType.exam)
@@ -52,27 +56,37 @@
 
         <div>
 
-            <div>
-                <h5>Comentários</h5>
 
-                @foreach (var comment in Model.Comments)
+            <div>
+                <h2>Comentários</h2>
+
+                @if (Model.Comments.Count > 0) 
+                { 
+                    foreach (var comment in Model.Comments)
+                    {
+                        <div style="display:block; float:none">
+                            <div style="float:left">
+                                <img src="/@Model.Category.ImageUrl" id="imgTopic" height="192" alt="" width="864" />
+                            </div>
+                            <div style="float:left">
+                                <p>@comment.Text</p>
+                            </div>
+                        </div>
+                    }
+                }
+                else
                 {
-                    <div style="display:block; float:none">
-                        <div style="float:left">
-                            <img src="/@Model.Category.ImageUrl" id="imgTopic" height="192" alt="" width="864" />
-                        </div>
-                        <div style="float:left">
-                            <p>@comment.Text</p>
-                        </div>
-                    </div>
+                    <strong>Seja o primeiro a comentar!</strong>
                 }
             </div>
 
             <div>
-                <button style="margin-right:0;">Responder</button>
 
-                <h5 style="margin-bottom:5px">Comentar</h5>
+                <div style="width:100%; height:35px; display:block">
+                    <button style="float:right; margin:20px;">Responder</button>
+                </div>
 
+                <h2 style="margin-bottom:5px;">Comentar</h2>
                 <textarea id="comentario"></textarea>
             </div>
 
