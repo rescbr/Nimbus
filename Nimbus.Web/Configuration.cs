@@ -3,6 +3,7 @@ using Microsoft.WindowsAzure.ServiceRuntime;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Configuration;
 
@@ -27,8 +28,17 @@ namespace Nimbus.Web
             get
             {
                 if (_databaseConnection == null)
+                {
                     _databaseConnection = GetSetting("DatabaseConnectionString");
-
+                    //Verifica se estamos no LTIA
+                    //try
+                    //{
+                    //    Dns.GetHostEntry("_are_we_at.ltia.***REMOVED***");
+                    //    _databaseConnection = GetSetting("LTIADatabaseConnectionString");
+                    //}
+                    //catch { }
+                    
+                }
                 return _databaseConnection;
             }
         }

@@ -44,7 +44,7 @@ namespace Nimbus.Web.API.Controllers
                     UserBag userBag = new UserBag();
                     userBag.Id = user.Id;
                     userBag.About = user.About;
-                    userBag.AvatarUrl = userBag.AvatarUrl;
+                    userBag.AvatarUrl = user.AvatarUrl;
                     userBag.BirthDate = user.BirthDate;
                     userBag.City = user.City;
                     userBag.Country = user.Country;

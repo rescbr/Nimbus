@@ -38,20 +38,55 @@ namespace Nimbus.Web.Security
                 if (hashedPassword.Equals(ptPassword))
                 {
                     //preenche o NimbusUser
-                    principal = new NimbusPrincipal(new NimbusUser()
-                    {
-                        IsAuthenticated = true,
-                        Email = dbuser.Email,
-                        FirstName = dbuser.FirstName,
-                        UserId = dbuser.Id,
-                        LastName = dbuser.LastName,
-                        AvatarUrl = dbuser.AvatarUrl
-                    });
+                    principal = GetNimbusPrincipal(dbuser);
                     return true;
                 } 
             }
 
             return false;
+        }
+
+
+        /// <summary>
+        /// Obtém NimbusUser a partir de um objeto DB.User.
+        /// </summary>
+        public static NimbusUser GetNimbusUser(User user)
+        {
+            return new NimbusUser()
+                    {
+                        IsAuthenticated = true,
+                        Email = user.Email,
+                        FirstName = user.FirstName,
+                        UserId = user.Id,
+                        LastName = user.LastName,
+                        AvatarUrl = user.AvatarUrl
+                    };
+        }
+        /// <summary>
+        /// Obtém NimbusPrincipal a partir de um objeto DB.User.
+        /// </summary>
+        public static NimbusPrincipal GetNimbusPrincipal(User user)
+        {
+            return new NimbusPrincipal(GetNimbusUser(user));
+        }
+        /// <summary>
+        /// Obtém NimbusUser a partir de um UserId. Faz consulta ao BD.
+        /// </summary>
+        public NimbusUser GetNimbusUser(int userId)
+        {
+            using (var db = _dbFactory.OpenDbConnection())
+            {
+                var user = db.Where<User>(u => u.Id == userId).FirstOrDefault();
+                if (user == null) throw new Exception("Invalid User ID");
+                return GetNimbusUser(user);
+            }
+        }
+        /// <summary>
+        /// Obtém NimbusPrincipal a partir de um UserId. Faz consulta ao BD.
+        /// </summary>
+        public NimbusPrincipal GetNimbusPrincipal(int userId)
+        {
+            return new NimbusPrincipal(GetNimbusUser(userId));
         }
     }
 }

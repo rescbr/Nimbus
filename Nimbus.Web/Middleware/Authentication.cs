@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Security.Principal;
 using System.Threading.Tasks;
+using System.Web.Caching;
 
 namespace Nimbus.Web.Middleware
 {
@@ -51,7 +52,13 @@ namespace Nimbus.Web.Middleware
                     //if (info.TokenGenerationDate.AddDays(7.0) > DateTime.Now.ToUniversalTime())
                     if (info.TokenExpirationDate.ToUniversalTime() > DateTime.Now.ToUniversalTime())
                     {
-                        request.User = new NimbusPrincipal(info.User);
+                        //tenta pegar do cache de sessão
+                        var sessionUser = (System.Web.HttpContext.Current
+                            .Session[Const.UserSession] as NimbusPrincipal);
+                        if (sessionUser != null)
+                        {
+                            request.User = sessionUser;
+                        }
                     }
                     else //token velho
                     {
@@ -62,7 +69,7 @@ namespace Nimbus.Web.Middleware
                 }
             }
             else { } //token = null
-
+            
 
             await Next.Invoke(context);
 
