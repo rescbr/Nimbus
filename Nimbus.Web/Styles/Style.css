@@ -73,10 +73,10 @@ p {
 
 /*------------------ começo header --------------------*/
 
-#header {
-	position:           fixed;
+#header {/*
+	position:           fixed;*/
 	width:              100%;
-	height:             48px;
+	height:             52px;
 	top:                0px;
 	left:               0px;
 }
@@ -122,6 +122,7 @@ nav.center {
 
 .center li {
 	width:              96px;
+    height:             48px;
 }
 
 nav.right {
@@ -276,14 +277,14 @@ div.Post_g {
     background:         #FFFFFF;
     position:           relative;
     margin:             20px;
-    width:              168px;
-    height:             260px;
+    width:              184px;
+    height:             269px;
     float:              left;
 }
 
 div.PostHeader_g {
-    width:              auto;
-    height:             120px;
+    width:              182px;
+    height:             129px;
     border:             1px solid #BE1E2D;
 }
 
@@ -294,16 +295,16 @@ div.PostHeader_g {
 }
 
 div.PostHeImg_g {
-    background:         url();
-    width:              auto;
-    height:             93px;
+    background:         #FFFFFF;
+    width:              180px;
+    height:             101px;
     border:             1px solid #BE1E2D;
 }
 
 div.PostHeader-img_g {
-    background:         url();
-    width:              auto;
-    height:             233px;
+    background:         #FFFFFF;
+    width:              180px;
+    height:             129px;
     border:             1px solid #BE1E2D;
 }
 
@@ -311,7 +312,7 @@ div.PostContent_g {
     margin-top:         5px;
     margin-bottom:      5px;
     height:             93px;
-    width:              auto;
+    width:              180px;
     padding-top:        5px;
     padding-bottom:     5px;
     overflow:           hidden; /* Temporário. Fazer caber X caracteres ali D: */
@@ -324,13 +325,13 @@ div.PostContent_g {
 }
 
 div.PostFooter_g {
-    width:              auto;
+    width:              180px;
     height:             24px;
     border:             1px solid #BE1E2D;
 }
 
 div.PostFoBoxL_g, div.PostFoBoxR_g {
-    width:              82px;
+    width:              89px;
     height:             24px;
     float:              left;
 }
@@ -448,15 +449,20 @@ div.ProfileImg {
     margin-bottom:      15px;
 }
 
-div.ProfileEdit {
+div#ProfileEdit {
+    margin-top:         5px;
     position:           absolute;
-    width:              43px;
-    height:             26px;/*
+    width:              24px;
+    height:             10px;
     font-size:          xx-small;
 	line-height:        10px;
-    border:             1px solid #BE1E2D;*/
+    border:             1px solid #BE1E2D;
     display:            inline-block;
 }
+
+#ProfileEdit p {
+    text-align:         center;
+ }
 
 .SendMessage {
     margin:             0 auto;
@@ -512,7 +518,7 @@ div.Channels {
 }
 
 div.ChanPaidImg {
-    background:         url();
+    background:         #FFFFFF;
     width:              40px;
     height:             40px;
     background:         #000000;
@@ -524,13 +530,13 @@ div.ChanPaidImg {
 
 nav.ProfTopBar {
     margin:             0 auto;
-    width:              602px;
-    height:             30px;
+    width:              600px;
+    height:             26px;
     border:             1px solid #BE1E2D;
 }
 
 .ProfTopBar li {
-    width:              109px;
+    width:              120px;
     text-align:         center;
 }
 
@@ -705,6 +711,33 @@ div.MyChannels h1, div.ModChannels h1{
 
 
 /*----- começo Botoes interativos / JS & JQuery ----*/
+.press {
+     cursor:pointer;
+}
+
+.press:hover, .press:active {
+	background-color:  #BE1E2D;
+}
+
+.attChoice {
+    display:            inline-block;
+}
+
+div.accRef {
+    padding:            2px;
+    padding-right:      10px;
+    padding-left:       10px;/*
+    width:              57px;*/
+    width:              auto;
+    height:             22px;
+    font-size:          small;
+    border:             1px solid #BE1E2D;
+    display:            inline-block;
+}
+
+.accRef p {
+    text-align:         center;
+ }
 
 
 

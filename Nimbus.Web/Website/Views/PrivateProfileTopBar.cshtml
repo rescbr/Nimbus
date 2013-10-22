@@ -9,11 +9,11 @@
 <div class="WrapperUser">
     <nav class="ProfTopBar">
         <ul class="sbs">
-		    <li><a name="divNotification" onclick="ChangeDiv(this.name);">Atualizações</a></li>
-		    <li><a name="divMyChannels" onclick="ChangeDiv(this.name);">Meus Canais</a></li>
-		    <li><a name="divChannelFollows" onclick="ChangeDiv(this.name);">Canais Seguidos</a></li>
-		    <li><a name="divReadLater" onclick="ChangeDiv(this.name);">Marcados</a></li>
-		    <li><a name="divMessages" onclick="ChangeDiv(this.name);">Mensagens</a></li>		
+            <li class="press"><a name="divNotification" onclick="ChangeDiv(this.name);">Atualizações</a></li>
+            <li class="press"><a name="divMyChannels" onclick="ChangeDiv(this.name);">Meus Canais</a></li>
+            <li class="press"><a name="divChannelFollows" onclick="ChangeDiv(this.name);">Canais Seguidos</a></li>
+            <li class="press"><a name="divReadLater" onclick="ChangeDiv(this.name);">Marcados</a></li>
+            <li class="press"><a name="divMessages" onclick="ChangeDiv(this.name);">Mensagens</a></li>		
 	    </ul>
     </nav>
 
@@ -25,10 +25,18 @@
         </p>
         <p>
             hora x     data x
-            <button id="btnAccept" onclick="">Aceitar</button>
-
-            <button id="btnDecline" onclick="">Recusar</button>
         </p>
+        <div id="attChoice">
+            @*<button id="btnAccept" onclick="">Aceitar</button>*@
+            <div id="btnAccept" class="press accRef">
+                <p>Aceitar</p>
+            </div>
+            
+            @*<button id="btnDecline" onclick="">Recusar</button>*@
+            <div id="btnAccept" class="press accRef">
+                <p>Recusar</p>
+            </div>
+        </div>
     </div>
 
     <div id="divMyChannels" style="display:none; background-color:AppWorkspace;">
@@ -50,10 +58,10 @@
                         </p>
                     </div>
                     <div class="PostFooter_g">
-                        <div class="PostFoBoxL_g">
+                        <div class="press PostFoBoxL_g">
                             <p onclick="unFollow(@item.Id);">Desfavoritar</p> @*chamar js passando item.id*@
                         </div>
-                        <div class="PostFoBoxR_g">
+                        <div class="press PostFoBoxR_g">
                             <p onclick="openChannel(@item.Id);">Ler</p>
                         </div>
                     </div>
@@ -64,6 +72,32 @@
     </div>
 
     <div id="divChannelFollows" style="display:none; background-color:azure;">
+
+        @*Aparecer o exemplo*@
+        <div class="Post_g">
+            <div class="PostHeader_g">
+                <h1>Nome</h1>
+                    <div class="PostHeImg_g">
+                        <img src="" alt="blabla" title="blabla">
+                    </div>
+                </div>
+                <div class="PostContent_g">
+                    <p>
+                        Descricao
+                        </p>
+                    </div>
+                    <div class="PostFooter_g">
+                        <div class="press PostFoBoxL_g">
+                            <p onclick="unFollow();">Desfavoritar</p> @*chamar js passando item.id*@
+                            </div>
+                            <div class="press PostFoBoxR_g">
+                                <p onclick="openChannel();">Ler</p>
+                            </div>
+                        </div>
+                    </div>
+        @*Fim do exemplo*@
+
+
         @if (Model.CurrentUser.UserId == Model.User.Id)
         {
             foreach (var item in Model.ChannelFollow)
@@ -82,10 +116,10 @@
                         </p>
                     </div>
                     <div class="PostFooter_g">
-                        <div class="PostFoBoxL_g">
+                        <div class="press PostFoBoxL_g">
                             <p onclick="unFollow(@item.Id);">Desfavoritar</p> @*chamar js passando item.id*@
-                        </div>
-                        <div class="PostFoBoxR_g">
+                                            </div>
+                        <div class="press PostFoBoxR_g">
                             <p onclick="openChannel(@item.Id);">Ler</p>
                         </div>
                     </div>
@@ -96,6 +130,32 @@
     </div>
 
     <div id="divReadLater" style="display:none; background-color:burlywood;">
+        @*Aparecer o exemplo*@
+        <div class="Post_g">
+            <div class="PostHeader_g">
+                <h1>Nome</h1>
+                    <div class="PostHeImg_g">
+                        <img src="bla.png" alt="blabla" title="blabla">
+                    </div>
+                </div>
+                <div class="PostContent_g">
+                    <p>
+                        Descricao
+                        </p>
+                    </div>
+                    <div class="PostFooter_g">
+                        <div class="press PostFoBoxL_g">
+                            <p onclick="unReadLater();">Desmarcar</p> @*chamar js passando item.id*@
+                            </div>
+                            <div class="press PostFoBoxR_g">
+                                <p>Ler</p> @*redirecionar pagina*@
+                                </div>
+                            </div>
+                        </div>
+        @*Fim do exemplo*@
+        
+        
+        
         @if (Model.CurrentUser.UserId == Model.User.Id)
         {
             foreach (var item in Model.ReadLater)
@@ -114,12 +174,12 @@
                         </p>
                     </div>
                     <div class="PostFooter_g">
-                        <div class="PostFoBoxL_g">
+                        <div class="press PostFoBoxL_g">
                             <p onclick="unReadLater(@item.Id);">Desmarcar</p> @*chamar js passando item.id*@
-                        </div>
-                        <div class="PostFoBoxR_g">
+                                            </div>
+                        <div class="press PostFoBoxR_g">
                             <p>Ler</p> @*redirecionar pagina*@
-                        </div>
+                                            </div>
                     </div>
                 </div>
 
@@ -128,33 +188,59 @@
     </div>
 
     <div id="divMessages" style="display:none; background-color:chartreuse;">
-        @if (Model.CurrentUser.UserId == Model.User.Id)
-        {
-            foreach (var item in Model.Messages)
-            {
-                <div class="Post_m">
-                    <div class="PostHeImg_m">
-                        <img src=@item.AvatarUrl alt="blabla" title="blabla">
-                    </div>
-                    <div class="Post_Right_m">
-                        <nav class="PostHeaderLeft_m">
-                            <ul class="sbs">
-                                <li>@item.UserName/li>
-                                <li>@item.Title</li>
+        @*Aparecer o exemplo*@
+        <div class="press Post_m">
+            <div class="PostHeImg_m">
+                <img src="bla.jpg" alt="blabla" title="blabla">
+            </div>
+            <div class="Post_Right_m">
+                <nav class="PostHeaderLeft_m">
+                    <ul class="sbs">
+                        <li>Nome</li>
+                            <li>Titulo</li>
                             </ul>
                         </nav>
                         <nav class="PostHeaderRight_m">
                             <ul class="sbs">
-                                <li>@string.Format("{0:d/M/yyyy}",item.Date)</li>
-                                <li>@string.Format("{0:HH:mm}", item.Date)</li>
-                            </ul>
-                        </nav>
-                        <div class="PostContent_m">
-                            <p>@item.Text </p>
-                        </div>
+                                <li>12/03/1998</li>
+                                    <li>12:45</li>
+                                    </ul>
+                                </nav>
+                                <div class="PostContent_m">
+                                    <p>texto </p>
+                                    </div>
+                                </div>
+                            </div>
+        @*Fim do exemplo*@
+
+
+
+        @if (Model.CurrentUser.UserId == Model.User.Id) {
+        foreach (var item in Model.Messages)
+        {
+            <div class="press Post_m">
+                <div class="PostHeImg_m">
+                    <img src=@item.AvatarUrl alt="blabla" title="blabla">
+                </div>
+                <div class="Post_Right_m">
+                    <nav class="PostHeaderLeft_m">
+                        <ul class="sbs">
+                            <li>@item.UserName/li>
+                            <li>@item.Title</li>
+                        </ul>
+                    </nav>
+                    <nav class="PostHeaderRight_m">
+                        <ul class="sbs">
+                            <li>@string.Format("{0:d/M/yyyy}", item.Date)</li>
+                            <li>@string.Format("{0:HH:mm}", item.Date)</li>
+                        </ul>
+                    </nav>
+                    <div class="PostContent_m">
+                        <p>@item.Text </p>
                     </div>
                 </div>
-            }
+            </div>
+        }
         }
     </div>
 
