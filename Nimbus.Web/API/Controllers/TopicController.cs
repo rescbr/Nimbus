@@ -16,6 +16,7 @@ namespace Nimbus.Web.API.Controllers
     /// </summary>
     public class TopicController : NimbusApiController
     {
+        #region IsOwner e IsManager
         /// <summary>
         /// Verifica se o usuário é dono do canalque possui o tópico
         /// </summary>
@@ -69,7 +70,9 @@ namespace Nimbus.Web.API.Controllers
             }
             return allow;
         }
+        #endregion
 
+        #region Criar e Mostrar tópico (Post e Get)
         /// <summary>
         /// Criar um novo tópico
         /// </summary>
@@ -77,6 +80,7 @@ namespace Nimbus.Web.API.Controllers
         /// <returns></returns>
         [Authorize]
         [HttpPost]
+        [ActionName("Post")] //default
         public Topic NewTopic(Topic topic)
         {
             try
@@ -102,6 +106,59 @@ namespace Nimbus.Web.API.Controllers
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
         }
+
+        //TODO terminar essa funçao: parte de mostras os topicos relacionados
+        /// <summary>
+        /// carregar informações gerais de um tópico, chammar a função de comentarios e count favoritos
+        /// </summary>
+        /// <returns></returns>
+        [Authorize]
+        [HttpGet]
+        [ActionName("Get")]
+        public Topic ShowTopic(int id)
+        {
+            Topic topic = new Topic();
+            try
+            {
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {
+                    bool allow = ValidateShowTopic(id);
+
+                    if (allow == true)
+                    {
+                        topic = db.SelectParam<Topic>(tp => tp.Id == id).FirstOrDefault();
+
+                        if (topic.TopicType == Nimbus.DB.Enums.TopicType.exam)
+                        {
+                            #region exam
+                            //verificar se o usuario já fez o exame
+                            int ChannelID = db.SelectParam<Channel>(ch => ch.Id == topic.ChannelId).Select(ch => ch.OrganizationId).FirstOrDefault();
+                            UserExam userExam = ValidateExam(id);
+
+                            bool isPrivate = db.SelectParam<Channel>(ch => ch.Id == topic.ChannelId).Select(ch => ch.IsPrivate).FirstOrDefault();
+
+                            if (userExam == null || isPrivate == false)
+                            {
+                                //se nunca tiver feito o exame, pode fazer. Canal privado = pode limitar. Canal free = sempre aberto 
+                                //caso seja um teste free, o 'bool' já permite refazer - apagar as respostas
+                                foreach (Nimbus.DB.Question item in topic.Question)
+                                {
+                                    item.CorrectAnswer = 0;
+                                }
+                            }
+                            #endregion
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+            }
+            return topic;
+        }
+
+        #endregion
 
         /// <summary>
         /// método de exibir tópicos em resumo, filtra por categoriam modificação e popularidade
@@ -374,56 +431,6 @@ namespace Nimbus.Web.API.Controllers
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
             return category;
-        }
-
-        //TODO terminar essa funçao: parte de mostras os topicos relacionados
-        /// <summary>
-        /// carregar informações gerais de um tópico, chammar a função de comentarios e count favoritos
-        /// </summary>
-        /// <returns></returns>
-        [Authorize]
-        [HttpGet]
-        public Topic ShowTopic(int id)
-        {
-            Topic topic = new Topic();
-            try
-            {
-                using(var db = DatabaseFactory.OpenDbConnection())
-                {
-                    bool allow = ValidateShowTopic(id);
-
-                    if (allow == true)
-                    {
-                        topic = db.SelectParam<Topic>(tp => tp.Id == id).FirstOrDefault();
-
-                       if (topic.TopicType == Nimbus.DB.Enums.TopicType.exam)
-                        {
-                            #region exam
-                            //verificar se o usuario já fez o exame
-                            int ChannelID = db.SelectParam<Channel>(ch => ch.Id == topic.ChannelId).Select(ch => ch.OrganizationId).FirstOrDefault();
-                            UserExam userExam = ValidateExam(id);
-
-                            bool isPrivate = db.SelectParam<Channel>(ch => ch.Id == topic.ChannelId).Select(ch => ch.IsPrivate).FirstOrDefault();
-                            
-                            if (userExam == null || isPrivate == false)
-                            {
-                                //se nunca tiver feito o exame, pode fazer. Canal privado = pode limitar. Canal free = sempre aberto 
-                                //caso seja um teste free, o 'bool' já permite refazer - apagar as respostas
-                                foreach (Nimbus.DB.Question item in topic.Question)
-                                {
-                                    item.CorrectAnswer = 0;
-                                }
-                            }
-                            #endregion
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
-            }
-            return topic;     
         }
 
         /// <summary>
