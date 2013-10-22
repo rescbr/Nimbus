@@ -430,7 +430,7 @@ div.ProBar {
     float:              left;
     background:         #FFFFFF;
     margin-left:        20px;
-    width:              264px;
+    width:              202px;
     height:             auto;
     line-height:        20px;
 }
@@ -442,25 +442,20 @@ div.ProBar {
 
 div.ProfileImg {
     background:         url();
-    width:              262px;
-    height:             262px;
+    width:              200px;
+    height:             200px;
     border:             1px solid #BE1E2D;
-    margin-bottom:      24px;
+    margin-bottom:      15px;
 }
 
 div.ProfileEdit {
-    margin-top:         5px;
     position:           absolute;
-    width:              24px;
-    height:             10px;
-    border:             1px solid #BE1E2D;
-    display:            inline-block;
+    width:              43px;
+    height:             26px;/*
     font-size:          xx-small;
 	line-height:        10px;
-}
-
-.ProfileEdit p {
-    text-align:         center;
+    border:             1px solid #BE1E2D;*/
+    display:            inline-block;
 }
 
 .SendMessage {
@@ -529,7 +524,7 @@ div.ChanPaidImg {
 
 nav.ProfTopBar {
     margin:             0 auto;
-    width:              552px;
+    width:              602px;
     height:             30px;
     border:             1px solid #BE1E2D;
 }
@@ -707,6 +702,13 @@ div.MyChannels h1, div.ModChannels h1{
 }
 
 /*------------------ fim middle --------------------*/
+
+
+/*----- começo Botoes interativos / JS & JQuery ----*/
+
+
+
+/*------ fim Botoes interativos / JS & JQuery ------*/
 
 /*------------ começo css progress bar -------------*/
 .progress{position: relative;width: 200px;border: 1px solid #DDD;padding: 1px;border-radius: 3px;}
