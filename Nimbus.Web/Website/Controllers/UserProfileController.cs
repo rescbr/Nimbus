@@ -40,7 +40,7 @@ namespace Nimbus.Web.Website.Controllers
         public async Task<ActionResult> Upload()
         {
             //se alterar aqui nao esqueça de mudar no metodo Crop()
-            const int dimensaoMax = 130;
+            const int dimensaoMax = 200;
 
             if (Request.Files.Count != 1)
             {
@@ -89,7 +89,7 @@ namespace Nimbus.Web.Website.Controllers
             //nome final = onde vai ser armazendo
             //pega o caminho da pasta que vai ser gravado o arquivo e sava
             //retorna a img JA salva  para o json colocar na tela 
-            
+
             return Json(new { url = pathFinal });
         }
 
@@ -98,7 +98,7 @@ namespace Nimbus.Web.Website.Controllers
         public async Task<ActionResult> Crop()
         { 
             //se alterar aqui nao esqueça de mudar no metodo Crop()
-            const int dimensaoMax = 130;
+            const int dimensaoMax = 200;
 
             int x1, x2, y1, y2 = 0;
 

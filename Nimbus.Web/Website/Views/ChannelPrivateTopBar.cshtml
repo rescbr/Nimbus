@@ -23,6 +23,7 @@
         <li><a name="divMessages" onclick="ChangeDiv(this.name);">Mensagens</a></li>
     </ul>
 </nav>
+
 <div>
     <div id="divNotifications" style="display:block;">
         @*ultimos topicos + ultimos comentarios*@
@@ -149,8 +150,9 @@
         </p>
 
         <div id="divVideo" style="display:none;">
-            <input type="text" name="iptnamevideo" value="URL do vídeo" />
-            <label>Sites aceitos: youtube, vimeo</label>
+            <input type="text" id="iptnamevideo" name="iptnamevideo" value="URL do vídeo" onfocus="javascript: this.value = ''" onchange="getUrlVideo(this.name, 'iframeVideo');" />
+            <label>Somente url do youtube</label><br />
+            <iframe width="420" height="345" name="iframeVideo"></iframe>
         </div>
 
         <div id="divText" style="display:none;">
