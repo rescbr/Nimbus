@@ -1,20 +1,31 @@
-﻿function ChangeDiv(newDiv) {
-    //currentDiv: variavel global que passa o nome da div ativa
-    document.getElementById(currentDiv).style.display = 'none';
-    document.getElementById(newDiv).style.display = 'block';
-    currentDiv = newDiv;
-}
-
+﻿
 /*Método para mudar divs dentro de outra div que já esta sendo alterada pela funçao changediv
   usada na pagina de channl -> novo tópico*/
-function EnableDiv(newDiv) {
-    //currentDiv: variavel global que passa o nome da div ativa   
-    if (divTipoTopic != '') {
-        document.getElementById(divTipoTopic).style.display = 'none';
+function EnableDiv(newDiv, tipoGlobal) { 
+
+    if (tipoGlobal == 'currentDiv')
+    {
+        document.getElementById(currentDiv).style.display = 'none';
+        currentDiv = newDiv;
+    }
+    else if (tipoGlobal == 'divTipoTopic')
+    {
+        if (divTipoTopic != '')
+        {
+            document.getElementById(divTipoTopic).style.display = 'none';
+        }
+        divTipoTopic = newDiv;
     }
     document.getElementById(newDiv).style.display = 'block';
-    divTipoTopic = newDiv;
 }
+
+function EnableTwoDiv(newDiv, tipoGlobal, divTwo)
+{
+    document.getElementById(divTwo).style.display = 'block';
+    EnableDiv(newDiv, tipoGlobal);   
+    
+}
+
 
 function getUrlVideo(nomecampo, nomeframe)
 {

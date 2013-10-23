@@ -148,7 +148,8 @@ namespace Nimbus.Web.API.Controllers
         [Authorize]
         [HttpGet]
         public List<MessageBag> ChannelReceivedMessages(int id = 0)
-        {
+        {          
+
             List<MessageBag> listMessage = new List<MessageBag>();
             try
             {
@@ -182,7 +183,10 @@ namespace Nimbus.Web.API.Controllers
             {
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
-            return listMessage.OrderBy(d => d.Date).ToList();
+            if (listMessage.Count > 0)
+                return listMessage.OrderBy(d => d.Date).ToList();
+            else
+                return null;
         }
 
         /// <summary>
