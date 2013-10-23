@@ -8,5 +8,11 @@ namespace Nimbus.Web
     public static class Const
     {
         public const string UserSession = "user";
+
+        public static class Azure
+        {
+            public const string AvatarContainer = "avatarupload";
+            
+        }
     }
 }
