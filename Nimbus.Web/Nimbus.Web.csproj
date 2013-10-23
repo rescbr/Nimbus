@@ -182,6 +182,7 @@
   <ItemGroup>
     <Content Include="Global.asax" />
     <Content Include="images\Category\saude.png" />
+    <Content Include="images\favorite_topic_icon.png" />
     <Content Include="images\person_icon.png" />
     <Content Include="images\Utils\Jcrop.gif" />
     <Content Include="Scripts\ckeditor\ckeditor.js" />
