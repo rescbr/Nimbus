@@ -354,6 +354,7 @@ namespace Nimbus.Web.API.Controllers
                         string firstName = db.SelectParam<User>(us => us.Id == channel.OwnerId).Select(us => us.FirstName).FirstOrDefault();
                         string lastName = db.SelectParam<User>(us => us.Id == channel.OwnerId).Select(us => us.LastName).FirstOrDefault();
                         showChannel.Name = channel.Name;
+                        showChannel.Id = channel.Id;
                         showChannel.countFollowers = channel.Followers.ToString();
                         showChannel.OrganizationId = channel.OrganizationId;
                         showChannel.OwnerId = channel.OwnerId;

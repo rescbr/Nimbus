@@ -14,7 +14,7 @@ namespace Nimbus.Web.Startup
     {
         public static void RegisterSignalR(RouteCollection routes)
         {
-            routes.MapHubs();
+            //routes.MapHubs();
         }
 
         public static void RegisterWebAPIRoutes(HttpConfiguration httpConfiguration)

@@ -637,7 +637,6 @@
     <Compile Include="Utils\ImageManipulation.cs" />
     <Compile Include="Website\Controllers\ChannelController.cs" />
     <Compile Include="Website\Controllers\TopicController.cs" />
-    <Compile Include="Website\Controllers\UploadController.cs" />
     <Compile Include="Website\Models\TopicModel.cs" />
     <Compile Include="Website\Models\ChannelModel.cs" />
     <Compile Include="_Startup\DatabaseStartup.cs" />

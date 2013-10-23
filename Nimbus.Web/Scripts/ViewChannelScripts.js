@@ -19,7 +19,7 @@ function ajaxSaveNewTopic(channelID)
     var enumTopicType;
     var ajaxData = {}
     var title = document.getElementById("txtNameTopic").value;
-    var ImgUrl = document.getElementById("imgTopic").value;
+    var ImgUrl = document.getElementById("url").value;
     var shortDescription = CKEditor.instances.txtaDescription.getData();
 
     if (divTipoTopic == "divVideo")

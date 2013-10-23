@@ -14,6 +14,8 @@
     }
 </div>
 
+@Scripts.Render("~/Scripts/ViewChannelScripts.js")
+
 <div id="divInfCanal">
     <p>@Model.CurrentChannel.Name</p>
     <p>Dono: @Model.CurrentChannel.OwnerName</p>
@@ -120,3 +122,4 @@
         ]
     });
 </script>
+

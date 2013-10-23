@@ -13,6 +13,7 @@
   Novo Tópico
   Mensagens
 *@
+@Scripts.Render(("~/Scripts/jquery.form.js"))
 
 <nav class="ProfTopBar">
     <ul class="sbs">
@@ -134,11 +135,11 @@
         <p>
             Imagem ilustrativa:
         </p>
-            <input type="file" id="imgTopic" />
-            <form action='/userprofile/upload' method="post" enctype="multipart/form-data" name="imagem_original">
-                <input type="file" name="imagem" id="imgTopic" />
-                <input type="submit" value="Carregar" class="hidden" id="upload" />
+            <form action='/channel/upload' method="post" enctype="multipart/form-data" name="imagem_original">
+                <input type="file" name="imgTopic" id="imgTopic" />
+                <input type="hidden" id="url" name="url" />
                 <label>Imagem de no máx. 5MB</label>
+                <img id="imgPrevia" src="" height="100" width="150"/>
             </form>
         
         <p>
@@ -220,3 +221,23 @@
             }
             </div>
     </div>
+
+<script type="text/javascript">
+    var jcrop;
+
+    $(document).ready(function () {
+
+        $(document).on('change', 'input[name=imgTopic]', function () {
+            $("#upload").click();
+        });
+
+        $('form[name=imagem_original]').ajaxForm({
+            dataType: 'json',
+            success: function (data) {
+                $('input[name=url]').val(data.url);
+                $("#imgPrevia").attr("src", data.url);
+            }
+        });
+    });
+
+</script>

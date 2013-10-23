@@ -12,6 +12,7 @@ namespace Nimbus.Web
         public static class Azure
         {
             public const string AvatarContainer = "avatarupload";
+            public const string TopicContainer = "topicupload";
             
         }
     }
