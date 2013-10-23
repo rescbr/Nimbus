@@ -576,7 +576,8 @@
     <Content Include="Scripts\jquery.signalR-1.1.3.min.js" />
     <Content Include="Scripts\modal.js" />
     <Content Include="Scripts\ScriptsShared.js" />
-    <Content Include="Scripts\UserUtils.js" />
+    <Content Include="Scripts\ViewUserScripts.js" />
+    <Content Include="Scripts\ViewChannelScripts.js" />
     <Content Include="Styles\jquery.Jcrop.css" />
     <Content Include="Styles\jquery.Jcrop.min.css" />
     <Content Include="Styles\modal.css" />
@@ -628,6 +629,7 @@
     <Compile Include="Utils\ImageManipulation.cs" />
     <Compile Include="Website\Controllers\ChannelController.cs" />
     <Compile Include="Website\Controllers\TopicController.cs" />
+    <Compile Include="Website\Controllers\UploadController.cs" />
     <Compile Include="Website\Models\TopicModel.cs" />
     <Compile Include="Website\Models\ChannelModel.cs" />
     <Compile Include="_Startup\DatabaseStartup.cs" />

@@ -23,14 +23,22 @@ namespace Nimbus.Web.API.Controllers
         /// <param name="topicID"></param>
         /// <returns></returns>
         [NonAction]
-        public bool IsOwner(int id)
+        public bool IsOwner(int id, string tipo)
         {
             bool allow = false;
+            int channelId = -1;
             try
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    int channelId = db.SelectParam<Topic>(tp => tp.Id == id && tp.Visibility == true).Select(tp => tp.ChannelId).FirstOrDefault();
+                    if (tipo == "topic")
+                    {
+                        channelId = db.SelectParam<Topic>(tp => tp.Id == id && tp.Visibility == true).Select(tp => tp.ChannelId).FirstOrDefault();
+                    }
+                    else if (tipo == "channel")
+                    {
+                        channelId = id;
+                    }
 
                     allow = db.SelectParam<Role>(own => own.UserId == NimbusUser.UserId && own.ChannelId == channelId)
                                                                         .Select(own => own.IsOwner).FirstOrDefault();
@@ -50,17 +58,25 @@ namespace Nimbus.Web.API.Controllers
         /// <param name="topicID"></param>
         /// <returns></returns>
         [NonAction]
-        public bool IsManager(int id)
+        public bool IsManager(int id, string tipo)
         {
             bool allow = false;
+            int channelId = -1;
             try
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    int channelId = db.SelectParam<Topic>(tp => tp.Id == id && tp.Visibility == true).Select(tp => tp.ChannelId).FirstOrDefault();
+                    if (tipo == "topic")
+                    {
+                        channelId = db.SelectParam<Topic>(tp => tp.Id == id && tp.Visibility == true).Select(tp => tp.ChannelId).FirstOrDefault();
+                    }
+                    else if (tipo == "channel")
+                    {
+                        channelId = id;
+                    }
 
                     allow = db.SelectParam<Role>(mg => mg.UserId == NimbusUser.UserId && mg.ChannelId == id)
-                                                                         .Exists(mg => mg.ChannelMagager == true || mg.TopicManager == true);
+                                                                          .Exists(mg => mg.ChannelMagager == true || mg.TopicManager == true);
                 }
             }
             catch (Exception ex)
@@ -70,6 +86,7 @@ namespace Nimbus.Web.API.Controllers
             }
             return allow;
         }
+
         #endregion
 
         #region Criar e Mostrar tópico (Post e Get)
@@ -87,10 +104,24 @@ namespace Nimbus.Web.API.Controllers
             {
                 using(var db = DatabaseFactory.OpenDbConnection())
                 {
-                    bool isOwner = IsOwner(topic.Id);
-                    bool isManager = IsManager(topic.Id);
+                    bool isOwner = IsOwner(topic.ChannelId, "channel");
+                    bool isManager = IsManager(topic.ChannelId,"channel");
                     if (isOwner == true || isManager == true)
                     {
+                        topic.AuthorId = NimbusUser.UserId;
+                        if (string.IsNullOrEmpty(topic.ImgUrl))
+                        {
+                            int idCtg = db.SelectParam<Channel>(ch => ch.Id == topic.ChannelId).Select(ch => ch.CategoryId).FirstOrDefault();
+                            topic.ImgUrl = db.SelectParam<Category>(ct => ct.Id == 1).Select(ct => ct.ImageUrl).FirstOrDefault();
+                        }
+                        topic.CreatedOn = DateTime.Now;
+                        topic.LastModified = DateTime.Now;
+                        topic.Visibility = true;
+                        if (string.IsNullOrEmpty(topic.Price.ToString()))
+                        {
+                            topic.Price = 0;
+                        }
+        
                         db.Insert(topic);
                         db.Save(topic);
                         return topic;
@@ -511,8 +542,8 @@ namespace Nimbus.Web.API.Controllers
                     {
                         try
                         {
-                            bool isOwner = IsOwner(id);
-                            bool isManager = IsManager(id);
+                            bool isOwner = IsOwner(id, "topic");
+                            bool isManager = IsManager(id, "topic");
                             int channelID = db.SelectParam<Topic>(tp => tp.Id == id && tp.Visibility==true).Select(tp => tp.ChannelId).FirstOrDefault();
 
                             bool isPrivate = db.SelectParam<Channel>(ch => ch.Id == channelID).Select(p => p.IsPrivate).FirstOrDefault();
