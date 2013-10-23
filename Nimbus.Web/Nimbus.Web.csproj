@@ -624,8 +624,9 @@
     <Compile Include="API\NimbusApiController.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="Const.cs" />
-    <Compile Include="NotificationHubs\MessageNotificationHub.cs" />
-    <Compile Include="NotificationHubs\NimbusHub.cs" />
+    <Compile Include="Notifications\MessageNotification.cs" />
+    <Compile Include="Notifications\NimbusHub.cs" />
+    <Compile Include="Notifications\NimbusNotificationBase.cs" />
     <Compile Include="Utils\AzureBlob.cs" />
     <Compile Include="Utils\ImageManipulation.cs" />
     <Compile Include="Website\Controllers\ChannelController.cs" />
