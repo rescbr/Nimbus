@@ -186,6 +186,7 @@
   <ItemGroup>
     <Content Include="Global.asax" />
     <Content Include="images\Category\saude.png" />
+    <Content Include="images\favorite_topic_icon.png" />
     <Content Include="images\person_icon.png" />
     <Content Include="images\Utils\Jcrop.gif" />
     <Content Include="Scripts\ckeditor\ckeditor.js" />
@@ -607,6 +608,10 @@
     <Content Include="Website\Views\Channels.cshtml" />
     <Content Include="Website\Views\ChannelPrivateTopBar.cshtml" />
     <Content Include="Website\Views\ChannelPublicTopBar.cshtml" />
+    <Content Include="Website\Views\Topic.cshtml" />
+    <Content Include="Website\Views\TopicText.cshtml" />
+    <Content Include="Website\Views\TopicVideo.cshtml" />
+    <Content Include="Website\Views\TopicAvalicao.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\Controllers\DatabaseController.cs" />
@@ -631,6 +636,7 @@
     <Compile Include="Utils\ImageManipulation.cs" />
     <Compile Include="Website\Controllers\ChannelController.cs" />
     <Compile Include="Website\Controllers\TopicController.cs" />
+    <Compile Include="Website\Models\TopicModel.cs" />
     <Compile Include="Website\Models\ChannelModel.cs" />
     <Compile Include="_Startup\DatabaseStartup.cs" />
     <Compile Include="ExtensionMethods.cs" />
