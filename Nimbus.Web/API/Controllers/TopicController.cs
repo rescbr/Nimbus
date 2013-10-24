@@ -8,6 +8,7 @@ using ServiceStack.OrmLite;
 using Nimbus.DB.ORM;
 using Nimbus.Web.API.Models;
 using Nimbus.DB.Bags;
+using Nimbus.Web.Utils;
 
 namespace Nimbus.Web.API.Controllers
 {
@@ -97,38 +98,50 @@ namespace Nimbus.Web.API.Controllers
         /// <returns></returns>
         [Authorize]
         [HttpPost]
-        [ActionName("Post")] //default
         public Topic NewTopic(Topic topic)
         {
             try
             {
-                using(var db = DatabaseFactory.OpenDbConnection())
+                using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    bool isOwner = IsOwner(topic.ChannelId, "channel");
-                    bool isManager = IsManager(topic.ChannelId,"channel");
-                    if (isOwner == true || isManager == true)
+                    using (var trans = db.OpenTransaction(System.Data.IsolationLevel.ReadCommitted))
                     {
-                        topic.AuthorId = NimbusUser.UserId;
-                        if (string.IsNullOrEmpty(topic.ImgUrl))
+                        try
                         {
-                            int idCtg = db.SelectParam<Channel>(ch => ch.Id == topic.ChannelId).Select(ch => ch.CategoryId).FirstOrDefault();
-                            topic.ImgUrl = db.SelectParam<Category>(ct => ct.Id == 1).Select(ct => ct.ImageUrl).FirstOrDefault();
+                            bool isOwner = IsOwner(topic.ChannelId, "channel");
+                            bool isManager = IsManager(topic.ChannelId, "channel");
+                            if (isOwner == true || isManager == true)
+                            {
+                                topic.AuthorId = NimbusUser.UserId;
+                                if (string.IsNullOrEmpty(topic.ImgUrl))
+                                {
+                                    int idCtg = db.SelectParam<Channel>(ch => ch.Id == topic.ChannelId).Select(ch => ch.CategoryId).FirstOrDefault();
+                                    topic.ImgUrl = db.SelectParam<Category>(ct => ct.Id == 1).Select(ct => ct.ImageUrl).FirstOrDefault();
+                                }
+                                topic.CreatedOn = DateTime.Now;
+                                topic.LastModified = DateTime.Now;
+                                topic.Visibility = true;
+                                if (string.IsNullOrEmpty(topic.Price.ToString()))
+                                {
+                                    topic.Price = 0;
+                                }
+
+                                db.Insert(topic);
+                                db.Save(topic);
+                                topic.Id = (int)db.GetLastInsertId();
+                                trans.Commit();
+                                return topic;
+                            }
+                            else
+                            {
+                                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotAcceptable, "erro ao criar item"));
+                            }
                         }
-                        topic.CreatedOn = DateTime.Now;
-                        topic.LastModified = DateTime.Now;
-                        topic.Visibility = true;
-                        if (string.IsNullOrEmpty(topic.Price.ToString()))
+                        catch(Exception ex)
                         {
-                            topic.Price = 0;
+                            trans.Rollback();
+                            throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
                         }
-        
-                        db.Insert(topic);
-                        db.Save(topic);
-                        return topic;
-                    }
-                    else
-                    {
-                        throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotAcceptable, "erro ao criar item"));
                     }
                 }
             }
@@ -145,7 +158,6 @@ namespace Nimbus.Web.API.Controllers
         /// <returns></returns>
         [Authorize]
         [HttpGet]
-        [ActionName("Get")]
         public Topic ShowTopic(int id)
         {
             Topic topic = new Topic();
@@ -159,6 +171,8 @@ namespace Nimbus.Web.API.Controllers
                     {
                         topic = db.SelectParam<Topic>(tp => tp.Id == id).FirstOrDefault();
 
+                        topic.Title = RemoveHTMLString.StripTagsCharArray(topic.Title);
+                        topic.Description = RemoveHTMLString.StripTagsCharArray(topic.Description);                        
                         if (topic.TopicType == Nimbus.DB.Enums.TopicType.exam)
                         {
                             #region exam

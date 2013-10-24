@@ -635,6 +635,7 @@
     <Compile Include="Notifications\NimbusNotificationBase.cs" />
     <Compile Include="Utils\AzureBlob.cs" />
     <Compile Include="Utils\ImageManipulation.cs" />
+    <Compile Include="Utils\RemoveHTMLString.cs" />
     <Compile Include="Website\Controllers\ChannelController.cs" />
     <Compile Include="Website\Controllers\TopicController.cs" />
     <Compile Include="Website\Models\TopicModel.cs" />

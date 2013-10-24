@@ -20,7 +20,7 @@ function ajaxSaveNewTopic(channelID)
     var ajaxData = {}
     var title = document.getElementById("txtNameTopic").value;
     var ImgUrl = document.getElementById("url").value;
-    var shortDescription = CKEditor.instances.txtaDescription.getData();
+    var shortDescription = document.getElementById("txtaDescription").value;
 
     if (divTipoTopic == "divVideo")
     {
@@ -30,12 +30,12 @@ function ajaxSaveNewTopic(channelID)
     }
     if (divTipoTopic == "divText")
     {
-        text = CKEditor.instances.txtArticle.getData();
+        text = CKEDITOR.instances.txtaArticle.getData();
         enumTopicType = 0;
     }
     if (divTipoTopic == "divDiscussion")
     {
-        text = CKEditor.instances.txtTextMsg.getData();
+        text = CKEDITOR.instances.txtaTextMsg.getData();
         enumTopicType = 2;
     }
     if (divTipoTopic == "divExam")
@@ -53,7 +53,7 @@ function ajaxSaveNewTopic(channelID)
     ajaxData["UrlVideo"] = video;
     ajaxData["Question"] = exam;
 
-    $ajax({
+    $.ajax({
         url: "/api/topic/NewTopic",
         data: JSON.stringify(ajaxData),
         type: "POST",
@@ -79,9 +79,9 @@ function ajaxEditTopic(channelID)
 { }
 
 function ajaxTopicCallback(response) {
-    if (response.success) {
-        window.location.href = "/topic/index" + response.topicID; //TODO
+    if (response.message) {
+        alert(response.message);        
     } else {
-        alert(response.message);
+        window.location.href = "/topic/index/" + response.Id; //
     }
 }

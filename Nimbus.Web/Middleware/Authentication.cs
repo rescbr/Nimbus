@@ -53,12 +53,22 @@ namespace Nimbus.Web.Middleware
                     if (info.TokenExpirationDate.ToUniversalTime() > DateTime.Now.ToUniversalTime())
                     {
                         //tenta pegar do cache de sessão
-                        var sessionUser = (System.Web.HttpContext.Current
-                            .Session[Const.UserSession] as NimbusPrincipal);
-                        if (sessionUser != null)
+                        //var sessionUser = (System.Web.HttpContext.Current
+                        //    .Session[Const.UserSession] as NimbusPrincipal);
+                        //if (sessionUser != null)
+                        //{
+                        //    request.User = sessionUser;
+                        //}
+
+                        request.User = new NimbusPrincipal(new NimbusUser()
                         {
-                            request.User = sessionUser;
-                        }
+                            UserId = info.UserId,
+                            IsAuthenticated = true,
+                            AvatarUrl = "/images/Category/saude.png",
+                            FirstName = "first",
+                            LastName = "last",
+                            Email = "sysop@portalnimbus.com.br"
+                        });
                     }
                     else //token velho
                     {

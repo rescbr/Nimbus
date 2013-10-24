@@ -134,12 +134,15 @@
         </p>
         <p>
             Imagem ilustrativa:
+            <div id="divImgTopico" style="display:none;">
+                <img id="imgPrevia" src="" height="100" width="150" />
+            </div>
         </p>
             <form action='/channel/upload' method="post" enctype="multipart/form-data" name="imagem_original">
                 <input type="file" name="imgTopic" id="imgTopic" />
+                <input type="submit" value="Carregar" class="hidden" style="display:none" id="upload" />
                 <input type="hidden" id="url" name="url" />
                 <label>Imagem de no máx. 5MB</label>
-                <img id="imgPrevia" src="" height="100" width="150"/>
             </form>
         
         <p>
@@ -166,13 +169,13 @@
             </div>
 
             <div id="divText" style="display:none;">
-                <textarea id="txtArticle" required class="ckeditor"></textarea>
+                <textarea id="txtaArticle" required class="ckeditor"></textarea>
             </div>
 
             <div id="divDiscussion" style="display:none;">
                 <p>
                     Questão em debate:
-                    <textarea id="txtTextMsg" required class="ckeditor"></textarea>
+                    <textarea id="txtaTextMsg" required class="ckeditor"></textarea>
                 </p>
             </div>
 
@@ -236,6 +239,7 @@
             success: function (data) {
                 $('input[name=url]').val(data.url);
                 $("#imgPrevia").attr("src", data.url);
+                $("#divImgTopico").attr("style", "display:block");
             }
         });
     });
