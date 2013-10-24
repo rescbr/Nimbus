@@ -251,7 +251,8 @@ namespace Nimbus.Web.API.Controllers
 
                    if (idChannel.Count > 0)
                    {
-                       List<Topic> topic = db.SelectParam<Topic>(tp => tp.Visibility == true).Where(t => idChannel.Contains(t.Id)).ToList();
+                       List<Topic> topic = db.SelectParam<Topic>(tp => tp.Visibility == true);
+                       topic = topic.Where(t => idChannel.Contains(t.Id)).ToList();
                                                                       
                        if (topic.Count > 0)
                        {
