@@ -16,6 +16,8 @@ namespace Nimbus.Web
         {
             app.Use(typeof(Middleware.Authentication));
             app.Properties["host.AppName"] = "Nimbus";
+
+            app.MapSignalR();
         }
     }
 }

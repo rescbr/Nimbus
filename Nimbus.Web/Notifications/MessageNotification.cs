@@ -6,12 +6,14 @@ using Microsoft.AspNet.SignalR;
 
 namespace Nimbus.Web.Notifications
 {
-    public class MessageNotification
+    public class MessageNotification : NimbusNotificationBase
     {
-        public void Hello()
+        public void NewMessage(string msg, List<int> userIds)
         {
-            
-            
+            foreach (var uid in userIds)
+            {
+                NimbusHubContext.Clients.Group(NimbusHub.GetGroupName(uid)).newMessageNotification(msg);
+            }
         }
     }
 }

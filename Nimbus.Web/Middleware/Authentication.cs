@@ -5,7 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Security.Principal;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Caching;
+using System.Web.SessionState;
+using System.Reflection;
 
 namespace Nimbus.Web.Middleware
 {
@@ -53,12 +56,22 @@ namespace Nimbus.Web.Middleware
                     if (info.TokenExpirationDate.ToUniversalTime() > DateTime.Now.ToUniversalTime())
                     {
                         //tenta pegar do cache de sessão
-                        var sessionUser = (System.Web.HttpContext.Current
-                            .Session[Const.UserSession] as NimbusPrincipal);
-                        if (sessionUser != null)
+                        try
                         {
-                            request.User = sessionUser;
+                            var syswebctxw = ((System.Web.HttpContextWrapper)context.Environment["System.Web.HttpContextBase"]);
+                            var syswebctx = GetHttpContextFromWrapper(syswebctxw);
+
+                            //var stateProvider = syswebctx.Application[0];
+                            //syswebctx.Application
+                            
+                            var sessionUser = (System.Web.HttpContext.Current
+                                .Session[Const.UserSession] as NimbusPrincipal);
+                            if (sessionUser != null)
+                            {
+                                request.User = sessionUser;
+                            }
                         }
+                        catch { } //sessao nao inicializada
                     }
                     else //token velho
                     {
@@ -74,6 +87,15 @@ namespace Nimbus.Web.Middleware
             await Next.Invoke(context);
 
 
+        }
+
+        HttpContext GetHttpContextFromWrapper(HttpContextWrapper wrapper)
+        {
+            //FUCK YOU
+            var fld = typeof(HttpContextWrapper).GetField("_context", BindingFlags.NonPublic | BindingFlags.Instance);
+            
+            var ctx = fld.GetValue(wrapper);
+            return (HttpContext)ctx;
         }
     }
 }
