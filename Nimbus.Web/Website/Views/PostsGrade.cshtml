@@ -45,35 +45,29 @@
 
 @*string type_vis = "lista" ou "grade";*@
 
-@string type_vis = "lista";
+<div class="postType">
 
-<div class="type_vis">
-    @if(type_vis == "lista") {
-        <div class="postImagem">
-            <img src="@item.ImgUrl" alt="blabla" title="blabla"/>
-        </div>
-    }
-    <div class="post_Header">
+    <div class="postHeaderType">
         <h1>@item.Name</h1>
-
-        @if(type_vis == "grade")
-        {
-            <div class="postHeImg_g">
-                <img src="@item.ImgUrl" alt="blabla" title="blabla">
-            </div>
-        }
     </div>
-    <div class="postContent_g">
+
+    <div class="postImage">
+        <img src="@item.ImgUrl" alt="blabla" title="blabla">
+    </div>
+
+    <div class="postContentType">
         <p>
             @item.Description
         </p>
     </div>
-    <div class="postFooter_g">
-        <div class="postFoBoxL_g">
+
+    <div class="postFooterType">
+        <div class="postFoBoxLType">
             <p onclick="unFollow(@item.Id);">Desfavoritar</p> @*chamar js passando item.id*@
         </div>
-        <div class="postFoBoxR_g">
+        <div class="postFoBoxRType">
             <p onclick="openChannel(@item.Id);">Ler</p>
         </div>
     </div>
+
 </div>

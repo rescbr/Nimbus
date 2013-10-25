@@ -52,6 +52,7 @@ function getUrlVideo(nomecampo, nomeframe)
     
 }
 
+//Mudar de Lista pra Grade e Grade pra lista
 function ChangeToGrade(lista)
 {
     document.getElementById(lista).attr("class");
