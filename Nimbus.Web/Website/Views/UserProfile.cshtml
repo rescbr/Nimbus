@@ -12,8 +12,8 @@
 @Scripts.Render(("~/Scripts/UserUtilis.js"))
 
 
-<div class="ProBar">
-    <div class="ProfileImg">
+<div class="proBar">
+    <div class="profileImg">
         @if (Model.User.Id == Model.CurrentUser.UserId)
         {
             <a href="#modal-img" class="call-modal"><img src="@Model.User.AvatarUrl" alt="Avatar" title="Editar Avatar" id="useravatar" /></a>
@@ -27,11 +27,11 @@
     @*Se for o usuário do perfil*@
     @if (Model.User.Id == Model.CurrentUser.UserId)
 {
-    <div class="press" id="ProfileEdit">
+    <div id="profileEdit">
         <p>Edit</p>
     </div>
 }
-    <div class="AboutUser">
+    <div class="aboutUser">
         <h1>@Model.User.FirstName @Model.User.LastName</h1>
         <p>Idade: @Model.User.Age</p>
         @if (!string.IsNullOrEmpty(Model.User.City) && !string.IsNullOrEmpty(Model.User.State))
@@ -61,23 +61,23 @@
     @*Se não for o usuário*@
     @if (Model.User.Id != Model.CurrentUser.UserId)
     {
-        <div class="SendMessage">
+        <div class="sendMessage">
             <p><a href="#modal-text" class="call-modal">Enviar Mensagem</a></p> <!-- clicavel -->
         </div>
     }
     else
     {
-        <div class="Participation">
+        <div class="participation">
             <h1>Participação</h1>
             <p>@Model.User.Interaction %</p>
         </div>
     }
-    <div class="ChanPaid">
+    <div class="chanPaid">
         <h1>Canais Pagos</h1>
-        <div class="Channels">
+        <div class="channels">
             @foreach (var item in Model.ChannelPaid)
             {
-                <div class="ChanPaidImg">
+                <div class="chanPaidImg">
                     <img src="@item.ImgUrl" alt="@item.Name" width="40" height="40"/><!--title="blabla-->
                 </div>
             }
@@ -103,7 +103,9 @@
         </div>
         <footer>
             <!-- Footer -->
-            <button>Enviar</button>
+            <div class="accRef">
+                <p>Enviar</p>
+            </div>
         </footer>
     </div>
 

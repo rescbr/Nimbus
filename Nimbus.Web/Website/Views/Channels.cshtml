@@ -8,7 +8,7 @@
     <img src="/@Model.CurrentChannel.ImgUrl" id="imgCapa" height="192" alt="" width="864" />
     @if (Model.CurrentChannel.OwnerId != Model.CurrentUser.UserId)
     {
-        <div class="press accRef">
+        <div class="accRef">
             <p>Seguir</p>
         </div>
     }
@@ -38,7 +38,7 @@
         
     @if (Model.CurrentChannel.OwnerId != Model.CurrentUser.UserId)
     {
-        <div class="press SendMessage">
+        <div class="sendMessage">
             <p><a href="#modal-text" class="call-modal">Enviar Mensagem</a></p> <!-- clicavel -->
         </div>
     }
@@ -55,7 +55,7 @@
    @if (Model.RolesCurrentUser.Contains("channelmanager")
          || Model.CurrentChannel.OwnerId == Model.CurrentUser.UserId)
     {
-       <div class="press accRef">
+       <div class="accRef">
             <p>Editar Tags</p>
         </div>                                                    
     }
@@ -99,7 +99,7 @@
         </div>
         <footer>
             <!-- Footer -->
-            <div class="press accRef">
+            <div class="accRef">
                 <p>Enviar</p>
             </div>
         </footer>

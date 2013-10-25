@@ -273,7 +273,7 @@ select.sel{
 
 /*------------------ Posts Grade --------------------*/
 
-div.Post_g {
+div.post_g {
     background:         #FFFFFF;
     position:           relative;
     margin:             20px;
@@ -282,33 +282,33 @@ div.Post_g {
     float:              left;
 }
 
-div.PostHeader_g {
+div.postHeader_g {
     width:              182px;
     height:             129px;
     border:             1px solid #BE1E2D;
 }
 
-.PostHeader_g h1 {
+.postHeader_g h1 {
     padding-left:       10px;
     font-size:          small;
     font-weight:        bold;
 }
 
-div.PostHeImg_g {
+div.postHeImg_g {
     background:         #FFFFFF;
     width:              180px;
     height:             101px;
     border:             1px solid #BE1E2D;
 }
 
-div.PostHeader-img_g {
+div.postHeader-img_g {
     background:         #FFFFFF;
     width:              180px;
     height:             129px;
     border:             1px solid #BE1E2D;
 }
 
-div.PostContent_g {
+div.postContent_g {
     margin-top:         5px;
     margin-bottom:      5px;
     height:             93px;
@@ -318,43 +318,43 @@ div.PostContent_g {
     overflow:           hidden; /* Temporário. Fazer caber X caracteres ali D: */
 }
 
-.PostContent_g p {
+.postContent_g p {
     text-align:         justify;
     font-size:          small;
     line-height:        normal;
 }
 
-div.PostFooter_g {
+div.postFooter_g {
     width:              180px;
     height:             24px;
     border:             1px solid #BE1E2D;
 }
 
-div.PostFoBoxL_g, div.PostFoBoxR_g {
+div.postFoBoxL_g, div.postFoBoxR_g {
     width:              89px;
     height:             24px;
     float:              left;
 }
 
-.PostFooter_g p {
+.postFooter_g p {
     text-align:         center;
     font-size:          90%;
 }
 
-div.PostFoBoxR_g {
+div.postFoBoxR_g {
     border-left:        1px solid #BE1E2D;
 }
 
 /*------------------ Posts Lista --------------------*/
 
-div.Post_l {
+div.post_l {
     background:         #FFFFFF;
     margin-bottom:      40px;
     width:              792px;
     height:             108px;
 }
 
-div.Post_Right_l {
+div.post_Right_l {
     margin-left:        169px;
     width:              624px;
     height:             96px;
@@ -362,7 +362,7 @@ div.Post_Right_l {
     float:              left;
 }
 
-div.PostHeImg_l {
+div.postHeImg_l {
     background:         url();
     width:              168px;
     height:             106px;
@@ -370,26 +370,26 @@ div.PostHeImg_l {
     float:              left;
 }
 
-div.PostHeader-img_l {
+div.postHeader-img_l {
     background:         url();
     width:              600px;
     height:             106px;
     border:             1px solid #BE1E2D;
 }
 
-div.PostHeader_l {
+div.postHeader_l {
     width:              auto;
     height:             24px;
     border:             1px solid #BE1E2D;
 }
 
-.PostHeader_l h1 {
+.postHeader_l h1 {
     padding-left:       10px;
     font-size:          small;
     font-weight:        bold;
 }
 
-div.PostContent_l {
+div.postContent_l {
     margin-right:       5px;
     margin-left:        5px;
     height:             46px;
@@ -399,35 +399,35 @@ div.PostContent_l {
     overflow:           hidden; /* Temporário. Fazer caber X caracteres ali D: */
 }
 
-.PostContent_l p {
+.postContent_l p {
     text-align:         justify;
     font-size:          small;
     line-height:        normal;
 }
 
-div.PostFooter_l {
+div.postFooter_l {
     width:              auto;
     height:             24px;
     border:             1px solid #BE1E2D;
 }
 
-div.PostFoBoxL_l, div.PostFoBoxR_l {
+div.postFoBoxL_l, div.postFoBoxR_l {
     width:              310px;
     height:             24px;
     float:              left;
 }
 
-.PostFooter_l p {
+.postFooter_l p {
     text-align:         center;
     font-size:          90%;
 }
 
-div.PostFoBoxR_l {
+div.postFoBoxR_l {
     border-left:        1px solid #BE1E2D;
 }
 
 /*------------------ User Profile --------------------*/
-div.ProBar {
+div.proBar {
     float:              left;
     background:         #FFFFFF;
     margin-left:        20px;
@@ -436,12 +436,12 @@ div.ProBar {
     line-height:        20px;
 }
 
-.ProBar h1 {
+.proBar h1 {
     font-size:          115%;
     font-weight:        bold;
 }
 
-div.ProfileImg {
+div.profileImg {
     background:         url();
     width:              200px;
     height:             200px;
@@ -449,7 +449,7 @@ div.ProfileImg {
     margin-bottom:      15px;
 }
 
-div#ProfileEdit {
+div#profileEdit {
     margin-top:         5px;
     position:           absolute;
     width:              24px;
@@ -460,64 +460,63 @@ div#ProfileEdit {
     display:            inline-block;
 }
 
-#ProfileEdit p {
+#profileEdit p {
     text-align:         center;
  }
 
-.SendMessage {
+.sendMessage {
     margin:             0 auto;
     width:              200px;
     border:             1px solid #BE1E2D;
     text-align:         center;
 }
 
-.SendMessage p {
+.sendMessage p {
     text-align:         center;
     font-weight:        600;
     font-size:          120%;
 }
 
-div.AboutUser {
+div.aboutUser {
     margin-bottom:      24px;
 }
 
-.AboutUser p, .AboutUser h1{
+.aboutUser p, .aboutUser h1{
     text-align:         right;
 }
 
-p.AboutUser-other {
+p.aboutUser-other {
     margin-top:         5px;
     margin-bottom:      5px;
 }
 
-div.Participation {
+div.participation {
     margin-bottom:      24px;
     margin-top:         24px;
 }
 
-.Participation p {
+.participation p {
     margin-top:         15px;
     margin-bottom:      15px;
     text-align:         center;
     font-size:          xx-large;
 }
 
-div.ChaPaid {
-    width:             200px;
-    height:             auto;
+div.chaPaid {
+    float:              none;
+    margin-bottom:      24px;
+    margin-top:         24px;
 }
 
-.ChanPaid h1 {
-    margin-top:         15px;
-    margin-bottom:      15px;
-}
-
-div.Channels {
+.chanPaid h1 {
     width:              200px;
+}
+
+div.channels {
     margin:             0 auto;
 }
 
-div.ChanPaidImg {
+div.chanPaidImg {
     background:         #FFFFFF;
     width:              40px;
     height:             40px;
@@ -528,30 +527,30 @@ div.ChanPaidImg {
 
 /*------------------ Private Profile - Top Bar --------------------*/
 
-nav.ProfTopBar {
+nav.profTopBar {
     margin:             0 auto;
     width:              600px;
     height:             26px;
     border:             1px solid #BE1E2D;
 }
 
-.ProfTopBar li {
+.profTopBar li {
     width:              120px;
     text-align:         center;
 }
 
 /*Tab*/
-div.WrapperUser {
+div.wrapperUser {
     float:              left;
 }
 
-div.TabContent {
+div.tabContent {
     margin-left:        5px;
     margin-right:       5px;
 }
 
 /*------------------ Private Profile - Messages --------------------*/
-nav.TopMess {
+nav.topMess {
     margin:             0 auto;
     width:              300px;
     height:             24px;
@@ -559,25 +558,24 @@ nav.TopMess {
     border-radius:      12px;
 }
 
-.TopMess li {
+.topMess li {
     width:              145px;
     text-align:         center;
 }
 
-div.MessContent {
+div.messContent {
     margin:             0 auto;
 }
 
 /*Content*/
-div.Post_m {
-    background:         #FFFFFF;
+div.post_m {
     margin-bottom:      30px;
     width:              456px;
     height:             60px;
     border:             1px solid #BE1E2D;
 }
 
-div.Post_Right_m {
+div.post_Right_m {
     margin-left:        60px;
     width:              396px;
     height:             60px;
@@ -585,7 +583,7 @@ div.Post_Right_m {
     float:              left;
 }
 
-div.PostHeImg_m {
+div.postHeImg_m {
     background:         url();
     width:              60px;
     height:             60px;
@@ -593,13 +591,13 @@ div.PostHeImg_m {
     float:              left;
 }
 
-nav.PostHeaderLeft_m {
+nav.postHeaderLeft_m {
     width:              auto;
     height:             24px;
     float:              left;
 }
 
-nav.PostHeaderRight_m {
+nav.postHeaderRight_m {
     width:              auto;
     height:             24px;
     float:              right;
@@ -607,14 +605,14 @@ nav.PostHeaderRight_m {
     float:              right;
 }
 
-.PostHeaderRight_m li, .PostHeaderLeft_m li {
+.postHeaderRight_m li, .postHeaderLeft_m li {
     padding-left:       10px;
     padding-right:      10px;
     font-size:          small;
     font-weight:        bold;
 }
 
-div.PostContent_m {
+div.postContent_m {
     margin-top:         40px;
     margin-right:       5px;
     margin-left:        10px;
@@ -623,7 +621,7 @@ div.PostContent_m {
     overflow:           hidden; /* Temporário. Fazer caber X caracteres ali D: */
 }
 
-.PostContent_m p {
+.postContent_m p {
     text-align:         left;
     font-size:          small;
     line-height:        normal;
@@ -631,14 +629,14 @@ div.PostContent_m {
 
 /*------------------ Private Profile - Att --------------------*/
 
-div.Post_att {
+div.post_att {
     background:         #FFFFFF;
     margin-bottom:      30px;
     width:              456px;
     height:             60px;
 }
 
-div.Post_Right_att {
+div.post_Right_att {
     margin-left:        60px;
     width:              396px;
     height:             60px;
@@ -646,7 +644,7 @@ div.Post_Right_att {
     float:              left;
 }
 
-div.PostHeImg_att {
+div.postHeImg_att {
     background:         url();
     width:              60px;
     height:             60px;
@@ -654,14 +652,14 @@ div.PostHeImg_att {
     float:              left;
 }
 
-nav.PostFooterLeft_att {
+nav.postFooterLeft_att {
     width:              auto;
     height:             24px;
     padding-left:       5px;
     float:              left;
 }
 
-nav.PostFooterRight_att {
+nav.postFooterRight_att {
     width:              auto;
     height:             24px;
     float:              right;
@@ -669,13 +667,13 @@ nav.PostFooterRight_att {
     float:              right;
 }
 
-.PostFooterLeft_att li {
+.postFooterLeft_att li {
     padding-left:       5px;
     padding-right:      5px;
     font-size:          small;
 }
 
-.PostFooterRight_att li {
+.postFooterRight_att li {
     width:              50px;
     margin-left:        20px;
     text-align:         center;
@@ -684,26 +682,26 @@ nav.PostFooterRight_att {
     border:             1px solid #BE1E2D;
 }
 
-div.PostContent_att {
+div.postContent_att {
     margin-right:       5px;
     margin-left:        10px;
     width:              370px;
 }
 
-.PostContent_m att {
+.postContent_m att {
     text-align:         left;
     font-size:          small;
     line-height:        normal;
 }
 
 /*------------------ Public Profile --------------------*/
-div.MyChannels, div.ModChannels, div.Channels {
+div.myChannels, div.modChannels{
     padding-top:        40px;
     padding-bottom:     40px;
     float:              none;
 }
 
-div.MyChannels h1, div.ModChannels h1{
+div.myChannels h1, div.modChannels h1{
     padding-bottom:     20px;
 }
 
@@ -715,8 +713,9 @@ div.MyChannels h1, div.ModChannels h1{
      cursor:pointer;
 }
 
-.press:hover, .press:active {
-	background-color:  #BE1E2D;
+.press:hover, .accRef:hover, .sendMessage:hover, #profileEdit:hover, .c-lista:hover .c-grade:hover, .postFoBoxL_l:hover, .postFoBoxR_l:hover, .postFoBoxL_g:hover, .postFoBoxR_g:hover, .post_m:hover, .chanPaidImg:hover {
+	background:  #BE1E2D;
+    cursor:            pointer;
 }
 
 .attChoice {

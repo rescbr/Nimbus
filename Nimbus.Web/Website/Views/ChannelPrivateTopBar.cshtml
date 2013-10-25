@@ -14,13 +14,13 @@
   Mensagens
 *@
 
-<nav class="ProfTopBar">
+<nav class="profTopBar">
     <ul class="sbs">
-        <li><a name="divNotifications" onclick="EnableDiv(this.name, 'currentDiv');">Atualizações</a></li>
-        <li><a name="divPopularTopics" onclick="EnableDiv(this.name, 'currentDiv');">Mais svistos</a></li>
-        <li><a name="divAllTopics" onclick="EnableDiv(this.name, 'currentDiv');">Todos</a></li>
-        <li><a name="divNewTopic" onclick="EnableDiv(this.name, 'currentDiv');">Novo tópico</a></li>
-        <li><a name="divMessages" onclick="EnableDiv(this.name, 'currentDiv');">Mensagens</a></li>
+        <li class="press"><a name="divNotifications" onclick="EnableDiv(this.name, 'currentDiv');">Atualizações</a></li>
+        <li class="press"><a name="divPopularTopics" onclick="EnableDiv(this.name, 'currentDiv');">Mais svistos</a></li>
+        <li class="press"><a name="divAllTopics" onclick="EnableDiv(this.name, 'currentDiv');">Todos</a></li>
+        <li class="press"><a name="divNewTopic" onclick="EnableDiv(this.name, 'currentDiv');">Novo tópico</a></li>
+        <li class="press"><a name="divMessages" onclick="EnableDiv(this.name, 'currentDiv');">Mensagens</a></li>
     </ul>
 </nav>
 
@@ -31,21 +31,21 @@
         <p>Últimos tópicos</p>
         @foreach (var item in Model.AllTopics.Take(15).OrderByDescending(m => m.LastModified))
         {
-                <div class="Post_g">
-                    <div class="PostHeader_g">
+                <div class="post_g">
+                    <div class="postHeader_g">
                         <h1>@item.Title</h1>
-                            <div class="PostHeImg_g">
+                            <div class="postHeImg_g">
                                 <img src="/@item.ImgUrl" alt="@item.TopicType.ToString()" title="@item.Title"> -->
                             </div>
                         </div>
-                        <div class="PostContent_g">
+                        <div class="postContent_g">
                             <p>@item.Description </p>
                             </div>
-                            <div class="PostFooter_g">
-                                <div class="PostFoBoxL_g">
+                            <div class="postFooter_g">
+                                <div class="postFoBoxL_g">
                                     <a>Ler mais tarde</a>
                                 </div>
-                                <div class="PostFoBoxR_g">
+                                <div class="postFoBoxR_g">
                                     <a href="/topic/@item.Id">Ler</a>
                                 </div>
                             </div>
@@ -76,21 +76,21 @@
     <div id="divPopularTopics" style="display:none;">
         @foreach (var item in Model.AllTopics.OrderByDescending(m => m.Count))
         {
-            <div class="Post_g">
-                <div class="PostHeader_g">
+            <div class="post_g">
+                <div class="postHeader_g">
                     <h1>@item.Title</h1>
-                    <div class="PostHeImg_g">
+                    <div class="postHeImg_g">
                         <img src="/@item.ImgUrl" alt="@item.TopicType.ToString()" title="@item.Title"> -->
                     </div>
                 </div>
-                <div class="PostContent_g">
+                <div class="postContent_g">
                     <p>@item.Description </p>
                 </div>
-                <div class="PostFooter_g">
-                    <div class="PostFoBoxL_g">
+                <div class="postFooter_g">
+                    <div class="postFoBoxL_g">
                         <a>Ler mais tarde</a>
                     </div>
-                    <div class="PostFoBoxR_g">
+                    <div class="postFoBoxR_g">
                         <a href="/topic/@item.Id">Ler</a>
                     </div>
                 </div>
@@ -103,21 +103,21 @@
     <div id="divAllTopics" style="display:none;">
         @foreach (var item in Model.AllTopics.OrderByDescending(m => m.LastModified))
         {
-            <div class="Post_g">
-                <div class="PostHeader_g">
+            <div class="post_g">
+                <div class="postHeader_g">
                     <h1>@item.Title</h1>
-                    <div class="PostHeImg_g">
+                    <div class="postHeImg_g">
                         <img src="/@item.ImgUrl" alt="@item.TopicType.ToString()" title="@item.Title"> -->
                     </div>
                 </div>
-                <div class="PostContent_g">
+                <div class="postContent_g">
                     <p>@item.Description </p>
                 </div>
-                <div class="PostFooter_g">
-                    <div class="PostFoBoxL_g">
+                <div class="postFooter_g">
+                    <div class="postFoBoxL_g">
                         <a>Ler mais tarde</a>
                     </div>
-                    <div class="PostFoBoxR_g">
+                    <div class="postFoBoxR_g">
                         <a href="/topic/@item.Id">Ler</a>
                     </div>
                 </div>
@@ -186,24 +186,24 @@
                 { 
                 foreach (var item in Model.Messages)
                 {
-                        <div class="Post_m">
-                            <div class="PostHeImg_m">
+                        <div class="post_m">
+                            <div class="postHeImg_m">
                                 <img src=@item.AvatarUrl alt="blabla" title="blabla">
                             </div>
-                            <div class="Post_Right_m">
-                                <nav class="PostHeaderLeft_m">
+                            <div class="post_Right_m">
+                                <nav class="postHeaderLeft_m">
                                     <ul class="sbs">
                                         <li>@item.UserName/li>
                                             <li>@item.Title</li>
                                             </ul>
                                         </nav>
-                                        <nav class="PostHeaderRight_m">
+                                        <nav class="postHeaderRight_m">
                                             <ul class="sbs">
                                                 <li>@string.Format("{0:d/M/yyyy}", item.Date)</li>
                                                     <li>@string.Format("{0:HH:mm}", item.Date)</li>
                                                     </ul>
                                                 </nav>
-                                                <div class="PostContent_m">
+                                                <div class="postContent_m">
                                                     <p>@item.Text </p>
                                                     </div>
                                                 </div>
