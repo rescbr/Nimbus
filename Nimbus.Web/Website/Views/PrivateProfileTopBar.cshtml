@@ -4,6 +4,7 @@
 <script type="text/javascript">
  //global
     currentDiv = 'divNotification';
+
 </script>
 
 <div class="wrapperUser">
@@ -40,6 +41,27 @@
     </div>
 
     <div id="divMyChannels" style="display:none;">
+        <nav class="cont-right">
+            <ul class="sbs">
+                <li>
+                    <div name="post_lista" class="c-lista" onclick="ChangeTo(this.name);">
+                        <!-- imagem icone lista -->
+                        <div class=" ret1"></div>
+                        <div class="ret2"></div>
+                    </div>
+                </li>
+                <li>
+                    <div name="post_grade" class="c-grade" onclick="ChangeTo(this.name);">
+                        <!-- imagem icone grade -->
+                        <div class="quad1"></div>
+                        <div class="quad2"></div>
+                        <div class="quad3"></div>
+                        <div class="quad4"></div>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+
         @if (Model.CurrentUser.UserId == Model.User.Id)
         {
             foreach (var item in Model.MyChannels)
@@ -72,6 +94,28 @@
     </div>
 
     <div id="divChannelFollows" style="display:none;">
+        <nav class="cont-right">
+            <ul class="sbs">
+                <li>
+                    <div class="c-lista">
+                        <!-- imagem icone lista -->
+                        <div class="ret1"></div>
+                        <div class="ret2"></div>
+                    </div>
+                </li>
+                <li>
+                    <div class="c-grade">
+                        <!-- imagem icone grade -->
+                        <div class="quad1"></div>
+                        <div class="quad2"></div>
+                        <div class="quad3"></div>
+                        <div class="quad4"></div>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+
+
 
         @*Aparecer o exemplo*@
         <div class="post_g">
@@ -130,6 +174,27 @@
     </div>
 
     <div id="divReadLater" style="display:none;">
+        <nav class="cont-right">
+            <ul class="sbs">
+                <li>
+                    <div class="c-lista">
+                        <!-- imagem icone lista -->
+                        <div class="ret1"></div>
+                        <div class="ret2"></div>
+                    </div>
+                </li>
+                <li>
+                    <div class="c-grade">
+                        <!-- imagem icone grade -->
+                        <div class="quad1"></div>
+                        <div class="quad2"></div>
+                        <div class="quad3"></div>
+                        <div class="quad4"></div>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+
         @*Aparecer o exemplo*@
         <div class="post_g">
             <div class="postHeader_g">

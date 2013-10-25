@@ -52,4 +52,8 @@ function getUrlVideo(nomecampo, nomeframe)
     
 }
 
+function ChangeToGrade(lista)
+{
+    document.getElementById(lista).attr("class");
 
+}
