@@ -116,7 +116,7 @@ namespace Nimbus.Web.API.Controllers
                                 if (string.IsNullOrEmpty(topic.ImgUrl))
                                 {
                                     int idCtg = db.SelectParam<Channel>(ch => ch.Id == topic.ChannelId).Select(ch => ch.CategoryId).FirstOrDefault();
-                                    topic.ImgUrl = db.SelectParam<Category>(ct => ct.Id == 1).Select(ct => ct.ImageUrl).FirstOrDefault();
+                                    topic.ImgUrl = "/" + db.SelectParam<Category>(ct => ct.Id == 1).Select(ct => ct.ImageUrl).FirstOrDefault();
                                 }
                                 topic.CreatedOn = DateTime.Now;
                                 topic.LastModified = DateTime.Now;
@@ -251,9 +251,10 @@ namespace Nimbus.Web.API.Controllers
 
                    if (idChannel.Count > 0)
                    {
-                       List<Topic> topic = db.SelectParam<Topic>(tp => tp.Visibility == true);
-                       topic = topic.Where(t => idChannel.Contains(t.Id)).ToList();
-                                                                      
+                       
+                       List<Topic> topic = db.Where<Topic>(tp => tp.Visibility == true);
+                       topic = topic.Where(t => idChannel.Contains(t.ChannelId)).ToList();
+                                         
                        if (topic.Count > 0)
                        {
                            foreach (var item in topic)

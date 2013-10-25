@@ -155,13 +155,13 @@ namespace Nimbus.Web.API.Controllers
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    List<int> listIdMsg = db.SelectParam<Message>(r => r.ChannelId == id && r.Visible == true)
-                                                                               .Select(r => r.Id).ToList();
+                    List<int> listIdMsg = db.SelectParam<ReceiverMessage>(rv => rv.UserId == NimbusUser.UserId).Select(rv => rv.MessageId).ToList();
 
+                    
                     foreach (int item in listIdMsg)
                     {
                         MessageBag bag = new MessageBag();
-                        Message msg = db.SelectParam<Message>(m => m.Visible == true && m.Id == item).First();
+                        Message msg = db.Where<Message>(m => m.Visible == true && m.Id == item ).First();
                         bag.ChannelId = msg.ChannelId;
                         bag.Date = msg.Date;
                         bag.Id = msg.Id;
