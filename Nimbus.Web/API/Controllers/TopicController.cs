@@ -151,6 +151,75 @@ namespace Nimbus.Web.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Método para editar um tópico
+        /// </summary>
+        /// <param name="topic"></param>
+        /// <returns></returns>
+        [Authorize]
+        [HttpPost]
+        public Topic EditTopic(Topic topic)
+        {
+            try
+            {
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {
+                    using (var trans = db.OpenTransaction(System.Data.IsolationLevel.ReadCommitted))
+                    {
+                        try
+                        {
+                            bool isOwner = IsOwner(topic.ChannelId, "channel");
+                            bool isManager = IsManager(topic.ChannelId, "channel");
+                            if (isOwner == true || isManager == true)
+                            {
+                                Topic tpc = db.SelectParam<Topic>(tp => tp.Id == topic.Id).FirstOrDefault();
+                                tpc.Description = topic.Description;
+
+                                if (string.IsNullOrEmpty(topic.ImgUrl))
+                                {
+                                    int idCtg = db.SelectParam<Channel>(ch => ch.Id == tpc.ChannelId).Select(ch => ch.CategoryId).FirstOrDefault();
+                                    tpc.ImgUrl = "/" + db.SelectParam<Category>(ct => ct.Id == 1).Select(ct => ct.ImageUrl).FirstOrDefault();
+                                }
+                                tpc.LastModified = DateTime.Now;
+                                //tpc.Question = topic.Question;
+                                tpc.Text = topic.Text;
+                                tpc.Title = topic.Title;
+                                tpc.UrlCapa = topic.UrlCapa;
+                                tpc.UrlVideo = topic.UrlVideo;
+                                tpc.Visibility = true;
+                                if (string.IsNullOrEmpty(topic.Price.ToString()))
+                                {
+                                    tpc.Price = 0;
+                                }
+                                else
+                                {
+                                    tpc.Price = topic.Price;
+                                }
+
+                                db.Insert(tpc);
+                                db.Save(tpc);
+                                trans.Commit();
+                                return topic;
+                            }
+                            else
+                            {
+                                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotAcceptable, "erro ao editar item"));
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            trans.Rollback();
+                            throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+            }
+        }
+
         //TODO terminar essa funçao: parte de mostras os topicos relacionados
         /// <summary>
         /// carregar informações gerais de um tópico, chammar a função de comentarios e count favoritos

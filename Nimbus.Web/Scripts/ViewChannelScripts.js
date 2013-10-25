@@ -15,7 +15,7 @@ function SaveNewTopic(channelID, isEdit)
 function ajaxSaveNewTopic(channelID)
 {
     var video; 
-    var text; var exam = null;
+    var text; var exam;
     var enumTopicType;
     var ajaxData = {}
     var title = document.getElementById("txtNameTopic").value;
@@ -44,39 +44,98 @@ function ajaxSaveNewTopic(channelID)
 
         //TODO
     }
-    ajaxData["Title"] = title;
-    ajaxData["ImgUrl"] = ImgUrl;
-    ajaxData["Description"] = shortDescription;
-    ajaxData["ChannelId"] = channelID;
-    ajaxData["TopicType"] = enumTopicType;
-    ajaxData["Text"] = text;
-    ajaxData["UrlVideo"] = video;
-    ajaxData["Question"] = exam;
+    if (title != "" && shortDescription != "" && channelID > 0 && (text != "" || video != "" || exam != ""))
+    {
+        ajaxData["Title"] = title;
+        ajaxData["ImgUrl"] = ImgUrl;
+        ajaxData["Description"] = shortDescription;
+        ajaxData["ChannelId"] = channelID;
+        ajaxData["TopicType"] = enumTopicType;
+        ajaxData["Text"] = text;
+        ajaxData["UrlVideo"] = video;
+        ajaxData["Question"] = exam;
 
-    $.ajax({
-        url: "/api/topic/NewTopic",
-        data: JSON.stringify(ajaxData),
-        type: "POST",
-        contentType: "application/json;charset=utf-8",
-        statusCode: {
-            200: function (newData)
-            {
-                ajaxTopicCallback(newData);
-                //liumpar campos
-            },
+        $.ajax({
+            url: "/api/topic/NewTopic",
+            data: JSON.stringify(ajaxData),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            statusCode: {
+                200: function (newData) {
+                    ajaxTopicCallback(newData);
+                    //liumpar campos
+                },
 
-            400: function ()
-            {
-                //erro
-                ajaxTopicCallback(newData);
+                400: function () {
+                    //erro
+                    ajaxTopicCallback(newData);
+                }
             }
-        }
-    });
+        });
+        
+    }
+    
 }
 
 
-function ajaxEditTopic(channelID)
-{ }
+function ajaxEditTopic()
+{
+    var video;
+    var text; var exam;
+    var ajaxData = {}
+    var title = document.getElementById("").value;
+    var ImgUrl = document.getElementById("").value;
+    var shortDescription = document.getElementById("").value;
+    var topicId = document.getElementById("").value;
+    var enumTopicType = document.getElementById(""), value;
+    var price = document.getElementById().value;
+
+    if (enumTopicType == 1) {
+        video = document.getElementById('iframeVideo').src;
+    }
+    if (enumTopicType == 0) {
+        text = CKEDITOR.instances.txtaArticle.getData();
+    }
+    if (enumTopicType == 2) {
+        text = CKEDITOR.instances.txtaTextMsg.getData();
+    }
+    if (enumTopicType == 3) {
+        //TODO
+    }
+        
+    if (title != "" && shortDescription != "" && topicId > 0 && (text != "" || video != "" || exam != "")) {
+        ajaxData["Title"] = title;
+        ajaxData["ImgUrl"] = ImgUrl;
+        ajaxData["Description"] = shortDescription;
+        ajaxData["ChannelId"] = channelID;
+        ajaxData["TopicType"] = enumTopicType;
+        ajaxData["Text"] = text;
+        ajaxData["UrlVideo"] = video;
+        ajaxData["Question"] = exam;
+        ajaxData["Price"] = price;
+        ajaxData["Id"] = topicId;
+
+        $.ajax({
+            url: "/api/topic/EditTopic",
+            data: JSON.stringify(ajaxData),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            statusCode: {
+                200: function (newData) {
+                    ajaxTopicCallback(newData);
+                    //liumpar campos
+                },
+
+                400: function () {
+                    //erro
+                    ajaxTopicCallback(newData);
+                }
+            }
+        });
+
+    }
+
+}
 
 function ajaxTopicCallback(response) {
     if (response.message) {
