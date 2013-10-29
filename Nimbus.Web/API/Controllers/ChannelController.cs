@@ -1013,7 +1013,7 @@ namespace Nimbus.Web.API.Controllers
                             {
                                 db.Insert(channel);
                                 int channelID = (int)db.GetLastInsertId();
-
+                                channel.Id = channelID;
                                 VoteChannel vote = new VoteChannel
                                 {
                                     ChannelId = channelID,

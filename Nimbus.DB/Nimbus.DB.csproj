@@ -55,6 +55,7 @@
     <Compile Include="ChannelReported.cs" />
     <Compile Include="ChannelUser.cs" />
     <Compile Include="CommentReported.cs" />
+    <Compile Include="ImgTopChannel.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="Premium.cs" />
     <Compile Include="PremiumUser.cs" />

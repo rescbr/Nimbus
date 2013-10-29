@@ -13,7 +13,8 @@
             <li class="press"><a name="divMyChannels" onclick="EnableDiv(this.name, 'currentDiv');">Meus Canais</a></li>
             <li class="press"><a name="divChannelFollows" onclick="EnableDiv(this.name, 'currentDiv');">Canais Seguidos</a></li>
             <li class="press"><a name="divReadLater" onclick="EnableDiv(this.name, 'currentDiv');">Marcados</a></li>
-            <li class="press"><a name="divMessages" onclick="EnableDiv(this.name, 'currentDiv');">Mensagens</a></li>		
+            <li class="press"><a name="divMessages" onclick="EnableDiv(this.name, 'currentDiv');">Mensagens</a></li>	
+            <li class="=press"><a name="divNewChannel" onclick="EnableDiv(this.name, 'currentDiv');">Novo Canal</a></li>	
 	    </ul>
     </nav>
 
@@ -242,6 +243,49 @@
             </div>
         }
         }
+    </div>
+
+    <div id="divNewChannel" style="display:none">
+        <form action='/userprofile/SaveNewChannel' method="post" enctype="multipart/form-data" name="saveChannel">
+            @if (Model.CurrentUser.UserId == Model.User.Id)
+            {
+                    <p>
+                        Nome:
+                        <input id="txtNameNewChannel" name="txtNameNewChannel" type="text" maxlength="50" min="" required />
+                    </p>
+                    <p>
+                        Descrição:
+                        <textarea id="txtaDescNewChannel" name="txtaDescNewChannel" cols="30" rows="5" maxlength="400"></textarea>
+                    </p>
+                    <p>
+                        Categoria:
+                        <select id="slcCategory" name="slcCategory">
+                            <option value="0" selected>Selecionar categoria</option>
+                            @foreach (var item in Model.Categories.OrderBy(c => c.Name))
+                            {
+                                    <option value="@item.Id">@item.Name</option>
+                            }
+                            </select>
+                        </p>
+                        <p>
+                            Este canal é um curso?
+                            <input type="radio" name="isCourse" value="true" required /> Sim
+                            <input type="radio" name="isCourse" value="false" required />Não
+                        </p>
+                        <p>
+                            Aberto para comentários:
+                            <input type="radio" name="openComment" value="true" required /> Sim
+                            <input type="radio" name="openComment" value="false" required />Não
+                        </p>
+                        <input type="submit" value="Cancelar" id="cancelar" onclick="Clear();" />
+                        <input type="submit" value="Salvar" id="salvar" />
+                        @*Se for pago, escolher preço
+                          Se for de org != nimbus, poder escolher entre privado ou aberto, poder escolher
+                            a foto da capa personalizada
+                        <p>Adicionar Moderadores:</p> *@
+            }
+            </form>
+        
     </div>
 
     @*Tab*@

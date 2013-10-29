@@ -11,6 +11,8 @@ using Nimbus.DB.ORM;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using System.Net;
+
 
 namespace Nimbus.Web.Website.Controllers
 {
@@ -22,6 +24,7 @@ namespace Nimbus.Web.Website.Controllers
             var channelApi = ClonedContextInstance<API.Controllers.ChannelController>();
             var userApi = ClonedContextInstance<API.Controllers.UserController>();
             var msgApi = ClonedContextInstance<API.Controllers.MessageController>();
+            var categoryApi = ClonedContextInstance<API.Controllers.CategoryController>();
             var userprofile = new UserProfileModel()
             {
                 CurrentUser = NimbusUser,
@@ -30,7 +33,8 @@ namespace Nimbus.Web.Website.Controllers
                 ChannelFollow = channelApi.FollowsChannel(NimbusOrganization.Id),
                 MyChannels = channelApi.MyChannel(),
                 ReadLater = channelApi.showReadLaterChannel(NimbusOrganization.Id),
-                Messages = msgApi.ReceivedMessages()
+                Messages = msgApi.ReceivedMessages(),
+                Categories = categoryApi.showAllCategory()
             };
             return View("UserProfile", userprofile);
         }
@@ -186,5 +190,41 @@ namespace Nimbus.Web.Website.Controllers
             pathFinal += "?x=" + DateTime.Now.ToFileTime().ToString();
             return Json(new { url = pathFinal });
         }
+
+        [HttpPost]
+        public ActionResult SaveNewChannel()
+        {
+                var channelAPI = ClonedContextInstance<API.Controllers.ChannelController>();
+                var categoryAPI = ClonedContextInstance<API.Controllers.CategoryController>(); 
+                Channel channel = new Channel();
+                int idCateg = Convert.ToInt32(Request.Form["slcCategory"]);
+
+                channel.CategoryId = idCateg;
+                channel.CreatedOn = DateTime.Now;
+                channel.Description = Request.Form["txtaDescNewChannel"];
+                channel.Followers = 0;
+                channel.ImgUrl = categoryAPI.GetImgTopChannel(idCateg); 
+                channel.IsCourse = Convert.ToBoolean(Request.Form["isCourse"]);
+                channel.IsPrivate = false;
+                channel.LastModification = DateTime.Now;
+                channel.Name = Request.Form["txtNameNewChannel"];
+                channel.OpenToComments = Convert.ToBoolean(Request.Form["openComment"]); ;
+                channel.OrganizationId = NimbusOrganization.Id;
+                channel.OwnerId = NimbusUser.UserId;
+                channel.Price = 0;
+                channel.Visible = true;
+            try
+            {
+
+                channel = channelAPI.NewChannel(channel);                
+                return RedirectToRoute(new { controller = "channel", action = "index", id = channel.Id});
+                
+            }
+            catch (Exception ex)
+            {
+                throw ex; //TODO
+            }
+        }
+
     }
 }

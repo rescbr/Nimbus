@@ -22,8 +22,9 @@ namespace Nimbus.Web
                     using (var trans = db.OpenTransaction())
                     {
                         //criar tabelas
-                        
+
                         db.CreateTable(false, typeof(Category));
+                        db.CreateTable(false, typeof(ImgTopChannel));
                         db.CreateTable(false, typeof(Ad)); 
                         db.CreateTable(false, typeof(Organization));
                         db.CreateTable(false, typeof(User));

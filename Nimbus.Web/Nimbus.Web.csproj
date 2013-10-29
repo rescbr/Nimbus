@@ -185,9 +185,40 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
+    <Content Include="images\CapaChannel\certificacao.png" />
+    <Content Include="images\CapaChannel\ciencias.png" />
+    <Content Include="images\CapaChannel\concursos.png" />
+    <Content Include="images\CapaChannel\culinaria.png" />
+    <Content Include="images\CapaChannel\esportes.png" />
+    <Content Include="images\CapaChannel\filosofia.png" />
+    <Content Include="images\CapaChannel\fotografia.png" />
+    <Content Include="images\CapaChannel\jardinagem.png" />
+    <Content Include="images\CapaChannel\linguas.png" />
+    <Content Include="images\CapaChannel\literatura.png" />
+    <Content Include="images\CapaChannel\musica.png" />
+    <Content Include="images\CapaChannel\programacao.png" />
+    <Content Include="images\CapaChannel\saude.png" />
+    <Content Include="images\CapaChannel\televisao.png" />
+    <Content Include="images\CapaChannel\vestibular.png" />
+    <Content Include="images\Category\animacao.png" />
+    <Content Include="images\Category\artes.png" />
+    <Content Include="images\Category\artesanato.png" />
+    <Content Include="images\Category\astronomia.png" />
+    <Content Include="images\Category\certificacao.png" />
+    <Content Include="images\Category\ciencias.png" />
+    <Content Include="images\Category\concursos.png" />
+    <Content Include="images\Category\culinaria.png" />
+    <Content Include="images\Category\esportes.png" />
+    <Content Include="images\Category\filosofia.png" />
+    <Content Include="images\Category\fotografia.png" />
+    <Content Include="images\Category\jardinagem.png" />
+    <Content Include="images\Category\linguas.png" />
+    <Content Include="images\Category\literatura.png" />
+    <Content Include="images\Category\musica.png" />
+    <Content Include="images\Category\programacao.png" />
     <Content Include="images\Category\saude.png" />
-    <Content Include="images\favorite_topic_icon.png" />
-    <Content Include="images\person_icon.png" />
+    <Content Include="images\Category\televisao.png" />
+    <Content Include="images\Category\vestibular.png" />
     <Content Include="images\Utils\Jcrop.gif" />
     <Content Include="Scripts\ckeditor\ckeditor.js" />
     <Content Include="Scripts\ckeditor\config.js" />
@@ -617,6 +648,7 @@
   <ItemGroup>
     <Compile Include="Admin\Controllers\DatabaseController.cs" />
     <Compile Include="API\Controllers\AdController.cs" />
+    <Compile Include="API\Controllers\CategoryController.cs" />
     <Compile Include="API\Controllers\ChannelController.cs" />
     <Compile Include="API\Controllers\CommentController.cs" />
     <Compile Include="API\Controllers\MessageController.cs" />
