@@ -44,6 +44,7 @@
     <Compile Include="Ad.cs" />
     <Compile Include="Badge.cs" />
     <Compile Include="Bags\AdsBag.cs" />
+    <Compile Include="Bags\CategoryBag.cs" />
     <Compile Include="Bags\ChannelBag.cs" />
     <Compile Include="Bags\CommentBag.cs" />
     <Compile Include="Bags\MessageBag.cs" />

@@ -531,15 +531,22 @@ namespace Nimbus.Web.API.Controllers
         /// <returns></returns>
         [Authorize]
         [HttpGet]
-        public Category CategoryTopic(int id)
+        public CategoryBag CategoryTopic(int id)
         {
-            Category category = new Category();
+            CategoryBag category = new CategoryBag();
             try
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
                     int catID = db.SelectParam<Channel>(ch => ch.Id == id && ch.Visible == true).Select(ch => ch.CategoryId).FirstOrDefault();
-                    category = db.SelectParam<Category>(ct => ct.Id == catID).FirstOrDefault();
+                    Category ctg = new Category();
+                    ctg = db.SelectParam<Category>(ct => ct.Id == catID).FirstOrDefault();
+                    category.ColorCode = ctg.ColorCode;
+                    category.Id = ctg.Id;
+                    category.ImageUrl = ctg.ImageUrl;
+                    category.ImgTopChannel = db.SelectParam<ImgTopChannel>(c => c.CategoryId == ctg.Id).Select(c => c.UrlImg).FirstOrDefault();
+                    category.LocalizedName = ctg.LocalizedName;
+                    category.Name = ctg.Name;                    
                 }
             }
             catch (Exception ex)
