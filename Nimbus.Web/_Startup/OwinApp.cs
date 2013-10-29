@@ -14,7 +14,8 @@ namespace Nimbus.Web
     {
         public void Configuration(Owin.IAppBuilder app)
         {
-            app.Use(typeof(Middleware.Authentication));
+            
+            //app.Use(typeof(Middleware.Authentication));
             app.Properties["host.AppName"] = "Nimbus";
 
             app.MapSignalR();

@@ -674,7 +674,9 @@
     <Compile Include="_Startup\Routing.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="packages.config" />
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="NimbusSNK.snk" />
     <Content Include="Scripts\jquery-2.0.3.min.map" />
     <None Include="Web.Debug.config">

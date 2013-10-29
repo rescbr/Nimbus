@@ -9,39 +9,83 @@ using System.Web;
 using System.Web.Caching;
 using System.Web.SessionState;
 using System.Reflection;
+using System.Threading;
+using System.Linq;
+using System.Diagnostics;
 
 namespace Nimbus.Web.Middleware
 {
     /// <summary>
-    /// Middleware responsável pela autenticação do Nimbus
+    /// Módulo IIS responsável pela autenticação do Nimbus
     /// </summary>
-    public class Authentication : OwinMiddleware
+    public class Authentication : IHttpModule
     {
-        public Authentication(OwinMiddleware next) : base(next) { }
-        //public override async Task Invoke(OwinRequest request, OwinResponse response)
-        public override async Task Invoke(IOwinContext context)
+        void IHttpModule.Dispose() { }
+        void IHttpModule.Init(HttpApplication app)
         {
-            var request = context.Request;
-            var response = context.Response;
+            
+            app.PostMapRequestHandler += SwapToForceSessionHandler;
+            app.PostAcquireRequestState += SwapToOriginalHandler;
+            app.PreRequestHandlerExecute += PreRequestAuthenticateUser;
+            app.PostRequestHandlerExecute += RedirectToLoginPageIfNotAuthorized;
+        }
 
-            response.OnSendingHeaders((c) =>
+        void SwapToForceSessionHandler(object sender, EventArgs e)
+        {
+            HttpApplication app = (HttpApplication)sender;
+            
+            if (app.Context.Handler is IReadOnlySessionState || app.Context.Handler is IRequiresSessionState)
             {
-                var ctx = (IOwinContext)c;
-                if (ctx.Response.StatusCode == 401)
+                // no need to replace the current handler
+                return;
+            }
+
+            // swap the current handler
+            app.Context.Handler = new ForceSessionHandler(app.Context.Handler);
+        }
+
+        void SwapToOriginalHandler(object sender, EventArgs e)
+        {
+            HttpApplication app = (HttpApplication)sender;
+            ForceSessionHandler resourceHttpHandler = HttpContext.Current.Handler as ForceSessionHandler;
+
+            if (resourceHttpHandler != null)
+            {
+                // set the original handler back
+                HttpContext.Current.Handler = resourceHttpHandler.OriginalHandler;
+            }
+
+            // -> at this point session state should be available
+            Debug.Assert(app.Session != null, "it did not work :(");
+        }
+
+        void RedirectToLoginPageIfNotAuthorized(object sender, EventArgs e)
+        {
+            HttpApplication app = sender as HttpApplication;
+            HttpContext context = app.Context;
+
+            if (context.Response.StatusCode == 401)
+            {
+                //apenas faz o redirecionamento caso a request seja de um browser
+                if (context.Request.AcceptTypes.Contains("text/html"))
                 {
-                    //apenas faz o redirecionamento caso a request seja de um browser
-                    if (ctx.Request.Accept.Contains("text/html"))
-                    {
-                        string originalUrl = ctx.Request.Uri.PathAndQuery;
-                        ctx.Response.Redirect(String.Format("/login?redirect={0}", Uri.EscapeDataString(originalUrl)));
-                    }
-                    //senão continua com o 401
+                    string originalUrl = context.Request.Url.PathAndQuery;
+                    context.Response.Redirect(String.Format("/login?redirect={0}", Uri.EscapeDataString(originalUrl)));
                 }
-            }, context);
+                //senão continua com o 401
+            }
+        }
+
+        void PreRequestAuthenticateUser(object sender, EventArgs e)
+        {
+            HttpApplication app = sender as HttpApplication;
+            HttpContext context = app.Context;
+
+            if (context.Handler == null) return; //request não possui handler, página estática, ignorar auth
 
             //Lê Cookie
             var cookies = context.Request.Cookies;
-            string sessionToken = cookies["nsc-session"];
+            string sessionToken = cookies["nsc-session"].Value;
 
             if (sessionToken != null)
             {
@@ -58,20 +102,17 @@ namespace Nimbus.Web.Middleware
                         //tenta pegar do cache de sessão
                         try
                         {
-                            var syswebctxw = ((System.Web.HttpContextWrapper)context.Environment["System.Web.HttpContextBase"]);
-                            var syswebctx = GetHttpContextFromWrapper(syswebctxw);
-
-                            //var stateProvider = syswebctx.Application[0];
-                            //syswebctx.Application
-                            
-                            var sessionUser = (System.Web.HttpContext.Current
-                                .Session[Const.UserSession] as NimbusPrincipal);
+                            var sessionUser = (context.Session[Const.UserSession] as NimbusPrincipal);
                             if (sessionUser != null)
                             {
-                                request.User = sessionUser;
+                                context.User = sessionUser;
                             }
                         }
-                        catch { } //sessao nao inicializada
+                        catch (Exception ex)
+                        {
+                            Debug.WriteLine(String.Format("Nimbus: context.Session exception on request to {0}: {1}",
+                                context.Request.Path, ex.Message));
+                        } //sessao nao inicializada
                     }
                     else //token velho
                     {
@@ -82,20 +123,38 @@ namespace Nimbus.Web.Middleware
                 }
             }
             else { } //token = null
-            
 
-            await Next.Invoke(context);
-
-
-        }
-
-        HttpContext GetHttpContextFromWrapper(HttpContextWrapper wrapper)
-        {
-            //FUCK YOU
-            var fld = typeof(HttpContextWrapper).GetField("_context", BindingFlags.NonPublic | BindingFlags.Instance);
-            
-            var ctx = fld.GetValue(wrapper);
-            return (HttpContext)ctx;
         }
     }
+
+    public class ForceSessionHandler : IHttpAsyncHandler, IRequiresSessionState
+    {
+        internal readonly IHttpHandler OriginalHandler;
+        public ForceSessionHandler(IHttpHandler originalHandler)
+        {
+            OriginalHandler = originalHandler;
+        }
+        bool IHttpHandler.IsReusable
+        {
+            get { return false; }
+        }
+
+        void IHttpHandler.ProcessRequest(HttpContext context)
+        {
+            throw new InvalidOperationException("ForceSessionHandler cannot process requests.");
+        }
+
+        IAsyncResult IHttpAsyncHandler.BeginProcessRequest(HttpContext context, AsyncCallback cb, object extraData)
+        {
+            throw new InvalidOperationException("ForceSessionHandler cannot process requests.");
+        }
+
+        void IHttpAsyncHandler.EndProcessRequest(IAsyncResult result)
+        {
+            throw new InvalidOperationException("ForceSessionHandler cannot process requests.");
+        }
+    }
+
+
+
 }
