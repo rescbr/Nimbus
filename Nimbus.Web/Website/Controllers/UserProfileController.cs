@@ -191,6 +191,7 @@ namespace Nimbus.Web.Website.Controllers
             return Json(new { url = pathFinal });
         }
 
+        [Authorize]
         [HttpPost]
         public ActionResult SaveNewChannel()
         {

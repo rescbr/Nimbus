@@ -10,6 +10,9 @@ using System.Security.Cryptography;
 using System.Text;
 using Nimbus.Web.Security;
 using Nimbus.Web.Utils;
+using Nimbus.DB.ORM;
+using Nimbus.DB.Bags;
+using Nimbus.DB;
 
 namespace Nimbus.Web.Website.Controllers
 {
@@ -99,9 +102,42 @@ namespace Nimbus.Web.Website.Controllers
 
             return Json(new { url = pathFinal });
         }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateInput(false)]
+        public ActionResult SendMessage(int id)
+        {
+            var channelApi = ClonedContextInstance<API.Controllers.ChannelController>();
+            var userApi = ClonedContextInstance<API.Controllers.UserController>();
+            var messageApi = ClonedContextInstance<API.Controllers.MessageController>();
+            try
+            {
+                List<MessageBag> receivers = messageApi.ChannelReceivedMessages(id);
+
+                Nimbus.DB.ORM.Message message = new Nimbus.DB.ORM.Message();
+                message.ChannelId = id;
+                message.Text = HttpUtility.HtmlEncode(Request.Unvalidated["txtTextMsg"]);
+                message.Title = HttpUtility.HtmlEncode(Request.Unvalidated["txtTitleMsg"]);
+
+               message = messageApi.SendMessageChannel(message);               
+                if (message.Id > 0)//salvou com sucesso
+                {                   
+                    return Json(new {isok=true, message="Mensagem enviada com sucesso."});
+
+                }
+                else
+                {
+                    return Json(new { isok = false, message = "Não foi possível enviar sua mensagem. Tente novamente mais tarde." });                                  
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     
-    
-    
+
     
     }             
 }

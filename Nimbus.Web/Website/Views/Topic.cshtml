@@ -15,7 +15,9 @@
         <img src="@Model.CurrentTopic.ImgUrl " id="imgTopic" height="100" alt="" width="150" />
     </div>
 
-    <h1 style="text-align: center; margin-top:5px;">@Model.CurrentTopic.Title</h1>
+    <h1 style="text-align: center; margin-top:5px;">
+        @Model.CurrentTopic.Title - @Model.CurrentChannel.Name
+    </h1>
     <p>@Model.CurrentTopic.Description</p>
 
     <h1 style="margin: 20px 10px 20px 10px;">

@@ -200,13 +200,13 @@ namespace Nimbus.Web.API.Controllers
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    idList = db.SelectParam<Role>(rl => rl.ChannelId == id).Where(rl => rl.ChannelMagager == true ||
+                    idList = db.SelectParam<Role>(rl => rl.ChannelId == id).Where(rl => (rl.ChannelMagager == true ||
                                                                                         rl.MessageManager == true ||
                                                                                         rl.ModeratorManager == true ||
                                                                                         rl.TopicManager == true ||
-                                                                                        rl.UserManager == true).Select(user => user.UserId).ToList();
+                                                                                        rl.UserManager == true) && rl.IsOwner == false).Select(user => user.UserId).ToList();
                     foreach (int item in idList)
-                    {
+                    {                        
                         User user = db.SelectParam<User>(us => us.Id == item).FirstOrDefault();
                         if (user != null)
                         {
