@@ -538,15 +538,19 @@ namespace Nimbus.Web.API.Controllers
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    int catID = db.SelectParam<Channel>(ch => ch.Id == id && ch.Visible == true).Select(ch => ch.CategoryId).FirstOrDefault();
-                    Category ctg = new Category();
-                    ctg = db.SelectParam<Category>(ct => ct.Id == catID).FirstOrDefault();
-                    category.ColorCode = ctg.ColorCode;
-                    category.Id = ctg.Id;
-                    category.ImageUrl = ctg.ImageUrl;
-                    category.ImgTopChannel = db.SelectParam<ImgTopChannel>(c => c.CategoryId == ctg.Id).Select(c => c.UrlImg).FirstOrDefault();
-                    category.LocalizedName = ctg.LocalizedName;
-                    category.Name = ctg.Name;                    
+                    int channlId = db.SelectParam<Topic>(t => t.Id == id).Select(t => t.ChannelId).FirstOrDefault();
+                    if (channlId > 0)
+                    { 
+                        int catID = db.SelectParam<Channel>(ch => ch.Id == channlId && ch.Visible == true).Select(ch => ch.CategoryId).FirstOrDefault();
+                        Category ctg = new Category();
+                        ctg = db.SelectParam<Category>(ct => ct.Id == catID).FirstOrDefault();
+                        //category.ColorCode = ctg.ColorCode;
+                        category.Id = ctg.Id;
+                        category.ImageUrl = ctg.ImageUrl;
+                        category.ImgTopChannel = db.SelectParam<ImgTopChannel>(c => c.CategoryId == ctg.Id).Select(c => c.UrlImg).FirstOrDefault();
+                        category.LocalizedName = ctg.LocalizedName;
+                        category.Name = ctg.Name;
+                    }
                 }
             }
             catch (Exception ex)

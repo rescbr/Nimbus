@@ -59,18 +59,24 @@
                 <div id="divComments">
                     <p>Novos Comentários</p>
                     @foreach (var item in Model.Comments.Take(10).OrderByDescending(c => c.PostedOn))
-                    {
-                            <div>
+                    { 
+                        <div id="divComment" style="display:block">
+                            <div id="divInfoComment" name="divInfoComment">
                                 <input type="hidden" value="@item.Id" />
                                 <img id="user+@item.UserId" src="@item.AvatarUrl" />
                                 @item.UserName
-                                    @item.TopicName
-                                        @item.PostedOn
-                                            @item.Text
-                                                <a>Responder</a> @*chamar um script q cria a div abaixo desse comentario*@
-                                                </div>
+                                                        @item.TopicName
+                                                                                @item.PostedOn
+                                                                                                        @item.Text
+                                                                                                                                <a onclick="document.getElementById('divAnswer_@item.Id').style.display ='block';">Responder</a>
+                                                                                                                            </div>
+                            <div id="divAnswer_@item.Id" name="divAnswer+@item.Id" style="display:none">
+                               <textarea rows="10" cols="30" id="txtaAnswer" name="txtaAnswer" maxlength="500"></textarea>
+                                <button id="btnAnswerComment" onclick="ajaxAnswerComment(@item.Id, @item.ChannelId, @item.TopicId);">Enviar</button>                                
+                            </div>
+                        </div>
                     }
-                    </div>
+              </div>
         }
     </div>
 
@@ -81,7 +87,7 @@
                 <div class="PostHeader_g">
                     <h1>@item.Title</h1>
                     <div class="PostHeImg_g">
-                        <img src="/@item.ImgUrl" alt="@item.TopicType.ToString()" title="@item.Title"> -->
+                        <img src="@item.ImgUrl" alt="@item.TopicType.ToString()" title="@item.Title">
                     </div>
                 </div>
                 <div class="PostContent_g">
@@ -108,7 +114,7 @@
                 <div class="PostHeader_g">
                     <h1>@item.Title</h1>
                     <div class="PostHeImg_g">
-                        <img src="/@item.ImgUrl" alt="@item.TopicType.ToString()" title="@item.Title"> -->
+                        <img src="@item.ImgUrl" alt="@item.TopicType.ToString()" title="@item.Title">
                     </div>
                 </div>
                 <div class="PostContent_g">
