@@ -8,6 +8,7 @@ using Nimbus.Plumbing;
 
 namespace Nimbus.Web.Notifications
 {
+    //[Authorize]
     public class NimbusHub : Hub
     {
 

@@ -15,5 +15,11 @@ namespace Nimbus.Web
             public const string TopicContainer = "topicupload";
             
         }
+
+        public static class Auth
+        {
+            public const string PerformAuthLater = "nimbus:PerformAuthLater";
+            public const string RequestPerformance = "nimbus:RequestPerfomance";
+        }
     }
 }

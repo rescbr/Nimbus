@@ -5,40 +5,140 @@ using System;
 using System.Collections.Generic;
 using System.Security.Principal;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Caching;
+using System.Web.SessionState;
+using System.Reflection;
+using System.Threading;
+using System.Linq;
+using System.Diagnostics;
 
 namespace Nimbus.Web.Middleware
 {
     /// <summary>
-    /// Middleware responsável pela autenticação do Nimbus
+    /// Módulo IIS responsável pela autenticação do Nimbus
     /// </summary>
-    public class Authentication : OwinMiddleware
+    public class Authentication : IHttpModule
     {
-        public Authentication(OwinMiddleware next) : base(next) { }
-        //public override async Task Invoke(OwinRequest request, OwinResponse response)
-        public override async Task Invoke(IOwinContext context)
+        void IHttpModule.Dispose() { }
+        void IHttpModule.Init(HttpApplication app)
         {
-            var request = context.Request;
-            var response = context.Response;
+            app.BeginRequest += app_BeginRequest;
+            app.AuthorizeRequest += app_AuthenticateRequest;
+            app.PreRequestHandlerExecute += app_PreRequestHandlerExecute;
+            app.PostRequestHandlerExecute += RedirectToLoginPageIfNotAuthorized;
 
-            response.OnSendingHeaders((c) =>
+            app.EndRequest += app_EndRequest;
+        }
+
+        void app_EndRequest(object sender, EventArgs e)
+        {
+            try
             {
-                var ctx = (IOwinContext)c;
-                if (ctx.Response.StatusCode == 401)
+                HttpApplication app = (HttpApplication)sender;
+                if (app.Context.Items[Const.Auth.RequestPerformance] != null)
                 {
-                    //apenas faz o redirecionamento caso a request seja de um browser
-                    if (ctx.Request.Accept.Contains("text/html"))
-                    {
-                        string originalUrl = ctx.Request.Uri.PathAndQuery;
-                        ctx.Response.Redirect(String.Format("/login?redirect={0}", Uri.EscapeDataString(originalUrl)));
-                    }
-                    //senão continua com o 401
+                    var authtime = (DateTime.UtcNow -
+                        (DateTime)(app.Context.Items[Const.Auth.RequestPerformance])).TotalMilliseconds;
+                    app.Context.Response.AddHeader("X-Nimbus-Perf-TotalReqT", authtime.ToString());
                 }
-            }, context);
+            }
+            catch { }
+        }
+
+        void app_BeginRequest(object sender, EventArgs e)
+        {
+            HttpApplication app = (HttpApplication)sender;
+
+            //força sessão para requests webapi e owin (/api/ e /signalr/)
+            //Resolve o bug criado pelo signalr que foi para resolver um bug.
+            //Não fiquei bravo. Estou calmo. hehe =)
+            if (app.Context.Request.Path.StartsWith("/api/") ||
+                app.Context.Request.Path.StartsWith("/signalr/"))
+            {   
+                app.Context.Items[Const.Auth.PerformAuthLater] = false;
+            }
+            else
+            {
+                //caso seja outra rota, o mvc inicializa a sessão se necessário
+                app.Context.Items[Const.Auth.PerformAuthLater] = true;
+            }
+
+            //if (app.Context.Request.QueryString["performance"] != null)
+            //{
+                var now = DateTime.UtcNow;
+                app.Context.Items[Const.Auth.RequestPerformance] = now;
+                app.Context.Response.AddHeader("X-Nimbus-Perf-StartedOn", now.ToString("o"));
+            //}
+
+        }
+
+        /// <summary>
+        /// Autenticação antes da pipeline chegar ao handler, para OWIN e WebApi.
+        /// </summary>
+        void app_AuthenticateRequest(object sender, EventArgs e)
+        {
+            HttpApplication app = (HttpApplication)sender;
+            HttpContext context = app.Context;
+
+            if ((bool)app.Context.Items[Const.Auth.PerformAuthLater]) return;
+            
+            AuthenticateUser(sender, e);
+            if (app.Context.Items[Const.Auth.RequestPerformance] != null)
+            {
+                var authtime = (DateTime.UtcNow -
+                    (DateTime)(app.Context.Items[Const.Auth.RequestPerformance])).TotalMilliseconds;
+                app.Context.Response.AddHeader("X-Nimbus-Perf-TimeAuthF", authtime.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Autenticação quando o Handler (muito provavelmente MVC) for chamado, 
+        /// permite que requests sem handler (estáticas) não sejam autenticadas.
+        /// </summary>
+        void app_PreRequestHandlerExecute(object sender, EventArgs e)
+        {
+            HttpApplication app = sender as HttpApplication;
+            HttpContext context = app.Context;
+
+            if (context.Handler == null) return; //request não possui handler, página estática, ignorar auth
+
+            AuthenticateUser(sender, e);
+            if (app.Context.Items[Const.Auth.RequestPerformance] != null)
+            {
+                var authtime = (DateTime.UtcNow -
+                    (DateTime)(app.Context.Items[Const.Auth.RequestPerformance])).TotalMilliseconds;
+                app.Context.Response.AddHeader("X-Nimbus-Perf-TimeAuthP", authtime.ToString());
+            }
+        }
+
+        void RedirectToLoginPageIfNotAuthorized(object sender, EventArgs e)
+        {
+            HttpApplication app = sender as HttpApplication;
+            HttpContext context = app.Context;
+
+            if (context.Response.StatusCode == 401)
+            {
+                //apenas faz o redirecionamento caso a request seja de um browser
+                if (context.Request.AcceptTypes.Contains("text/html"))
+                {
+                    string originalUrl = context.Request.Url.PathAndQuery;
+                    context.Response.Redirect(String.Format("/login?redirect={0}", Uri.EscapeDataString(originalUrl)));
+                }
+                //senão continua com o 401
+            }
+        }
+
+        void AuthenticateUser(object sender, EventArgs e)
+        {
+            HttpApplication app = sender as HttpApplication;
+            HttpContext context = app.Context;
 
             //Lê Cookie
+            string sessionToken = null;
             var cookies = context.Request.Cookies;
-            string sessionToken = cookies["nsc-session"];
+            if(cookies["nsc-session"] != null)
+                sessionToken = cookies["nsc-session"].Value;
 
             if (sessionToken != null)
             {
@@ -53,22 +153,19 @@ namespace Nimbus.Web.Middleware
                     if (info.TokenExpirationDate.ToUniversalTime() > DateTime.Now.ToUniversalTime())
                     {
                         //tenta pegar do cache de sessão
-                        //var sessionUser = (System.Web.HttpContext.Current
-                        //    .Session[Const.UserSession] as NimbusPrincipal);
-                        //if (sessionUser != null)
-                        //{
-                        //    request.User = sessionUser;
-                        //}
-
-                        request.User = new NimbusPrincipal(new NimbusUser()
+                        try
                         {
-                            UserId = info.UserId,
-                            IsAuthenticated = true,
-                            AvatarUrl = "/images/Category/saude.png",
-                            FirstName = "first",
-                            LastName = "last",
-                            Email = "sysop@portalnimbus.com.br"
-                        });
+                            var sessionUser = new SessionManagement().GetNimbusPrincipal(info.UserId);
+                            if (sessionUser != null)
+                            {
+                                context.User = sessionUser;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.WriteLine(String.Format("Nimbus: context.Session exception on request to {0}: {1}",
+                                context.Request.Path, ex.Message));
+                        } //sessao nao inicializada
                     }
                     else //token velho
                     {
@@ -79,11 +176,9 @@ namespace Nimbus.Web.Middleware
                 }
             }
             else { } //token = null
-            
-
-            await Next.Invoke(context);
-
 
         }
+
     }
+
 }
