@@ -611,6 +611,7 @@
     <Content Include="Scripts\jquery.signalR-2.0.0.js" />
     <Content Include="Scripts\jquery.signalR-2.0.0.min.js" />
     <Content Include="Scripts\modal.js" />
+    <Content Include="Scripts\Notifications.js" />
     <Content Include="Scripts\ScriptsShared.js" />
     <Content Include="Scripts\ViewUserScripts.js" />
     <Content Include="Scripts\ViewChannelScripts.js" />
@@ -665,6 +666,7 @@
     <Compile Include="Notifications\MessageNotification.cs" />
     <Compile Include="Notifications\NimbusHub.cs" />
     <Compile Include="Notifications\NimbusNotificationBase.cs" />
+    <Compile Include="Security\SessionManagement.cs" />
     <Compile Include="Utils\AzureBlob.cs" />
     <Compile Include="Utils\ImageManipulation.cs" />
     <Compile Include="Utils\RemoveHTMLString.cs" />
@@ -707,7 +709,9 @@
     <Compile Include="_Startup\Routing.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="packages.config" />
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="NimbusSNK.snk" />
     <Content Include="Scripts\jquery-2.0.3.min.map" />
     <None Include="Web.Debug.config">

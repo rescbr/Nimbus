@@ -7,11 +7,14 @@
 
 </head>
 <body>
+    @* não esquecer de minificar =) *@
     @Scripts.Render(("~/Scripts/modal.js"))
     @Styles.Render(("~/Styles/modal.css"))
     @Scripts.Render(("~/Scripts/ScriptsShared.js"))
     @Scripts.Render(("~/Scripts/ckeditor/ckeditor.js"))
     @Scripts.Render(("~/Scripts/jquery-2.0.3.js"))
+
+
     <header id="header">
 			<div class="container">
 				<nav class="press logo">
@@ -53,5 +56,11 @@
 		<footer id="footer">
 			<!-- blablablabla-->
 		</footer>
+    @if (User.Identity.IsAuthenticated) {
+        @Scripts.Render("~/Scripts/jquery.signalR-2.0.0.js")
+        @Scripts.Render("~/signalr/hubs")
+        @Scripts.Render("~/Scripts/Notifications.js")
+    }
+    
 </body>
 </html>

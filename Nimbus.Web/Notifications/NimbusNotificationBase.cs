@@ -13,13 +13,5 @@ namespace Nimbus.Web.Notifications
         {
             get { return NimbusNotificationBase._nimbusHubCtx; }
         } 
-
-
-
-
-        void x()
-        {
-            
-        }
     }
 }
