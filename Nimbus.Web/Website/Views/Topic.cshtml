@@ -36,18 +36,16 @@
 </div>
 
 
-<div style="float:right; width: 600px;">
+<div id="divContentTopic" style="float:right; width: 600px;">
 
     @*Topico em formato texto*@
     @if (Model.CurrentTopic.TopicType == Nimbus.DB.Enums.TopicType.exam)
     {
         @RenderPage("~/Website/Views/TopicAvalicao.cshtml")
     }
-    else
-    {
-        @*Topico em formato de video*@
-        if (Model.CurrentTopic.TopicType == Nimbus.DB.Enums.TopicType.video)
+    else if (Model.CurrentTopic.TopicType == Nimbus.DB.Enums.TopicType.video)
         {
+            @*Topico em formato de video*@
             @RenderPage("~/Website/Views/TopicVideo.cshtml")
         }
         else
@@ -55,49 +53,50 @@
             @*Topico avaliacao*@
             @RenderPage("~/Website/Views/TopicText.cshtml")
         }
-
-        <div>
-
-
-            <div>
-                <br />
-                <h2>Comentários</h2>
-
-                @if (Model.Comments.Count > 0) 
-                { 
-                    foreach (var comment in Model.Comments)
-                    {
-                        <div style="display:block; float:none">
-                            <div style="float:left">
-                                <img src="/@Model.Category.ImageUrl" id="imgTopic" height="192" alt="" width="864" />
-                            </div>
-                            <div style="float:left">
-                                <p>@comment.Text</p>
-                            </div>
-                        </div>
-                    }
-                }
-                else
-                {
-                    <strong>Seja o primeiro a comentar!</strong>
-                }
-            </div>
-
-            <div>
-
-                <div style="width:100%; height:35px; display:block">
-                    <button style="float:right; margin:20px;">Responder</button>
-                </div>
-
-                <h2 style="margin-bottom:5px;">Comentar</h2>
-                <textarea id="txtacomentario"></textarea>
-            </div>
-
-        </div>
     }
 
 
 </div>
+
+
+<div id="divCommentsTopic">
+    <div id="divAllComments">
+        <br />
+        <h2>Comentários</h2>
+
+        @if (Model.Comments.Count > 0)
+        {
+            foreach (var comment in Model.Comments)
+            {
+                <div style="display:block; float:none">
+                    <div style="float:left">
+                        <img src="/@Model.Category.ImageUrl" id="imgTopic" height="192" alt="" width="864" />
+                    </div>
+                    <div style="float:left">
+                        <p>@comment.Text</p>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <strong>Seja o primeiro a comentar!</strong>
+        }
+    </div>
+
+    <div>
+
+        <div style="width:100%; height:35px; display:block">
+            <button style="float:right; margin:20px;">Responder</button>
+        </div>
+
+        <h2 style="margin-bottom:5px;">Comentar</h2>
+        <textarea id="txtacomentario"></textarea>
+    </div>
+
+</div>
+
+
 
 
 
