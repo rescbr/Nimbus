@@ -13,6 +13,13 @@ namespace Nimbus.Web.Security
     {
         IDbConnectionFactory _dbFactory;
 
+        public DatabaseLogin()
+        {
+            _dbFactory = new OrmLiteConnectionFactory
+                    (NimbusConfig.DatabaseConnection,
+                    SqlServerDialect.Provider);
+        }
+
         public DatabaseLogin(IDbConnectionFactory dbFactory)
         {
             _dbFactory = dbFactory;

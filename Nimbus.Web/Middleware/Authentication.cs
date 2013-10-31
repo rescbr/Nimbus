@@ -23,40 +23,93 @@ namespace Nimbus.Web.Middleware
         void IHttpModule.Dispose() { }
         void IHttpModule.Init(HttpApplication app)
         {
-            
-            app.PostMapRequestHandler += SwapToForceSessionHandler;
-            app.PostAcquireRequestState += SwapToOriginalHandler;
-            app.PreRequestHandlerExecute += PreRequestAuthenticateUser;
+            app.BeginRequest += app_BeginRequest;
+            app.AuthorizeRequest += app_AuthenticateRequest;
+            app.PreRequestHandlerExecute += app_PreRequestHandlerExecute;
             app.PostRequestHandlerExecute += RedirectToLoginPageIfNotAuthorized;
+
+            app.EndRequest += app_EndRequest;
         }
 
-        void SwapToForceSessionHandler(object sender, EventArgs e)
+        void app_EndRequest(object sender, EventArgs e)
+        {
+            try
+            {
+                HttpApplication app = (HttpApplication)sender;
+                if (app.Context.Items[Const.Auth.RequestPerformance] != null)
+                {
+                    var authtime = (DateTime.UtcNow -
+                        (DateTime)(app.Context.Items[Const.Auth.RequestPerformance])).TotalMilliseconds;
+                    app.Context.Response.AddHeader("X-Nimbus-Perf-TotalReqT", authtime.ToString());
+                }
+            }
+            catch { }
+        }
+
+        void app_BeginRequest(object sender, EventArgs e)
         {
             HttpApplication app = (HttpApplication)sender;
+
+            //força sessão para requests webapi e owin (/api/ e /signalr/)
+            //Resolve o bug criado pelo signalr que foi para resolver um bug.
+            //Não fiquei bravo. Estou calmo. hehe =)
+            if (app.Context.Request.Path.StartsWith("/api/") ||
+                app.Context.Request.Path.StartsWith("/signalr/"))
+            {   
+                app.Context.Items[Const.Auth.PerformAuthLater] = false;
+            }
+            else
+            {
+                //caso seja outra rota, o mvc inicializa a sessão se necessário
+                app.Context.Items[Const.Auth.PerformAuthLater] = true;
+            }
+
+            //if (app.Context.Request.QueryString["performance"] != null)
+            //{
+                var now = DateTime.UtcNow;
+                app.Context.Items[Const.Auth.RequestPerformance] = now;
+                app.Context.Response.AddHeader("X-Nimbus-Perf-StartedOn", now.ToString("o"));
+            //}
+
+        }
+
+        /// <summary>
+        /// Autenticação antes da pipeline chegar ao handler, para OWIN e WebApi.
+        /// </summary>
+        void app_AuthenticateRequest(object sender, EventArgs e)
+        {
+            HttpApplication app = (HttpApplication)sender;
+            HttpContext context = app.Context;
+
+            if ((bool)app.Context.Items[Const.Auth.PerformAuthLater]) return;
             
-            if (app.Context.Handler is IReadOnlySessionState || app.Context.Handler is IRequiresSessionState)
+            AuthenticateUser(sender, e);
+            if (app.Context.Items[Const.Auth.RequestPerformance] != null)
             {
-                // no need to replace the current handler
-                return;
+                var authtime = (DateTime.UtcNow -
+                    (DateTime)(app.Context.Items[Const.Auth.RequestPerformance])).TotalMilliseconds;
+                app.Context.Response.AddHeader("X-Nimbus-Perf-TimeAuthF", authtime.ToString());
             }
-
-            // swap the current handler
-            app.Context.Handler = new ForceSessionHandler(app.Context.Handler);
         }
 
-        void SwapToOriginalHandler(object sender, EventArgs e)
+        /// <summary>
+        /// Autenticação quando o Handler (muito provavelmente MVC) for chamado, 
+        /// permite que requests sem handler (estáticas) não sejam autenticadas.
+        /// </summary>
+        void app_PreRequestHandlerExecute(object sender, EventArgs e)
         {
-            HttpApplication app = (HttpApplication)sender;
-            ForceSessionHandler resourceHttpHandler = HttpContext.Current.Handler as ForceSessionHandler;
+            HttpApplication app = sender as HttpApplication;
+            HttpContext context = app.Context;
 
-            if (resourceHttpHandler != null)
+            if (context.Handler == null) return; //request não possui handler, página estática, ignorar auth
+
+            AuthenticateUser(sender, e);
+            if (app.Context.Items[Const.Auth.RequestPerformance] != null)
             {
-                // set the original handler back
-                HttpContext.Current.Handler = resourceHttpHandler.OriginalHandler;
+                var authtime = (DateTime.UtcNow -
+                    (DateTime)(app.Context.Items[Const.Auth.RequestPerformance])).TotalMilliseconds;
+                app.Context.Response.AddHeader("X-Nimbus-Perf-TimeAuthP", authtime.ToString());
             }
-
-            // -> at this point session state should be available
-            Debug.Assert(app.Session != null, "it did not work :(");
         }
 
         void RedirectToLoginPageIfNotAuthorized(object sender, EventArgs e)
@@ -76,16 +129,16 @@ namespace Nimbus.Web.Middleware
             }
         }
 
-        void PreRequestAuthenticateUser(object sender, EventArgs e)
+        void AuthenticateUser(object sender, EventArgs e)
         {
             HttpApplication app = sender as HttpApplication;
             HttpContext context = app.Context;
 
-            if (context.Handler == null) return; //request não possui handler, página estática, ignorar auth
-
             //Lê Cookie
+            string sessionToken = null;
             var cookies = context.Request.Cookies;
-            string sessionToken = cookies["nsc-session"].Value;
+            if(cookies["nsc-session"] != null)
+                sessionToken = cookies["nsc-session"].Value;
 
             if (sessionToken != null)
             {
@@ -102,7 +155,7 @@ namespace Nimbus.Web.Middleware
                         //tenta pegar do cache de sessão
                         try
                         {
-                            var sessionUser = (context.Session[Const.UserSession] as NimbusPrincipal);
+                            var sessionUser = new SessionManagement().GetNimbusPrincipal(info.UserId);
                             if (sessionUser != null)
                             {
                                 context.User = sessionUser;
@@ -125,36 +178,7 @@ namespace Nimbus.Web.Middleware
             else { } //token = null
 
         }
+
     }
-
-    public class ForceSessionHandler : IHttpAsyncHandler, IRequiresSessionState
-    {
-        internal readonly IHttpHandler OriginalHandler;
-        public ForceSessionHandler(IHttpHandler originalHandler)
-        {
-            OriginalHandler = originalHandler;
-        }
-        bool IHttpHandler.IsReusable
-        {
-            get { return false; }
-        }
-
-        void IHttpHandler.ProcessRequest(HttpContext context)
-        {
-            throw new InvalidOperationException("ForceSessionHandler cannot process requests.");
-        }
-
-        IAsyncResult IHttpAsyncHandler.BeginProcessRequest(HttpContext context, AsyncCallback cb, object extraData)
-        {
-            throw new InvalidOperationException("ForceSessionHandler cannot process requests.");
-        }
-
-        void IHttpAsyncHandler.EndProcessRequest(IAsyncResult result)
-        {
-            throw new InvalidOperationException("ForceSessionHandler cannot process requests.");
-        }
-    }
-
-
 
 }

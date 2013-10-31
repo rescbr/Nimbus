@@ -14,5 +14,11 @@ namespace Nimbus.Web
             public const string AvatarContainer = "avatarupload";
             
         }
+
+        public static class Auth
+        {
+            public const string PerformAuthLater = "nimbus:PerformAuthLater";
+            public const string RequestPerformance = "nimbus:RequestPerfomance";
+        }
     }
 }

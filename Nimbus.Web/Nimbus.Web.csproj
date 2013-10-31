@@ -633,6 +633,7 @@
     <Compile Include="Notifications\MessageNotification.cs" />
     <Compile Include="Notifications\NimbusHub.cs" />
     <Compile Include="Notifications\NimbusNotificationBase.cs" />
+    <Compile Include="Security\SessionManagement.cs" />
     <Compile Include="Utils\AzureBlob.cs" />
     <Compile Include="Utils\ImageManipulation.cs" />
     <Compile Include="Website\Controllers\ChannelController.cs" />
