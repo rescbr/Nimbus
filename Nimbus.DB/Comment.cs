@@ -22,6 +22,8 @@ namespace Nimbus.DB
         public bool Visible { get; set; }
         public string Text { get; set; }
 
-       
+        public bool IsNew { get; set; }
+
+        public bool IsAnswer { get; set; }
     }
 }

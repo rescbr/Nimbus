@@ -12,7 +12,6 @@ using Nimbus.Web.Security;
 using Nimbus.Web.Utils;
 using Nimbus.DB.ORM;
 using Nimbus.DB.Bags;
-using Nimbus.DB;
 
 namespace Nimbus.Web.Website.Controllers
 {
@@ -108,8 +107,6 @@ namespace Nimbus.Web.Website.Controllers
         [ValidateInput(false)]
         public ActionResult SendMessage(int id)
         {
-            var channelApi = ClonedContextInstance<API.Controllers.ChannelController>();
-            var userApi = ClonedContextInstance<API.Controllers.UserController>();
             var messageApi = ClonedContextInstance<API.Controllers.MessageController>();
             try
             {
@@ -136,8 +133,7 @@ namespace Nimbus.Web.Website.Controllers
                 throw ex;
             }
         }
-    
 
-    
+       
     }             
 }

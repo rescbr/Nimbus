@@ -144,3 +144,38 @@ function ajaxTopicCallback(response) {
         window.location.href = "/topic/index/" + response.Id; //
     }
 }
+
+function ajaxAnswerComment(commentId, channelId, topicId) {
+    
+    var ajaxData = {}
+    var text = document.getElementById("txtaAnswer").value;
+
+  
+    if (text != "") {
+        ajaxData["ParentId"] = commentId;
+        ajaxData["Text"] = text;
+        ajaxData["TopicId"] = topicId;
+        ajaxData["ChannelId"] = channelId;
+
+        $.ajax({
+            url: "/api/comment/AnswerComment",
+            data: JSON.stringify(ajaxData),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            statusCode: {
+                200: function (newData) {
+                    document.getElementById("divAnswer_" + commentId).style.display = 'none';
+                    document.getElementById("divComment").style.display = 'none';
+                    //liumpar campos
+                },
+
+                400: function () {
+                    //erro
+                    window.alert("Não foi possível enviar seu comentário. Tente novamente mais tarde.");
+                }
+            }
+        });
+
+    }
+
+}
