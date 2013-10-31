@@ -68,6 +68,8 @@
         {
             foreach (var comment in Model.Comments)
             {
+                if(comment.IsParent == true)
+                { 
                 <div style="display:block; float:none">
                     <div style="float:left">
                         <img src="@comment.AvatarUrl" id="imgTopic" height="48" alt="" width="48" />
@@ -76,6 +78,18 @@
                         <p>@comment.Text</p>
                     </div>
                 </div>
+                }
+                else
+                {
+                    <div style="display:block; float:none">
+                    <div style="float:left">
+                        <img src="@comment.AvatarUrl" id="imgTopic" height="48" alt="" width="48" />
+                    </div>
+                    <div style="float:left">
+                        <p>@comment.Text</p>
+                    </div>
+                </div>
+                }
             
             }
         }
