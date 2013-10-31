@@ -10,7 +10,7 @@ namespace Nimbus.DB
     {
         public int Id { get; set; }
 
-        public int ParentId { get; set; }
+        public int? ParentId { get; set; }
 
         public int UserId { get; set; }
 

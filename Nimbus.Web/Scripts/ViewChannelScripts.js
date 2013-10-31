@@ -145,14 +145,18 @@ function ajaxTopicCallback(response) {
     }
 }
 
-function ajaxAnswerComment(commentId, channelId, topicId) {
+function ajaxAnswerComment(parentId,commentId, channelId, topicId) {
     
     var ajaxData = {}
     var text = document.getElementById("txtaAnswer").value;
 
   
     if (text != "") {
-        ajaxData["ParentId"] = commentId;
+        if (parentId == 0)
+            ajaxData["ParentId"] = commentId;
+        else
+            ajaxData["ParentId"] = parentId;
+
         ajaxData["Text"] = text;
         ajaxData["TopicId"] = topicId;
         ajaxData["ChannelId"] = channelId;

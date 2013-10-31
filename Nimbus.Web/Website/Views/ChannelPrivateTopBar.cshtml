@@ -65,14 +65,14 @@
                                 <input type="hidden" value="@item.Id" />
                                 <img id="user+@item.UserId" src="@item.AvatarUrl" />
                                 @item.UserName
-                                                        @item.TopicName
-                                                                                @item.PostedOn
-                                                                                                        @item.Text
-                                                                                                                                <a onclick="document.getElementById('divAnswer_@item.Id').style.display ='block';">Responder</a>
-                                                                                                                            </div>
+                                @item.TopicName
+                                @item.PostedOn
+                                @item.Text
+                                <a onclick="document.getElementById('divAnswer_@item.Id').style.display ='block';">Responder</a>
+                            </div>
                             <div id="divAnswer_@item.Id" name="divAnswer+@item.Id" style="display:none">
                                <textarea rows="10" cols="30" id="txtaAnswer" name="txtaAnswer" maxlength="500"></textarea>
-                                <button id="btnAnswerComment" onclick="ajaxAnswerComment(@item.Id, @item.ChannelId, @item.TopicId);">Enviar</button>                                
+                                <button id="btnAnswerComment" onclick="ajaxAnswerComment(@item.ParentId, @item.Id, @item.ChannelId, @item.TopicId);">Enviar</button>                                
                             </div>
                         </div>
                     }

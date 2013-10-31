@@ -30,12 +30,29 @@ namespace Nimbus.Web.API.Controllers
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    comment.ParentId = 0;
+                    bool isOwner = db.SelectParam<Role>(r => r.ChannelId == comment.ChannelId).Exists(u => u.UserId == NimbusUser.UserId
+                                                                                                                          && u.IsOwner == true);
+
+                    bool isManager = db.SelectParam<Role>(r => r.ChannelId == comment.ChannelId).Exists(u => u.UserId == NimbusUser.UserId &&
+                                                                             (u.TopicManager == true || u.ChannelMagager == true));
+                    comment.Text = HttpUtility.HtmlDecode(comment.Text);
+
+                    //caso o usuário seja adm/dono deve marcar como IsAnswer true, pois na hora de mostrar no canal quais sao os novos comentários
+                    // o método irá ignorar as 'respostas' (pois foram realizadas pelo próprio usuário)
+                    if (isManager || isOwner == true)
+                        comment.IsAnswer = true;
+                    else
+                        comment.IsAnswer = false;
+
+                    comment.IsNew = true;
+                    comment.ParentId = null;
                     comment.PostedOn = DateTime.Now;
                     comment.UserId = NimbusUser.UserId;
                     comment.Visible = true;
                     comment.IsNew = true;
                     db.Insert(comment);
+
+                    comment.Id = (int)db.GetLastInsertId();
                 }
             }
             catch (Exception ex)
@@ -78,7 +95,7 @@ namespace Nimbus.Web.API.Controllers
                                     answer.Visible = true;
                                     answer.IsNew = true;
                                 //caso o usuário seja adm/dono deve marcar como IsAnswer true, pois na hora de mostrar no canal quais sao os novos comentários
-                                // o método irá ignorar as respostas (pois foram realizadas pelo próprio usuário)
+                                // o método irá ignorar as 'respostas' (pois foram realizadas pelo próprio usuário)
                                     if (isManager || isOwner == true)
                                         answer.IsAnswer = true;
                                     else
@@ -160,17 +177,20 @@ namespace Nimbus.Web.API.Controllers
                         User user = db.SelectParam<User>(u => u.Id == item.UserId).FirstOrDefault();
                         
                         CommentBag bag = new CommentBag()
-                        {
+                        {                            
                             AvatarUrl = user.AvatarUrl,
-                            UserName = user.FirstName + " " + user.LastName,
+                            UserName = HttpUtility.HtmlDecode(user.FirstName + " " + user.LastName),
                             UserId = user.Id,
                             Id = item.Id,
-                            Text = item.Text,
+                            Text = HttpUtility.HtmlDecode(item.Text),
                             ParentId = item.ParentId,
                             PostedOn = item.PostedOn,
+                            IsNew = item.IsNew,
+                            IsAnswer = item.IsAnswer,
                             TopicId = item.TopicId,
+                            IsParent = item.ParentId > 0 ? false : true,
                             ChannelId = item.ChannelId,
-                            TopicName =db.SelectParam<Topic>(t => t.Id == item.TopicId).Select(t => t.Title).FirstOrDefault()
+                            TopicName =HttpUtility.HtmlDecode(db.SelectParam<Topic>(t => t.Id == item.TopicId).Select(t => t.Title).FirstOrDefault())
                         };
                         listComments.Add(bag);
                     }
