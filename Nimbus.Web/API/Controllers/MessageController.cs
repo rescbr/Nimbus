@@ -90,6 +90,11 @@ namespace Nimbus.Web.API.Controllers
                                         }
                                     }
                                     trans.Commit();
+
+                                    //Notificação
+                                    var notification = new Notifications.MessageNotification();
+                                    notification.NewMessage(dadosMsg.Title, listReceiver.Select(l => l.UserId).ToList());
+
                                 }
                                 catch (Exception ex)
                                 {
