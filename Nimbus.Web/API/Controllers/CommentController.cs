@@ -166,6 +166,7 @@ namespace Nimbus.Web.API.Controllers
         public List<CommentBag> ShowTopicComment(int id)
         {
             List<CommentBag> listComments = new List<CommentBag>();
+           
             try
             {
                 using(var db= DatabaseFactory.OpenDbConnection())
@@ -175,7 +176,33 @@ namespace Nimbus.Web.API.Controllers
                     foreach (Comment item in comment)
                     {
                         User user = db.SelectParam<User>(u => u.Id == item.UserId).FirstOrDefault();
-                        
+
+                        //busco todos os filhos desse comentário
+                        List<Comment> cmtChild = db.SelectParam<Comment>(c => c.Id == item.ParentId && item.Visible == true);
+                        List<CommentBag> listChild = new List<CommentBag>();
+                        foreach (var itemChild in cmtChild)
+                        {
+                            User userChild = db.SelectParam<User>(u => u.Id == item.UserId).FirstOrDefault();
+                            CommentBag child = new CommentBag()
+                            {
+                                AvatarUrl = userChild.AvatarUrl,
+                                UserName = HttpUtility.HtmlDecode(userChild.FirstName + " " + userChild.LastName),
+                                UserId = userChild.Id,
+                                Id = itemChild.Id,
+                                Text = HttpUtility.HtmlDecode(itemChild.Text),
+                                ParentId = itemChild.ParentId,
+                                PostedOn = itemChild.PostedOn,
+                                IsNew = itemChild.IsNew,
+                                IsAnswer = itemChild.IsAnswer,
+                                TopicId = itemChild.TopicId,
+                                IsParent = false,
+                                ChannelId = itemChild.ChannelId,
+                                TopicName = HttpUtility.HtmlDecode(db.SelectParam<Topic>(t => t.Id == itemChild.TopicId).Select(t => t.Title).FirstOrDefault())
+                            };
+                            listChild.Add(child);
+                        }
+
+                        //crio o objeto para o comentario 
                         CommentBag bag = new CommentBag()
                         {                            
                             AvatarUrl = user.AvatarUrl,
@@ -190,6 +217,7 @@ namespace Nimbus.Web.API.Controllers
                             TopicId = item.TopicId,
                             IsParent = item.ParentId > 0 ? false : true,
                             ChannelId = item.ChannelId,
+                            CommentChild = listChild,
                             TopicName =HttpUtility.HtmlDecode(db.SelectParam<Topic>(t => t.Id == item.TopicId).Select(t => t.Title).FirstOrDefault())
                         };
                         listComments.Add(bag);
