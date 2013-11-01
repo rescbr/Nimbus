@@ -219,11 +219,28 @@ function ajaxSaveNewComment(topicId, channelId, txtContent)
 
 }
 
-function ChangeTo(tipoPost, tipoAtual) {
-    if (tipoPost == tipoAtual)
-    {
-        //nao faz nada 
-    } else if (tipoPost == 'post_lista') {
-        document.getElementById(lista).attr("class");
-    } else { }
+function ajaxDeleteComment(commentId, divName)
+{
+    var ajaxData = {}
+
+    if (commentId != 0) {
+        ajaxData["Id"] = commentId;
+        $.ajax({
+            url: "/api/comment/DeleteComment",
+            data: JSON.stringify(ajaxData),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            statusCode: {
+                200: function (newData) {
+                    document.getElementById(DeleteComment).style.display = 'none';
+                },
+
+                400: function () {
+                    //erro
+                    window.alert("Não foi possível enviar seu comentário. Tente novamente mais tarde.");
+                }
+            }
+        });
+    }
+
 }

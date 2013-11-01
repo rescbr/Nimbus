@@ -359,6 +359,7 @@ namespace Nimbus.Web.API.Controllers
                         showChannel.OrganizationId = channel.OrganizationId;
                         showChannel.OwnerId = channel.OwnerId;
                         showChannel.Price = channel.Price;
+                        showChannel.OpenToComments = channel.OpenToComments;
                         if (userComment > 0 && listComments.Count > 0)
                         {
                             showChannel.participationChannel = ((userComment * 100) / listComments.Count()).ToString();

@@ -60,8 +60,9 @@
 
 </div>
 
-
-<div id="divCommentsTopic">
+@if(Model.CurrentChannel.OpenToComments == true)
+{   
+    <div id="divCommentsTopic">
     <div id="divAllComments" style="float:right">
         <br />
         <h2>Comentários</h2>
@@ -70,36 +71,48 @@
         {
             foreach (var comment in Model.Comments)
             {
-                <div id="divRegionComment" style="background-color:beige;">
-                    @if(comment.IsParent == true)
+               <br />
+                   if(comment.IsParent == true)
                     { 
                         <div style="background-color:chocolate;">
-                        <div id="divCommentParent" style="display:block; float:none">
-                        <div style="float:left">
+                        <div id="divCommentParent_@comment.Id" style="display:block; float:none">
+                            <div style="float:left">
                             <img src="@comment.AvatarUrl" id="imgTopic" height="48" alt="" width="48" />
                         </div>
                             <div>
                                 <p>
                                     @comment.UserName
                                     @comment.PostedOn
+                                    @if (Model.CurrentUser.UserId == Model.CurrentChannel.OwnerId ||
+                                        comment.UserId == Model.CurrentUser.UserId || Model.RolesCurrentUser.Contains("channelmanager")
+                                                                                   || Model.RolesCurrentUser.Contains("topicmanager"))
+                                        {
+                                            <a href="#" title="Deletar" onclick="ajaxDeleteComment(@comment.Id, 'divCommentParent_@comment.Id');">X</a>
+                                        }
                                 </p>
                             </div>
-                        <div style="float:left">
-                            <p>@comment.Text</p>
+                                 <div style="float:left">
+                                <p>@comment.Text</p>
+                             </div>
                         </div>
-                    </div>
                         
                         @foreach (var child in comment.CommentChild)
                         {
                             <br />
-                           <div id="divCommentChild" style="display:block; float:none">
+                           <div id="divCommentChild_@child.Id" style="display:block; float:none">
                                 <div style="float:left">
                                     <img src="@child.AvatarUrl" id="imgTopic" height="48" alt="" width="48" />
                                 </div>
-                                 <div>
+                                <div>
                                    <p>
                                        @child.UserName
                                        @child.PostedOn
+                                       @if (Model.CurrentUser.UserId == Model.CurrentChannel.OwnerId ||
+                                        comment.UserId == Model.CurrentUser.UserId || Model.RolesCurrentUser.Contains("channelmanager")
+                                                                                   || Model.RolesCurrentUser.Contains("topicmanager"))
+                                       {
+                                         <a href="#" title="Deletar" onclick="ajaxDeleteComment(@child.Id,'divCommentChild_@child.Id' );">X</a>
+                                       }
                                    </p>
                                  </div>
                                 <div style="float:left">
@@ -112,15 +125,12 @@
                             <button id="bntAnswer_@comment.Id" onclick="EnableDivHiddenBtn('divComment_@comment.Id', 'bntAnswer_@comment.Id');" value="Responder">Responder</button>
                          </div>
             
-                        <div id="divComment_@comment.Id" style="display:none">
-                            <textarea id="txtaAnswer_@comment.Id" name="txtaAnswerTopic" cols="30" rows="2"></textarea>
-                            <button id="btnSendAnswer" onclick="ajaxAnswerComment(0,@comment.Id, @comment.ChannelId, @comment.TopicId, 'txtaAnswer_@comment.Id');" value="Enviar">Enviar</button>
-                        </div>
+                         <div id="divComment_@comment.Id" style="display:none">
+                                        <textarea id="txtaAnswer_@comment.Id" name="txtaAnswerTopic" cols="30" rows="2"></textarea>
+                                        <button id="btnSendAnswer" onclick="ajaxAnswerComment(0,@comment.Id, @comment.ChannelId, @comment.TopicId, 'txtaAnswer_@comment.Id');" value="Enviar">Enviar</button>
+                                    </div>
                      </div>
-                    }
-                    
-                    <br />                   
-                </div>
+                    }                  
             }
         }
         else
@@ -137,7 +147,7 @@
     </div>
 
 </div>
-
+}
 
 
 

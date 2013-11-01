@@ -141,26 +141,39 @@ namespace Nimbus.Web.API.Controllers
         /// <returns></returns>
         [Authorize]
         [HttpDelete]
-        public bool DeleteComment(int id)
+        public Comment DeleteComment(int id)
         {
-            bool success = false;
+            Comment cmt = new Comment ();
             try
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    var dado = new Nimbus.DB.Comment()
-                                  { Visible = false };
+                    using (var trans = db.OpenTransaction(System.Data.IsolationLevel.ReadCommitted))
+                    {
+                        try
+                        {
+                            //se ele é pai => apaga ele e os filhos
+                            // se ele é um filho => deixa visible, coloca foto do usuario como avatar padrao, tira o nome e coloca texto como: comentario removido
 
-                    db.Update<Nimbus.DB.Comment>(dado, cmt => cmt.Id == id);
-                    db.Save(dado);
-                    success = true;
+                            var dado = new Nimbus.DB.Comment() { Visible = false };
+
+                            db.Update<Nimbus.DB.Comment>(dado, c => c.Id == id);
+                            db.Save(dado);
+                            trans.Commit();
+                        }
+                        catch(Exception ex)
+                        {
+                            trans.Rollback();
+                            throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+                        }
+                    }
                 }
             }
             catch (Exception ex)
             {
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
-            return success;
+            return cmt;
         }
         
         /// <summary>
