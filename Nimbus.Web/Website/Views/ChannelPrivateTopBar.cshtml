@@ -13,7 +13,7 @@
   Novo Tópico
   Mensagens
 *@
-@Scripts.Render(("~/Scripts/jquery.form.js"))
+@Scripts.Render("~/Scripts/jquery.form.js")
 
 <nav class="ProfTopBar">
     <ul class="sbs">
@@ -60,7 +60,7 @@
                     <p>Novos Comentários</p>
                     @foreach (var item in Model.Comments.Take(10).OrderByDescending(c => c.PostedOn))
                     { 
-                        <div id="divComment" style="display:block">
+                        <div id="divComment_@item.Id" style="display:block">
                             <div id="divInfoComment" name="divInfoComment">
                                 <input type="hidden" value="@item.Id" />
                                 <img id="user+@item.UserId" src="@item.AvatarUrl" />
@@ -68,11 +68,11 @@
                                 @item.TopicName
                                 @item.PostedOn
                                 @item.Text
-                                <a onclick="document.getElementById('divAnswer_@item.Id').style.display ='block';">Responder</a>
+                                <button id="btnAnswerChComment" onclick="EnableDivHiddenBtn('divAnswer_@item.Id', 'btnAnswerChComment');">Responder</button>
                             </div>
                             <div id="divAnswer_@item.Id" name="divAnswer+@item.Id" style="display:none">
                                <textarea rows="10" cols="30" id="txtaAnswer" name="txtaAnswer" maxlength="500"></textarea>
-                                <button id="btnAnswerComment" onclick="ajaxAnswerComment(@item.ParentId, @item.Id, @item.ChannelId, @item.TopicId);">Enviar</button>                                
+                                <button id="btnAnswerComment" onclick="ajaxAnswerComment(@item.ParentId, @item.Id, @item.ChannelId, @item.TopicId, 'txtaAnswer');">Enviar</button>                                
                             </div>
                         </div>
                     }
@@ -87,7 +87,7 @@
                 <div class="PostHeader_g">
                     <h1>@item.Title</h1>
                     <div class="PostHeImg_g">
-                        <img src="@item.ImgUrl" alt="@item.TopicType.ToString()" title="@item.Title">
+                        <img src="@item.ImgUrl" alt="@item.TopicType.ToString()" title="@item.Title" width="180" height="100">
                     </div>
                 </div>
                 <div class="PostContent_g">
@@ -114,7 +114,7 @@
                 <div class="PostHeader_g">
                     <h1>@item.Title</h1>
                     <div class="PostHeImg_g">
-                        <img src="@item.ImgUrl" alt="@item.TopicType.ToString()" title="@item.Title">
+                        <img src="@item.ImgUrl" alt="@item.TopicType.ToString()" title="@item.Title" width="180" height="100">
                     </div>
                 </div>
                 <div class="PostContent_g">

@@ -145,17 +145,17 @@ function ajaxTopicCallback(response) {
     }
 }
 
-function ajaxAnswerComment(parentId,commentId, channelId, topicId) {
+function ajaxAnswerComment(parentId,commentId, channelId, topicId, txtContent) {
     
     var ajaxData = {}
-    var text = document.getElementById("txtaAnswer").value;
+    var text = document.getElementById(txtContent).value;
 
   
     if (text != "") {
-        if (parentId == 0)
-            ajaxData["ParentId"] = commentId;
-        else
+        if (parentId > 0)
             ajaxData["ParentId"] = parentId;
+        else
+            ajaxData["ParentId"] = commentId;
 
         ajaxData["Text"] = text;
         ajaxData["TopicId"] = topicId;
@@ -168,9 +168,13 @@ function ajaxAnswerComment(parentId,commentId, channelId, topicId) {
             contentType: "application/json;charset=utf-8",
             statusCode: {
                 200: function (newData) {
-                    document.getElementById("divAnswer_" + commentId).style.display = 'none';
-                    document.getElementById("divComment").style.display = 'none';
+                    var div = document.getElementById("divAnswer_" + commentId);
+                    if (div === null)
+                        div.style.display = 'none';
+
+                    document.getElementById("divComment_" + commentId).style.display = 'none';
                     //liumpar campos
+                    document.getElementById(txtContent).value = '';
                 },
 
                 400: function () {
@@ -182,4 +186,44 @@ function ajaxAnswerComment(parentId,commentId, channelId, topicId) {
 
     }
 
+}
+
+function ajaxSaveNewComment(topicId, channelId, txtContent)
+{
+    var ajaxData = {}
+    var text = document.getElementById(txtContent).value;
+
+
+    if (text != "" ) {        
+        ajaxData["Text"] = text;
+        ajaxData["TopicId"] = topicId;
+        ajaxData["ChannelId"] = channelId;
+
+        $.ajax({
+            url: "/api/comment/NewComment",
+            data: JSON.stringify(ajaxData),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            statusCode: {
+                200: function (newData) {
+                    document.getElementById("txtacomentario").value = '';
+                },
+
+                400: function () {
+                    //erro
+                    window.alert("Não foi possível enviar seu comentário. Tente novamente mais tarde.");
+                }
+            }
+        });
+    }
+
+}
+
+function ChangeTo(tipoPost, tipoAtual) {
+    if (tipoPost == tipoAtual)
+    {
+        //nao faz nada 
+    } else if (tipoPost == 'post_lista') {
+        document.getElementById(lista).attr("class");
+    } else { }
 }

@@ -16,6 +16,7 @@ function EnableDiv(newDiv, tipoGlobal) {
         }
         divTipoTopic = newDiv;
     }
+    
     document.getElementById(newDiv).style.display = 'block';
 }
 
@@ -24,6 +25,12 @@ function EnableTwoDiv(newDiv, tipoGlobal, divTwo)
     document.getElementById(divTwo).style.display = 'block';
     EnableDiv(newDiv, tipoGlobal);   
     
+}
+
+function EnableDivHiddenBtn(nameDiv, nameBtn)
+{
+    document.getElementById(nameDiv).style.display = 'block';
+    document.getElementById(nameBtn).style.display = 'none';
 }
 
 function DisabledBtn(nameButton)
