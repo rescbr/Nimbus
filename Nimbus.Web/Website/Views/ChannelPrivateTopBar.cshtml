@@ -4,6 +4,7 @@
     //global
     currentDiv = 'divNotifications';
     divTipoTopic = '';
+    CurrentQuestion = '1';
 </script>
 
 @*
@@ -187,33 +188,34 @@
 
             <div id="divExam" style="display:none;">
                <p>Título:
-                <input id="txtTitleExam" type="text" maxlength="140" />
+                <input id="txtTitleExamP1" type="text" maxlength="140" />
                 </p>
                 <p>Descrição:
-                <textarea id="txtaDescriptionExam" cols="10" rows="5" maxlength="600"></textarea>
+                <textarea id="txtaDescriptionExamP1" cols="10" rows="5" maxlength="600"></textarea>
                 </p>
-                <div id="divQuestionExam1">
-                    @*Preenchida por javascript*@
+                <div id="divPergunta1">
                     <p>Enunciado da questão:
-                    <input id="txtTitleQuestion" type="text" maxlength="600" />
+                    <input id="QuestionPerg1" type="text" maxlength="600" />
                     </p>
                     <p>Respostas:</p>
-                     <div id="divQuestion1">
-                         <ul id="ulQuestion1">
-                            <li id="opt1">
-                                <input type="radio" id="rdbOpt1" />
-                                <input id="txtOpt1" type="text" onfocus="javascript: this.value = ''" value="Opção 1" />
+                     <div>
+                         <ul id="ulPerg1">
+                            <li id="liPerg1_opt1"> @*pergunta 1 _ opçao 1*@
+                                <input type="radio" id="rdbPerg1_opt1" />
+                                <input id="txtPerg1_opt1" type="text" onfocus="javascript: this.value = ''" value="Opção 1" />
                             </li>
-                             <li id="opt2" onclick="DisableOption('2', 'divQuestion1');">
-                                 <input type="radio" id="rdbOpt2" name="rdbOpt2" disabled="disabled" />
-                                 <input id="txtOpt2" type="text" disabled="disabled" onfocus="javascript: this.value = ''" value="Opção 2" />
+                            <li id="liPerg1_opt2" onclick="DisableOption('2', 'divPergunta1');">
+                                 <input type="radio" id="rdbPerg1_opt2" disabled="disabled" />
+                                 <input id="txtPerg1_opt2" type="text" disabled="disabled" onfocus="javascript: this.value = ''" value="Opção 2" />
                              </li>
                          </ul> 
-                     <button id="bntAddOption">Adicionar</button>
+                     <button id="bntAddOption">Ok</button>
                     </div>
                 </div>
             </div>
-            <button id="btnSalvar" onclick="SaveNewTopic(@Model.CurrentChannel.Id, false);">Salvar</button>
+            <button id="bntAddItem" onclick="CreatedDivQuestion();">Add item</button>
+                <br />
+                <button id="btnSalvar" onclick="SaveNewTopic(@Model.CurrentChannel.Id, false);">Salvar tópico</button>
         </div>
     </div>
 

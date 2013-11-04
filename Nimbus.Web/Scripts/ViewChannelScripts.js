@@ -1,27 +1,50 @@
 ﻿//deve conter nesse scprits, os scripts utilizados  APENAS nas views de CHANNEL
 
-function CreatedDivQuestion(innerDiv)
+function CreatedDivQuestion()
 {
-
+    var nextQuestion = parseInt(CurrentQuestion) + 1; //variavel global
+    var html = 
+    "<div id=\"divPergunta"+nextQuestion+"\">"+
+                   "<p>Enunciado da questão:"+
+    "<input id=\"QuestionPerg"+nextQuestion+"\" type=\"text\" maxlength=\"600\" />"+
+    "</p>"+
+    "<p>Respostas:</p>"+
+     "<div>"+
+         "<ul id=\"ulPerg"+nextQuestion+"\">"+
+           "<li id=\"liPerg"+CurrentQuestion+"_opt"+nextQuestion+"\">"+ //pergunta 1 _ opçao 1
+                "<input type=\"radio\" id=\"rdbPerg"+CurrentQuestion+"_opt"+nextQuestion+"\" />"+
+                "<input id=\"txtPerg"+CurrentQuestion+"_opt"+nextQuestion+"\" type=\"text\" onfocus=\"javascript: this.value = ''\" value=\"Opção"+nextQuestion+"\" />"+
+            "</li>"+
+            "<li id=\"liPerg"+CurrentQuestion+"_opt"+nextQuestion+"\" onclick=\"DisableOption('"+nextQuestion+"', 'divPergunta"+CurrentQuestion+"');\">"+
+                 "<input type=\"radio\" id=\"rdbPerg"+CurrentQuestion+"_opt"+nextQuestion+"\" disabled=\"disabled\" />"+
+                 "<input id=\"txtPerg"+CurrentQuestion+"_opt"+nextQuestion+"\" type=\"text\" disabled=\"disabled\" onfocus=\"javascript: this.value = ''\" value=\"Opção "+nextQuestion+"\" />"+
+             "</li>"+
+         "</ul>"+ 
+     "<button id=\"bntAddOption\">Ok</button>"+
+    "</div>"+
+"</div>";
+    
+    $("#divExam").append(html);
+    CurrentQuestion = nextQuestion;
 }
 
-function DisableOption(indexOpt, nameDiv)
-{
-    
-    var rdb = document.getElementById("rdbOpt"+ indexOpt);
+function DisableOption(currentOpt, nameDiv)
+{    
+    var rdb = document.getElementById("rdbPerg"+CurrentQuestion+"_opt" + currentOpt);//ex: rdbPerg1_opt2
     rdb.removeAttribute('disabled');
-    var txt = document.getElementById("txtOpt"+ indexOpt);
+    var txt = document.getElementById("txtPerg" + CurrentQuestion + "_opt" + currentOpt);
     txt.removeAttribute('disabled');
-    document.getElementById("opt" + indexOpt).removeAttribute("onClick");
+    document.getElementById("liPerg" + CurrentQuestion + "_opt" + currentOpt).removeAttribute("onClick");
 
-    var i = nameDiv.replace("divQuestion", "");
-    var name = $("ul#ulQuestion"+i+" li:last-child").attr("id");
-    name = name.replace("opt","");
+    
+    var name = $("ul#ulPerg" + CurrentQuestion + " li:last-child").attr("id");
+    name = name.replace("liPerg" + CurrentQuestion + "_opt", ""); //retorna o index da opção, ou seja..quantas opçoes ja teve
 
-    var index = parseInt(name) + 1;
-    var campo = "<li id=\"opt"+ index+"\" onclick=\"DisableOption('"+ index +"', '"+ nameDiv +"');\">" +
-                "<input type=\"radio\" id=\"rdbOpt" + index + "\" disabled=\"disabled\" />" +
-                "<input id=\"txtOpt" + index + "\" type=\"text\" disabled=\"disabled\" onfocus=\"javascript: this.value = ''\" value=\"Opção " + index + "\" />" +
+    var index = parseInt(name) + 1; //index da prox opção a ser inserida
+    
+    var campo = "<li id=\"liPerg" + CurrentQuestion + "_opt" + index + "\" onclick=\"DisableOption('" + index + "', 'divPergunta" + CurrentQuestion + "');\">" +
+                      "<input type=\"radio\" id=\"rdbPerg"+CurrentQuestion+"_opt"+index+"\" disabled=\"disabled\" />"+
+                      "<input id=\"txtPerg"+CurrentQuestion+"_opt"+index+"\" type=\"text\" disabled=\"disabled\" onfocus=\"javascript: this.value = ''\" value=\"Opção "+index+"\" />"+
                 "</li>";
     
     $("#"+ nameDiv + " ul").append(campo);
