@@ -42,17 +42,10 @@ body {
     line-height:        normal;
 }
 
-h1, h2, em, a, a:link, a:visited, a:hover, a:active{
+
+h1, h2, em {
 	color:              #000000;
 	text-decoration:    none;
-}
-
-a, a:link, a:visited, a:hover, a:active {
-	font-weight:        bold;
-}
-
-a:hover {
-	color:              #000000;
 }
 
 ::selection {
@@ -73,22 +66,24 @@ p {
 
 /*------------------ começo header --------------------*/
 
-#header {/*
-	position:           fixed;*/
+#header {
+    background:         #2b2d2e;
 	width:              100%;
-	height:             52px;
+	height:             48px;
 	top:                0px;
 	left:               0px;
+    z-index:            9999;
+    margin:             0 auto;
 }
 
-.container {
-    background:         #FFFFFF;
+.container {/*
+    background:         #FFFFFF;*/
 	width:              960px;
 	height:             48px;
-	margin:             0 auto;
-	border:             2px solid #BE1E2D;
+	margin:             0 auto;/*
+	border:             2px solid #BE1E2D;*/
 	clear:              both;
-	line-height:        3em;
+	line-height:        3.5em;
 }
 
 nav.logo {
@@ -104,10 +99,13 @@ div.userlogo {
     height:             35px;
     width:              35px;
     border-radius:      100%;
-    background-color:   #BE1E2D;
+    background-color:   #87c240;
     float:              left;
 }
 
+.logo h1{
+    color:              #FFFFFF;
+}
 nav.center {
 	font-weight:        bold;
 	left:               240px;
@@ -115,20 +113,32 @@ nav.center {
 }
 
 .center, ul.sbs, ul.sbs li {
+    color:              #FFFFFF;
 	text-align:         center;
 	display:            inline-block;
 	float:              left;
 }
 
-.center li {
-	width:              96px;
+.center li{
+    border-left:        1px solid #4b4b4b;
+	width:              100px;
     height:             48px;
+    color:              #FFFFFF;
+    font-weight:        normal;
 }
 
+.center li:last-child {
+    border-right:       1px solid #4b4b4b;
+}
+
+.center li:active, .center li:hover {
+    border-bottom:      5px solid #87c240;
+    height:             43px;
+}
 nav.right {
 	display:            inline-block;
-	float:              right;
-	margin-right:       96px;
+	float:              left;
+	margin-left:        180px;
 }
 
 div.userpic {
@@ -136,13 +146,20 @@ div.userpic {
 	margin-left:        30px;
 	margin-right:       10px;
     height:             35px;
-    width:              35px;
+    width:              35px;/*
     border:             1px solid #BE1E2D;
-    border-radius:      100%;
+    border-radius:      100%;*/
     background-color:   #FFFFFF;
     float:              left;
 }
 
+h2.userName{
+    font-size:          1.1em;
+    color:              #828282;
+    font-weight:        normal;
+}
+
+/*
 div.exitbutton {
 	display:            inline-block;
 	text-align:         center;
@@ -154,11 +171,7 @@ div.exitbutton {
     width:              15px;
     border-radius:      100%;
     background-color:   #BE1E2D;
-}
-
-.center li {
-	width:              100px;
-}
+}*/
 
 /*------------------ fim header --------------------*/
 
@@ -179,16 +192,14 @@ div.exitbutton {
 	line-height:        2em;
 }
 
-
 .middle-body {
-	margin:             48px;
+	margin:             24px;
 }
-
-
+    
 /*------------------ Trending Topics topo --------------------*/
 
 .content-top {
-	margin-top:         96px;
+	margin-top:         72px;
 	height:             24px;
 }
 
@@ -198,7 +209,6 @@ div.exitbutton {
 
 .cont-left h1 {
 	font-size:          1.5em;
-
 }
 
 .cont-right {
@@ -220,6 +230,10 @@ select.sel{
 	border-radius:      10px;
 	line-height:        1em;
 	font-size:          0.8em;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -khtml-border-radius: 10px;
+    border-radius:      10px;
 }
 
 .c-lista {
@@ -229,10 +243,10 @@ select.sel{
 
 .ret1, .ret2 {
 	margin:             2px;
-	background-color:   #FFFFFF;
+	background-color:   none;
 	height:             5px;
 	width:              15px;
-	border:             1px solid #BE1E2D;
+	border:             1px solid #87c240;
 }
 
 .c-grade {
@@ -243,10 +257,10 @@ select.sel{
 
 .quad1, .quad2, .quad3, .quad4 {
 	position:           absolute;
-	background-color:   #BE1E2D;
+	background-color:   #87c240;
 	height:             5px;
 	width:              5px;
-	border:             1px solid #BE1E2D;
+	border:             1px solid #87c240;
 }
 
 .quad1 {
@@ -294,19 +308,20 @@ div.postHeader_g {
     font-weight:        bold;
 }
 
-div.postHeImg_g {
+div.postImg_g {
     background:         #FFFFFF;
     width:              180px;
     height:             101px;
     border:             1px solid #BE1E2D;
 }
 
+/* apenas imagem / sem texto
 div.postHeader-img_g {
     background:         #FFFFFF;
-    width:              180px;
+    width:              182px;
     height:             129px;
     border:             1px solid #BE1E2D;
-}
+}*/
 
 div.postContent_g {
     margin-top:         5px;
@@ -351,7 +366,7 @@ div.post_l {
     background:         #FFFFFF;
     margin-bottom:      40px;
     width:              792px;
-    height:             108px;
+    height:             148px;
 }
 
 div.post_Right_l {
@@ -362,12 +377,11 @@ div.post_Right_l {
     float:              left;
 }
 
-div.postHeImg_l {
-    background:         url();
-    width:              168px;
-    height:             106px;
+div.postImg_l {
+    background:         #FFFFFF;
+    width:              180px;
+    height:             101px;
     border:             1px solid #BE1E2D;
-    float:              left;
 }
 
 div.postHeader-img_l {
@@ -427,12 +441,24 @@ div.postFoBoxR_l {
 }
 
 /*------------------ User Profile --------------------*/
+h1.userNProfBar {
+    color:              #2b2d2e;
+    font-size:          2em;
+    font-weight:        normal;
+}
+
+div.wrapperUserProfile {
+    padding:            4px 24px 24px 24px;
+    width:              864px;
+    height:             800px;
+}
+
 div.proBar {
+    background:         #f1f2f2;
+    padding:            24px;
     float:              left;
-    background:         #FFFFFF;
-    margin-left:        20px;
     width:              202px;
-    height:             auto;
+    height:             100%;
     line-height:        20px;
 }
 
@@ -442,36 +468,40 @@ div.proBar {
 }
 
 div.profileImg {
-    background:         url();
+    background:         #FFFFFF;
     width:              200px;
     height:             200px;
-    border:             1px solid #BE1E2D;
+    border:             4px solid #2b2d2e;
     margin-bottom:      15px;
 }
 
 div#profileEdit {
     margin-top:         5px;
+    margin-left:        180px;
     position:           absolute;
     width:              24px;
     height:             10px;
     font-size:          xx-small;
 	line-height:        10px;
-    border:             1px solid #BE1E2D;
+    background:         #2b2d2e;
     display:            inline-block;
 }
 
 #profileEdit p {
     text-align:         center;
+    color:              #f1f2f2;
  }
 
 .sendMessage {
     margin:             0 auto;
-    width:              200px;
-    border:             1px solid #BE1E2D;
+    width:              200px;/*
+    border:             1px solid #BE1E2D;*/
+    background:         #2b2d2e;
     text-align:         center;
 }
 
 .sendMessage p {
+    color:              #87c240;
     text-align:         center;
     font-weight:        600;
     font-size:          120%;
@@ -482,7 +512,7 @@ div.aboutUser {
 }
 
 .aboutUser p, .aboutUser h1{
-    text-align:         right;
+    text-align:         left;
 }
 
 p.aboutUser-other {
@@ -491,25 +521,31 @@ p.aboutUser-other {
 }
 
 div.participation {
+    margin-left:        10px;
     margin-bottom:      24px;
     margin-top:         24px;
+}
+
+.participation h1 {
+    border-bottom:      1px solid #87c240;
 }
 
 .participation p {
-    margin-top:         15px;
-    margin-bottom:      15px;
+    margin-top:         30px;
+    margin-bottom:      30px;
     text-align:         center;
-    font-size:          xx-large;
+    font-size:          300%;
+    color:              #87c240;
 }
 
-div.chaPaid {
-    float:              none;
+div.chanPaid {
+    margin-left:        10px;
     margin-bottom:      24px;
-    margin-top:         24px;
-}
+    margin-top:         24px;}
 
 .chanPaid h1 {
-    width:              200px;
+    border-bottom:      1px solid #87c240;
+    margin-bottom:      10px;
 }
 
 div.channels {
@@ -528,15 +564,31 @@ div.chanPaidImg {
 /*------------------ Private Profile - Top Bar --------------------*/
 
 nav.profTopBar {
-    margin:             0 auto;
+    margin-top:         24px;
     width:              600px;
-    height:             26px;
-    border:             1px solid #BE1E2D;
+    height:             39px;/*
+    border:             1px solid #BE1E2D;*/
+    background:         #2b2d2e;
+    font-weight:        normal;
+    color:              #FFFFFF;
 }
 
 .profTopBar li {
     width:              120px;
     text-align:         center;
+    line-height:        3em;
+}
+/*
+.profTopBar a {
+    font-weight:        normal;
+    color:              #FFFFFF;
+}
+*/
+.profTopBar li:hover {
+    background:         #2b2d2e;
+    border-bottom:      2px solid #87c240;
+    height:             36px;
+    color:              #87c240;
 }
 
 /*Tab*/
@@ -629,70 +681,142 @@ div.postContent_m {
 
 /*------------------ Private Profile - Att --------------------*/
 
-div.post_att {
-    background:         #FFFFFF;
-    margin-bottom:      30px;
-    width:              456px;
-    height:             60px;
+#divNotification {
+    background:         #d1d3d4;
+    margin-bottom:      20px;
+    margin-top:         20px;
+    margin-left:        10px;
+    width:              590px;
+    height:             70px;
+    border-bottom:      2px solid #87c240;
 }
 
-div.post_Right_att {
-    margin-left:        60px;
-    width:              396px;
-    height:             60px;
-    position:           absolute;
-    float:              left;
-}
-
-div.postHeImg_att {
-    background:         url();
+#imgNotification {
+    background:         #bcbec0;
     width:              60px;
     height:             60px;
-    border:             1px solid #BE1E2D;
     float:              left;
+    margin:             5px;
 }
 
-nav.postFooterLeft_att {
-    width:              auto;
-    height:             24px;
-    padding-left:       5px;
-    float:              left;
-}
-
-nav.postFooterRight_att {
-    width:              auto;
-    height:             24px;
-    float:              right;
-    display:            inline-block;
-    float:              right;
-}
-
-.postFooterLeft_att li {
-    padding-left:       5px;
-    padding-right:      5px;
-    font-size:          small;
-}
-
-.postFooterRight_att li {
-    width:              50px;
-    margin-left:        20px;
-    text-align:         center;
-    font-size:          x-small;
-    font-weight:        bold;
-    border:             1px solid #BE1E2D;
-}
-
-div.postContent_att {
+p#timeNotification {
     margin-right:       5px;
-    margin-left:        10px;
-    width:              370px;
+    float:              right;
+    font-size:          xx-small;
 }
 
-.postContent_m att {
-    text-align:         left;
-    font-size:          small;
-    line-height:        normal;
+p#txtNotification {
+    padding-top:          24px;
+    font-size:           medium;
 }
+
+div#attChoice {
+    margin-top:         38px;
+    margin-left:        408px;
+    position:           absolute;
+    display:            inline-block;
+}
+
+div#btnAccept{
+    margin-left:        5px;
+    float:              left;
+    width:              48px;
+    height:             24px;
+    font-size:          x-small;
+    background:         #2b2d2e;
+}
+
+div#btnAccept p{
+    color:              #FFFFFF;
+    text-align:         center;
+}
+
+div#btnAccept:hover, div#btnAccept:hover p {
+    color:              #87c240;
+    cursor:             pointer;
+}
+
+/*------------------ Private Profile - fim Att --------------------*/
+
+/*------------------ Post Canais começo --------------------*/
+
+div#divChannel {
+    float:             left;
+    margin:            24px;
+    width:             180px;
+    height:            auto;
+    background:        #d1d3d4;
+}
+
+div#headerChannel{
+    width:             180px;
+    height:            50px;
+    background:        #2b2d2e;
+}
+
+#headerChannel h1 {
+    line-height:       4em;
+    text-align:        center;
+    color:             #FFFFFF;
+    font-size:         small;
+    height:            50px;
+}
+
+#imgChannel {
+    background:         #bcbec0;
+    width:              180px;
+    height:             100px;
+}
+/*------------------ Post Canais fim --------------------*/
+/*------------------ Post Tópicos começo --------------------*/
+
+div.divTopic-grade {
+    float:             left;
+    margin:            24px;
+    width:             180px;
+    height:            auto;
+    background:        #d1d3d4;
+}
+
+div.headerTopic-grade{
+    width:             180px;
+    height:            50px;
+    background:        #2b2d2e;
+}
+
+.headerTopic-grade h1 {
+    line-height:       4em;
+    text-align:        center;
+    color:             #FFFFFF;
+    font-size:         small;
+    height:            50px;
+}
+
+.imgTopic-grade {
+    background:         #bcbec0;
+    width:              180px;
+    height:             100px;
+}
+.contentTopic-grade p{
+
+}
+
+.footerTopic-grade {
+    background:         #87c240;
+}
+
+.btnLeftTopic-grade p{
+    color:              #FFFFFF;
+    text-align:         center;
+}
+
+.btnRightTopic-grade {
+    color:              #FFFFFF;
+    width:              24px;
+    text-align:         center;
+}
+
+/*------------------ Post Tópicos fim --------------------*/
 
 /*------------------ Public Profile --------------------*/
 div.myChannels, div.modChannels{
@@ -710,16 +834,20 @@ div.myChannels h1, div.modChannels h1{
 
 /*----- começo Botoes interativos / JS & JQuery ----*/
 .press {
-     cursor:pointer;
+     cursor:           pointer;
 }
 
-.press:hover, .accRef:hover, .sendMessage:hover, #profileEdit:hover, .c-lista:hover .c-grade:hover, .postFoBoxL_l:hover, .postFoBoxR_l:hover, .postFoBoxL_g:hover, .postFoBoxR_g:hover, .post_m:hover, .chanPaidImg:hover {
-	background:  #BE1E2D;
+.c-grade:hover, .c-lista:hover {
+    cursor:            pointer;
+}
+
+.userpic:hover, .logo:hover, .BSearch:hover, .BTrTop:hover, .BTop:hover, .BNews:hover, .press:hover, .accRef:hover, .sendMessage:hover, #profileEdit:hover, .c-lista:hover .c-grade:hover, .postFoBoxL_l:hover, .postFoBoxR_l:hover, .postFoBoxL_g:hover, .postFoBoxR_g:hover, .post_m:hover, .chanPaidImg:hover {
+	background:        #bcbec0;
     cursor:            pointer;
 }
 
 .attChoice {
-    display:            inline-block;
+    display:           inline-block;
 }
 
 div.accRef {

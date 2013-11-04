@@ -53,8 +53,18 @@ function getUrlVideo(nomecampo, nomeframe)
 }
 
 //Mudar de Lista pra Grade e Grade pra lista
-function ChangeToGrade(lista)
+function ChangeTo(tipoPost, tipoAtual)
 {
-    document.getElementById(lista).attr("class");
+    if (tipoPost == tipoAtual) {
+        //nao faz nada
+    }
+    else if (tipoPost == 'post_lista') {
+        document.getElementById("lista").attr("class-antiga","class-nova");
+
+    }
+    else {
+
+    }
+    
 
 }
