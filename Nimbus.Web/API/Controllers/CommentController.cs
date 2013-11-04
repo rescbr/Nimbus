@@ -141,9 +141,9 @@ namespace Nimbus.Web.API.Controllers
         /// <returns></returns>
         [Authorize]
         [HttpDelete]
-        public Comment DeleteComment(int id)
+        public CommentBag DeleteComment(Comment comment)
         {
-            Comment cmt = new Comment ();
+            
             try
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
@@ -154,12 +154,44 @@ namespace Nimbus.Web.API.Controllers
                         {
                             //se ele é pai => apaga ele e os filhos
                             // se ele é um filho => deixa visible, coloca foto do usuario como avatar padrao, tira o nome e coloca texto como: comentario removido
+                            Comment cmt = new Comment();
+                            CommentBag bag = new CommentBag();
+                            cmt = db.SelectParam<Comment>(c => c.Id == comment.Id).FirstOrDefault();
+                            if (cmt.ParentId > 0) // é filho
+                            {
 
-                            var dado = new Nimbus.DB.Comment() { Visible = false };
+                                cmt.Text = "Comentário removido";
 
-                            db.Update<Nimbus.DB.Comment>(dado, c => c.Id == id);
-                            db.Save(dado);
+                                db.Update<Comment>(cmt, c => c.Id == cmt.Id);
+                                db.Save(cmt);
+
+                                bag.Text = cmt.Text;
+                                bag.ParentId = cmt.ParentId;
+                                bag.AvatarUrl = "/images/Utils/person_icon.png";
+                                bag.UserName = "Nome do usuário";
+                            }
+                            else
+                            {
+                                List<int> idChilds = db.SelectParam<Comment>(c => c.ParentId == comment.Id).Select(c => c.Id).ToList();
+                                foreach (int item in idChilds)
+                                {
+                                    var dado = new Comment()
+                                    {
+                                        Visible = false
+                                    };
+                                    db.Update<Comment>(dado, c => c.Id == item);
+                                    db.Save(dado);
+                                }
+                                cmt.Visible = false;
+                                db.Update<Comment>(cmt, c => c.Id == cmt.Id);
+                                db.Save(cmt);
+
+                                bag.Id = cmt.Id;
+                                bag.ParentId = cmt.ParentId;
+                            }
+                         
                             trans.Commit();
+                            return bag;
                         }
                         catch(Exception ex)
                         {
@@ -173,7 +205,6 @@ namespace Nimbus.Web.API.Controllers
             {
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
-            return cmt;
         }
         
         /// <summary>
@@ -200,14 +231,24 @@ namespace Nimbus.Web.API.Controllers
 
                         //busco todos os filhos desse comentário
                         List<Comment> cmtChild = db.SelectParam<Comment>(c => c.ParentId == item.Id && item.Visible == true);
-                        List<CommentBag> listChild = new List<CommentBag>();
+                        List<CommentBag> listChild = new List<CommentBag>();                        
+                        
                         foreach (var itemChild in cmtChild)
-                        {
+                        {                            
                             User userChild = db.SelectParam<User>(u => u.Id == itemChild.UserId).FirstOrDefault();
+                            string name = "";
+                            if (itemChild.Text == "Comentário removido")
+                            {
+                                userChild.AvatarUrl = "/images/Utils/person_icon.png";
+                                name = "Nome do usuário";
+
+                            }
+                            else
+                                name = HttpUtility.HtmlDecode(userChild.FirstName + " " + userChild.LastName);
                             CommentBag child = new CommentBag()
                             {
                                 AvatarUrl = userChild.AvatarUrl,
-                                UserName = HttpUtility.HtmlDecode(userChild.FirstName + " " + userChild.LastName),
+                                UserName = name,
                                 UserId = userChild.Id,
                                 Id = itemChild.Id,
                                 Text = HttpUtility.HtmlDecode(itemChild.Text),

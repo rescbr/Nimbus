@@ -228,11 +228,22 @@ function ajaxDeleteComment(commentId, divName)
         $.ajax({
             url: "/api/comment/DeleteComment",
             data: JSON.stringify(ajaxData),
-            type: "POST",
+            type: "DELETE",
             contentType: "application/json;charset=utf-8",
             statusCode: {
                 200: function (newData) {
-                    document.getElementById(DeleteComment).style.display = 'none';
+                    if (newData.ParentId > 0)
+                    {
+                        document.getElementById("lblText_"+ commentId).value = newData.Text;
+                        document.getElementById("lblPostedOn_" + commentId).value = newData.PostedOn;
+                        document.getElementById("imgTopic_"+ commentId).src = newData.AvatarUrl;
+                        document.getElementById("lblUserName_" + commentId).value = newData.UserName;
+                        document.getElementById("btnDelete_"+ commentId).style.display = 'none';
+                    }
+                    else
+                    {
+                        document.getElementById("divContentComment_" + commentId).style.display = 'none';
+                    }
                 },
 
                 400: function () {
