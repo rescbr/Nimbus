@@ -186,9 +186,32 @@
             </div>
 
             <div id="divExam" style="display:none;">
-                <p>
-                    Ainda precisa ver como vai ser
+               <p>Título:
+                <input id="txtTitleExam" type="text" maxlength="140" />
                 </p>
+                <p>Descrição:
+                <textarea id="txtaDescriptionExam" cols="10" rows="5" maxlength="600"></textarea>
+                </p>
+                <div id="divQuestionExam1">
+                    @*Preenchida por javascript*@
+                    <p>Enunciado da questão:
+                    <input id="txtTitleQuestion" type="text" maxlength="600" />
+                    </p>
+                    <p>Respostas:</p>
+                     <div id="divQuestion1">
+                         <ul id="ulQuestion1">
+                            <li id="opt1">
+                                <input type="radio" id="rdbOpt1" />
+                                <input id="txtOpt1" type="text" onfocus="javascript: this.value = ''" value="Opção 1" />
+                            </li>
+                             <li id="opt2" onclick="DisableOption('2', 'divQuestion1');">
+                                 <input type="radio" id="rdbOpt2" name="rdbOpt2" disabled="disabled" />
+                                 <input id="txtOpt2" type="text" disabled="disabled" onfocus="javascript: this.value = ''" value="Opção 2" />
+                             </li>
+                         </ul> 
+                     <button id="bntAddOption">Adicionar</button>
+                    </div>
+                </div>
             </div>
             <button id="btnSalvar" onclick="SaveNewTopic(@Model.CurrentChannel.Id, false);">Salvar</button>
         </div>

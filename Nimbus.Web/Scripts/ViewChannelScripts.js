@@ -1,5 +1,33 @@
 ﻿//deve conter nesse scprits, os scripts utilizados  APENAS nas views de CHANNEL
 
+function CreatedDivQuestion(innerDiv)
+{
+
+}
+
+function DisableOption(indexOpt, nameDiv)
+{
+    
+    var rdb = document.getElementById("rdbOpt"+ indexOpt);
+    rdb.removeAttribute('disabled');
+    var txt = document.getElementById("txtOpt"+ indexOpt);
+    txt.removeAttribute('disabled');
+    document.getElementById("opt" + indexOpt).removeAttribute("onClick");
+
+    var i = nameDiv.replace("divQuestion", "");
+    var name = $("ul#ulQuestion"+i+" li:last-child").attr("id");
+    name = name.replace("opt","");
+
+    var index = parseInt(name) + 1;
+    var campo = "<li id=\"opt"+ index+"\" onclick=\"DisableOption('"+ index +"', '"+ nameDiv +"');\">" +
+                "<input type=\"radio\" id=\"rdbOpt" + index + "\" disabled=\"disabled\" />" +
+                "<input id=\"txtOpt" + index + "\" type=\"text\" disabled=\"disabled\" onfocus=\"javascript: this.value = ''\" value=\"Opção " + index + "\" />" +
+                "</li>";
+    
+    $("#"+ nameDiv + " ul").append(campo);
+}
+
+
 function SaveNewTopic(channelID, isEdit)
 {
     if (isEdit == false)
