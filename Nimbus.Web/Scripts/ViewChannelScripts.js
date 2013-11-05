@@ -2,22 +2,22 @@
 
 function CreatedDivQuestion()
 {
-    var nextQuestion = parseInt(CurrentQuestion) + 1; //variavel global
+    var nextPerg= parseInt(CurrentQuestion) + 1; //variavel global
     var html = 
-    "<div id=\"divPergunta"+nextQuestion+"\">"+
+    "<div id=\"divPergunta" + nextPerg + "\">" +
                    "<p>Enunciado da questão:"+
-    "<input id=\"QuestionPerg"+nextQuestion+"\" type=\"text\" maxlength=\"600\" />"+
+    "<input id=\"QuestionPerg" + nextPerg + "\" type=\"text\" maxlength=\"600\" />" +
     "</p>"+
     "<p>Respostas:</p>"+
      "<div>"+
-         "<ul id=\"ulPerg"+nextQuestion+"\">"+
-           "<li id=\"liPerg"+CurrentQuestion+"_opt"+nextQuestion+"\">"+ //pergunta 1 _ opçao 1
-                "<input type=\"radio\" id=\"rdbPerg"+CurrentQuestion+"_opt"+nextQuestion+"\" />"+
-                "<input id=\"txtPerg"+CurrentQuestion+"_opt"+nextQuestion+"\" type=\"text\" onfocus=\"javascript: this.value = ''\" value=\"Opção"+nextQuestion+"\" />"+
+         "<ul id=\"ulPerg" + nextPerg + "\">" +
+           "<li id=\"liPerg" + nextPerg + "_opt1\">" + //ex: pergunta 1 _ opçao 1
+                "<input type=\"radio\" id=\"rdbPerg" + nextPerg + "_opt1\" />" +
+                "<input id=\"txtPerg" + nextPerg + "_opt1\" type=\"text\" onfocus=\"javascript: this.value = ''\" value=\"Opção 1\" />" +
             "</li>"+
-            "<li id=\"liPerg"+CurrentQuestion+"_opt"+nextQuestion+"\" onclick=\"DisableOption('"+nextQuestion+"', 'divPergunta"+CurrentQuestion+"');\">"+
-                 "<input type=\"radio\" id=\"rdbPerg"+CurrentQuestion+"_opt"+nextQuestion+"\" disabled=\"disabled\" />"+
-                 "<input id=\"txtPerg"+CurrentQuestion+"_opt"+nextQuestion+"\" type=\"text\" disabled=\"disabled\" onfocus=\"javascript: this.value = ''\" value=\"Opção "+nextQuestion+"\" />"+
+            "<li id=\"liPerg" + nextPerg + "_opt2\" onclick=\"DisableOption('2', 'divPergunta" + nextPerg + "');\">" +
+                 "<input type=\"radio\" id=\"rdbPerg" + nextPerg + "_opt2\" disabled=\"disabled\" />" +
+                 "<input id=\"txtPerg" + nextPerg + "_opt2\" type=\"text\" disabled=\"disabled\" onfocus=\"javascript: this.value = ''\" value=\"Opção 2\" />" +
              "</li>"+
          "</ul>"+ 
      "<button id=\"bntAddOption\">Ok</button>"+
@@ -25,7 +25,7 @@ function CreatedDivQuestion()
 "</div>";
     
     $("#divExam").append(html);
-    CurrentQuestion = nextQuestion;
+    CurrentQuestion = nextPerg;
 }
 
 function DisableOption(currentOpt, nameDiv)
