@@ -42,22 +42,15 @@ body {
     line-height:        normal;
 }
 
-h1, h2, em, a, a:link, a:visited, a:hover, a:active{
+
+h1, h2, em {
 	color:              #000000;
 	text-decoration:    none;
 }
 
-a, a:link, a:visited, a:hover, a:active {
-	font-weight:        bold;
-}
-
-a:hover {
-	color:              #000000;
-}
-
 ::selection {
 	color:              #FFFFFF;
-	background:         #BE1E2D;
+	background:         #87c240;
 }
 
 h1 {
@@ -71,24 +64,30 @@ p {
 	text-align:         justify;
 }
 
+a, a:hover, a:visited {
+    text-decoration:    none;
+    color:              #000000;
+}
 /*------------------ começo header --------------------*/
 
-#header {/*
-	position:           fixed;*/
+#header {
+    background:         #2b2d2e;
 	width:              100%;
-	height:             52px;
+	height:             48px;
 	top:                0px;
 	left:               0px;
+    z-index:            9999;
+    margin:             0 auto;
 }
 
-.container {
-    background:         #FFFFFF;
+.container {/*
+    background:         #FFFFFF;*/
 	width:              960px;
 	height:             48px;
-	margin:             0 auto;
-	border:             2px solid #BE1E2D;
+	margin:             0 auto;/*
+	border:             2px solid #BE1E2D;*/
 	clear:              both;
-	line-height:        3em;
+	line-height:        3.5em;
 }
 
 nav.logo {
@@ -104,10 +103,13 @@ div.userlogo {
     height:             35px;
     width:              35px;
     border-radius:      100%;
-    background-color:   #BE1E2D;
+    background-color:   #87c240;
     float:              left;
 }
 
+.logo h1{
+    color:              #FFFFFF;
+}
 nav.center {
 	font-weight:        bold;
 	left:               240px;
@@ -115,20 +117,32 @@ nav.center {
 }
 
 .center, ul.sbs, ul.sbs li {
+    color:              #FFFFFF;
 	text-align:         center;
 	display:            inline-block;
 	float:              left;
 }
 
-.center li {
-	width:              96px;
+.center li{
+    border-left:        1px solid #4b4b4b;
+	width:              100px;
     height:             48px;
+    color:              #FFFFFF;
+    font-weight:        normal;
 }
 
+.center li:last-child {
+    border-right:       1px solid #4b4b4b;
+}
+
+.center li:active, .center li:hover {
+    border-bottom:      5px solid #87c240;
+    height:             43px;
+}
 nav.right {
 	display:            inline-block;
-	float:              right;
-	margin-right:       96px;
+	float:              left;
+	margin-left:        180px;
 }
 
 div.userpic {
@@ -136,13 +150,20 @@ div.userpic {
 	margin-left:        30px;
 	margin-right:       10px;
     height:             35px;
-    width:              35px;
+    width:              35px;/*
     border:             1px solid #BE1E2D;
-    border-radius:      100%;
+    border-radius:      100%;*/
     background-color:   #FFFFFF;
     float:              left;
 }
 
+h2.userName{
+    font-size:          1.1em;
+    color:              #828282;
+    font-weight:        normal;
+}
+
+/*
 div.exitbutton {
 	display:            inline-block;
 	text-align:         center;
@@ -154,11 +175,7 @@ div.exitbutton {
     width:              15px;
     border-radius:      100%;
     background-color:   #BE1E2D;
-}
-
-.center li {
-	width:              100px;
-}
+}*/
 
 /*------------------ fim header --------------------*/
 
@@ -179,16 +196,14 @@ div.exitbutton {
 	line-height:        2em;
 }
 
-
 .middle-body {
-	margin:             48px;
+/*	margin:             24px;*/
 }
-
-
+    
 /*------------------ Trending Topics topo --------------------*/
 
 .content-top {
-	margin-top:         96px;
+	margin-top:         72px;
 	height:             24px;
 }
 
@@ -198,7 +213,6 @@ div.exitbutton {
 
 .cont-left h1 {
 	font-size:          1.5em;
-
 }
 
 .cont-right {
@@ -220,6 +234,10 @@ select.sel{
 	border-radius:      10px;
 	line-height:        1em;
 	font-size:          0.8em;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -khtml-border-radius: 10px;
+    border-radius:      10px;
 }
 
 .c-lista {
@@ -229,10 +247,10 @@ select.sel{
 
 .ret1, .ret2 {
 	margin:             2px;
-	background-color:   #FFFFFF;
+	background-color:   none;
 	height:             5px;
 	width:              15px;
-	border:             1px solid #BE1E2D;
+	border:             1px solid #87c240;
 }
 
 .c-grade {
@@ -243,10 +261,10 @@ select.sel{
 
 .quad1, .quad2, .quad3, .quad4 {
 	position:           absolute;
-	background-color:   #BE1E2D;
+	background-color:   #87c240;
 	height:             5px;
 	width:              5px;
-	border:             1px solid #BE1E2D;
+	border:             1px solid #87c240;
 }
 
 .quad1 {
@@ -273,7 +291,7 @@ select.sel{
 
 /*------------------ Posts Grade --------------------*/
 
-div.Post_g {
+div.post_g {
     background:         #FFFFFF;
     position:           relative;
     margin:             20px;
@@ -282,33 +300,34 @@ div.Post_g {
     float:              left;
 }
 
-div.PostHeader_g {
+div.postHeader_g {
     width:              182px;
     height:             129px;
     border:             1px solid #BE1E2D;
 }
 
-.PostHeader_g h1 {
+.postHeader_g h1 {
     padding-left:       10px;
     font-size:          small;
     font-weight:        bold;
 }
 
-div.PostHeImg_g {
+div.postImg_g {
     background:         #FFFFFF;
     width:              180px;
     height:             101px;
     border:             1px solid #BE1E2D;
 }
 
-div.PostHeader-img_g {
+/* apenas imagem / sem texto
+div.postHeader-img_g {
     background:         #FFFFFF;
-    width:              180px;
+    width:              182px;
     height:             129px;
     border:             1px solid #BE1E2D;
-}
+}*/
 
-div.PostContent_g {
+div.postContent_g {
     margin-top:         5px;
     margin-bottom:      5px;
     height:             93px;
@@ -318,43 +337,43 @@ div.PostContent_g {
     overflow:           hidden; /* Temporário. Fazer caber X caracteres ali D: */
 }
 
-.PostContent_g p {
+.postContent_g p {
     text-align:         justify;
     font-size:          small;
     line-height:        normal;
 }
 
-div.PostFooter_g {
+div.postFooter_g {
     width:              180px;
     height:             24px;
     border:             1px solid #BE1E2D;
 }
 
-div.PostFoBoxL_g, div.PostFoBoxR_g {
+div.postFoBoxL_g, div.postFoBoxR_g {
     width:              89px;
     height:             24px;
     float:              left;
 }
 
-.PostFooter_g p {
+.postFooter_g p {
     text-align:         center;
     font-size:          90%;
 }
 
-div.PostFoBoxR_g {
+div.postFoBoxR_g {
     border-left:        1px solid #BE1E2D;
 }
 
 /*------------------ Posts Lista --------------------*/
 
-div.Post_l {
+div.post_l {
     background:         #FFFFFF;
     margin-bottom:      40px;
     width:              792px;
-    height:             108px;
+    height:             148px;
 }
 
-div.Post_Right_l {
+div.post_Right_l {
     margin-left:        169px;
     width:              624px;
     height:             96px;
@@ -362,34 +381,33 @@ div.Post_Right_l {
     float:              left;
 }
 
-div.PostHeImg_l {
-    background:         url();
-    width:              168px;
-    height:             106px;
+div.postImg_l {
+    background:         #FFFFFF;
+    width:              180px;
+    height:             101px;
     border:             1px solid #BE1E2D;
-    float:              left;
 }
 
-div.PostHeader-img_l {
+div.postHeader-img_l {
     background:         url();
     width:              600px;
     height:             106px;
     border:             1px solid #BE1E2D;
 }
 
-div.PostHeader_l {
+div.postHeader_l {
     width:              auto;
     height:             24px;
     border:             1px solid #BE1E2D;
 }
 
-.PostHeader_l h1 {
+.postHeader_l h1 {
     padding-left:       10px;
     font-size:          small;
     font-weight:        bold;
 }
 
-div.PostContent_l {
+div.postContent_l {
     margin-right:       5px;
     margin-left:        5px;
     height:             46px;
@@ -399,125 +417,147 @@ div.PostContent_l {
     overflow:           hidden; /* Temporário. Fazer caber X caracteres ali D: */
 }
 
-.PostContent_l p {
+.postContent_l p {
     text-align:         justify;
     font-size:          small;
     line-height:        normal;
 }
 
-div.PostFooter_l {
+div.postFooter_l {
     width:              auto;
     height:             24px;
     border:             1px solid #BE1E2D;
 }
 
-div.PostFoBoxL_l, div.PostFoBoxR_l {
+div.postFoBoxL_l, div.postFoBoxR_l {
     width:              310px;
     height:             24px;
     float:              left;
 }
 
-.PostFooter_l p {
+.postFooter_l p {
     text-align:         center;
     font-size:          90%;
 }
 
-div.PostFoBoxR_l {
+div.postFoBoxR_l {
     border-left:        1px solid #BE1E2D;
 }
 
 /*------------------ User Profile --------------------*/
-div.ProBar {
+h1.userNProfBar {
+    color:              #2b2d2e;
+    font-size:          2em;
+    font-weight:        normal;
+}
+
+div.wrapperUserProfile {
+    padding:            4px 24px 24px 24px;
+    width:              864px;
+    height:             800px;
+}
+
+div.proBar {
+    background:         #f1f2f2;
+    padding:            24px;
     float:              left;
-    background:         #FFFFFF;
-    margin-left:        20px;
     width:              202px;
-    height:             auto;
+    height:             100%;
     line-height:        20px;
 }
 
-.ProBar h1 {
+.proBar h1 {
     font-size:          115%;
     font-weight:        bold;
 }
 
-div.ProfileImg {
-    background:         url();
+div.profileImg {
+    background:         #FFFFFF;
     width:              200px;
     height:             200px;
-    border:             1px solid #BE1E2D;
+    border:             4px solid #2b2d2e;
     margin-bottom:      15px;
 }
 
-div#ProfileEdit {
+div#profileEdit {
     margin-top:         5px;
+    margin-left:        180px;
     position:           absolute;
     width:              24px;
     height:             10px;
     font-size:          xx-small;
 	line-height:        10px;
-    border:             1px solid #BE1E2D;
+    background:         #2b2d2e;
     display:            inline-block;
 }
 
-#ProfileEdit p {
+#profileEdit p {
     text-align:         center;
+    color:              #f1f2f2;
  }
 
-.SendMessage {
+.sendMessage {
     margin:             0 auto;
-    width:              200px;
-    border:             1px solid #BE1E2D;
+    width:              120px;
+    height:             30px;
+    line-height:        2em;
+    background:         #2b2d2e;
     text-align:         center;
 }
 
-.SendMessage p {
+.sendMessage p, .sendMessage a, .sendMessage a:hover, .sendMessage a:active {
+    color:              #87c240;
     text-align:         center;
-    font-weight:        600;
-    font-size:          120%;
+    font-weight:        normal;
+    font-size:          1em;
 }
 
-div.AboutUser {
+div.aboutUser {
     margin-bottom:      24px;
 }
 
-.AboutUser p, .AboutUser h1{
-    text-align:         right;
+.aboutUser p, .aboutUser h1{
+    text-align:         left;
 }
 
-p.AboutUser-other {
+p.aboutUser-other {
     margin-top:         5px;
     margin-bottom:      5px;
 }
 
-div.Participation {
+div.participation {
+    margin-left:        10px;
     margin-bottom:      24px;
     margin-top:         24px;
 }
 
-.Participation p {
-    margin-top:         15px;
-    margin-bottom:      15px;
+.participation h1 {
+    border-bottom:      1px solid #87c240;
+}
+
+.participation p {
+    margin-top:         30px;
+    margin-bottom:      30px;
     text-align:         center;
-    font-size:          xx-large;
+    font-size:          300%;
+    color:              #87c240;
 }
 
-div.ChaPaid {
-    width:             200px;
-    height:             auto;
+div.chanPaid {
+    margin-left:        10px;
+    margin-bottom:      24px;
+    margin-top:         24px;}
+
+.chanPaid h1 {
+    border-bottom:      1px solid #87c240;
+    margin-bottom:      10px;
 }
 
-.ChanPaid h1 {
-    margin-top:         15px;
-    margin-bottom:      15px;
-}
-
-div.Channels {
-    width:              200px;
+div.channels {
     margin:             0 auto;
 }
 
-div.ChanPaidImg {
+div.chanPaidImg {
     background:         #FFFFFF;
     width:              40px;
     height:             40px;
@@ -528,30 +568,47 @@ div.ChanPaidImg {
 
 /*------------------ Private Profile - Top Bar --------------------*/
 
-nav.ProfTopBar {
-    margin:             0 auto;
+nav.profTopBar {
+    margin-top:         24px;
     width:              600px;
-    height:             26px;
-    border:             1px solid #BE1E2D;
+    height:             39px;/*
+    border:             1px solid #BE1E2D;*/
+    background:         #2b2d2e;
+    font-weight:        normal;
+    color:              #FFFFFF;
 }
 
-.ProfTopBar li {
-    width:              120px;
+.profTopBar li {
+    width:              100px;
     text-align:         center;
+    line-height:        3em;
+}
+/*
+.profTopBar a {
+    font-weight:        normal;
+    color:              #FFFFFF;
+}
+*/
+.profTopBar li:hover {
+    background:         #2b2d2e;
+    border-bottom:      2px solid #87c240;
+    height:             36px;
+    color:              #87c240;
+    cursor:             pointer;
 }
 
 /*Tab*/
-div.WrapperUser {
+div.wrapperUser {
     float:              left;
 }
 
-div.TabContent {
+div.tabContent {
     margin-left:        5px;
     margin-right:       5px;
 }
 
 /*------------------ Private Profile - Messages --------------------*/
-nav.TopMess {
+nav.topMess {
     margin:             0 auto;
     width:              300px;
     height:             24px;
@@ -559,25 +616,24 @@ nav.TopMess {
     border-radius:      12px;
 }
 
-.TopMess li {
+.topMess li {
     width:              145px;
     text-align:         center;
 }
 
-div.MessContent {
+div.messContent {
     margin:             0 auto;
 }
 
 /*Content*/
-div.Post_m {
-    background:         #FFFFFF;
+div.post_m {
     margin-bottom:      30px;
     width:              456px;
     height:             60px;
     border:             1px solid #BE1E2D;
 }
 
-div.Post_Right_m {
+div.post_Right_m {
     margin-left:        60px;
     width:              396px;
     height:             60px;
@@ -585,7 +641,7 @@ div.Post_Right_m {
     float:              left;
 }
 
-div.PostHeImg_m {
+div.postHeImg_m {
     background:         url();
     width:              60px;
     height:             60px;
@@ -593,13 +649,13 @@ div.PostHeImg_m {
     float:              left;
 }
 
-nav.PostHeaderLeft_m {
+nav.postHeaderLeft_m {
     width:              auto;
     height:             24px;
     float:              left;
 }
 
-nav.PostHeaderRight_m {
+nav.postHeaderRight_m {
     width:              auto;
     height:             24px;
     float:              right;
@@ -607,14 +663,14 @@ nav.PostHeaderRight_m {
     float:              right;
 }
 
-.PostHeaderRight_m li, .PostHeaderLeft_m li {
+.postHeaderRight_m li, .postHeaderLeft_m li {
     padding-left:       10px;
     padding-right:      10px;
     font-size:          small;
     font-weight:        bold;
 }
 
-div.PostContent_m {
+div.postContent_m {
     margin-top:         40px;
     margin-right:       5px;
     margin-left:        10px;
@@ -623,7 +679,7 @@ div.PostContent_m {
     overflow:           hidden; /* Temporário. Fazer caber X caracteres ali D: */
 }
 
-.PostContent_m p {
+.postContent_m p {
     text-align:         left;
     font-size:          small;
     line-height:        normal;
@@ -631,96 +687,371 @@ div.PostContent_m {
 
 /*------------------ Private Profile - Att --------------------*/
 
-div.Post_att {
-    background:         #FFFFFF;
-    margin-bottom:      30px;
-    width:              456px;
-    height:             60px;
+#divNotification {
+    background:         #d1d3d4;
+    margin-bottom:      20px;
+    margin-top:         20px;
+    margin-left:        10px;
+    width:              590px;
+    height:             70px;
+    border-bottom:      2px solid #87c240;
 }
 
-div.Post_Right_att {
-    margin-left:        60px;
-    width:              396px;
-    height:             60px;
-    position:           absolute;
-    float:              left;
-}
-
-div.PostHeImg_att {
-    background:         url();
+#imgNotification {
+    background:         #bcbec0;
     width:              60px;
     height:             60px;
-    border:             1px solid #BE1E2D;
     float:              left;
+    margin:             5px;
 }
 
-nav.PostFooterLeft_att {
-    width:              auto;
-    height:             24px;
-    padding-left:       5px;
-    float:              left;
-}
-
-nav.PostFooterRight_att {
-    width:              auto;
-    height:             24px;
-    float:              right;
-    display:            inline-block;
-    float:              right;
-}
-
-.PostFooterLeft_att li {
-    padding-left:       5px;
-    padding-right:      5px;
-    font-size:          small;
-}
-
-.PostFooterRight_att li {
-    width:              50px;
-    margin-left:        20px;
-    text-align:         center;
-    font-size:          x-small;
-    font-weight:        bold;
-    border:             1px solid #BE1E2D;
-}
-
-div.PostContent_att {
+p#timeNotification {
     margin-right:       5px;
-    margin-left:        10px;
-    width:              370px;
+    float:              right;
+    font-size:          xx-small;
 }
 
-.PostContent_m att {
-    text-align:         left;
-    font-size:          small;
-    line-height:        normal;
+p#txtNotification {
+    padding-top:          24px;
+    font-size:           medium;
 }
+
+div#attChoice {
+    margin-top:         38px;
+    margin-left:        408px;
+    position:           absolute;
+    display:            inline-block;
+}
+
+div#btnAccept{
+    margin-left:        5px;
+    float:              left;
+    width:              48px;
+    height:             24px;
+    font-size:          x-small;
+    background:         #2b2d2e;
+}
+
+div#btnAccept p{
+    color:              #FFFFFF;
+    text-align:         center;
+}
+
+div#btnAccept:hover, div#btnAccept:hover p {
+    color:              #87c240;
+    cursor:             pointer;
+}
+
+/*------------------ Private Profile - fim Att --------------------*/
+
+/*------------------ Post Canais começo --------------------*/
+
+div#divChannel {
+    float:             left;
+    margin:            24px;
+    width:             180px;
+    height:            auto;
+    background:        #d1d3d4;
+}
+
+div#headerChannel{
+    width:             180px;
+    height:            50px;
+    background:        #2b2d2e;
+}
+
+#headerChannel h1 {
+    line-height:       4em;
+    text-align:        center;
+    color:             #FFFFFF;
+    font-size:         small;
+    height:            50px;
+}
+
+#imgChannel {
+    background:         #bcbec0;
+    width:              180px;
+    height:             100px;
+}
+/*------------------ Post Canais fim --------------------*/
+/*------------------ Post Tópicos começo --------------------*/
+
+div.divTopic-grade {
+    float:             left;
+    margin:            15px;
+    width:             180px;
+    height:            auto;
+    background:        none;
+}
+
+.divTopic-grade a, .divTopic-grade a:hover, .divTopic-grade a:active, .headerTopic-grade h1 {
+    color:            #FFFFFF;
+    font-style:       none;
+    line-height:      4em;
+    text-align:       center;
+    color:            #FFFFFF;
+    font-size:        small;
+    height:           50px;
+    text-decoration:  none;
+}
+div.headerTopic-grade{
+    width:             180px;
+    height:            150px;
+    background:        #2b2d2e;
+}
+/*
+.headerTopic-grade h1 {
+    line-height:       4em;
+    text-align:        center;
+    color:             #FFFFFF;
+    font-size:         small;
+    height:            50px;
+}
+*/
+.imgTopic-grade {
+    background:         #BE1E2D;
+    width:              180px;
+    height:             100px;
+}
+
+p.contentTopic-grade{
+    line-height:        1.1em;
+    background:         #f1f2f2;
+    width:              178px;
+    padding:            5px 2px 5px 2px;
+    height:             100px;
+    overflow:           hidden;
+}
+
+.footerTopic-grade {
+    background:         #87c240;
+    width:              180px;
+    height:             40px;
+}
+
+.btnLeftTopic-grade {
+    width:             139px;
+    float:             left;
+}
+
+.btnLeftTopic-grade p{
+    line-height:        3em;
+    color:              #2b2d2e;
+    text-align:         center;
+}
+
+.btnRightTopic-grade {
+    float:              right;
+    color:              #FFFFFF;
+    width:              40px;
+    border-left:        1px solid #FFFFFF;
+}
+
+.btnRightTopic-grade p {
+    line-height:        3em;
+    color:              #2b2d2e;
+    text-align:         center;
+}
+
+.btnLeftTopic-grade:hover, .btnRightTopic-grade:hover {
+    cursor:             pointer;
+    background:         #7db43b;
+}
+/*------------------ Post Tópicos fim --------------------*/
 
 /*------------------ Public Profile --------------------*/
-div.MyChannels, div.ModChannels, div.Channels {
+div.myChannels, div.modChannels{
     padding-top:        40px;
     padding-bottom:     40px;
     float:              none;
 }
 
-div.MyChannels h1, div.ModChannels h1{
+div.myChannels h1, div.modChannels h1{
     padding-bottom:     20px;
 }
 
+
+/*------------------ Channel Page --------------------*/
+/* Info - parte da esquerda e capa */
+div#divCapa {
+    margin:             0 auto;
+    top:                0;
+    width:              864px;
+    height:             192px;
+}
+
+div.followChannelPage {
+    position:           relative;
+    left:               760px;
+    top:                -60px;
+    width:              80px;
+    background:         #2b2d2e;
+    line-height:        2.4em;
+    z-index:            999999;
+    cursor:             pointer;
+}
+
+.followChannelPage p {
+    text-align:         center;
+    font-size:          1.2em;
+    color:              #FFFFFF;
+}
+div#nameChannelPage {
+    position:           absolute;
+    top:                150px;
+    margin-left:        68px;
+    z-index:            9999;
+}
+
+#nameChannelPage h1{
+
+    color:              #000000;
+    font-weight:        bold;
+}
+
+div#divInfCanal {
+    top:                0;
+    margin-left:        48px;
+    width:              200px;
+    height:             100%;
+    background:         #f1f2f2;
+    float:              left;
+    padding:            10px 10px 0 10px;
+}
+
+a.nameOwner {
+    font-weight:        bold;
+    color:              #000000;
+}
+
+a.nameMod {
+    font-weight:        bold;
+}
+
+div.infoTitleChannel {
+    margin-left:        10px;
+    margin-bottom:      24px;
+    margin-top:         24px;
+}
+
+.infoTitleChannel h2 {
+    border-bottom:      1px solid #87c240;
+    font-size:          1.3em;
+    height:             1.3em;
+}
+
+p.numberIco {
+    margin-top:         30px;
+    margin-bottom:      30px;
+    text-align:         center;
+    font-size:          300%;
+    color:              #87c240;
+}
+
+
+p.tagChannel{
+    color:              #87c240;
+    text-align:         center;
+    font-size:          1.2em;
+    margin-top:         20px;
+    margin-bottom:      20px;
+}
+
+div.editTag {
+    margin:             0 auto;
+    background:         #2b2d2e;
+    width:              80px;
+    height:             26px;
+    cursor:             pointer;
+}
+
+div.editTag:hover, .editTag p:hover {
+    color:              #87c240;
+    cursor:             pointer;
+}
+
+.editTag p {
+    color:              #FFFFFF;
+    text-align:         center;
+    font-size:          small;
+}
+
+/* Content - Parte da direita */
+div.wrapperChannel {
+    margin:             0 auto;
+    width:              644px;
+    float:              left;
+}
+
+/*Top Bar*/
+nav.chanTopBar {
+    width:              644px;
+    height:             39px;
+    background:         #2b2d2e;
+    font-weight:        normal;
+    color:              #FFFFFF;
+}
+
+.chanTopBar li {
+    width:              129px;
+    text-align:         center;
+    line-height:        3em;
+}
+
+.chanTopBar li:last-child {
+    width:              128px;
+}
+
+.chanTopBar li:hover {
+    background:         #2b2d2e;
+    border-bottom:      2px solid #87c240;
+    height:             36px;
+    color:              #87c240;
+    cursor:             pointer;
+}
+
+/* Content */
+.wrapperChannel div.divTopic-grade:first-child {
+    margin-left:        10px;
+}
+
+.wrapperChannel div.divTopic-grade:last-child {
+    margin-right:       10px;
+}
+
+div#divNotifications, div#divComments, div#divPopularTopics, div#divAllTopics {
+    margin:             0 auto;
+    height:             100%;
+}
+
+p#txtPartChannel {
+    margin-top:         20px;
+    margin-bottom:      20px;
+    margin-left:        10px;
+    margin-right:       10px;
+    text-align:         left;
+    font-size:          1.2em;
+    color:              #bcbec0;
+}
 /*------------------ fim middle --------------------*/
 
 
 /*----- começo Botoes interativos / JS & JQuery ----*/
 .press {
-     cursor:pointer;
+     cursor:           pointer;
 }
 
-.press:hover, .press:active {
-	background-color:  #BE1E2D;
+.c-grade:hover, .c-lista:hover {
+    cursor:            pointer;
+}
+
+.userpic:hover, .logo:hover, .BSearch:hover, .BTrTop:hover, .BTop:hover, .BNews:hover, .press:hover, .accRef:hover, .sendMessage:hover, #profileEdit:hover, .c-lista:hover .c-grade:hover, .postFoBoxL_l:hover, .postFoBoxR_l:hover, .postFoBoxL_g:hover, .postFoBoxR_g:hover, .post_m:hover, .chanPaidImg:hover {
+	background:        #bcbec0;
+    cursor:            pointer;
 }
 
 .attChoice {
-    display:            inline-block;
+    display:           inline-block;
 }
 
 div.accRef {

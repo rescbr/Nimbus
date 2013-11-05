@@ -10,7 +10,7 @@
     <img src="@Model.CurrentChannel.ImgUrl" id="imgCapa" height="192" alt="" width="864" />
     @if (Model.CurrentChannel.OwnerId != Model.CurrentUser.UserId)
     {
-        <div class="press accRef">
+        <div class="followChannelPage">
             <p>Seguir</p>
         </div>
     }
@@ -18,58 +18,97 @@
 
 @Scripts.Render("~/Scripts/ViewChannelScripts.js")
 
+<div id="nameChannelPage">
+    <h1>@Model.CurrentChannel.Name</h1>
+</div>
+
 <div id="divInfCanal">
-    <p>@Model.CurrentChannel.Name</p>
-    <p>Dono: @Model.CurrentChannel.OwnerName</p>
+    <p>Dono:<a href="/userprofile" class="nameOwner"> @Model.CurrentChannel.OwnerName</a></p>
     <p>Moderadores:</p>
 
     @foreach (var item in Model.Moderators)
     {
         <p>
-            <a href="/userprofile/index/@item.Id"> @item.FirstName + @item.LastName</a>
+            <a href="/userprofile/index/@item.Id" class="nameMod"> @item.FirstName + @item.LastName</a>
         </p>
     }
 
+    <div class="infoTitleChannel">
+        <h2>Numero de seguidores</h2>
+        <p class="numberIco">
+            @*colocar icone de total de seguidores*@
+            @Model.CurrentChannel.countFollowers
+        </p>
+    </div>
 
-    <p>
-        @*colocar icone de total de seguidores*@
-        @Model.CurrentChannel.countFollowers
-    </p>
-    <p>
-        @*colocar icone pontuaçao*@
-        @Model.CurrentChannel.CountVotes
-    </p>
+    <div class="infoTitleChannel">
+        <h2>Numero de Likes</h2>
+        <p class="numberIco">
+            @*colocar icone pontuaçao*@
+            @Model.CurrentChannel.CountVotes
+        </p>
+    </div>
 
     @if (Model.CurrentChannel.OwnerId != Model.CurrentUser.UserId)
     {
-        <div class="press SendMessage">
+        <div class="sendMessage">
             <p><a href="#modal-text" class="call-modal">Enviar Mensagem</a></p> <!-- clicavel -->
         </div>
     }
 
-    @Model.CurrentChannel.participationChannel
+    <div class="infoTitleChannel">
+        <h2>Participação</h2>
+            @if (Model.CurrentChannel.participationChannel == "0%")
+            {
+                <p id="txtPartChannel">
+                    Você ainda não participou deste canal.<br>
+                    Desfrute do conteúdo e seja ativo para aumentar sua porcentagem!
+                </p>
+            }
+            else
+            {
+                <p class="numberIco">
+                    @*colocar icone participacao*@
+                    @Model.CurrentChannel.participationChannel
+                </p>
+            }
+        </p>
+    </div>
 
-    <p>
-        @foreach (var item in Model.Tags)
-        {
-        <label>#@item.TagName</label>
-        }
-    </p>
+    <div class="infoTitleChannel">
+        <h2>Tags</h2>
+        <p class="tagChannel">
+            @foreach (var item in Model.Tags)
+            {
+                <label>#@item.TagName</label>
+            }
+        </p>
+    </div>
 
     @if (Model.RolesCurrentUser.Contains("channelmanager")
          || Model.CurrentChannel.OwnerId == Model.CurrentUser.UserId)
     {
-        <div class="press accRef">
+        <div class="editTag">
             <p>Editar Tags</p>
         </div>
     }
-
-    <div id="divCanaisRelacionados">
-        @*TODO*@
+    
+    <div class="infoTitleChannel divCanaisRelacionados">
+        <h2>Canais Relacionados</h2>
+        <div class="channels">
+            @* Editar essa parte para que mostre os canais relacionados ( copiei da userprofile )
+            @foreach (var item in Model.ChannelPaid)
+            {
+                <div class="chanPaidImg">
+                    <img src="@item.ImgUrl" alt="@item.Name" width="40" height="40" />
+                </div>
+            }*@
+        </div>
     </div>
+
 </div>
 
-<div style="float:right;">
+<div style="float:left;">
     @if (Model.CurrentChannel.OwnerId == Model.CurrentUser.UserId || Model.RolesCurrentUser.Contains("channelmanager") || Model.RolesCurrentUser.Contains("topicmanager")
         || Model.RolesCurrentUser.Contains("usermanager") || Model.RolesCurrentUser.Contains("messagemanager"))
     {
