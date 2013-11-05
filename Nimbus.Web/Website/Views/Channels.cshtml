@@ -4,8 +4,10 @@
     Layout = "~/Website/Views/Shared/_Layout.cshtml";
 }
 
+@Scripts.Render(("~/Scripts/jquery.form.js"))
+
 <div id="divCapa">
-    <img src="/@Model.CurrentChannel.ImgUrl" id="imgCapa" height="192" alt="" width="864" />
+    <img src="@Model.CurrentChannel.ImgUrl" id="imgCapa" height="192" alt="" width="864" />
     @if (Model.CurrentChannel.OwnerId != Model.CurrentUser.UserId)
     {
         <div class="accRef">
@@ -14,19 +16,21 @@
     }
 </div>
 
+@Scripts.Render("~/Scripts/ViewChannelScripts.js")
+
 <div id="divInfCanal">
     <p>@Model.CurrentChannel.Name</p>
     <p>Dono: @Model.CurrentChannel.OwnerName</p>
     <p>Moderadores:</p>
-   
-    @foreach (var item in Model.Moderators)
-        {
-          <p>
-             <a href="/userprofile/index/@item.Id"> @item.FirstName + @item.LastName</a>
-          </p>
-        }  
 
-    
+    @foreach (var item in Model.Moderators)
+    {
+        <p>
+            <a href="/userprofile/index/@item.Id"> @item.FirstName + @item.LastName</a>
+        </p>
+    }
+
+
     <p>
         @*colocar icone de total de seguidores*@
         @Model.CurrentChannel.countFollowers
@@ -35,7 +39,7 @@
         @*colocar icone pontuaçao*@
         @Model.CurrentChannel.CountVotes
     </p>
-        
+
     @if (Model.CurrentChannel.OwnerId != Model.CurrentUser.UserId)
     {
         <div class="sendMessage">
@@ -44,22 +48,22 @@
     }
 
     @Model.CurrentChannel.participationChannel
-  
-      <p>
+
+    <p>
         @foreach (var item in Model.Tags)
         {
-            <label>#@item.TagName</label>
+        <label>#@item.TagName</label>
         }
     </p>
 
-   @if (Model.RolesCurrentUser.Contains("channelmanager")
+    @if (Model.RolesCurrentUser.Contains("channelmanager")
          || Model.CurrentChannel.OwnerId == Model.CurrentUser.UserId)
     {
-       <div class="accRef">
+        <div class="press accRef">
             <p>Editar Tags</p>
-        </div>                                                    
+        </div>
     }
-      
+
     <div id="divCanaisRelacionados">
         @*TODO*@
     </div>
@@ -68,44 +72,70 @@
 <div style="float:right;">
     @if (Model.CurrentChannel.OwnerId == Model.CurrentUser.UserId || Model.RolesCurrentUser.Contains("channelmanager") || Model.RolesCurrentUser.Contains("topicmanager")
         || Model.RolesCurrentUser.Contains("usermanager") || Model.RolesCurrentUser.Contains("messagemanager"))
-    { 
-         @RenderPage("~/Website/Views/ChannelPrivateTopBar.cshtml")
+    {
+        @RenderPage("~/Website/Views/ChannelPrivateTopBar.cshtml")
     }
     else
     {
-        @RenderPage("~/Website/Views/ChannelPublicTopBar.cshtml")                                                      
+        @RenderPage("~/Website/Views/ChannelPublicTopBar.cshtml")
     }
 </div>
 
 <section class="semantic-content" id="modal-text" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
     <div class="modal-inner">
-        <header id="modal-label"><!-- Header --></header>
-        <div class="modal-content">
-            <!-- The modals content -->
-            <p>Para: @Model.CurrentChannel.OwnerName</p>
-            <p>Cc:
-             @foreach (var item in Model.Moderators)
-             {
-                 @item.FirstName @item.LastName
-             }
-            </p>
-            <p>
-                Assunto:
-                <input name="inpTitleMsg" type="text" maxlength="100" />
-            </p><br />
-            <p>
-                <textarea id="txtTextMsg" name="txtTextMsg" rows="10" cols="60" required class="ckeditor"></textarea>
-            </p>
-        </div>
-        <footer>
-            <!-- Footer -->
-            <div class="accRef">
-                <p>Enviar</p>
+        <header id="modal-label">
+            <!-- Header -->
+            Mensagem
+        </header>
+
+        @if (Model.CurrentChannel.OwnerId != Model.CurrentUser.UserId)
+        {
+            <form action="/channel/SendMessage/@Model.CurrentChannel.Id" method="post" enctype="multipart/form-data" id="sendMessage" name="sendMessage">
+            <div class="modal-content">
+                
+                    <!-- The modals content -->
+                    <p>
+                        Para:
+                        <input type="text" name="txtOwnerName" value="@Model.CurrentChannel.OwnerName" disabled="disabled" />
+                    </p>
+                    <p>
+                        Cc:
+                        <textarea name="txtaCc" disabled="disabled" cols="40" rows="5">
+                            @if (Model.Moderators.Count > 0)
+                            {
+                                foreach (var item in Model.Moderators)
+                                {
+                                    @item.FirstName @item.LastName
+                                }
+                            }
+                            else
+                            {
+                                <text>Apenas o dono do canal poderá receber está mensagem.</text>
+                            }
+                        </textarea>
+                    </p>
+                    <p>
+                        Assunto:
+                        <input name="txtTitleMsg" type="text" maxlength="100" />
+                    </p><br />
+                    <p>
+                        <textarea id="txtTextMsg" name="txtTextMsg" rows="10" cols="60" class="ckeditor"></textarea>
+                    </p>
+                    
+                
             </div>
-        </footer>
+
+            <footer>
+                <!-- Footer -->
+                <input type="submit" value="Enviar" id="btnEnviar" />
+            </footer>
+            </form>
+        }
+
+
     </div>
 
-    <a href="#!" class="modal-close" title="Close this modal" data-close="Close"
+    <a href="#!" id="closeModal" class="modal-close" title="Close this modal" data-close="Close"
        data-dismiss="modal">×</a>
 </section>
 
@@ -119,4 +149,23 @@
             { name: 'basicstyles', items: ['Bold', 'Italic'] }
         ]
     });
+
+$(document).ready(function () {
+ $('form[name=sendMessage]').ajaxForm({
+            dataType: 'json',
+            success: function (returnvalue) {
+                 if(returnvalue.isok == false)
+                 {
+                    window.alert(returnvalue.message);
+                 }
+                 else
+                     {
+                     window.alert(returnvalue.message);
+                     document.getElementById('closeModal').click();
+                     }
+            }
+        });
+
+     });
 </script>
+

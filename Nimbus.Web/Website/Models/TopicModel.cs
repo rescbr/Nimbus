@@ -20,7 +20,7 @@ namespace Nimbus.Web.Website.Models
 
         public List<string> RolesCurrentUser { get; set; }
                 
-        public Category Category { get; set; }
+        public CategoryBag Category { get; set; }
 
         public int NumFavorites { get; set; }
     }

@@ -12,5 +12,9 @@ namespace Nimbus.DB.Bags
         public string UserName { get; set; }
 
         public string TopicName { get; set; }
+
+        public bool IsParent { get; set; }
+
+        public List<CommentBag> CommentChild { get; set; }
     }
 }

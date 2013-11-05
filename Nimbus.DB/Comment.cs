@@ -10,7 +10,7 @@ namespace Nimbus.DB
     {
         public int Id { get; set; }
 
-        public int ParentId { get; set; }
+        public int? ParentId { get; set; }
 
         public int UserId { get; set; }
 
@@ -22,6 +22,8 @@ namespace Nimbus.DB
         public bool Visible { get; set; }
         public string Text { get; set; }
 
-       
+        public bool IsNew { get; set; }
+
+        public bool IsAnswer { get; set; }
     }
 }

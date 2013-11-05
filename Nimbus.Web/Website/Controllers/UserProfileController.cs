@@ -11,6 +11,8 @@ using Nimbus.DB.ORM;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using System.Net;
+
 
 namespace Nimbus.Web.Website.Controllers
 {
@@ -22,6 +24,7 @@ namespace Nimbus.Web.Website.Controllers
             var channelApi = ClonedContextInstance<API.Controllers.ChannelController>();
             var userApi = ClonedContextInstance<API.Controllers.UserController>();
             var msgApi = ClonedContextInstance<API.Controllers.MessageController>();
+            var categoryApi = ClonedContextInstance<API.Controllers.CategoryController>();
             var userprofile = new UserProfileModel()
             {
                 CurrentUser = NimbusUser,
@@ -30,7 +33,8 @@ namespace Nimbus.Web.Website.Controllers
                 ChannelFollow = channelApi.FollowsChannel(NimbusOrganization.Id),
                 MyChannels = channelApi.MyChannel(),
                 ReadLater = channelApi.showReadLaterChannel(NimbusOrganization.Id),
-                Messages = msgApi.ReceivedMessages()
+                Messages = msgApi.ReceivedMessages(),
+                Categories = categoryApi.showAllCategory()
             };
             return View("UserProfile", userprofile);
         }
@@ -54,6 +58,7 @@ namespace Nimbus.Web.Website.Controllers
                 return Json(new { error = "Too Large" });
             }
 
+            //gera um nome obfuscado mas previsivel
             var nomeFinal = "fullsize-" + NimbusUser.UserId;
 
             HMACMD5 md5 = new HMACMD5(NimbusConfig.GeneralHMACKey);
@@ -71,14 +76,15 @@ namespace Nimbus.Web.Website.Controllers
             {
                 //mantém a imagem no tamanho original
             }
-            else { 
+            else
+            {
                 //reduz a imagem
                 image.Resize(600, 450);
             }
 
             var imageStream = image.SaveToJpeg();
 
-            var blob = new AzureBlob("avatarupload", nomeFinal);
+            var blob = new AzureBlob(Const.Azure.AvatarContainer, nomeFinal);
             blob.UploadStreamToAzure(imageStream);
 
             var pathFinal = blob.BlockBlob.Uri.AbsoluteUri.Replace("https://", "http://");
@@ -96,7 +102,7 @@ namespace Nimbus.Web.Website.Controllers
         [Authorize]
         [HttpPost]
         public async Task<ActionResult> Crop()
-        { 
+        {
             //se alterar aqui nao esqueça de mudar no metodo Crop()
             const int dimensaoMax = 200;
 
@@ -131,7 +137,7 @@ namespace Nimbus.Web.Website.Controllers
                 return Json(new { error = "Image should be square" });
             }
 
-            //pega a imagem do azure
+            //pega a imagem do azure gerando um nome previsivel
             var nomeImagemOriginal = "fullsize-" + NimbusUser.UserId;
 
             HMACMD5 md5 = new HMACMD5(NimbusConfig.GeneralHMACKey);
@@ -139,7 +145,7 @@ namespace Nimbus.Web.Website.Controllers
             nomeImagemOriginal = Base32.ToString(md5.Hash).ToLower() + ".jpg";
 
             Stream imgResize = null;
-            var origBlob = new AzureBlob("avatarupload", nomeImagemOriginal);
+            var origBlob = new AzureBlob(Const.Azure.AvatarContainer, nomeImagemOriginal);
 
             using (var streamImgOrig = origBlob.DownloadToMemoryStream())
             {
@@ -155,7 +161,7 @@ namespace Nimbus.Web.Website.Controllers
             md5.ComputeHash(Encoding.Unicode.GetBytes(nomeImgAvatar));
             nomeImgAvatar = Base32.ToString(md5.Hash).ToLower() + ".jpg";
 
-            var blob = new AzureBlob("avatarupload", nomeImgAvatar);
+            var blob = new AzureBlob(Const.Azure.AvatarContainer, nomeImgAvatar);
             blob.UploadStreamToAzure(imgResize);
 
             var pathFinal = blob.BlockBlob.Uri.AbsoluteUri.Replace("https://", "http://");
@@ -166,10 +172,10 @@ namespace Nimbus.Web.Website.Controllers
 
                 //apaga imagem antiga
                 var uriAntigo = new Uri(user.AvatarUrl).Segments;
-                var blobAntigo = new AzureBlob("avatarupload", uriAntigo[uriAntigo.Length - 1]);
+                var blobAntigo = new AzureBlob(Const.Azure.AvatarContainer, uriAntigo[uriAntigo.Length - 1]);
                 try { blobAntigo.Delete(); }
                 catch { }
-                
+
                 user.AvatarUrl = pathFinal;
                 db.Save(user);
 
@@ -177,12 +183,49 @@ namespace Nimbus.Web.Website.Controllers
                 //lembre-se de atualizar no cache também!
                 Session[Const.UserSession] = DatabaseLogin.GetNimbusPrincipal(user);
             }
-            
+
             //depois que salvar no azure retorna por json p mostrar na tela a imagem final
-            
+
             //adiciona query string para atrapalhar o cache =)
             pathFinal += "?x=" + DateTime.Now.ToFileTime().ToString();
             return Json(new { url = pathFinal });
         }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult SaveNewChannel()
+        {
+                var channelAPI = ClonedContextInstance<API.Controllers.ChannelController>();
+                var categoryAPI = ClonedContextInstance<API.Controllers.CategoryController>(); 
+                Channel channel = new Channel();
+                int idCateg = Convert.ToInt32(Request.Form["slcCategory"]);
+
+                channel.CategoryId = idCateg;
+                channel.CreatedOn = DateTime.Now;
+                channel.Description = Request.Form["txtaDescNewChannel"];
+                channel.Followers = 0;
+                channel.ImgUrl = categoryAPI.GetImgTopChannel(idCateg); 
+                channel.IsCourse = Convert.ToBoolean(Request.Form["isCourse"]);
+                channel.IsPrivate = false;
+                channel.LastModification = DateTime.Now;
+                channel.Name = Request.Form["txtNameNewChannel"];
+                channel.OpenToComments = Convert.ToBoolean(Request.Form["openComment"]); ;
+                channel.OrganizationId = NimbusOrganization.Id;
+                channel.OwnerId = NimbusUser.UserId;
+                channel.Price = 0;
+                channel.Visible = true;
+            try
+            {
+
+                channel = channelAPI.NewChannel(channel);                
+                return RedirectToRoute(new { controller = "channel", action = "index", id = channel.Id});
+                
+            }
+            catch (Exception ex)
+            {
+                throw ex; //TODO
+            }
+        }
+
     }
 }

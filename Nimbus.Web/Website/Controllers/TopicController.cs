@@ -29,7 +29,7 @@ namespace Nimbus.Web.Website.Controllers
                 CurrentUser = NimbusUser,
                 Comments = commentApi.ShowTopicComment(id),
                 RolesCurrentUser = channelApi.ReturnRolesUser(aux.ChannelId),
-                Category = topicApi.CategoryTopic(aux.ChannelId),
+                Category = topicApi.CategoryTopic( aux.Id),
                 NumFavorites = topicApi.CountFavorite(id)
             };
             return View("Topic", topic);

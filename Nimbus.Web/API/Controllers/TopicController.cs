@@ -8,6 +8,7 @@ using ServiceStack.OrmLite;
 using Nimbus.DB.ORM;
 using Nimbus.Web.API.Models;
 using Nimbus.DB.Bags;
+using Nimbus.Web.Utils;
 
 namespace Nimbus.Web.API.Controllers
 {
@@ -23,14 +24,22 @@ namespace Nimbus.Web.API.Controllers
         /// <param name="topicID"></param>
         /// <returns></returns>
         [NonAction]
-        public bool IsOwner(int id)
+        public bool IsOwner(int id, string tipo)
         {
             bool allow = false;
+            int channelId = -1;
             try
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    int channelId = db.SelectParam<Topic>(tp => tp.Id == id && tp.Visibility == true).Select(tp => tp.ChannelId).FirstOrDefault();
+                    if (tipo == "topic")
+                    {
+                        channelId = db.SelectParam<Topic>(tp => tp.Id == id && tp.Visibility == true).Select(tp => tp.ChannelId).FirstOrDefault();
+                    }
+                    else if (tipo == "channel")
+                    {
+                        channelId = id;
+                    }
 
                     allow = db.SelectParam<Role>(own => own.UserId == NimbusUser.UserId && own.ChannelId == channelId)
                                                                         .Select(own => own.IsOwner).FirstOrDefault();
@@ -50,17 +59,25 @@ namespace Nimbus.Web.API.Controllers
         /// <param name="topicID"></param>
         /// <returns></returns>
         [NonAction]
-        public bool IsManager(int id)
+        public bool IsManager(int id, string tipo)
         {
             bool allow = false;
+            int channelId = -1;
             try
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    int channelId = db.SelectParam<Topic>(tp => tp.Id == id && tp.Visibility == true).Select(tp => tp.ChannelId).FirstOrDefault();
+                    if (tipo == "topic")
+                    {
+                        channelId = db.SelectParam<Topic>(tp => tp.Id == id && tp.Visibility == true).Select(tp => tp.ChannelId).FirstOrDefault();
+                    }
+                    else if (tipo == "channel")
+                    {
+                        channelId = id;
+                    }
 
                     allow = db.SelectParam<Role>(mg => mg.UserId == NimbusUser.UserId && mg.ChannelId == id)
-                                                                         .Exists(mg => mg.ChannelMagager == true || mg.TopicManager == true);
+                                                                          .Exists(mg => mg.ChannelMagager == true || mg.TopicManager == true);
                 }
             }
             catch (Exception ex)
@@ -70,6 +87,7 @@ namespace Nimbus.Web.API.Controllers
             }
             return allow;
         }
+
         #endregion
 
         #region Criar e Mostrar tópico (Post e Get)
@@ -80,24 +98,119 @@ namespace Nimbus.Web.API.Controllers
         /// <returns></returns>
         [Authorize]
         [HttpPost]
-        [ActionName("Post")] //default
         public Topic NewTopic(Topic topic)
         {
             try
             {
-                using(var db = DatabaseFactory.OpenDbConnection())
+                using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    bool isOwner = IsOwner(topic.Id);
-                    bool isManager = IsManager(topic.Id);
-                    if (isOwner == true || isManager == true)
+                    using (var trans = db.OpenTransaction(System.Data.IsolationLevel.ReadCommitted))
                     {
-                        db.Insert(topic);
-                        db.Save(topic);
-                        return topic;
+                        try
+                        {
+                            bool isOwner = IsOwner(topic.ChannelId, "channel");
+                            bool isManager = IsManager(topic.ChannelId, "channel");
+                            if (isOwner == true || isManager == true)
+                            {
+                                topic.AuthorId = NimbusUser.UserId;
+                                if (string.IsNullOrEmpty(topic.ImgUrl))
+                                {
+                                    int idCtg = db.SelectParam<Channel>(ch => ch.Id == topic.ChannelId).Select(ch => ch.CategoryId).FirstOrDefault();
+                                    topic.ImgUrl = "/" + db.SelectParam<Category>(ct => ct.Id == 1).Select(ct => ct.ImageUrl).FirstOrDefault();
+                                }
+                                topic.CreatedOn = DateTime.Now;
+                                topic.LastModified = DateTime.Now;
+                                topic.Visibility = true;
+                                if (string.IsNullOrEmpty(topic.Price.ToString()))
+                                {
+                                    topic.Price = 0;
+                                }
+
+                                db.Insert(topic);
+                                db.Save(topic);
+                                topic.Id = (int)db.GetLastInsertId();
+                                trans.Commit();
+                                return topic;
+                            }
+                            else
+                            {
+                                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotAcceptable, "erro ao criar item"));
+                            }
+                        }
+                        catch(Exception ex)
+                        {
+                            trans.Rollback();
+                            throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+                        }
                     }
-                    else
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+            }
+        }
+
+        /// <summary>
+        /// Método para editar um tópico
+        /// </summary>
+        /// <param name="topic"></param>
+        /// <returns></returns>
+        [Authorize]
+        [HttpPost]
+        public Topic EditTopic(Topic topic)
+        {
+            try
+            {
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {
+                    using (var trans = db.OpenTransaction(System.Data.IsolationLevel.ReadCommitted))
                     {
-                        throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotAcceptable, "erro ao criar item"));
+                        try
+                        {
+                            bool isOwner = IsOwner(topic.ChannelId, "channel");
+                            bool isManager = IsManager(topic.ChannelId, "channel");
+                            if (isOwner == true || isManager == true)
+                            {
+                                Topic tpc = db.SelectParam<Topic>(tp => tp.Id == topic.Id).FirstOrDefault();
+                                tpc.Description = topic.Description;
+
+                                if (string.IsNullOrEmpty(topic.ImgUrl))
+                                {
+                                    int idCtg = db.SelectParam<Channel>(ch => ch.Id == tpc.ChannelId).Select(ch => ch.CategoryId).FirstOrDefault();
+                                    tpc.ImgUrl = "/" + db.SelectParam<Category>(ct => ct.Id == 1).Select(ct => ct.ImageUrl).FirstOrDefault();
+                                }
+                                tpc.LastModified = DateTime.Now;
+                                //tpc.Question = topic.Question;
+                                tpc.Text = topic.Text;
+                                tpc.Title = topic.Title;
+                                tpc.UrlCapa = topic.UrlCapa;
+                                tpc.UrlVideo = topic.UrlVideo;
+                                tpc.Visibility = true;
+                                if (string.IsNullOrEmpty(topic.Price.ToString()))
+                                {
+                                    tpc.Price = 0;
+                                }
+                                else
+                                {
+                                    tpc.Price = topic.Price;
+                                }
+
+                                db.Insert(tpc);
+                                db.Save(tpc);
+                                trans.Commit();
+                                return topic;
+                            }
+                            else
+                            {
+                                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotAcceptable, "erro ao editar item"));
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            trans.Rollback();
+                            throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+                        }
                     }
                 }
             }
@@ -114,7 +227,6 @@ namespace Nimbus.Web.API.Controllers
         /// <returns></returns>
         [Authorize]
         [HttpGet]
-        [ActionName("Get")]
         public Topic ShowTopic(int id)
         {
             Topic topic = new Topic();
@@ -128,6 +240,8 @@ namespace Nimbus.Web.API.Controllers
                     {
                         topic = db.SelectParam<Topic>(tp => tp.Id == id).FirstOrDefault();
 
+                        topic.Title = RemoveHTMLString.StripTagsCharArray(topic.Title);
+                        topic.Description = RemoveHTMLString.StripTagsCharArray(topic.Description);                        
                         if (topic.TopicType == Nimbus.DB.Enums.TopicType.exam)
                         {
                             #region exam
@@ -206,8 +320,10 @@ namespace Nimbus.Web.API.Controllers
 
                    if (idChannel.Count > 0)
                    {
-                       List<Topic> topic = db.SelectParam<Topic>(tp => tp.Visibility == true).Where(t => idChannel.Contains(t.Id)).ToList();
-                                                                      
+                       
+                       List<Topic> topic = db.Where<Topic>(tp => tp.Visibility == true);
+                       topic = topic.Where(t => idChannel.Contains(t.ChannelId)).ToList();
+                                         
                        if (topic.Count > 0)
                        {
                            foreach (var item in topic)
@@ -415,15 +531,26 @@ namespace Nimbus.Web.API.Controllers
         /// <returns></returns>
         [Authorize]
         [HttpGet]
-        public Category CategoryTopic(int id)
+        public CategoryBag CategoryTopic(int id)
         {
-            Category category = new Category();
+            CategoryBag category = new CategoryBag();
             try
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    int catID = db.SelectParam<Channel>(ch => ch.Id == id && ch.Visible == true).Select(ch => ch.CategoryId).FirstOrDefault();
-                    category = db.SelectParam<Category>(ct => ct.Id == catID).FirstOrDefault();
+                    int channlId = db.SelectParam<Topic>(t => t.Id == id).Select(t => t.ChannelId).FirstOrDefault();
+                    if (channlId > 0)
+                    { 
+                        int catID = db.SelectParam<Channel>(ch => ch.Id == channlId && ch.Visible == true).Select(ch => ch.CategoryId).FirstOrDefault();
+                        Category ctg = new Category();
+                        ctg = db.SelectParam<Category>(ct => ct.Id == catID).FirstOrDefault();
+                        //category.ColorCode = ctg.ColorCode;
+                        category.Id = ctg.Id;
+                        category.ImageUrl = ctg.ImageUrl;
+                        category.ImgTopChannel = db.SelectParam<ImgTopChannel>(c => c.CategoryId == ctg.Id).Select(c => c.UrlImg).FirstOrDefault();
+                        category.LocalizedName = ctg.LocalizedName;
+                        category.Name = ctg.Name;
+                    }
                 }
             }
             catch (Exception ex)
@@ -511,8 +638,8 @@ namespace Nimbus.Web.API.Controllers
                     {
                         try
                         {
-                            bool isOwner = IsOwner(id);
-                            bool isManager = IsManager(id);
+                            bool isOwner = IsOwner(id, "topic");
+                            bool isManager = IsManager(id, "topic");
                             int channelID = db.SelectParam<Topic>(tp => tp.Id == id && tp.Visibility==true).Select(tp => tp.ChannelId).FirstOrDefault();
 
                             bool isPrivate = db.SelectParam<Channel>(ch => ch.Id == channelID).Select(p => p.IsPrivate).FirstOrDefault();

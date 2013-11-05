@@ -20,5 +20,7 @@ namespace Nimbus.Web.Website.Models
         public List<Channel> ReadLater { get; set; }
 
         public List<MessageBag> Messages { get; set; }
+
+        public List<Category> Categories { get; set; }
     }
 }

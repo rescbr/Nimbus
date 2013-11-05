@@ -44,6 +44,7 @@
     <Compile Include="Ad.cs" />
     <Compile Include="Badge.cs" />
     <Compile Include="Bags\AdsBag.cs" />
+    <Compile Include="Bags\CategoryBag.cs" />
     <Compile Include="Bags\ChannelBag.cs" />
     <Compile Include="Bags\CommentBag.cs" />
     <Compile Include="Bags\MessageBag.cs" />
@@ -55,6 +56,7 @@
     <Compile Include="ChannelReported.cs" />
     <Compile Include="ChannelUser.cs" />
     <Compile Include="CommentReported.cs" />
+    <Compile Include="ImgTopChannel.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="Premium.cs" />
     <Compile Include="PremiumUser.cs" />

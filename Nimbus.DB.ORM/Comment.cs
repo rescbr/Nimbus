@@ -13,7 +13,7 @@ namespace Nimbus.DB.ORM
         public int Id { get; set; }
 
         [References(typeof(Comment))]
-        public int ParentId { get; set; }
+        public int? ParentId { get; set; }
 
         [References(typeof(User))]
         public int UserId { get; set; }

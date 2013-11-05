@@ -16,6 +16,7 @@ function EnableDiv(newDiv, tipoGlobal) {
         }
         divTipoTopic = newDiv;
     }
+    
     document.getElementById(newDiv).style.display = 'block';
 }
 
@@ -26,7 +27,25 @@ function EnableTwoDiv(newDiv, tipoGlobal, divTwo)
     
 }
 
+function EnableDivHiddenBtn(nameDiv, nameBtn)
+{
+    document.getElementById(nameDiv).style.display = 'block';
+    document.getElementById(nameBtn).style.display = 'none';
+}
 
+function DisabledBtn(nameButton)
+{
+    var btn = document.getElementById(nameButton);
+    if (btn.disabled == true) {
+        btn.disabled = false;
+    }
+    else {
+        btn.disabled = true;
+    }
+}
+
+//método que coloca url para visualização do video antes de salvar
+//param: nome do campo que vai ter a string do video, nome do frame que vai receber a string como src
 function getUrlVideo(nomecampo, nomeframe)
 {
     var text = document.getElementById(nomecampo).value;
@@ -46,8 +65,9 @@ function getUrlVideo(nomecampo, nomeframe)
             queryurl = "//www.youtube.com/embed/" + params;            
         }
         if (queryurl.length > 34) {
-            document.getElementsByTagName("IFRAME")[0].setAttribute('src', queryurl);
+            document.getElementsByTagName("IFRAME")[0].setAttribute('src', queryurl);            
         }
+       
     }
     
 }

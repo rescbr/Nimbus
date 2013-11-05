@@ -8,5 +8,18 @@ namespace Nimbus.Web
     public static class Const
     {
         public const string UserSession = "user";
+
+        public static class Azure
+        {
+            public const string AvatarContainer = "avatarupload";
+            public const string TopicContainer = "topicupload";
+            
+        }
+
+        public static class Auth
+        {
+            public const string PerformAuthLater = "nimbus:PerformAuthLater";
+            public const string RequestPerformance = "nimbus:RequestPerfomance";
+        }
     }
 }

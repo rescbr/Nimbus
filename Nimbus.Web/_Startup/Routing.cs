@@ -14,7 +14,7 @@ namespace Nimbus.Web.Startup
     {
         public static void RegisterSignalR(RouteCollection routes)
         {
-            routes.MapHubs();
+            //SignalR é registrado em OwinApp.
         }
 
         public static void RegisterWebAPIRoutes(HttpConfiguration httpConfiguration)
@@ -23,8 +23,17 @@ namespace Nimbus.Web.Startup
                 new NamespaceHttpControllerSelector(httpConfiguration));
 
             httpConfiguration.Routes.MapHttpRoute(
-                name: "ApiWithAction",
+                name: "ApiWithActionAndId",
                 routeTemplate: "api/{controller}/{action}/{id}",
+                defaults: new
+                {
+                    @namespace = "api",
+                }
+            );
+
+            httpConfiguration.Routes.MapHttpRoute(
+                name: "ApiWithAction",
+                routeTemplate: "api/{controller}/{action}",
                 defaults: new
                 {
                     @namespace = "api",

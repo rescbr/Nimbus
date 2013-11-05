@@ -200,13 +200,13 @@ namespace Nimbus.Web.API.Controllers
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    idList = db.SelectParam<Role>(rl => rl.ChannelId == id).Where(rl => rl.ChannelMagager == true ||
+                    idList = db.SelectParam<Role>(rl => rl.ChannelId == id).Where(rl => (rl.ChannelMagager == true ||
                                                                                         rl.MessageManager == true ||
                                                                                         rl.ModeratorManager == true ||
                                                                                         rl.TopicManager == true ||
-                                                                                        rl.UserManager == true).Select(user => user.UserId).ToList();
+                                                                                        rl.UserManager == true) && rl.IsOwner == false).Select(user => user.UserId).ToList();
                     foreach (int item in idList)
-                    {
+                    {                        
                         User user = db.SelectParam<User>(us => us.Id == item).FirstOrDefault();
                         if (user != null)
                         {
@@ -354,10 +354,12 @@ namespace Nimbus.Web.API.Controllers
                         string firstName = db.SelectParam<User>(us => us.Id == channel.OwnerId).Select(us => us.FirstName).FirstOrDefault();
                         string lastName = db.SelectParam<User>(us => us.Id == channel.OwnerId).Select(us => us.LastName).FirstOrDefault();
                         showChannel.Name = channel.Name;
+                        showChannel.Id = channel.Id;
                         showChannel.countFollowers = channel.Followers.ToString();
                         showChannel.OrganizationId = channel.OrganizationId;
                         showChannel.OwnerId = channel.OwnerId;
                         showChannel.Price = channel.Price;
+                        showChannel.OpenToComments = channel.OpenToComments;
                         if (userComment > 0 && listComments.Count > 0)
                         {
                             showChannel.participationChannel = ((userComment * 100) / listComments.Count()).ToString();
@@ -1012,7 +1014,7 @@ namespace Nimbus.Web.API.Controllers
                             {
                                 db.Insert(channel);
                                 int channelID = (int)db.GetLastInsertId();
-
+                                channel.Id = channelID;
                                 VoteChannel vote = new VoteChannel
                                 {
                                     ChannelId = channelID,
