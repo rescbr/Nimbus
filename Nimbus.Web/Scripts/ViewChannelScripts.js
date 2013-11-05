@@ -6,18 +6,18 @@ function CreatedDivQuestion()
     var html = 
     "<div id=\"divPergunta" + nextPerg + "\">" +
                    "<p>Enunciado da questão:"+
-    "<input id=\"QuestionPerg" + nextPerg + "\" type=\"text\" maxlength=\"600\" />" +
+    "<input id=\"QuestionPerg" + nextPerg + "\" name=\"enunciado\" type=\"text\" maxlength=\"600\" />" +
     "</p>"+
     "<p>Respostas:</p>"+
      "<div>"+
          "<ul id=\"ulPerg" + nextPerg + "\">" +
            "<li id=\"liPerg" + nextPerg + "_opt1\">" + //ex: pergunta 1 _ opçao 1
-                "<input type=\"radio\" id=\"rdbPerg" + nextPerg + "_opt1\" />" +
-                "<input id=\"txtPerg" + nextPerg + "_opt1\" type=\"text\" onfocus=\"javascript: this.value = ''\" value=\"Opção 1\" />" +
+                "<input type=\"radio\" name=\"radio\" id=\"rdbPerg" + nextPerg + "_opt1\" />" +
+                "<input id=\"txtPerg" + nextPerg + "_opt1\" name=\"resposta\" type=\"text\" onfocus=\"javascript: this.value = ''\" value=\"Opção 1\" />" +
             "</li>"+
             "<li id=\"liPerg" + nextPerg + "_opt2\" onclick=\"DisableOption('2', 'divPergunta" + nextPerg + "');\">" +
-                 "<input type=\"radio\" id=\"rdbPerg" + nextPerg + "_opt2\" disabled=\"disabled\" />" +
-                 "<input id=\"txtPerg" + nextPerg + "_opt2\" type=\"text\" disabled=\"disabled\" onfocus=\"javascript: this.value = ''\" value=\"Opção 2\" />" +
+                 "<input type=\"radio\" name=\"radio\" id=\"rdbPerg" + nextPerg + "_opt2\" disabled=\"disabled\" />" +
+                 "<input id=\"txtPerg" + nextPerg + "_opt2\" name=\"resposta\" type=\"text\" disabled=\"disabled\" onfocus=\"javascript: this.value = ''\" value=\"Opção 2\" />" +
              "</li>"+
          "</ul>"+ 
     "</div>"+
@@ -50,8 +50,8 @@ function DisableOption(currentOpt, nameDiv)
     var index = parseInt(name) + 1; //index da prox opção a ser inserida
     
     var campo = "<li id=\"liPerg" + indexActive + "_opt" + index + "\" onclick=\"DisableOption('" + index + "', 'divPergunta" + indexActive + "');\">" +
-                      "<input type=\"radio\" id=\"rdbPerg" + indexActive + "_opt" + index + "\" disabled=\"disabled\" />" +
-                      "<input id=\"txtPerg" + indexActive + "_opt" + index + "\" type=\"text\" disabled=\"disabled\" onfocus=\"javascript: this.value = ''\" value=\"Opção " + index + "\" />" +
+                      "<input type=\"radio\" name=\"radio\" id=\"rdbPerg" + indexActive + "_opt" + index + "\" disabled=\"disabled\" />" +
+                      "<input id=\"txtPerg" + indexActive + "_opt" + index + "\" name=\"resposta\" type=\"text\" disabled=\"disabled\" onfocus=\"javascript: this.value = ''\" value=\"Opção " + index + "\" />" +
                 "</li>";
     
     $("#"+ nameDiv + " ul").append(campo);
@@ -96,13 +96,52 @@ function ajaxSaveNewTopic(channelID)
         text = CKEDITOR.instances.txtaTextMsg.getData();
         enumTopicType = 2;
     }
-    if (divTipoTopic == "divExam")
-    {
+    if (divTipoTopic == "divExam") {
         enumTopicType = 3;
 
         //TODO
+        var questionData = {}
+        var listQuestion = []
+        var listPerg = document.getElementsByName('enunciado');
+
+        for (perg = 0; perg < listPerg.length; perg++) //para cada pergunta
+        {
+            var item = listPerg[perg];
+            questionData["TextQuestion"] = item.value; //pego o conteudo = enunciado   
+
+            var currentPerg = item.id.replace("QuestionPerg",""); //pega o indice da pergunta atual
+
+            var listOpt =[]; 
+            var dictionary = new Object();
+
+            $("#divExam li").each(function() {//pego todas as opções
+                var id = this.id;                
+                if (id.indexOf("liPerg") > -1)
+                {
+                    listOpt.push(id);
+                }
+            });
+
+            for (option = 0; option < listOpt.length; option++)
+            {
+                var rdbOption = document.getElementById('rdbPerg'+currentPerg+'_opt'+ (option + 1));
+                var txtOption = document.getElementById('txtPerg' + currentPerg + '_opt' + (option + 1));
+
+                if (txtOption.value != "Opção " + (option + 1) && txtOption.value != "")
+                {
+                    if (rdbOption.checked == true) {
+                        questionData["CorrectAnswer"] = option + 1; //passa o indice da resposta certa + 1 .'. o for começa do zero                    
+                    }
+                    dictionary[option + 1] = txtOption.value; //dictionary<int, string>
+
+                    questionData["ChoicesAnswer"] = dictionary;
+                }
+            }
+            listQuestion.push(questionData);
+        }
     }
-    if (title != "" && shortDescription != "" && channelID > 0 && (text != "" || video != "" || exam != ""))
+
+    if (title != "" && shortDescription != "" && channelID > 0 && (text != "" || video != "" || listQuestion.length > 0))
     {
         ajaxData["Title"] = title;
         ajaxData["ImgUrl"] = ImgUrl;
@@ -111,7 +150,7 @@ function ajaxSaveNewTopic(channelID)
         ajaxData["TopicType"] = enumTopicType;
         ajaxData["Text"] = text;
         ajaxData["UrlVideo"] = video;
-        ajaxData["Question"] = exam;
+        ajaxData["Question"] = listQuestion;
 
         $.ajax({
             url: "/api/topic/NewTopic",

@@ -9,6 +9,7 @@ using Nimbus.DB.ORM;
 using Nimbus.Web.API.Models;
 using Nimbus.DB.Bags;
 using Nimbus.Web.Utils;
+using System.Web;
 
 namespace Nimbus.Web.API.Controllers
 {
@@ -121,9 +122,23 @@ namespace Nimbus.Web.API.Controllers
                                 topic.CreatedOn = DateTime.Now;
                                 topic.LastModified = DateTime.Now;
                                 topic.Visibility = true;
+                                
                                 if (string.IsNullOrEmpty(topic.Price.ToString()))
                                 {
                                     topic.Price = 0;
+                                }
+
+                                topic.Description = HttpUtility.HtmlEncode(topic.Description);
+                                topic.Text = HttpUtility.HtmlEncode(topic.Text);
+                                topic.Title = HttpUtility.HtmlEncode(topic.Title);
+                                topic.UrlVideo = HttpUtility.HtmlEncode(topic.UrlVideo);
+                                
+                                if (topic.TopicType == DB.Enums.TopicType.exam)
+                                {
+                                    foreach (var item in topic.Question)
+                                    {
+                                        item.TextQuestion = HttpUtility.HtmlEncode(item.TextQuestion);
+                                    }
                                 }
 
                                 db.Insert(topic);

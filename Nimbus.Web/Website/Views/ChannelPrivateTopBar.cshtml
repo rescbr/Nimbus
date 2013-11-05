@@ -186,27 +186,21 @@
                 </p>
             </div>
 
-            <div id="divExam" style="display:none;">
-               <p>Título:
-                <input id="txtTitleExamP1" type="text" maxlength="140" />
-                </p>
-                <p>Descrição:
-                <textarea id="txtaDescriptionExamP1" cols="10" rows="5" maxlength="600"></textarea>
-                </p>
+            <div id="divExam" style="display:none;">               
                 <div id="divPergunta1">
                     <p>Enunciado da questão:
-                    <input id="QuestionPerg1" type="text" maxlength="600" />
+                    <input id="QuestionPerg1" name="enunciado" type="text" maxlength="600" />
                     </p>
                     <p>Respostas:</p>
                      <div>
                          <ul id="ulPerg1">
                             <li id="liPerg1_opt1"> @*pergunta 1 _ opçao 1*@
-                                <input type="radio" id="rdbPerg1_opt1" />
-                                <input id="txtPerg1_opt1" type="text" onfocus="javascript: this.value = ''" value="Opção 1" />
+                                <input type="radio" name="radio" id="rdbPerg1_opt1" />
+                                <input id="txtPerg1_opt1" name="resposta" type="text" onfocus="javascript: this.value = ''" value="Opção 1" />
                             </li>
                             <li id="liPerg1_opt2" onclick="DisableOption('2', 'divPergunta1');">
-                                 <input type="radio" id="rdbPerg1_opt2" disabled="disabled" />
-                                 <input id="txtPerg1_opt2" type="text" disabled="disabled" onfocus="javascript: this.value = ''" value="Opção 2" />
+                                <input type="radio" name="radio" id="rdbPerg1_opt2" disabled="disabled" />
+                                <input id="txtPerg1_opt2" name="resposta" type="text" disabled="disabled" onfocus="javascript: this.value = ''" value="Opção 2" />
                              </li>
                          </ul> 
                     </div>
