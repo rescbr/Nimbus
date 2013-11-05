@@ -138,6 +138,7 @@ namespace Nimbus.Web.API.Controllers
                                     foreach (var item in topic.Question)
                                     {
                                         item.TextQuestion = HttpUtility.HtmlEncode(item.TextQuestion);
+                                        //colocar encode nas opçoes
                                     }
                                 }
 
@@ -255,8 +256,11 @@ namespace Nimbus.Web.API.Controllers
                     {
                         topic = db.SelectParam<Topic>(tp => tp.Id == id).FirstOrDefault();
 
-                        topic.Title = RemoveHTMLString.StripTagsCharArray(topic.Title);
-                        topic.Description = RemoveHTMLString.StripTagsCharArray(topic.Description);                        
+                        topic.Title = HttpUtility.HtmlDecode(topic.Title);
+                        //topic.Description = RemoveHTMLString.StripTagsCharArray(topic.Description); 
+                        topic.Description =HttpUtility.HtmlDecode(topic.Description);
+                        topic.Text = HttpUtility.HtmlDecode(topic.Text);
+
                         if (topic.TopicType == Nimbus.DB.Enums.TopicType.exam)
                         {
                             #region exam
@@ -272,8 +276,9 @@ namespace Nimbus.Web.API.Controllers
                                 //caso seja um teste free, o 'bool' já permite refazer - apagar as respostas
                                 foreach (Nimbus.DB.Question item in topic.Question)
                                 {
-                                    item.CorrectAnswer = 0;
-                                }
+                                    item.TextQuestion = HttpUtility.HtmlDecode(item.TextQuestion);
+                                    //colocar p opçoes e arrumar p retornar esse
+                                }                                
                             }
                             #endregion
                         }

@@ -6,8 +6,7 @@
     {
         
         <section>
-            <p><strong>@i</strong> - @Model.CurrentTopic.Question.ElementAt(i).TextQuestion</p>
-            
+            <p><strong>@i</strong> - @Model.CurrentTopic.Question.ElementAt(i).TextQuestion</p>            
             @{
                 var num = Model.CurrentTopic.Question.ElementAt(i).ChoicesAnswer.Count;
                 
@@ -38,5 +37,7 @@
             }
         </section>
     }
+
+    <button id="btnSendExam">Finalizar</button>
 
 </div>

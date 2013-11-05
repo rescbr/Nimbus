@@ -103,7 +103,7 @@ function ajaxSaveNewTopic(channelID)
         var questionData = {}
         var listQuestion = []
         var listPerg = document.getElementsByName('enunciado');
-
+        var isChecked = false;
         for (perg = 0; perg < listPerg.length; perg++) //para cada pergunta
         {
             var item = listPerg[perg];
@@ -131,6 +131,7 @@ function ajaxSaveNewTopic(channelID)
                 {
                     if (rdbOption.checked == true) {
                         questionData["CorrectAnswer"] = option + 1; //passa o indice da resposta certa + 1 .'. o for começa do zero                    
+                        isChecked = true;
                     }
                     dictionary[option + 1] = txtOption.value; //dictionary<int, string>
 
@@ -141,7 +142,7 @@ function ajaxSaveNewTopic(channelID)
         }
     }
 
-    if (title != "" && shortDescription != "" && channelID > 0 && (text != "" || video != "" || listQuestion.length > 0))
+    if (title != "" && shortDescription != "" && channelID > 0 && (text != "" || video != "" || (listQuestion.length > 0 && isChecked == true)))
     {
         ajaxData["Title"] = title;
         ajaxData["ImgUrl"] = ImgUrl;
