@@ -182,31 +182,6 @@
             </ul>
         </nav>
 
-        @*Imagem e texto*@
-            <div class="divTopic-grade">
-                <div class="headerTopic-grade">
-                    <h1>@item.Name</h1>
-                        <div class="imgTopic-grade">
-                            <img src="@item.ImgUrl" alt="blabla" title="blabla">
-                        </div>
-                    </div>
-                    <div class="contentTopic-grade">
-                        <p>
-                            @item.Description
-                            </p>
-                        </div>
-                        <div class="footerTopic-grade">
-                            <div class="btnLeftTopic-grade">
-                                <p onclick="unReadLater(@item.Id);">Ler mais tarde</p> @*chamar js passando item.id*@
-                                </div>
-                                <div class="btnRightTopic-grade">
-                                    <p>s2</p> @*adicionar aos favoritos*@
-                                    </div>
-                                </div>
-                            </div>
-
-
-
         @if (Model.CurrentUser.UserId == Model.User.Id)
         {
             foreach (var item in Model.ReadLater)
@@ -214,23 +189,25 @@
                 @*Imagem e texto*@
                 <div class="divTopic-grade">
                     <div class="headerTopic-grade">
-                        <h1>@item.Name</h1>
-                        <div class="imgTopic-grade">
-                            <img src="@item.ImgUrl" alt="blabla" title="blabla">
-                        </div>
+                        <h1>blabla</h1>
+                        <img src="blabla.png" class="imgTopic-grade" alt="blabla" title="blabla">
                     </div>
-                    <div class="contentTopic-grade">
-                        <p>
-                            @item.Description
-                        </p>
-                    </div>
+                    <p class="contentTopic-grade">
+                        blab df fgbfgb flabg bdfgngabla kh 
+                        vkjhv jv kj hv kjhv kj hvkj vh kj 
+                        vh kjv hlkj blkh blkb lkjb lkjb lkhbgd 
+                        lfkgbjs lkjfdg lksdjfgn lskdjgf nlkjdf 
+                        nglkjdf nglkjdfg lkjdfng lksjdgfn 
+                        rtnmdfgb ovcbn kermng bcolvb nelrjt 
+                        lkjn oerhg eiorug heoirugh oriu heuh iouh
+                    </p>
                     <div class="footerTopic-grade">
                         <div class="btnLeftTopic-grade">
-                            <p onclick="unReadLater(@item.Id);">Ler mais tarde</p> @*chamar js passando item.id*@
-                                            </div>
+                            <p onclick="unReadLater();">Ler mais tarde</p> @*chamar js passando item.id*@
+                        </div>
                         <div class="btnRightTopic-grade">
                             <p>s2</p> @*adicionar aos favoritos*@
-                                            </div>
+                        </div>
                     </div>
                 </div>
 

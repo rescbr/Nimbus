@@ -775,12 +775,12 @@ div.divTopic-grade {
     margin:            24px;
     width:             180px;
     height:            auto;
-    background:        #d1d3d4;
+    background:        none;
 }
 
 div.headerTopic-grade{
     width:             180px;
-    height:            50px;
+    height:            150px;
     background:        #2b2d2e;
 }
 
@@ -797,25 +797,50 @@ div.headerTopic-grade{
     width:              180px;
     height:             100px;
 }
-.contentTopic-grade p{
 
+p.contentTopic-grade{
+    line-height:        1.1em;
+    background:         none;
+    width:              178px;
+    margin:             5px 2px 5px 2px;
+    height:             100px;
+    overflow:           hidden;
 }
 
 .footerTopic-grade {
     background:         #87c240;
+    width:              180px;
+    height:             40px;
+}
+
+.btnLeftTopic-grade {
+    width:             139px;
+    float:             left;
 }
 
 .btnLeftTopic-grade p{
-    color:              #FFFFFF;
+    line-height:        3em;
+    color:              #2b2d2e;
     text-align:         center;
 }
 
 .btnRightTopic-grade {
+    float:              right;
     color:              #FFFFFF;
-    width:              24px;
+    width:              40px;
+    border-left:        1px solid #FFFFFF;
+}
+
+.btnRightTopic-grade p {
+    line-height:        3em;
+    color:              #2b2d2e;
     text-align:         center;
 }
 
+.btnLeftTopic-grade:hover, .btnRightTopic-grade:hover {
+    cursor:             pointer;
+    background:         #7db43b;
+}
 /*------------------ Post Tópicos fim --------------------*/
 
 /*------------------ Public Profile --------------------*/
