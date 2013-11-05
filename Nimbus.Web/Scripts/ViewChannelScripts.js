@@ -20,7 +20,6 @@ function CreatedDivQuestion()
                  "<input id=\"txtPerg" + nextPerg + "_opt2\" type=\"text\" disabled=\"disabled\" onfocus=\"javascript: this.value = ''\" value=\"Opção 2\" />" +
              "</li>"+
          "</ul>"+ 
-     "<button id=\"bntAddOption\">Ok</button>"+
     "</div>"+
 "</div>";
     
@@ -29,22 +28,30 @@ function CreatedDivQuestion()
 }
 
 function DisableOption(currentOpt, nameDiv)
-{    
-    var rdb = document.getElementById("rdbPerg"+CurrentQuestion+"_opt" + currentOpt);//ex: rdbPerg1_opt2
+{
+    
+    var indexPerg = parseInt(nameDiv.replace("divPergunta", ""));
+    var indexActive
+    if (indexPerg != CurrentQuestion)
+        indexActive = indexPerg;
+    else
+        indexActive = CurrentQuestion
+
+    var rdb = document.getElementById("rdbPerg" + indexActive + "_opt" + currentOpt);//ex: rdbPerg1_opt2
     rdb.removeAttribute('disabled');
-    var txt = document.getElementById("txtPerg" + CurrentQuestion + "_opt" + currentOpt);
+    var txt = document.getElementById("txtPerg" + indexActive + "_opt" + currentOpt);
     txt.removeAttribute('disabled');
-    document.getElementById("liPerg" + CurrentQuestion + "_opt" + currentOpt).removeAttribute("onClick");
+    document.getElementById("liPerg" + indexActive + "_opt" + currentOpt).removeAttribute("onClick");
 
     
-    var name = $("ul#ulPerg" + CurrentQuestion + " li:last-child").attr("id");
-    name = name.replace("liPerg" + CurrentQuestion + "_opt", ""); //retorna o index da opção, ou seja..quantas opçoes ja teve
+    var name = $("ul#ulPerg" + indexActive + " li:last-child").attr("id");
+    name = name.replace("liPerg" + indexActive + "_opt", ""); //retorna o index da opção, ou seja..quantas opçoes ja teve
 
     var index = parseInt(name) + 1; //index da prox opção a ser inserida
     
-    var campo = "<li id=\"liPerg" + CurrentQuestion + "_opt" + index + "\" onclick=\"DisableOption('" + index + "', 'divPergunta" + CurrentQuestion + "');\">" +
-                      "<input type=\"radio\" id=\"rdbPerg"+CurrentQuestion+"_opt"+index+"\" disabled=\"disabled\" />"+
-                      "<input id=\"txtPerg"+CurrentQuestion+"_opt"+index+"\" type=\"text\" disabled=\"disabled\" onfocus=\"javascript: this.value = ''\" value=\"Opção "+index+"\" />"+
+    var campo = "<li id=\"liPerg" + indexActive + "_opt" + index + "\" onclick=\"DisableOption('" + index + "', 'divPergunta" + indexActive + "');\">" +
+                      "<input type=\"radio\" id=\"rdbPerg" + indexActive + "_opt" + index + "\" disabled=\"disabled\" />" +
+                      "<input id=\"txtPerg" + indexActive + "_opt" + index + "\" type=\"text\" disabled=\"disabled\" onfocus=\"javascript: this.value = ''\" value=\"Opção " + index + "\" />" +
                 "</li>";
     
     $("#"+ nameDiv + " ul").append(campo);
