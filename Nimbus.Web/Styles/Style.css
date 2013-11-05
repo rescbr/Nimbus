@@ -50,7 +50,7 @@ h1, h2, em {
 
 ::selection {
 	color:              #FFFFFF;
-	background:         #BE1E2D;
+	background:         #87c240;
 }
 
 h1 {
@@ -64,6 +64,10 @@ p {
 	text-align:         justify;
 }
 
+a, a:hover, a:visited {
+    text-decoration:    none;
+    color:              #000000;
+}
 /*------------------ começo header --------------------*/
 
 #header {
@@ -193,7 +197,7 @@ div.exitbutton {
 }
 
 .middle-body {
-	margin:             24px;
+/*	margin:             24px;*/
 }
     
 /*------------------ Trending Topics topo --------------------*/
@@ -494,17 +498,18 @@ div#profileEdit {
 
 .sendMessage {
     margin:             0 auto;
-    width:              200px;/*
-    border:             1px solid #BE1E2D;*/
+    width:              120px;
+    height:             30px;
+    line-height:        2em;
     background:         #2b2d2e;
     text-align:         center;
 }
 
-.sendMessage p {
+.sendMessage p, .sendMessage a, .sendMessage a:hover, .sendMessage a:active {
     color:              #87c240;
     text-align:         center;
-    font-weight:        600;
-    font-size:          120%;
+    font-weight:        normal;
+    font-size:          1em;
 }
 
 div.aboutUser {
@@ -574,7 +579,7 @@ nav.profTopBar {
 }
 
 .profTopBar li {
-    width:              120px;
+    width:              100px;
     text-align:         center;
     line-height:        3em;
 }
@@ -589,6 +594,7 @@ nav.profTopBar {
     border-bottom:      2px solid #87c240;
     height:             36px;
     color:              #87c240;
+    cursor:             pointer;
 }
 
 /*Tab*/
@@ -772,18 +778,28 @@ div#headerChannel{
 
 div.divTopic-grade {
     float:             left;
-    margin:            24px;
+    margin:            15px;
     width:             180px;
     height:            auto;
     background:        none;
 }
 
+.divTopic-grade a, .divTopic-grade a:hover, .divTopic-grade a:active, .headerTopic-grade h1 {
+    color:            #FFFFFF;
+    font-style:       none;
+    line-height:      4em;
+    text-align:       center;
+    color:            #FFFFFF;
+    font-size:        small;
+    height:           50px;
+    text-decoration:  none;
+}
 div.headerTopic-grade{
     width:             180px;
     height:            150px;
     background:        #2b2d2e;
 }
-
+/*
 .headerTopic-grade h1 {
     line-height:       4em;
     text-align:        center;
@@ -791,18 +807,18 @@ div.headerTopic-grade{
     font-size:         small;
     height:            50px;
 }
-
+*/
 .imgTopic-grade {
-    background:         #bcbec0;
+    background:         #BE1E2D;
     width:              180px;
     height:             100px;
 }
 
 p.contentTopic-grade{
     line-height:        1.1em;
-    background:         none;
+    background:         #f1f2f2;
     width:              178px;
-    margin:             5px 2px 5px 2px;
+    padding:            5px 2px 5px 2px;
     height:             100px;
     overflow:           hidden;
 }
@@ -854,6 +870,169 @@ div.myChannels h1, div.modChannels h1{
     padding-bottom:     20px;
 }
 
+
+/*------------------ Channel Page --------------------*/
+/* Info - parte da esquerda e capa */
+div#divCapa {
+    margin:             0 auto;
+    top:                0;
+    width:              864px;
+    height:             192px;
+}
+
+div.followChannelPage {
+    position:           relative;
+    left:               760px;
+    top:                -60px;
+    width:              80px;
+    background:         #2b2d2e;
+    line-height:        2.4em;
+    z-index:            999999;
+    cursor:             pointer;
+}
+
+.followChannelPage p {
+    text-align:         center;
+    font-size:          1.2em;
+    color:              #FFFFFF;
+}
+div#nameChannelPage {
+    position:           absolute;
+    top:                150px;
+    margin-left:        68px;
+    z-index:            9999;
+}
+
+#nameChannelPage h1{
+
+    color:              #000000;
+    font-weight:        bold;
+}
+
+div#divInfCanal {
+    top:                0;
+    margin-left:        48px;
+    width:              200px;
+    height:             100%;
+    background:         #f1f2f2;
+    float:              left;
+    padding:            10px 10px 0 10px;
+}
+
+a.nameOwner {
+    font-weight:        bold;
+    color:              #000000;
+}
+
+a.nameMod {
+    font-weight:        bold;
+}
+
+div.infoTitleChannel {
+    margin-left:        10px;
+    margin-bottom:      24px;
+    margin-top:         24px;
+}
+
+.infoTitleChannel h2 {
+    border-bottom:      1px solid #87c240;
+    font-size:          1.3em;
+    height:             1.3em;
+}
+
+p.numberIco {
+    margin-top:         30px;
+    margin-bottom:      30px;
+    text-align:         center;
+    font-size:          300%;
+    color:              #87c240;
+}
+
+
+p.tagChannel{
+    color:              #87c240;
+    text-align:         center;
+    font-size:          1.2em;
+    margin-top:         20px;
+    margin-bottom:      20px;
+}
+
+div.editTag {
+    margin:             0 auto;
+    background:         #2b2d2e;
+    width:              80px;
+    height:             26px;
+    cursor:             pointer;
+}
+
+div.editTag:hover, .editTag p:hover {
+    color:              #87c240;
+    cursor:             pointer;
+}
+
+.editTag p {
+    color:              #FFFFFF;
+    text-align:         center;
+    font-size:          small;
+}
+
+/* Content - Parte da direita */
+div.wrapperChannel {
+    margin:             0 auto;
+    width:              644px;
+    float:              left;
+}
+
+/*Top Bar*/
+nav.chanTopBar {
+    width:              644px;
+    height:             39px;
+    background:         #2b2d2e;
+    font-weight:        normal;
+    color:              #FFFFFF;
+}
+
+.chanTopBar li {
+    width:              129px;
+    text-align:         center;
+    line-height:        3em;
+}
+
+.chanTopBar li:last-child {
+    width:              128px;
+}
+
+.chanTopBar li:hover {
+    background:         #2b2d2e;
+    border-bottom:      2px solid #87c240;
+    height:             36px;
+    color:              #87c240;
+    cursor:             pointer;
+}
+
+/* Content */
+.wrapperChannel div.divTopic-grade:first-child {
+    margin-left:        10px;
+}
+
+.wrapperChannel div.divTopic-grade:last-child {
+    margin-right:       10px;
+}
+
+div#divNotifications, div#divComments, div#divPopularTopics, div#divAllTopics {
+    margin:             0 auto;
+    height:             100%;
+}
+
+p#txtPartChannel {
+    margin-top:         20px;
+    margin-bottom:      20px;
+    margin-left:        10px;
+    margin-right:       10px;
+    text-align:         left;
+    font-size:          1.2em;
+    color:              #bcbec0;
+}
 /*------------------ fim middle --------------------*/
 
 
