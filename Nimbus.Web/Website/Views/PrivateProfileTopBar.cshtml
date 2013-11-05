@@ -189,34 +189,7 @@
     </div>
 
     <div id="divMessages" style="display:none;">
-        @*Aparecer o exemplo*@
-        <div class="press Post_m">
-            <div class="PostHeImg_m">
-                <img src="bla.jpg" alt="blabla" title="blabla">
-            </div>
-            <div class="Post_Right_m">
-                <nav class="PostHeaderLeft_m">
-                    <ul class="sbs">
-                        <li>Nome</li>
-                            <li>Titulo</li>
-                            </ul>
-                        </nav>
-                        <nav class="PostHeaderRight_m">
-                            <ul class="sbs">
-                                <li>12/03/1998</li>
-                                    <li>12:45</li>
-                                    </ul>
-                                </nav>
-                                <div class="PostContent_m">
-                                    <p>texto </p>
-                                    </div>
-                                </div>
-                            </div>
-        @*Fim do exemplo*@
-
-
-
-        @if (Model.CurrentUser.UserId == Model.User.Id) {
+      @if (Model.CurrentUser.UserId == Model.User.Id) {
         foreach (var item in Model.Messages)
         {
             <div class="press Post_m">
