@@ -32,7 +32,7 @@ namespace Nimbus.Web.Website.Controllers
        
                     /* Quando for usar uma API internamente, faça o clone antes. */
                     var userapi = ClonedContextInstance<API.Controllers.UserController>();
-                    var newUser = new Nimbus.DB.ORM.User()
+                    var newUser = new Nimbus.Model.ORM.User()
                     {
                         City = newAccount.City,
                         Country = newAccount.Country,

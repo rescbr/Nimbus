@@ -11,8 +11,8 @@ namespace Nimbus.Web.Website
 {
     public class NimbusWebController : Controller
     {
-        private DB.ORM.Organization _nimbusOrg = null;
-        public DB.ORM.Organization NimbusOrganization
+        private Model.ORM.Organization _nimbusOrg = null;
+        public Model.ORM.Organization NimbusOrganization
         {
             get
             {
@@ -22,14 +22,14 @@ namespace Nimbus.Web.Website
                 }
                 else
                 {
-                    DB.ORM.Organization org;
+                    Model.ORM.Organization org;
                     string host = Request.Headers["Host"].Split(':')[0]; //remove porta
                     using (var db = DatabaseFactory.OpenDbConnection())
                     {
-                        org = (db.Where<DB.ORM.Organization>(o => o.Cname == host)
-                            .FirstOrDefault() as DB.ORM.Organization);
+                        org = (db.Where<Model.ORM.Organization>(o => o.Cname == host)
+                            .FirstOrDefault() as Model.ORM.Organization);
                         if(org == null)
-                            org = db.Where<DB.ORM.Organization>(o => o.Id == 1).FirstOrDefault();
+                            org = db.Where<Model.ORM.Organization>(o => o.Id == 1).FirstOrDefault();
                     }
                     
                     return org;

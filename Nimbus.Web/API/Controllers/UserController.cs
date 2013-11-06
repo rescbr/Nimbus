@@ -5,8 +5,8 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using ServiceStack.OrmLite;
-using Nimbus.DB.ORM;
-using Nimbus.DB.Bags;
+using Nimbus.Model.ORM;
+using Nimbus.Model.Bags;
 
 namespace Nimbus.Web.API.Controllers
 {

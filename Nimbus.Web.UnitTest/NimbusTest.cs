@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nimbus.Web.API;
 using ServiceStack.OrmLite;
-using Nimbus.DB.ORM;
+using Nimbus.Model.ORM;
 
 namespace Nimbus.Web.UnitTest
 {

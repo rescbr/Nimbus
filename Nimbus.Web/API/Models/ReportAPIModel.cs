@@ -8,7 +8,7 @@ namespace Nimbus.Web.API.Models
 {
     public class ReportModel
     {
-        [References(typeof(Nimbus.DB.User))]
+        [References(typeof(Nimbus.Model.User))]
         public int userReported_id{get;set;}
 
         public string justification { get; set; }

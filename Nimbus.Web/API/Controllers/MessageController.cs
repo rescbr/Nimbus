@@ -6,8 +6,8 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using ServiceStack.OrmLite;
-using Nimbus.DB.ORM;
-using Nimbus.DB.Bags;
+using Nimbus.Model.ORM;
+using Nimbus.Model.Bags;
 using System.Web;
 
 namespace Nimbus.Web.API.Controllers
@@ -35,13 +35,13 @@ namespace Nimbus.Web.API.Controllers
                         try
                         {
                             //Lembrar: se owner = true, quando mostrar na view colocar: Nimbus     
-                            List<Nimbus.DB.Receiver> listReceiver = new List<DB.Receiver>();
+                            List<Nimbus.Model.Receiver> listReceiver = new List<Model.Receiver>();
 
                             var roles = db.SelectParam<Role>(r => r.ChannelId == message.ChannelId && (r.MessageManager == true || r.IsOwner == true));
 
                             foreach (var item in roles)
                             {
-                                Nimbus.DB.Receiver receiver = new DB.Receiver();
+                                Nimbus.Model.Receiver receiver = new Model.Receiver();
                                 receiver.IsOwner = item.IsOwner;
                                 receiver.UserId = item.UserId;
                                 receiver.Name = db.SelectParam<User>(u => u.Id == item.UserId).Select(s => s.FirstName + " " + s.LastName).FirstOrDefault();
@@ -75,7 +75,7 @@ namespace Nimbus.Web.API.Controllers
                                                 MessageId = idMesg,
                                                 UserId = item.UserId,
                                                 NameUser = item.Name,
-                                                Status = Nimbus.DB.Enums.MessageType.send
+                                                Status = Nimbus.Model.Enums.MessageType.send
                                             });
                                         }
                                         else
@@ -86,7 +86,7 @@ namespace Nimbus.Web.API.Controllers
                                                 MessageId = idMesg,
                                                 UserId = item.UserId,
                                                 NameUser = item.Name,
-                                                Status = Nimbus.DB.Enums.MessageType.received
+                                                Status = Nimbus.Model.Enums.MessageType.received
                                             });
                                         }
                                     }
@@ -133,15 +133,15 @@ namespace Nimbus.Web.API.Controllers
                         {
                             //Lembrar: se owner = true, quando mostrar na view colocar: Nimbus   
 
-                            List<Nimbus.DB.Receiver> listReceiver = new List<Nimbus.DB.Receiver>();                             
-                                Nimbus.DB.Receiver receiver = new DB.Receiver();
+                            List<Nimbus.Model.Receiver> listReceiver = new List<Nimbus.Model.Receiver>();                             
+                                Nimbus.Model.Receiver receiver = new Model.Receiver();
                                 receiver.IsOwner = true; //a msg é enviada para o perfil, logo não importa esse item
                                 receiver.UserId = receiverId;
                                 receiver.Name = db.SelectParam<User>(u => u.Id == receiverId).Select(s => s.FirstName + " " + s.LastName).FirstOrDefault();
                                 listReceiver.Add(receiver);
 
                             //add quem enviou para os 'receivers', pois ele deve ter controle sobre o que ele enviou tbm.
-                                Nimbus.DB.Receiver sendReceiver = new DB.Receiver();
+                                Nimbus.Model.Receiver sendReceiver = new Model.Receiver();
                                 receiver.IsOwner = true;
                                 receiver.UserId = NimbusUser.UserId;
                                 receiver.Name = NimbusUser.FirstName + " " + NimbusUser.LastName;
@@ -175,7 +175,7 @@ namespace Nimbus.Web.API.Controllers
                                             MessageId = idMesg,
                                             UserId = item.UserId,
                                             NameUser = item.Name,
-                                            Status = Nimbus.DB.Enums.MessageType.send
+                                            Status = Nimbus.Model.Enums.MessageType.send
                                         });                                      
                                     }
                                     else
@@ -186,7 +186,7 @@ namespace Nimbus.Web.API.Controllers
                                             MessageId = idMesg,
                                             UserId = item.UserId,
                                             NameUser = item.Name,
-                                            Status = Nimbus.DB.Enums.MessageType.received
+                                            Status = Nimbus.Model.Enums.MessageType.received
                                         });
                                     }
                                 }
@@ -335,7 +335,7 @@ namespace Nimbus.Web.API.Controllers
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
                     List<int> msgSend = new List<int>();
-                    msgSend = db.SelectParam<ReceiverMessage>(rm => rm.Status == Nimbus.DB.Enums.MessageType.send 
+                    msgSend = db.SelectParam<ReceiverMessage>(rm => rm.Status == Nimbus.Model.Enums.MessageType.send 
                                                                    && rm.UserId == NimbusUser.UserId)
                                                                    .Select(rm => rm.MessageId).ToList();
 

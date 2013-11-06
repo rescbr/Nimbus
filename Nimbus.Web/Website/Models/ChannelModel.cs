@@ -1,5 +1,5 @@
-﻿using Nimbus.DB.Bags;
-using Nimbus.DB.ORM;
+﻿using Nimbus.Model.Bags;
+using Nimbus.Model.ORM;
 using Nimbus.Plumbing;
 using System;
 using System.Collections.Generic;

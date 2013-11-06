@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nimbus.DB.ORM
+namespace Nimbus.Model.ORM
 {
-    public class UserChannelReadLater : Nimbus.DB.UserChannelReadLater
+    public class UserChannelReadLater : Nimbus.Model.UserChannelReadLater
     {
         [AutoIncrement]
         public int Id { get; set; }

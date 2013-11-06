@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nimbus.DB.ORM
+namespace Nimbus.Model.ORM
 {
-    public class Channel : Nimbus.DB.Channel
+    public class Channel : Nimbus.Model.Channel
     {
         [AutoIncrement]
         public int Id { get; set; }

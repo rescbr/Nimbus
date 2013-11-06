@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nimbus.DB.ORM
+namespace Nimbus.Model.ORM
 {
-    public  class UserExam : Nimbus.DB.UserExam
+    public  class UserExam : Nimbus.Model.UserExam
     {
         [References(typeof(User))]
         public override int UserId { get; set; }

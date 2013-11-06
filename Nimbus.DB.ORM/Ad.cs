@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nimbus.DB.ORM
+namespace Nimbus.Model.ORM
 {
     //TODO: Terminar
-    public class Ad : Nimbus.DB.Ad
+    public class Ad : Nimbus.Model.Ad
     {
         [AutoIncrement]
         public int Id { get; set; }

@@ -1,4 +1,4 @@
-﻿using Nimbus.DB.ORM;
+﻿using Nimbus.Model.ORM;
 using Nimbus.Plumbing;
 using ServiceStack.OrmLite;
 using System;
@@ -60,7 +60,7 @@ namespace Nimbus.Web
                         db.CreateTable(false, typeof(ViewByTopic));
                         db.CreateTable(false, typeof(VoteChannel));
 
-                        var nimbusorg = new Nimbus.DB.ORM.Organization()
+                        var nimbusorg = new Nimbus.Model.ORM.Organization()
                         {
                             Cname = "dev.portalnimbus.com.br",
                             Id = 1,
@@ -68,7 +68,7 @@ namespace Nimbus.Web
                         };
                         db.Save(nimbusorg);
 
-                        var sysuser = new DB.ORM.User()
+                        var sysuser = new Model.ORM.User()
                         {
                             Id = 1,
                             FirstName = "System",
@@ -80,14 +80,14 @@ namespace Nimbus.Web
                         };
                         db.Save(sysuser);
                                                
-                        var orguser = new DB.ORM.OrganizationUser()
+                        var orguser = new Model.ORM.OrganizationUser()
                         {
                             OrganizationId = 1,
                             UserId = 1
                         };
                         db.Save(orguser);
 
-                        var categoria = new DB.ORM.Category()
+                        var categoria = new Model.ORM.Category()
                         {
                             Id = 1,
                             ImageUrl = "images/Category/saude.png" ,
@@ -97,7 +97,7 @@ namespace Nimbus.Web
                         };
                         db.Save(categoria);
 
-                        var channel = new DB.ORM.Channel()
+                        var channel = new Model.ORM.Channel()
                         {
                             Id = 1,
                             CategoryId =1,

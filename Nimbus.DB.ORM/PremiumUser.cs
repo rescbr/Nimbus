@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nimbus.DB.ORM
+namespace Nimbus.Model.ORM
 {
-    public class PremiumUser : Nimbus.DB.PremiumUser
+    public class PremiumUser : Nimbus.Model.PremiumUser
     {
         [References(typeof(Premium))]
         public override int PremiumId { get; set; }

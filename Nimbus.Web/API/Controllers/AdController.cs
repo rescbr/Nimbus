@@ -1,4 +1,4 @@
-﻿using Nimbus.DB.ORM;
+﻿using Nimbus.Model.ORM;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using ServiceStack.OrmLite;
 using System.Web.Http;
 using System.Net;
 using System.Net.Http;
-using Nimbus.DB.Bags;
+using Nimbus.Model.Bags;
 
 namespace Nimbus.Web.API.Controllers
 {

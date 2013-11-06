@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nimbus.DB.ORM
+namespace Nimbus.Model.ORM
 {
-    public class Tag: Nimbus.DB.Tag
+    public class Tag: Nimbus.Model.Tag
     {
         [AutoIncrement]
         public  int Id { get; set; }

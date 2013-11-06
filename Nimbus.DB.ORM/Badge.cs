@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nimbus.DB.ORM
+namespace Nimbus.Model.ORM
 {
-    public class Badge : Nimbus.DB.Badge
+    public class Badge : Nimbus.Model.Badge
     {
         [AutoIncrement]
         public int Id { get; set; }

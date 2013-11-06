@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nimbus.DB.ORM
+namespace Nimbus.Model.ORM
 {
-    public class UserBadge : Nimbus.DB.UserBadge
+    public class UserBadge : Nimbus.Model.UserBadge
     {
         [References(typeof(User))]
         public int UserId { get; set; }

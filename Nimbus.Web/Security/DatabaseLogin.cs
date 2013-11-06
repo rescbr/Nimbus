@@ -5,7 +5,7 @@ using System.Web;
 using ServiceStack.OrmLite;
 using Nimbus.Web.Security;
 using Nimbus.Plumbing;
-using Nimbus.DB.ORM;
+using Nimbus.Model.ORM;
 
 namespace Nimbus.Web.Security
 {

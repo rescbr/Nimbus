@@ -121,13 +121,13 @@
     <Compile Include="NimbusTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Nimbus.DB.ORM\Nimbus.DB.ORM.csproj">
+    <ProjectReference Include="..\Nimbus.DB.ORM\Nimbus.Model.ORM.csproj">
       <Project>{7f04ec7a-7fdb-4bb5-b613-c134bc56a48d}</Project>
-      <Name>Nimbus.DB.ORM</Name>
+      <Name>Nimbus.Model.ORM</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Nimbus.DB\Nimbus.DB.csproj">
+    <ProjectReference Include="..\Nimbus.DB\Nimbus.Model.csproj">
       <Project>{0d485fa6-60bc-410c-b437-37a7c47cdb70}</Project>
-      <Name>Nimbus.DB</Name>
+      <Name>Nimbus.Model</Name>
     </ProjectReference>
     <ProjectReference Include="..\Nimbus.Plumbing\Nimbus.Plumbing.csproj">
       <Project>{c28f8f7a-c5a2-4cb4-92b1-9507a87d5ffe}</Project>

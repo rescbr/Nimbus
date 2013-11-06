@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nimbus.DB.ORM
+namespace Nimbus.Model.ORM
 {
-    public class ImgTopChannel:Nimbus.DB.ImgTopChannel
+    public class ImgTopChannel:Nimbus.Model.ImgTopChannel
     {
         [References(typeof(Category))]
         public int CategoryId { get; set; }

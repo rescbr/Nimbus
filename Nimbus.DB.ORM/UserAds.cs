@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nimbus.DB.ORM
+namespace Nimbus.Model.ORM
 {
-    public class UserAds: Nimbus.DB.UserAds
+    public class UserAds: Nimbus.Model.UserAds
     {
         [References(typeof(User))]
         public int UserId { get; set; }

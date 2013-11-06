@@ -5,9 +5,9 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using ServiceStack.OrmLite;
-using Nimbus.DB.ORM;
+using Nimbus.Model.ORM;
 using Nimbus.Web.API.Models;
-using Nimbus.DB.Bags;
+using Nimbus.Model.Bags;
 using Nimbus.Web.Utils;
 using System.Web;
 
@@ -133,7 +133,7 @@ namespace Nimbus.Web.API.Controllers
                                 topic.Title = HttpUtility.HtmlEncode(topic.Title);
                                 topic.UrlVideo = HttpUtility.HtmlEncode(topic.UrlVideo);
                                 
-                                if (topic.TopicType == DB.Enums.TopicType.exam)
+                                if (topic.TopicType == Model.Enums.TopicType.exam)
                                 {
                                     foreach (var item in topic.Question)
                                     {
@@ -261,7 +261,7 @@ namespace Nimbus.Web.API.Controllers
                         topic.Description =HttpUtility.HtmlDecode(topic.Description);
                         topic.Text = HttpUtility.HtmlDecode(topic.Text);
 
-                        if (topic.TopicType == Nimbus.DB.Enums.TopicType.exam)
+                        if (topic.TopicType == Nimbus.Model.Enums.TopicType.exam)
                         {
                             #region exam
                             //verificar se o usuario já fez o exame
@@ -274,7 +274,7 @@ namespace Nimbus.Web.API.Controllers
                             {
                                 //se nunca tiver feito o exame, pode fazer. Canal privado = pode limitar. Canal free = sempre aberto 
                                 //caso seja um teste free, o 'bool' já permite refazer - apagar as respostas
-                                foreach (Nimbus.DB.Question item in topic.Question)
+                                foreach (Nimbus.Model.Question item in topic.Question)
                                 {
                                     item.TextQuestion = HttpUtility.HtmlDecode(item.TextQuestion);
                                     //colocar p opçoes e arrumar p retornar esse

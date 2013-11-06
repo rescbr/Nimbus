@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using ServiceStack.OrmLite;
-using Nimbus.DB.ORM;
+using Nimbus.Model.ORM;
 using System.Collections.Generic;
 using System.Linq;
 using System;

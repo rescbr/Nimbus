@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nimbus.DB.ORM
+namespace Nimbus.Model.ORM
 {
-    public class RoleTopic  : Nimbus.DB.RoleTopic
+    public class RoleTopic  : Nimbus.Model.RoleTopic
     {
         [References(typeof(Channel))]
         public override int ChannelId { get; set; }

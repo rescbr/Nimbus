@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nimbus.DB.ORM
+namespace Nimbus.Model.ORM
 {
-    public class TagChannel : Nimbus.DB.TagChannel
+    public class TagChannel : Nimbus.Model.TagChannel
     {
        [References(typeof(TagChannel))]
         public int TagId { get; set; }

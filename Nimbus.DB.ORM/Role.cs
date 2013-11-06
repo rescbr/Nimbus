@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nimbus.DB.ORM
+namespace Nimbus.Model.ORM
 {
-    public class Role  : Nimbus.DB.Role
+    public class Role  : Nimbus.Model.Role
     {        
         [PrimaryKey()]
         [References(typeof(User))]

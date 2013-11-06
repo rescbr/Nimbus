@@ -6,7 +6,7 @@ using System.Net.Http;
 using System.Net;
 using System.Threading;
 using ServiceStack.OrmLite;
-using Nimbus.DB.ORM;
+using Nimbus.Model.ORM;
 
 namespace Nimbus.Web.UnitTest
 {

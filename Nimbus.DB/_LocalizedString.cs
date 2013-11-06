@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 //Baseado em http://stackoverflow.com/a/9264669
-namespace Nimbus.DB
+namespace Nimbus.Model
 {
 
     public class LocalizedString : Dictionary<string, string>

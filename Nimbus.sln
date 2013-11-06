@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.20827.3
+VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{E53276D8-BE4D-4BE6-B503-50C8A0096F04}"
 	ProjectSection(SolutionItems) = preProject
@@ -16,15 +16,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nimbus.Web", "Nimbus.Web\Ni
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nimbus.Plumbing", "Nimbus.Plumbing\Nimbus.Plumbing.csproj", "{C28F8F7A-C5A2-4CB4-92B1-9507A87D5FFE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nimbus.DB", "Nimbus.DB\Nimbus.DB.csproj", "{0D485FA6-60BC-410C-B437-37A7C47CDB70}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nimbus.Model", "Nimbus.DB\Nimbus.Model.csproj", "{0D485FA6-60BC-410C-B437-37A7C47CDB70}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nimbus.Web.UnitTest", "Nimbus.Web.UnitTest\Nimbus.Web.UnitTest.csproj", "{C56119AE-5599-4737-83F3-3AFDAE7A476E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{AAA9E3F2-951E-46C8-83E8-B5E0695D2D62}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nimbus.DB.ORM", "Nimbus.DB.ORM\Nimbus.DB.ORM.csproj", "{7F04EC7A-7FDB-4BB5-B613-C134BC56A48D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nimbus.Model.ORM", "Nimbus.DB.ORM\Nimbus.Model.ORM.csproj", "{7F04EC7A-7FDB-4BB5-B613-C134BC56A48D}"
 EndProject
 Project("{CC5FD16D-436D-48AD-A40C-5A424C6E3E79}") = "Nimbus.Azure", "Nimbus.Azure\Nimbus.Azure.ccproj", "{88EA382D-AE75-4978-8975-2C772682A5C2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Model", "Model", "{07C7C177-C5DA-4DD8-8597-FD6777653E62}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -76,5 +78,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{C28F8F7A-C5A2-4CB4-92B1-9507A87D5FFE} = {D91FCAA8-07BC-4514-959A-26937409713A}
 		{C56119AE-5599-4737-83F3-3AFDAE7A476E} = {AAA9E3F2-951E-46C8-83E8-B5E0695D2D62}
+		{7F04EC7A-7FDB-4BB5-B613-C134BC56A48D} = {07C7C177-C5DA-4DD8-8597-FD6777653E62}
+		{0D485FA6-60BC-410C-B437-37A7C47CDB70} = {07C7C177-C5DA-4DD8-8597-FD6777653E62}
 	EndGlobalSection
 EndGlobal

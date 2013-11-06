@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nimbus.DB.ORM
+namespace Nimbus.Model.ORM
 {
-    public class ReceiverMessage : Nimbus.DB.ReceiverMessage
+    public class ReceiverMessage : Nimbus.Model.ReceiverMessage
     {
         [References(typeof(User))]
         public override int UserId { get; set; }

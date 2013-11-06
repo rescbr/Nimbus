@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nimbus.DB.ORM
+namespace Nimbus.Model.ORM
 {
-    public class RoleOrganization  : Nimbus.DB.RoleOrganization
+    public class RoleOrganization  : Nimbus.Model.RoleOrganization
     {
     }
 }

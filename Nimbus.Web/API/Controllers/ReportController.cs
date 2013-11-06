@@ -33,7 +33,7 @@ namespace Nimbus.Web.API.Controllers
                             //report comment
                             if (dados.typeReport.ToLower() == "comment")
                             {
-                                var report = new Nimbus.DB.ORM.CommentReported
+                                var report = new Nimbus.Model.ORM.CommentReported
                                 {
                                     UserReporterId = NimbusUser.UserId,
                                     UserReportedId = dados.userReported_id,
@@ -46,7 +46,7 @@ namespace Nimbus.Web.API.Controllers
                             //report channel
                             else if (dados.typeReport.ToLower() == "channel")
                             {
-                                var report = new Nimbus.DB.ORM.ChannelReported
+                                var report = new Nimbus.Model.ORM.ChannelReported
                                 {
                                     UserReporterId = NimbusUser.UserId,
                                     UserReportedId = dados.userReported_id,
@@ -59,7 +59,7 @@ namespace Nimbus.Web.API.Controllers
                             //report topic
                             else if (dados.typeReport.ToLower() == "topic")
                             {
-                                var report = new Nimbus.DB.ORM.TopicReported
+                                var report = new Nimbus.Model.ORM.TopicReported
                                 {
                                     UserReporterId = NimbusUser.UserId,
                                     UserReportedId = dados.userReported_id,
@@ -70,12 +70,12 @@ namespace Nimbus.Web.API.Controllers
                                 reportID = (int)db.GetLastInsertId(); //pega o id criado anteriormente
                             }
                             //report user
-                            var userReported = new Nimbus.DB.ORM.UserReported
+                            var userReported = new Nimbus.Model.ORM.UserReported
                             {
                                 UserReportedId = dados.userReported_id,
                                 UserReporterId = NimbusUser.UserId,
                                 ReportId = reportID,
-                                Type = DB.Enums.ReportType.comment
+                                Type = Model.Enums.ReportType.comment
                             };
                             db.Insert(userReported);
                             trans.Commit();

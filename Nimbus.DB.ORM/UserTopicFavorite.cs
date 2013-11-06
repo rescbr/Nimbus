@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nimbus.DB.ORM
+namespace Nimbus.Model.ORM
 {
-    public class UserTopicFavorite : Nimbus.DB.UserTopicFavorite
+    public class UserTopicFavorite : Nimbus.Model.UserTopicFavorite
     {      
         [References(typeof(User))]
         public override int UserId { get; set; }

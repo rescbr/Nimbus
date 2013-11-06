@@ -10,8 +10,8 @@ using System.Security.Cryptography;
 using System.Text;
 using Nimbus.Web.Security;
 using Nimbus.Web.Utils;
-using Nimbus.DB.ORM;
-using Nimbus.DB.Bags;
+using Nimbus.Model.ORM;
+using Nimbus.Model.Bags;
 
 namespace Nimbus.Web.Website.Controllers
 {
@@ -112,7 +112,7 @@ namespace Nimbus.Web.Website.Controllers
             {
                 List<MessageBag> receivers = messageApi.ChannelReceivedMessages(id);
 
-                Nimbus.DB.ORM.Message message = new Nimbus.DB.ORM.Message();
+                Nimbus.Model.ORM.Message message = new Nimbus.Model.ORM.Message();
                 message.ChannelId = id;
                 message.Text = HttpUtility.HtmlEncode(Request.Unvalidated["txtTextMsg"]);
                 message.Title = HttpUtility.HtmlEncode(Request.Unvalidated["txtTitleMsg"]);

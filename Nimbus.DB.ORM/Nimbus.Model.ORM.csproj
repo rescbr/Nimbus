@@ -7,7 +7,7 @@
     <ProjectGuid>{7F04EC7A-7FDB-4BB5-B613-C134BC56A48D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Nimbus.DB.ORM</RootNamespace>
+    <RootNamespace>Nimbus.Model.ORM</RootNamespace>
     <AssemblyName>Nimbus.DB.ORM</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -97,9 +97,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Nimbus.DB\Nimbus.DB.csproj">
+    <ProjectReference Include="..\Nimbus.DB\Nimbus.Model.csproj">
       <Project>{0d485fa6-60bc-410c-b437-37a7c47cdb70}</Project>
-      <Name>Nimbus.DB</Name>
+      <Name>Nimbus.Model</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

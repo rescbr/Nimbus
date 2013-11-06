@@ -1,4 +1,4 @@
-﻿using Nimbus.DB.Bags;
+﻿using Nimbus.Model.Bags;
 using System;
 using System.Collections.Generic;
 using System.Linq;

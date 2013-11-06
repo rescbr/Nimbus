@@ -6,8 +6,8 @@ using System.Net.Http;
 using System.Web.Http;
 using ServiceStack.OrmLite;
 using Nimbus.Web.API.Models;
-using Nimbus.DB.ORM;
-using Nimbus.DB.Bags;
+using Nimbus.Model.ORM;
+using Nimbus.Model.Bags;
 
 namespace Nimbus.Web.API.Controllers
 {
@@ -390,7 +390,7 @@ namespace Nimbus.Web.API.Controllers
         [HttpGet]
         public List<Channel> SearchChannel(string q)
         {
-            List<Channel> channel = new List<Channel>();
+            List<Channel> channels = new List<Channel>();
             if (!string.IsNullOrEmpty(q))
             {
                 int idOrg = NimbusOrganization.Id;
@@ -415,7 +415,7 @@ namespace Nimbus.Web.API.Controllers
                             {
                                 Channel chn = db.SelectParam<Channel>(ch => ch.Id == item && ch.Visible == true && ch.OrganizationId == idOrg).FirstOrDefault();
                                 if (chn != null)
-                                    channel.Add(chn);
+                                    channels.Add(chn);
                             }
 
                         }
@@ -425,12 +425,12 @@ namespace Nimbus.Web.API.Controllers
                             int idCat = db.SelectParam<Category>(ct => ct.Name.ToLower() == q.ToLower()).Select(ct => ct.Id).FirstOrDefault();
                             if (idCat > 0)
                             {
-                                channel = db.SelectParam<Channel>(chn => (chn.Name.Contains(q) || chn.CategoryId == idCat)
+                                channels = db.SelectParam<Channel>(chn => (chn.Name.Contains(q) || chn.CategoryId == idCat)
                                                                         && chn.Visible == true && chn.OrganizationId == idOrg);
                             }
                             else
                             {
-                                channel = db.SelectParam<Channel>(chn => chn.Name.Contains(q) && chn.Visible == true && chn.OrganizationId == idOrg);
+                                channels = db.SelectParam<Channel>(chn => chn.Name.Contains(q) && chn.Visible == true && chn.OrganizationId == idOrg);
                             }
                         }
                     }
@@ -444,7 +444,7 @@ namespace Nimbus.Web.API.Controllers
             {
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Nenhum registro encontrado para '" + q + "'"));
             }
-            return channel;
+            return channels;
         }
         
        

@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nimbus.DB.ORM
+namespace Nimbus.Model.ORM
 {
-    public class ViewByTopic : Nimbus.DB.ViewByTopic
+    public class ViewByTopic : Nimbus.Model.ViewByTopic
     {
         [References (typeof(Topic))]
         public override int TopicId { get; set; }

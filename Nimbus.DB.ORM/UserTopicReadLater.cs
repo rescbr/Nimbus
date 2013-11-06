@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nimbus.DB.ORM
+namespace Nimbus.Model.ORM
 {
-    public class UserTopicReadLater : Nimbus.DB.UserTopicReadLater
+    public class UserTopicReadLater : Nimbus.Model.UserTopicReadLater
     {
 
         [AutoIncrement]

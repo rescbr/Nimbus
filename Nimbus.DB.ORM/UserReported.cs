@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nimbus.DB.ORM
+namespace Nimbus.Model.ORM
 {
-    public class UserReported  : Nimbus.DB.UserReported
+    public class UserReported  : Nimbus.Model.UserReported
     {
         [AutoIncrement]
         public override int Id { get; set; }
