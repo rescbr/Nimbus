@@ -1,4 +1,4 @@
-﻿@model Nimbus.Web.Website.Models.LoginModel
+﻿@model Nimbus.Web.Website.Models.TrendingTopicModel
 @{Layout = "~/Website/Views/Shared/_Layout.cshtml";}
 
 <div class="content-top">
@@ -34,6 +34,36 @@
 			</li>
 		</ul>
 	</nav>
+</div>
+
+@*Miniaturas dos topicos*@
+
+<div id="divTrendingTopics" style="display:none;">
+    @*depois vai ser carregado por js + ajax, mas para facilitar, motando o modelo aqui*@
+
+    @foreach (var item in Model.Topics.OrderByDescending(m => m.LastModified))
+    {
+        @*Imagem e texto*@
+        <div class="divTopic-grade">
+            <a href="/topic/index/@item.Id">
+                <div class="headerTopic-grade">
+                    <h1>@item.Title</h1>
+                    <img src="@item.ImgUrl" alt="@item.TopicType.ToString()" title="@item.Title" width="180" height="100">
+                </div>
+            </a>
+            <p class="contentTopic-grade">
+                @item.Description
+            </p>
+            <div class="footerTopic-grade">
+                <div class="btnLeftTopic-grade">
+                    <p onclick="unReadLater();">Ler mais tarde</p> @*chamar js passando item.id*@
+                </div>
+                <div class="btnRightTopic-grade">
+                    <p>s2</p> @*adicionar aos favoritos*@
+                </div>
+            </div>
+        </div>
+    }
 </div>
 
 @*Miniaturas dos topicos*@

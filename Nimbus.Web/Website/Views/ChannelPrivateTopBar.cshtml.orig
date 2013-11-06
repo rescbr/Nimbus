@@ -35,7 +35,7 @@
         {
            @*Imagem e texto*@
                 <div class="divTopic-grade">
-                    <a href="/topic/index/@item.Id">
+                    <a href="/topic/@item.Id">
                         <div class="headerTopic-grade">
                             <h1>@item.Title</h1>
                             <img src="@item.ImgUrl" alt="@item.TopicType.ToString()" title="@item.Title" width="180" height="100">
@@ -64,10 +64,8 @@
                         <div id="divComment_@item.Id" style="display:block">
                             <div id="divInfoComment" name="divInfoComment">
                                 <input type="hidden" value="@item.Id" />
-                                <a id="linkUserProfile" href="userprofile/@item.UserId">
-                                    <img id="user+@item.UserId" src="@item.AvatarUrl" />
-                                    @item.UserName
-                                </a>
+                                <img id="user+@item.UserId" src="@item.AvatarUrl" />
+                                @item.UserName
                                 @item.TopicName
                                 @item.PostedOn
                                 @item.Text
@@ -88,7 +86,7 @@
             {
                 @*Imagem e texto*@
                 <div class="divTopic-grade">
-                    <a href="/topic/index/@item.Id">
+                    <a href="/topic/@item.Id">
                         <div class="headerTopic-grade">
                             <h1>@item.Title</h1>
                             <img src="@item.ImgUrl" alt="@item.TopicType.ToString()" title="@item.Title" width="180" height="100">
@@ -115,7 +113,7 @@
             {
                 @*Imagem e texto*@
                 <div class="divTopic-grade">
-                    <a href="/topic/index/@item.Id">
+                    <a href="/topic/@item.Id">
                         <div class="headerTopic-grade">
                             <h1>@item.Title</h1>
                             <img src="@item.ImgUrl" alt="@item.TopicType.ToString()" title="@item.Title" width="180" height="100">
@@ -188,7 +186,11 @@
                     </p>
                 </div>
 
+<<<<<<< local
                 <div id="divExam" style="display:none;">
+=======
+            <div id="divExam" style="display:none;">               
+>>>>>>> other
                     <div id="divPergunta1">
                         <p>Enunciado da questão:
                     <input id="QuestionPerg1" name="enunciado" type="text" maxlength="600" />
@@ -223,14 +225,14 @@
                     {
                             <div class="post_m">
                                 <div class="postHeImg_m">
-                                    <a href="userprofile/@item.SenderId"></a><img src=@item.AvatarUrl alt="blabla" title="blabla">
+                                    <img src=@item.AvatarUrl alt="blabla" title="blabla">
                                 </div>
                                 <div class="post_Right_m">
                                     <nav class="postHeaderLeft_m">
                                         <ul class="sbs">
-                                            <li><a href="userprofile/@item.SenderId">@item.UserName</a></li>                                                                                    
-                                            <li>@item.Title</li>
-                                        </ul>
+                                            <li>@item.UserName/li>
+                                                <li>@item.Title</li>
+                                                </ul>
                                             </nav>
                                             <nav class="postHeaderRight_m">
                                                 <ul class="sbs">
