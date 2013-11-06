@@ -217,12 +217,8 @@
     </div>
 
     <div id="divMessages" style="display:none;">
-<<<<<<< local
-      @if (Model.CurrentUser.UserId == Model.User.Id) {
-=======
        
-        @if (Model.CurrentUser.UserId == Model.User.Id) {
->>>>>>> other
+      @if (Model.CurrentUser.UserId == Model.User.Id) {
         foreach (var item in Model.Messages)
         {
             string readStat;
