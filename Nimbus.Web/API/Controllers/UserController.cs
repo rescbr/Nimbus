@@ -34,12 +34,15 @@ namespace Nimbus.Web.API.Controllers
         /// </sumary>
         //[Authorize]
         [HttpGet]
-        public UserBag showProfile(int id)
+        public UserBag showProfile(int? id)
         {
             try
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
+                    if (id == null)
+                        id = NimbusUser.UserId;
+
                     var user = db.SelectParam<User>(usr => usr.Id == id).FirstOrDefault();      
                     UserBag userBag = new UserBag();
                     userBag.Id = user.Id;

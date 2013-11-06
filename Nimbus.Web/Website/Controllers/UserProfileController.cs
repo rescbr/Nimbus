@@ -19,17 +19,19 @@ namespace Nimbus.Web.Website.Controllers
     public class UserProfileController : NimbusWebController
     {
         [Authorize]
-        public ActionResult Index()
+        public ActionResult Index(int? id)
         {
             var channelApi = ClonedContextInstance<API.Controllers.ChannelController>();
             var userApi = ClonedContextInstance<API.Controllers.UserController>();
             var msgApi = ClonedContextInstance<API.Controllers.MessageController>();
             var categoryApi = ClonedContextInstance<API.Controllers.CategoryController>();
+            
+
             var userprofile = new UserProfileModel()
             {
                 CurrentUser = NimbusUser,
                 ChannelPaid = channelApi.UserChannelPaid(NimbusUser.UserId),
-                User = userApi.showProfile(),
+                User =  userApi.showProfile(id),
                 ChannelFollow = channelApi.FollowsChannel(NimbusOrganization.Id),
                 MyChannels = channelApi.MyChannel(),
                 ReadLater = channelApi.showReadLaterChannel(NimbusOrganization.Id),

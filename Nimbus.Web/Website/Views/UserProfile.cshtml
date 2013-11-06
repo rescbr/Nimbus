@@ -4,12 +4,13 @@
     Layout = "~/Website/Views/Shared/_Layout.cshtml";
 }
 
-@Scripts.Render(("~/Scripts/jquery.form.js"))
+@Scripts.Render("~/Scripts/jquery.form.js")
 
-@Scripts.Render(("~/Scripts/jquery.Jcrop.js"))
-@Styles.Render(("~/Styles/jquery.Jcrop.css"))
+@Scripts.Render("~/Scripts/jquery.Jcrop.js")
+@Styles.Render("~/Styles/jquery.Jcrop.css")
 
-@Scripts.Render(("~/Scripts/UserUtilis.js"))
+@Scripts.Render("~/Scripts/UserUtilis.js")
+@Scripts.Render("~/Scripts/ViewYserScripts.js")
 
 <div class="content-top">
     <div class="cont-left">
@@ -124,7 +125,7 @@
                 <p>Para: @Model.User.FirstName @Model.User.LastName</p>
                 <p>
                     Assunto:
-                    <input name="inpTitleMsg" type="text" maxlength="100" />
+                    <input id="inpTitleMsg" name="inpTitleMsg" type="text" maxlength="100" />
                 </p>
                 <p>
                     <textarea id="txtTextMsg" name="txtTextMsg" rows="10" cols="60" required class="ckeditor"></textarea>
@@ -133,7 +134,7 @@
             <footer>
                 <!-- Footer -->
                 <div class="accRef">
-                    <p>Enviar</p>
+                    <a href="#" onclick="SendMessageProfile(@Model.User.Id);">Enviar</a>
                 </div>
             </footer>
         </div>
