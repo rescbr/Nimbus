@@ -272,6 +272,84 @@ namespace Nimbus.Web.API.Controllers
             return topic;
         }
 
+        /// <summary>
+        /// Search para Topicos
+        /// </summary>
+        /// <param name="q">Query de Pesquisa</param>
+        /// <returns></returns>
+        [Authorize]
+        [HttpGet]
+        public List<Topic> SearchTopic(string q)
+        {
+            List<Topic> topics = new List<Topic>();
+            if (!string.IsNullOrEmpty(q))
+            {
+                int idOrg = NimbusOrganization.Id;
+                try
+                {
+                    using (var db = DatabaseFactory.OpenDbConnection())
+                    {
+                        List<int> idChannelTopic = new List<int>();
+                        //restringe a busca para o conteudo da organizacao
+                        idChannelTopic = db.SelectParam<Channel>(ch => ch.Visible == true && ch.OrganizationId == idOrg).Select(ch => ch.Id).ToList();
+
+                        //verificar se é tag
+                        if (q.StartsWith("#"))
+                        {
+                            int i = 0;
+                            while (q.StartsWith("#"))
+                            {
+                                q = q.Substring(i + 1);
+                                i++;
+                            }
+                            int tagID = db.SelectParam<Tag>(tag => tag.TagName.ToLower() == q.ToLower()).Select(tag => tag.Id).FirstOrDefault();
+                            List<int> idTopics = db.SelectParam<TagTopic>(tgc => tgc.TagId == tagID).Select(tgc => tgc.TopicId).ToList();
+
+                            foreach (int item in idTopics)
+                            {
+                                Topic tpc = db.SelectParam<Topic>(tp => idChannelTopic.Contains(tp.ChannelId) && tp.Visibility == true && idTopics.Contains(tp.Id)).FirstOrDefault();
+                                if (tpc != null)
+                                    topics.Add(tpc);
+                            }
+                        }
+                        else
+                        {
+                            //pegar canais da categoria
+                            int idCat = db.SelectParam<Category>(ct => ct.Name.ToLower() == q.ToLower()).Select(ct => ct.Id).FirstOrDefault();
+                            if (idCat > 0)
+                            {
+                                //restringe a busca para o conteudo da organizacao MAS com a categoria
+                                idChannelTopic = db.SelectParam<Channel>(ch => ch.CategoryId == idCat && ch.Visible == true && ch.OrganizationId == idOrg).Select(ch => ch.Id).ToList();
+
+                                topics = db.SelectParam<Topic>(tp => (tp.Text.Contains(q) ||
+                                                                     tp.Title.Contains(q) ||
+                                                                     tp.Description.Contains(q) ||
+                                                                     tp.Question.Exists(question => question.TextQuestion.Contains(q) || question.ChoicesAnswer.Values.Contains(q))
+                                                                     ) && tp.Visibility == true && idChannelTopic.Contains(tp.ChannelId));
+                            }
+                            else
+                            {
+                                topics = db.SelectParam<Topic>(tp => (tp.Text.Contains(q) ||
+                                                                     tp.Title.Contains(q) ||
+                                                                     tp.Description.Contains(q) ||
+                                                                     tp.Question.Exists(question => question.TextQuestion.Contains(q) || question.ChoicesAnswer.Values.Contains(q))
+                                                                     ) && tp.Visibility == true && idChannelTopic.Contains(tp.ChannelId));
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+                }
+            }
+            else
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Nenhum registro encontrado para '" + q + "'"));
+            }
+            return topics;
+        }
+
         #endregion
 
         /// <summary>

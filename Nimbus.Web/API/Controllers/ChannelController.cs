@@ -380,7 +380,72 @@ namespace Nimbus.Web.API.Controllers
             }
             return showChannel;
         }
-               
+
+        /// <summary>
+        /// Retorna os canais encontrados para a palavra/tag buscada 
+        /// </summary>
+        /// <param name="q">query de pesquisa</param>
+        /// <returns></returns>
+        [Authorize]
+        [HttpGet]
+        public List<Channel> SearchChannel(string q)
+        {
+            List<Channel> channel = new List<Channel>();
+            if (!string.IsNullOrEmpty(q))
+            {
+                int idOrg = NimbusOrganization.Id;
+                try
+                {
+                    using (var db = DatabaseFactory.OpenDbConnection())
+                    {
+                        //verificar se é tag
+                        if (q.StartsWith("#"))
+                        {
+                            int i = 0;
+                            while (q.StartsWith("#"))
+                            {
+                                q = q.Substring(i + 1);
+                                i++;
+                            }
+                            int tagID = db.SelectParam<Tag>(tag => tag.TagName.ToLower() == q.ToLower()).Select(tag => tag.Id).FirstOrDefault();
+
+                            List<int> idChannels = db.SelectParam<TagChannel>(tgc => tgc.TagId == tagID).Select(tgc => tgc.ChannelId).ToList();
+
+                            foreach (int item in idChannels)
+                            {
+                                Channel chn = db.SelectParam<Channel>(ch => ch.Id == item && ch.Visible == true && ch.OrganizationId == idOrg).FirstOrDefault();
+                                if (chn != null)
+                                    channel.Add(chn);
+                            }
+
+                        }
+                        else
+                        {
+                            //pegar canais da categoria
+                            int idCat = db.SelectParam<Category>(ct => ct.Name.ToLower() == q.ToLower()).Select(ct => ct.Id).FirstOrDefault();
+                            if (idCat > 0)
+                            {
+                                channel = db.SelectParam<Channel>(chn => (chn.Name.Contains(q) || chn.CategoryId == idCat)
+                                                                        && chn.Visible == true && chn.OrganizationId == idOrg);
+                            }
+                            else
+                            {
+                                channel = db.SelectParam<Channel>(chn => chn.Name.Contains(q) && chn.Visible == true && chn.OrganizationId == idOrg);
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+                }
+            }
+            else
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Nenhum registro encontrado para '" + q + "'"));
+            }
+            return channel;
+        }
         
        
                    
