@@ -292,6 +292,68 @@ namespace Nimbus.Web.API.Controllers
             return topic;
         }
 
+        /// <summary>
+        /// carregar informações gerais dos trending tópicos
+        /// </summary>
+        /// <returns></returns>
+        [Authorize]
+        [HttpGet]
+        public List<TopicBag> ShowTTopic(int id)
+        {
+            List<TopicBag> topicList = new List<TopicBag>();
+            try
+            {
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {
+                    ICollection<int> idChannel;
+                    if (id == 0)
+                    {
+                         idChannel = db.SelectParam<Channel>(ch => ch.Visible == true && ch.OrganizationId == NimbusOrganization.Id)
+                                                             .Select(ch => ch.Id).ToList();
+                    }
+                    else
+                    {
+                         idChannel = db.SelectParam<Channel>(ch => ch.Visible == true && ch.OrganizationId == NimbusOrganization.Id && ch.CategoryId == id)
+                                                             .Select(ch => ch.Id).ToList();
+
+                    }
+                    //COLOCAR P APARECER DE DFATO SO OS TRENDING
+                    ICollection<Topic> tpcs = db.SelectParam<Topic>(tp => tp.Visibility == true && idChannel.Contains(tp.ChannelId)).ToList();
+                    foreach (var item in tpcs)
+                    {
+                        TopicBag topic = new TopicBag()
+                        {
+                            Title = HttpUtility.HtmlDecode(item.Title),
+                            //Description = RemoveHTMLString.StripTagsCharArray(topic.Description); 
+                            Description = HttpUtility.HtmlDecode(item.Description),
+                            Text = HttpUtility.HtmlDecode(item.Text),
+                            AuthorId = item.AuthorId,
+                            ChannelId = item.ChannelId,
+                            //Count
+                            CreatedOn = item.CreatedOn,
+                            Id = item.Id,
+                            ImgUrl = item.ImgUrl,
+                            LastModified = item.LastModified,
+                            Price = item.Price,
+                            Question = item.Question,
+                            TopicType = item.TopicType,
+                            UrlCapa = item.UrlCapa,
+                            UrlVideo = item.UrlVideo,
+                            Visibility = item.Visibility
+
+                        };
+                        topicList.Add(topic);
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+            }
+            return topicList;
+        }
+
         #endregion
 
         /// <summary>

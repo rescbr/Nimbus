@@ -673,8 +673,10 @@
     <Compile Include="Utils\RemoveHTMLString.cs" />
     <Compile Include="Website\Controllers\ChannelController.cs" />
     <Compile Include="Website\Controllers\TopicController.cs" />
+    <Compile Include="Website\Controllers\TrendingTopicController.cs" />
     <Compile Include="Website\Models\TopicModel.cs" />
     <Compile Include="Website\Models\ChannelModel.cs" />
+    <Compile Include="Website\Models\TrendingTopicModel.cs" />
     <Compile Include="_Startup\DatabaseStartup.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="Global.asax.cs">
