@@ -45,5 +45,17 @@ function SendMessageProfile(receiverId)
 
 function EditProfile()
 {
-
+    $('#popoverEdit').popover({
+        title: 'teste',
+        template:
+            '<div class="popover" style="width: 300px">'+
+            '<div class="arrow"></div>'+
+            '<div class="popover-inner">'+
+            '<h3 class="popover-title"></h3><div class="popover-content" style:"width:300px;"><p></p></div></div></div>',
+        content: function() {
+            return $('#divPopoverEdit').html();
+        },
+        html: true
+    });
+    $('#popoverEdit').popover('show');
 }
