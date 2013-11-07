@@ -614,6 +614,7 @@
     <Content Include="Scripts\modal.js" />
     <Content Include="Scripts\Notifications.js" />
     <Content Include="Scripts\ScriptsShared.js" />
+    <Content Include="Scripts\ViewTopicScripts.js" />
     <Content Include="Scripts\ViewUserScripts.js" />
     <Content Include="Scripts\ViewChannelScripts.js" />
     <Content Include="Styles\jquery.Jcrop.css" />
@@ -744,6 +745,7 @@
     <Folder Include="Admin\Models\" />
     <Folder Include="Admin\Views\" />
     <Folder Include="Uploads\" />
+    <Folder Include="Views\_Layout\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

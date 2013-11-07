@@ -1,29 +1,100 @@
-﻿<script type="text/javascript">
+﻿@model Nimbus.Web.Website.Models.ChannelModel
+
+<script type="text/javascript">
     //global
     currentDiv = 'divNotification';
 </script>
-@Scripts.Render(("~/Scripts/UserUtils.js"))
 
-@*
-Todos
-Mais vistos
-Atualizações
-*@
-<div id="divBarPublicChannel">
+<div class="wrapperChannel">
+    <nav class="chanTopBar">
+        <ul class="sbs">
+            <li class="press"><a name="divAllTopics" onclick="EnableDiv(this.name, 'currentDiv');">Todos</a></li>
+            <li class="press"><a name="divPopularTopics" onclick="EnableDiv(this.name, 'currentDiv');">Mais vistos</a></li>
+            <li class="press"><a name="divNotifications" onclick="EnableDiv(this.name, 'currentDiv');">Atualizações</a></li>
+        </ul>
+    </nav>
 
-</div>
-
-<div>
     <div id="divNotifications">
-
+        @*ultimos topicos + ultimos comentarios*@
+        @*TODO:colocar script p 'ver mais' index de pagina*@
+        @foreach (var item in Model.AllTopics.Take(15).OrderByDescending(m => m.LastModified))
+        {
+            @*Imagem e texto*@
+            <div class="divTopic-grade">
+                <a href="/topic/index/@item.Id">
+                    <div class="headerTopic-grade">
+                        <h1>@item.Title</h1>
+                        <img src="@item.ImgUrl" alt="@item.TopicType.ToString()" title="@item.Title" width="180" height="100">
+                    </div>
+                </a>
+                <p class="contentTopic-grade">
+                    @item.Description
+                </p>
+                <div class="footerTopic-grade">
+                    <div class="btnLeftTopic-grade">
+                        <p onclick="unReadLater();">Ler mais tarde</p> @*chamar js passando item.id*@
+                    </div>
+                    <div class="btnRightTopic-grade">
+                        <p>s2</p> @*adicionar aos favoritos*@
+                    </div>
+                </div>
+            </div>
+        }   
     </div>
 
-    <div id="divPopularTopics">
-
+    <div id="divPopularTopics" style="display:none;">
+        @foreach (var item in Model.AllTopics.OrderByDescending(m => m.Count))
+        {
+            @*Imagem e texto*@
+            <div class="divTopic-grade">
+                <a href="/topic/index/@item.Id">
+                    <div class="headerTopic-grade">
+                        <h1>@item.Title</h1>
+                        <img src="@item.ImgUrl" alt="@item.TopicType.ToString()" title="@item.Title" width="180" height="100">
+                    </div>
+                </a>
+                <p class="contentTopic-grade">
+                    @item.Description
+                </p>
+                <div class="footerTopic-grade">
+                    <div class="btnLeftTopic-grade">
+                        <p onclick="unReadLater();">Ler mais tarde</p> @*chamar js passando item.id*@
+                    </div>
+                    <div class="btnRightTopic-grade">
+                        <p>s2</p> @*adicionar aos favoritos*@
+                    </div>
+                </div>
+            </div>
+        }
     </div>
 
-    <div id="divAllTopics">
-
+    <div id="divAllTopics" style="display:none;">
+        @foreach (var item in Model.AllTopics.OrderByDescending(m => m.LastModified))
+        {
+            @*Imagem e texto*@
+            <div class="divTopic-grade">
+                <a href="/topic/index/@item.Id">
+                    <div class="headerTopic-grade">
+                        <h1>@item.Title</h1> 
+                        <img src="@item.ImgUrl" alt="@item.TopicType.ToString()" title="@item.Title" width="180" height="100">
+                    </div>
+                </a>
+                <p class="contentTopic-grade">
+                    @item.Description
+                </p>
+                <div class="footerTopic-grade">
+                    <div class="btnLeftTopic-grade">
+                        <p onclick="unReadLater();">Ler mais tarde</p> @*chamar js passando item.id*@
+                    </div>
+                    <div class="btnRightTopic-grade">
+                        <p>s2</p> @*adicionar aos favoritos*@
+                    </div>
+                </div>
+            </div>
+        }
     </div>
+
+
 
 </div>
+

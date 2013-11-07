@@ -10,7 +10,7 @@
 @Styles.Render("~/Styles/jquery.Jcrop.css")
 
 @Scripts.Render("~/Scripts/UserUtilis.js")
-@Scripts.Render("~/Scripts/ViewYserScripts.js")
+@Scripts.Render("~/Scripts/ViewUserScripts.js")
 
 <div class="content-top">
     <div class="cont-left">
@@ -58,7 +58,7 @@
         @if (Model.User.Id == Model.CurrentUser.UserId)
         {
             <div id="profileEdit">
-                <p>Edit</p>
+                <a href="#" onclick="EditProfile();">Edit</a>
             </div>
         }
         <div class="aboutUser">
@@ -134,7 +134,7 @@
             <footer>
                 <!-- Footer -->
                 <div class="accRef">
-                    <a href="#" onclick="SendMessageProfile(@Model.User.Id);">Enviar</a>
+                    <button onclick="SendMessageProfile(@Model.User.Id);">Enviar</button>
                 </div>
             </footer>
         </div>

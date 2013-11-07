@@ -2,8 +2,8 @@
 
 function SendMessageProfile(receiverId)
 {
-    ajaxMessage = {};
-    var text = document.getElementById('txtTextMsg').value;
+    ajaxMessage = {};    
+    var text = CKEDITOR.instances.txtTextMsg.getData();
     var title = document.getElementById('inpTitleMsg').value;
 
     if (text != "")
@@ -12,12 +12,11 @@ function SendMessageProfile(receiverId)
         if (title != "")
             ajaxMessage["Title"] = title;
         else
-            ajaxMessage["Title"] = "Sem assunto";
+            ajaxMessage["Title"] = "Sem assunto";       
 
-        var Paramters = "{ message:"+ ajaxMessage + ", receiverId: " + receiverId + " }";
         $.ajax({                        
-            url: "/api/message/SendMessageUser",
-            data: JSON.stringify(Paramters),
+            url: "/api/Message/SendMessageUser/"+receiverId,
+            data: JSON.stringify(ajaxMessage),
             type: "POST",
             contentType: "application/json;charset=utf-8",
             statusCode: {
@@ -42,4 +41,9 @@ function SendMessageProfile(receiverId)
             }
         });
     }
+}
+
+function EditProfile()
+{
+
 }

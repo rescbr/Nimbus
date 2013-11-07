@@ -129,9 +129,7 @@
 
         @if (Model.CurrentChannel.OwnerId != Model.CurrentUser.UserId)
         {
-            <form action="/channel/SendMessage/@Model.CurrentChannel.Id" method="post" enctype="multipart/form-data" id="sendMessage" name="sendMessage">
-            <div class="modal-content">
-                
+            <div class="modal-content">                
                     <!-- The modals content -->
                     <p>
                         Para:
@@ -159,16 +157,13 @@
                     </p><br />
                     <p>
                         <textarea id="txtTextMsg" name="txtTextMsg" rows="10" cols="60" class="ckeditor"></textarea>
-                    </p>
-                    
-                
+                    </p>   
             </div>
 
             <footer>
                 <!-- Footer -->
-                <input type="submit" value="Enviar" id="btnEnviar" />
+                <button id="btnEnviar" onclick="ajaxSendMessage(@Model.CurrentChannel.Id);">Enviar</button>
             </footer>
-            </form>
         }
 
 

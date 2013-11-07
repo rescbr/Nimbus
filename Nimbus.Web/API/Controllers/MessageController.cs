@@ -54,8 +54,8 @@ namespace Nimbus.Web.API.Controllers
                                     ChannelId = message.ChannelId,
                                     Date = DateTime.Now,
                                     ReadStatus = false,
-                                    Text = message.Text,
-                                    Title = message.Title,
+                                    Text = HttpUtility.HtmlEncode(message.Text),
+                                    Title = HttpUtility.HtmlEncode(message.Title),
                                     Visible = true,
                                     Receivers = listReceiver
                                 };
@@ -119,9 +119,15 @@ namespace Nimbus.Web.API.Controllers
             return message;
         }
 
+        /// <summary>
+        /// método que envia uma mensagem pelo profile do usuario
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="receiverId"></param>
+        /// <returns></returns>
         [Authorize]
         [HttpPost]
-        public Message SendMessageUser(Message message, int receiverId)
+        public Message SendMessageUser(Message message, int id)
         {
             try
             {
@@ -136,8 +142,8 @@ namespace Nimbus.Web.API.Controllers
                             List<Nimbus.Model.Receiver> listReceiver = new List<Nimbus.Model.Receiver>();                             
                                 Nimbus.Model.Receiver receiver = new Model.Receiver();
                                 receiver.IsOwner = true; //a msg é enviada para o perfil, logo não importa esse item
-                                receiver.UserId = receiverId;
-                                receiver.Name = db.SelectParam<User>(u => u.Id == receiverId).Select(s => s.FirstName + " " + s.LastName).FirstOrDefault();
+                                receiver.UserId = id;
+                                receiver.Name = db.SelectParam<User>(u => u.Id == id).Select(s => s.FirstName + " " + s.LastName).FirstOrDefault();
                                 listReceiver.Add(receiver);
 
                             //add quem enviou para os 'receivers', pois ele deve ter controle sobre o que ele enviou tbm.
