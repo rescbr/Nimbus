@@ -80,12 +80,10 @@ a, a:hover, a:visited {
     margin:             0 auto;
 }
 
-.container {/*
-    background:         #FFFFFF;*/
+.container {  
 	width:              960px;
 	height:             48px;
-	margin:             0 auto;/*
-	border:             2px solid #BE1E2D;*/
+	margin:             0 auto;
 	clear:              both;
 	line-height:        3.5em;
 }
@@ -136,8 +134,10 @@ nav.center {
 }
 
 .center li:active, .center li:hover {
+    background:         #2b2d2e;
     border-bottom:      5px solid #87c240;
     height:             43px;
+    cursor:             pointer;
 }
 nav.right {
 	display:            inline-block;
@@ -512,6 +512,7 @@ div#profileEdit {
     text-align:         center;
     font-weight:        normal;
     font-size:          1em;
+    cursor:             pointer;
 }
 
 div.aboutUser {
@@ -802,7 +803,9 @@ div.divTopic-grade {
     font-size:        small;
     height:           50px;
     text-decoration:  none;
+    cursor:           pointer;
 }
+
 div.headerTopic-grade{
     width:             180px;
     height:            150px;
@@ -818,7 +821,7 @@ div.headerTopic-grade{
 }
 */
 .imgTopic-grade {
-    background:         #87c240;
+    background:         #4fbd86;
     width:              180px;
     height:             100px;
 }
@@ -1031,6 +1034,7 @@ nav.chanTopBar {
 .chanTopBar p:hover, .chanTopBar p:active {
     text-decoration:    none;
     color:              #87c240;
+    cursor:             pointer;
 }
 
 .wrapperChannel div.divTopic-grade:first-child {
