@@ -12,6 +12,7 @@
 @Scripts.Render("~/Scripts/UserUtilis.js")
 @Scripts.Render("~/Scripts/ViewUserScripts.js")
 
+
 <div class="content-top">
     <div class="cont-left">
         <h1 class="userNProfBar">User's Name</h1>
@@ -73,8 +74,8 @@
                             <p><label style="color:black">Interesses: </label><input id="txtInterest" value="@Model.User.Interest" /></p>
                             <p><label style="color:black">Experiência: </label><input id="txtExperience" value="@Model.User.Experience" /></p>
 
-                            <button id="btnSaveEdit">Salvar</button>
-                            <button id="btnSaveEdit">Cancelar</button>
+                            <button id="btnSaveEdit" onclick="SaveEditProfile();">Salvar</button>
+                            <button id="btnSaveEdit" class="triggerClose">Cancelar</button>
                         </div>
 
                     </div>
