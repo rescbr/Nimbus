@@ -12,28 +12,44 @@
     <img src="@Model.Category.ImgTopChannel"  id="imgcapa"  height="192" alt="" width="864" />
 </div>
 
+<img src="@Model.CurrentTopic.ImgUrl " id="imgTopic" height="100" alt="" width="150" />
 
-<div id="divInfTopic" style="margin: -30px 20px 0px 20px; float:left; width: 200px;">
-
-    <div style="width: 150px; margin: 0 auto;">
+<div id="divInfTopic">
+    @*<div style="width: 150px; margin: 0 auto;">
         <img src="@Model.CurrentTopic.ImgUrl " id="imgTopic" height="100" alt=""  width="150" />
-    </div>
+    </div>*@
 
-    <h1 style="text-align: center; margin-top:5px;">
-        @Model.CurrentTopic.Title - @Model.CurrentChannel.Name
+    <h1 id="nameTopicPage">
+        @Model.CurrentTopic.Title <br />
+        @Model.CurrentChannel.Name
     </h1>
-    <p>@Model.CurrentTopic.Description</p>
-    <button id="btnEditTopic" onclick="EditTopic();">Editar</button>
 
-    <h1 style="margin: 20px 10px 20px 10px;">
+    <p class="txtInfTopic">@Model.CurrentTopic.Description</p>
+
+    <h1 class="favTopic">
         <img src="/images/favorite_topic_icon.png" style="margin: 0px 0px -5px 10px;"/>
         @Model.NumFavorites
     </h1>
 
-    <p style="text-align: center; border: solid;">
-        @*Categoria*@
-        @Model.Category.Name
-    </p>
+    <div id="btnEditTopic" onclick="EditTopic();">
+        <p>Editar</p>
+    </div>
+
+    <div class="infoTitleChannel">
+        <h2>Número de seguidores</h2>
+        <p class="catTopic">
+            @*Categoria*@
+                @Model.Category.Name
+                </p>
+    </div>
+
+    <div class="infoTitleChannel">
+        <h2>Número de Likes</h2>
+        <p class="numberIco">
+            @*colocar icone de likes*@
+            100
+        </p>
+    </div>
 
     <div id="divCanaisRelacionados">
         @*TODO*@
@@ -41,7 +57,7 @@
 </div>
 
 
-<div id="divContentTopic" style="float:right; width: 600px;">
+<div id="divContentTopic" style="float:left;">
 
     @*Topico em formato texto*@
     @if (Model.CurrentTopic.TopicType == Nimbus.Model.Enums.TopicType.exam)
@@ -66,9 +82,11 @@
 @if(Model.CurrentChannel.OpenToComments == true)
 {   
     <div id="divCommentsTopic">
-    <div id="divAllComments" style="float:right">
+    <div id="divAllComments">
         <br />
-        <h2>Comentários</h2>
+        <div class="contentTitleTopic">
+            <h2>Comentários</h2>
+        </div>
 
         @if (Model.Comments.Count > 0)
         {

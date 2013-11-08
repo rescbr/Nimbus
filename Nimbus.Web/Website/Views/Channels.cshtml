@@ -87,11 +87,11 @@
 
     @if (Model.RolesCurrentUser.Contains("channelmanager")
          || Model.CurrentChannel.OwnerId == Model.CurrentUser.UserId)
-    {
-        <div class="editTag">
-            <p>Editar Tags</p>
-        </div>
-    }
+{
+    <div class="editTag" onclick="EditTag();">
+        <p>Editar Tags</p>
+    </div>
+}
     
     <div class="infoTitleChannel divCanaisRelacionados">
         <h2>Canais Relacionados</h2>
