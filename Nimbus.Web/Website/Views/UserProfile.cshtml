@@ -12,12 +12,6 @@
 @Scripts.Render("~/Scripts/UserUtilis.js")
 @Scripts.Render("~/Scripts/ViewUserScripts.js")
 
-@*Scripts + css bootstrap*@
-@Scripts.Render("~/Scripts/bootstrap.min.js")
-@Styles.Render("~/Styles/bootstrap.css")
-@Styles.Render("~/Styles/bootstrap-theme.css")
-
-
 <div class="content-top">
     <div class="cont-left">
         <h1 class="userNProfBar">User's Name</h1>
@@ -62,25 +56,35 @@
 
         @*Se for o usuário do perfil*@
         @if (Model.User.Id == Model.CurrentUser.UserId)
-        {
-            <div id="profileEdit">
-                <a href="#" id="popoverEdit" onclick="EditProfile();">Edit</a>
-            </div>
-        }
-        @*Fields to edit profile*@
-        <div id="divPopoverEdit" class="hide">
-            <p><label style="color:black">Nome: </label> <input id="txtFirstName" value="@Model.User.FirstName" /></p>
-            <p><label style="color:black">Sobrenome: </label><input id="txtLastName" value="@Model.User.LastName" /></p>
-            <p><label style="color:black">Cidade: </label><input id="txtCity" value="@Model.User.City" /></p>
-            <p><label style="color:black">Estado: </label><input id="txtState" value="@Model.User.State" /></p>
-            <p><label style="color:black">País: </label><input id="txtCountry" value="@Model.User.Country" /></p>
-            <p><label style="color:black">Profissão: </label><input id="txtOccupation" value="@Model.User.Occupation" /></p>
-            <p><label style="color:black">Interesses: </label><input id="txtInterest" value="@Model.User.Interest" /></p>
-            <p><label style="color:black">Experiência: </label><input id="txtExperience" value="@Model.User.Experience" /></p>
+        {          
+          <a class="trigger" href="#">Edit</a>
+            <div class="bubbleInfo">               
+                <div class="popup">
+                    <div class="popupMaster">
+                        <div id="divImgSeta">
+                            <img id="imgSeta" style="width:15px; height:15px;" src="/images/Utils/seta-mais.png" />
+                        </div>
+                        <div id="divInfoEdit" class="popupEditProfie">
+                            <p><label style="color:black">Nome: </label> <input id="txtFirstName" value="@Model.User.FirstName" /></p>
+                            <p><label style="color:black">Sobrenome: </label><input id="txtLastName" value="@Model.User.LastName" /></p>
+                            <p><label style="color:black">Cidade: </label><input id="txtCity" value="@Model.User.City" /></p>
+                            <p><label style="color:black">Estado: </label><input id="txtState" value="@Model.User.State" /></p>
+                            <p><label style="color:black">País: </label><input id="txtCountry" value="@Model.User.Country" /></p>
+                            <p><label style="color:black">Profissão: </label><input id="txtOccupation" value="@Model.User.Occupation" /></p>
+                            <p><label style="color:black">Interesses: </label><input id="txtInterest" value="@Model.User.Interest" /></p>
+                            <p><label style="color:black">Experiência: </label><input id="txtExperience" value="@Model.User.Experience" /></p>
 
-           <button id="btnSaveEdit">Salvar</button>
-            <button id="btnSaveEdit" onclick="HidePopover('popoverEdit');">Cancelar</button>
-        </div>
+                            <button id="btnSaveEdit">Salvar</button>
+                            <button id="btnSaveEdit">Cancelar</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+               
+          
+        }
+      
 
         <div class="aboutUser">
             <h1>@Model.User.FirstName @Model.User.LastName</h1>

@@ -1079,3 +1079,46 @@ div.accRef {
 .bar{background-color: #B4F5B4;width: 0%;height: 20px;border-radius: 3px;}
 .percent{position: absolute;display: inline-block;top: 3px;left: 48%;}
 /*------------ fim css progress bar -------------*/
+
+/*---------CSS tooltip----------------*/
+.bubbleInfo {
+    position: relative;
+}
+
+.popup {
+    position: absolute;
+    display: none; /* keeps the popup hidden if no JS available */
+    -webkit-border-radius: 2px;
+    -webkit-border-bottom-right-radius: 4px;
+    -moz-border-radius: 2px;
+    -moz-border-radius-bottomright: 4px;
+    border-radius: 2px;
+    border-bottom-right-radius: 4px;
+    display: block; 
+    margin-top:-15px;
+    margin-left:25px;
+}
+
+.popupEditProfie {
+    width:250px;
+    height:300px;
+    float:right;
+    background-color:red;
+    margin-top:-40px;
+}
+
+.popupMaster {    
+    width:270px;
+    height:250px;
+    border:3px;
+    border-color:green;
+}
+
+#divInfoEdit p {
+    text-align:center;
+}
+
+.poupopImg {
+    float:left;
+}
+/*---------Fim CSS tooltip----------------*/
