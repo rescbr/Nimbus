@@ -125,7 +125,7 @@ namespace Nimbus.Web.API.Controllers
         /// <param name="message"></param>
         /// <param name="receiverId"></param>
         /// <returns></returns>
-        [Authorize]
+        [NimbusAuthorize]
         [HttpPost]
         public Message SendMessageUser(Message message, int id)
         {

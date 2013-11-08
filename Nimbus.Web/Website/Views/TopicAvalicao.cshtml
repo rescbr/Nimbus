@@ -1,50 +1,30 @@
-﻿@model Nimbus.Web.Website.Models.TopicModel
+﻿@using Nimbus.Extensions @* para utilizar o IList<>.Shuffle() *@
+@model Nimbus.Web.Website.Models.TopicModel
 
 <div>
-
-    @for(int i=0; i < Model.CurrentTopic.Question.Count; i++)
+    @for (int i = 0; i < Model.CurrentTopic.Question.Count; i++)
     {
-        
+        var question = Model.CurrentTopic.Question[i];
+        var answers = question.ChoicesAnswer.ToList();
+        answers.Shuffle();
+
         <section>
-            <p><strong>@i</strong> - @Model.CurrentTopic.Question.ElementAt(i).TextQuestion</p>            
-            @{
-                var num = Model.CurrentTopic.Question.ElementAt(i).ChoicesAnswer.Count;
-                
-                List<int> randoness = new List<int>(num);
-                List<int> queue = new List<int>(num);
-                
-                for (int aux = 0; aux < num; aux++)
-                {
-                    queue.Add(aux);
-                }
-
-                Random r = new Random();
-                for (int aux = 0; aux < num; aux++)
-                {     
-                    int randIndex = r.Next(0, queue.Count);
-                    
-                    int val = queue.ElementAt(randIndex);
-                    queue.RemoveAt(randIndex);
-                    
-                    randoness.Add(val);
-                }
-            }   
-
-            @for (int q = 0; q < randoness.Count; q++)
-            {                
-                @* randoness.ElementAt(q) is the fixed index *@
-                <input type="radio" name="@i" value="@randoness.ElementAt(q)" /> @Model.CurrentTopic.Question.ElementAt(i).ChoicesAnswer[ randoness.ElementAt(q) ] <br />
+            <p><strong>@(i+1)</strong> - @question.TextQuestion</p>
+            
+            @foreach(var answer in answers)
+            { 
+                //imprime as questoes
+                <input type="radio" name="@i" value="@answer.Key" />@answer.Value<br />
             }
         </section>
     }
-
     <button id="btnSendExam">Finalizar</button>
 
     @*Div com botao para "Terminar"
         <div class="finishedTopAv">
         <p>Terminar</p>
         </div>
-        
-        
+
+
     *@
 </div>

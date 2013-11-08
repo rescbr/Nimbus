@@ -665,6 +665,7 @@
     <Compile Include="API\NimbusApiController.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="Const.cs" />
+    <Compile Include="NimbusAuthorizeAttribute.cs" />
     <Compile Include="Notifications\MessageNotification.cs" />
     <Compile Include="Notifications\NimbusHub.cs" />
     <Compile Include="Notifications\NimbusNotificationBase.cs" />
