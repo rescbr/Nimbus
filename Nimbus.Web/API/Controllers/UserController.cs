@@ -7,6 +7,7 @@ using System.Web.Http;
 using ServiceStack.OrmLite;
 using Nimbus.Model.ORM;
 using Nimbus.Model.Bags;
+using System.Web;
 
 namespace Nimbus.Web.API.Controllers
 {
@@ -85,15 +86,29 @@ namespace Nimbus.Web.API.Controllers
         /// <param name="profile"></param>
         /// <returns>bool</returns>        
         [Authorize]
-        [HttpPut]
+        [HttpPost]
         public User EditProfile(User user)
         {
             try
             {
                 using(var db = DatabaseFactory.OpenDbConnection())
                 {
-                    db.Update<User>(user, usr => usr.Id == NimbusUser.UserId);
-                    db.Save(user);
+                    User currentUser = db.SelectParam<User>(us => us.Id == NimbusUser.UserId).FirstOrDefault();
+                    if (currentUser != null)
+                    {
+                        user.FirstName = HttpUtility.HtmlEncode(user.FirstName);
+                        user.LastName = HttpUtility.HtmlEncode(user.LastName);
+                        user.City = HttpUtility.HtmlEncode(user.City);
+                        user.State = HttpUtility.HtmlEncode(user.State);
+                        user.Country = HttpUtility.HtmlEncode(user.Country);
+                        user.Interest = HttpUtility.HtmlEncode(user.Interest);
+                        user.Occupation = HttpUtility.HtmlEncode(user.Occupation);
+                        user.Experience = HttpUtility.HtmlEncode(user.Experience);
+                        user.BirthDate = currentUser.BirthDate;
+
+                        db.Update<User>(user, usr => usr.Id == NimbusUser.UserId);
+                        db.Save(user);
+                    }
                 }
 
                 return user;

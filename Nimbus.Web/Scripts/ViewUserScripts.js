@@ -43,71 +43,66 @@ function SendMessageProfile(receiverId)
     }
 }
 
-function ShowFieldsEdit()
+function SaveEditProfile()
 {
+    var firstName = document.getElementById('txtFirstName').value;
+    var lastName = document.getElementById('txtLastName').value;
+    var city = document.getElementById('txtCity').value;
+    var state = document.getElementById('txtState').value;
+    var country = document.getElementById('txtCountry').value;
+    var occupation = document.getElementById('txtOccupation').value;
+    var interest = document.getElementById('txtInterest').value;
+    var experience = document.getElementById('txtExperience').value;
+    allow = true;
+    if(firstName == "")
+    {
+        allow = false;
+    }//colocar aviso
+    if(lastName == "")
+    {
+        allow = false;
+    }
 
-}
+    if (allow == true)
+    {
+        var ajaxData = {};
+        ajaxData['FirstName'] = firstName;
+        ajaxData['LastName'] = lastName;
+        ajaxData['City'] = city;
+        ajaxData['State'] = state;
+        ajaxData['Country'] = country;
+        ajaxData['Occupation'] = occupation;
+        ajaxData['Interest'] = interest;
+        ajaxData['Experience'] = experience;
 
- $(function () {
-        $('.bubbleInfo').each(function () {
-            // options
-            var distance = 10;
-            var time = 250;
-            var hideDelay = 500;
+        $.ajax({
+            url: "/api/user/EditProfile",
+            data: JSON.stringify(ajaxData),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            statusCode: {
+                200: function (newData) {
 
-            var hideDelayTimer = null;
-
-            // tracker
-            var beingShown = false;
-            var shown = false;
-
-            var trigger = $('.trigger', this);
-            var popup = $('.popup', this).css('opacity', 0);
-            var close = $('.triggerClose', this);
-
-            // set the mouseover and mouseout on both element
-            $([trigger.get(0), popup.get(0)]).click(function () {
-                // don't trigger the animation again if we're being shown, or already visible
-                if (beingShown || shown) {
-                    return;
-                } else {
-                    beingShown = true;
-
-                    // reset position of popup box
-                    popup.css({
-                        display: 'block' // brings the popup back in to view
-                    })
-
-                    // (we're using chaining on the popup) now animate it's opacity and position
-                    .animate({
-                        top: '-=' + distance + 'px',
-                        opacity: 1
-                    }, time, 'swing', function () {
-                        // once the animation is complete, set the tracker variables
-                        beingShown = false;
-                        shown = true;
-                    });
+                    if (newData.Id > 0) {
+                        //fechar modal
+                        document.getElementById('closeModal').click();
+                        //limpar campos
+                        firstName.value = "";
+                        lastName.value = "";
+                        city.value = "";
+                        state.value = "";
+                        country.value = "";
+                        occupation.value = "";
+                        interest.value = "";
+                        experience.value = "";                        
+                    }
+                },
+                400: function () {
+                    //erro
+                    window.alert("Não foi possível alterar seu perfil. Tente novamente mais tarde.");
                 }
-            });
-
-            $([close.get(0), popup.get(0)]).click(function () {
-                // reset the timer if we get fired again - avoids double animations
-                if (hideDelayTimer) clearTimeout(hideDelayTimer);
-
-                // store the timer so that it can be cleared in the mouseover if required
-                hideDelayTimer = setTimeout(function () {
-                    hideDelayTimer = null;
-                    popup.animate({
-                        top: '-=' + distance + 'px',
-                        opacity: 0
-                    }, '100', 'swing', function () {
-                        // once the animate is complete, set the tracker variables
-                        shown = false;
-                        // hide the popup entirely after the effect (opacity alone doesn't do the job)
-                        popup.css('display', 'none');
-                    });
-                }, '50');
-            });
+            }
         });
-    });   
-
+    }
+    
+}
