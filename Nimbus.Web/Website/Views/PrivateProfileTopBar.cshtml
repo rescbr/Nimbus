@@ -12,12 +12,12 @@
 <div class="wrapperUser">
     <nav class="profTopBar">
         <ul class="sbs">
-            <li class="press"><a name="divNotification" onclick="EnableDiv(this.name,'currentDiv');">Atualizações</a></li>
-            <li class="press"><a name="divMyChannels" onclick="EnableDiv(this.name, 'currentDiv');">Meus Canais</a></li>
-            <li class="press"><a name="divChannelFollows" onclick="EnableDiv(this.name, 'currentDiv');">Favoritos</a></li>
-            <li class="press"><a name="divReadLater" onclick="EnableDiv(this.name, 'currentDiv');">Marcados</a></li>
-            <li class="press"><a name="divMessages" onclick="EnableDiv(this.name, 'currentDiv');">Mensagens</a></li>	
-            <li class="=press"><a name="divNewChannel" onclick="EnableDiv(this.name, 'currentDiv');">Novo Canal</a></li>	
+            <li class="press"><a name="divNotification" onclick="EnableDiv(this.name,'currentDiv');"><p>Atualizações</p></a></li>
+            <li class="press"><a name="divMyChannels" onclick="EnableDiv(this.name, 'currentDiv');"><p>Meus Canais</p></a></li>
+            <li class="press"><a name="divChannelFollows" onclick="EnableDiv(this.name, 'currentDiv');"><p>Favoritos</p></a></li>
+            <li class="press"><a name="divReadLater" onclick="EnableDiv(this.name, 'currentDiv');"><p>Marcados</p></a></li>
+            <li class="press"><a name="divMessages" onclick="EnableDiv(this.name, 'currentDiv');"><p>Mensagens</p></a></li>	
+            <li class="=press"><a name="divNewChannel" onclick="EnableDiv(this.name, 'currentDiv');"><p>Novo Canal</p></a></li>	
 	    </ul>
     </nav>
 
@@ -188,26 +188,24 @@
             foreach (var item in Model.ReadLater)
             {
                 @*Imagem e texto*@
-                <div class="divTopic-grade">
-                    <div class="headerTopic-grade">
-                        <h1>blabla</h1>
-                        <img src="blabla.png" class="imgTopic-grade" alt="blabla" title="blabla">
-                    </div>
-                    <p class="contentTopic-grade">
-                        blab df fgbfgb flabg bdfgngabla kh 
-                        vkjhv jv kj hv kjhv kj hvkj vh kj 
-                        vh kjv hlkj blkh blkb lkjb lkjb lkhbgd 
-                        lfkgbjs lkjfdg lksdjfgn lskdjgf nlkjdf 
-                        nglkjdf nglkjdfg lkjdfng lksjdgfn 
-                        rtnmdfgb ovcbn kermng bcolvb nelrjt 
-                        lkjn oerhg eiorug heoirugh oriu heuh iouh
-                    </p>
-                    <div class="footerTopic-grade">
-                        <div class="btnLeftTopic-grade">
-                            <p onclick="unReadLater();">Ler mais tarde</p> @*chamar js passando item.id*@
+                <div class="post_g">
+                    <div class="postHeader_g">
+                        <h1>@item.Name</h1>
+                        <div class="postImg_g">
+                            <img src="@item.ImgUrl" alt="blabla" title="blabla">
                         </div>
-                        <div class="btnRightTopic-grade">
-                            <p>s2</p> @*adicionar aos favoritos*@
+                    </div>
+                    <div class="postContent_g">
+                        <p>
+                            @item.Description
+                        </p>
+                    </div>
+                    <div class="postFooter_g">
+                        <div class="press PostFoBoxL_g">
+                            <p onclick="unFollow(@item.Id);">Desfavoritar</p> @*chamar js passando item.id*@
+                                            </div>
+                        <div class="postFoBoxR_g">
+                            <p onclick="openChannel(@item.Id);">Ler</p>
                         </div>
                     </div>
                 </div>

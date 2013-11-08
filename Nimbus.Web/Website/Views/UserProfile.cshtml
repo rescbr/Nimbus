@@ -41,7 +41,6 @@
     }
 </div>
 
-<div class="wrapperUserProfile">
     <div class="proBar">
         <div class="profileImg">
             @if (Model.User.Id == Model.CurrentUser.UserId)
@@ -206,7 +205,7 @@
         @RenderPage("~/Website/Views/PrivateProfileTopBar.cshtml")
     </div>
 
-</div>
+
     @*Sempre manter no fim da página*@
     <script type="text/javascript">
         CKEDITOR.replace('txtTextMsg', {
