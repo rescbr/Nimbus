@@ -43,7 +43,9 @@ function SendMessageProfile(receiverId)
     }
 }
 
-function EditProfile() {
+function ShowFieldsEdit()
+{
+
 }
 
  $(function () {

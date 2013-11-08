@@ -12,6 +12,9 @@
 @Scripts.Render("~/Scripts/UserUtilis.js")
 @Scripts.Render("~/Scripts/ViewUserScripts.js")
 
+<script>
+    shown = false;
+</script>
 
 <div class="content-top">
     <div class="cont-left">
@@ -56,34 +59,9 @@
 
         @*Se for o usuário do perfil*@
         @if (Model.User.Id == Model.CurrentUser.UserId)
-        {          
-          <a class="trigger" href="#">Edit</a>
-            <div class="bubbleInfo">               
-                <div class="popup">
-                    <div class="popupMaster">
-                        <div id="divImgSeta">
-                            <img id="imgSeta" style="width:15px; height:15px;" src="/images/Utils/seta-mais.png" />
-                        </div>
-                        <div id="divInfoEdit" class="popupEditProfie">
-                            <p><label style="color:black">Nome: </label> <input id="txtFirstName" value="@Model.User.FirstName" /></p>
-                            <p><label style="color:black">Sobrenome: </label><input id="txtLastName" value="@Model.User.LastName" /></p>
-                            <p><label style="color:black">Cidade: </label><input id="txtCity" value="@Model.User.City" /></p>
-                            <p><label style="color:black">Estado: </label><input id="txtState" value="@Model.User.State" /></p>
-                            <p><label style="color:black">País: </label><input id="txtCountry" value="@Model.User.Country" /></p>
-                            <p><label style="color:black">Profissão: </label><input id="txtOccupation" value="@Model.User.Occupation" /></p>
-                            <p><label style="color:black">Interesses: </label><input id="txtInterest" value="@Model.User.Interest" /></p>
-                            <p><label style="color:black">Experiência: </label><input id="txtExperience" value="@Model.User.Experience" /></p>
-
-                            <button id="btnSaveEdit" onclick="SaveEditProfile();">Salvar</button>
-                            <button id="btnSaveEdit" class="triggerClose">Cancelar</button>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-               
-          
-        }
+            {
+                <a href="#modal-editProfile" class="call-modal">Editar</a>
+            }
       
 
         <div class="aboutUser">
@@ -201,6 +179,33 @@
         <a href="#!" class="modal-close" title="Close this modal" data-close="Close"
            data-dismiss="modal">×</a>
     </section>
+
+<section class="semantic-content" id="modal-editProfile" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
+    <div class="modal-inner">
+        <header id="modal-label">
+            <!-- Header -->
+            Editar perfil
+        </header>
+        <div class="modal-content">
+            <!-- The modals content -->
+            <p><label style="color:black">Nome: </label> <input id="txtFirstName" value="@Model.User.FirstName" /></p>
+            <p><label style="color:black">Sobrenome: </label><input id="txtLastName" value="@Model.User.LastName" /></p>
+            <p><label style="color:black">Cidade: </label><input id="txtCity" value="@Model.User.City" /></p>
+            <p><label style="color:black">Estado: </label><input id="txtState" value="@Model.User.State" /></p>
+            <p><label style="color:black">País: </label><input id="txtCountry" value="@Model.User.Country" /></p>
+            <p><label style="color:black">Profissão: </label><input id="txtOccupation" value="@Model.User.Occupation" /></p>
+            <p><label style="color:black">Interesses: </label><input id="txtInterest" value="@Model.User.Interest" /></p>
+            <p><label style="color:black">Experiência: </label><input id="txtExperience" value="@Model.User.Experience" /></p>            
+        </div>
+        <footer>
+            <!-- Footer -->
+            <button id="btnSaveEdit" onclick="SaveEditProfile();">Salvar</button>
+            <button id="btnSaveEdit" class="triggerClose">Cancelar</button>
+        </footer>
+    </div>
+    <a href="#!" class="modal-close" title="Close this modal" data-close="Close"
+       data-dismiss="modal">×</a>
+</section>
 
     <div style="float:left;">
         @RenderPage("~/Website/Views/PrivateProfileTopBar.cshtml")
