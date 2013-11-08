@@ -172,15 +172,17 @@ namespace Nimbus.Web.API.Controllers
                             }
                             else
                             {
-                                List<int> idChilds = db.SelectParam<Comment>(c => c.ParentId == comment.Id).Select(c => c.Id).ToList();
+                                IEnumerable<int> idChilds = db.SelectParam<Comment>(c => c.ParentId == comment.Id).Select(c => c.Id);
                                 foreach (int item in idChilds)
                                 {
-                                    var dado = new Comment()
+                                    Comment ct = new Comment();
+                                    ct = db.SelectParam<Comment>(c => c.Id == item).FirstOrDefault();
+                                    if(ct != null)
                                     {
-                                        Visible = false
-                                    };
-                                    db.Update<Comment>(dado, c => c.Id == item);
-                                    db.Save(dado);
+                                        ct.Visible = false;
+                                        db.Update<Comment>(ct, c => c.Id == item);
+                                        db.Save(ct);
+                                    }
                                 }
                                 cmt.Visible = false;
                                 db.Update<Comment>(cmt, c => c.Id == cmt.Id);

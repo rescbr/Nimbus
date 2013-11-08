@@ -25,7 +25,7 @@ function SendMessageProfile(receiverId)
                     if (newData.Id > 0)
                     {
                         //fechar modal
-                        document.getElementById('closeModal').click();
+                        document.getElementById('closeModalMessage').click();
                         //limpar campos
                         text.value = "";
                         title.value = "";
@@ -85,7 +85,7 @@ function SaveEditProfile()
 
                     if (newData.Id > 0) {
                         //fechar modal
-                        document.getElementById('closeModal').click();
+                        document.getElementById('closeModalEdit').click();
                         //limpar campos
                         firstName.value = "";
                         lastName.value = "";

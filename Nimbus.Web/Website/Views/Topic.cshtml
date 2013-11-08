@@ -146,7 +146,7 @@
         <br /><br />
         <h2 style="margin-bottom:5px;">Comentar</h2>
         <textarea id="txtacomentario" cols="50" rows="5"></textarea>
-        <button id="btnNewComment" onclick="ajaxSaveNewComment(@Model.CurrentTopic.Id, @Model.CurrentTopic.ChannelId,'txtacomentario');" value="Enviar">Enviar</button>
+        <input type="submit" id="btnNewComment" onclick="ajaxSaveNewComment(@Model.CurrentTopic.Id, @Model.CurrentTopic.ChannelId,'txtacomentario');" value="Enviar"/>
     </div>
 
 </div>
