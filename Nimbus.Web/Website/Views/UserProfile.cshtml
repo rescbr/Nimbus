@@ -14,8 +14,6 @@
 
 @*Scripts + css bootstrap*@
 @Scripts.Render("~/Scripts/bootstrap.min.js")
-@Styles.Render("~/Styles/bootstrap.css")
-@Styles.Render("~/Styles/bootstrap-theme.css")
 
 
 <div class="content-top">
@@ -47,7 +45,6 @@
     }
 </div>
 
-<div class="wrapperUserProfile">
     <div class="proBar">
         <div class="profileImg">
             @if (Model.User.Id == Model.CurrentUser.UserId)
@@ -202,7 +199,7 @@
         @RenderPage("~/Website/Views/PrivateProfileTopBar.cshtml")
     </div>
 
-</div>
+
     @*Sempre manter no fim da página*@
     <script type="text/javascript">
         CKEDITOR.replace('txtTextMsg', {

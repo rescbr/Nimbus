@@ -204,6 +204,7 @@ div.exitbutton {
 
 .content-top {
 	margin-top:         72px;
+    margin-bottom:      4px;
 	height:             24px;
 }
 
@@ -453,13 +454,14 @@ h1.userNProfBar {
 
 div.wrapperUserProfile {
     padding:            4px 24px 24px 24px;
-    width:              864px;
+    width:              912px;
     height:             800px;
 }
 
 div.proBar {
     background:         #f1f2f2;
     padding:            24px;
+    margin-left:        24px;
     float:              left;
     width:              202px;
     height:             100%;
@@ -571,8 +573,7 @@ div.chanPaidImg {
 nav.profTopBar {
     margin-top:         24px;
     width:              600px;
-    height:             39px;/*
-    border:             1px solid #BE1E2D;*/
+    height:             39px;
     background:         #2b2d2e;
     font-weight:        normal;
     color:              #FFFFFF;
@@ -583,12 +584,20 @@ nav.profTopBar {
     text-align:         center;
     line-height:        3em;
 }
-/*
-.profTopBar a {
+
+.profTopBar p {
+    text-align:         center;
+    width:              100px;
+    height:             39px;
     font-weight:        normal;
     color:              #FFFFFF;
 }
-*/
+
+.profTopBar p:hover {
+    font-weight:        normal;
+    color:              #87c240;
+}
+
 .profTopBar li:hover {
     background:         #2b2d2e;
     border-bottom:      2px solid #87c240;
@@ -809,7 +818,7 @@ div.headerTopic-grade{
 }
 */
 .imgTopic-grade {
-    background:         #BE1E2D;
+    background:         #87c240;
     width:              180px;
     height:             100px;
 }
@@ -1011,6 +1020,19 @@ nav.chanTopBar {
 }
 
 /* Content */
+.chanTopBar p {
+    text-align:         center;
+    width:              128px;
+    height:             39px;
+    text-decoration:    none;
+    color:              #FFFFFF;
+}
+
+.chanTopBar p:hover, .chanTopBar p:active {
+    text-decoration:    none;
+    color:              #87c240;
+}
+
 .wrapperChannel div.divTopic-grade:first-child {
     margin-left:        10px;
 }
