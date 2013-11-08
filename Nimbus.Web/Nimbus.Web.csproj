@@ -221,8 +221,7 @@
     <Content Include="images\Category\vestibular.png" />
     <Content Include="images\Utils\Jcrop.gif" />
     <Content Include="images\Utils\person_icon.png" />
-    <Content Include="Scripts\bootstrap.js" />
-    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="images\Utils\seta-mais.png" />
     <Content Include="Scripts\ckeditor\ckeditor.js" />
     <Content Include="Scripts\ckeditor\config.js" />
     <Content Include="Scripts\ckeditor\contents.css" />
@@ -619,10 +618,6 @@
     <Content Include="Scripts\ViewTopicScripts.js" />
     <Content Include="Scripts\ViewUserScripts.js" />
     <Content Include="Scripts\ViewChannelScripts.js" />
-    <Content Include="Styles\bootstrap-theme.css" />
-    <Content Include="Styles\bootstrap-theme.min.css" />
-    <Content Include="Styles\bootstrap.css" />
-    <Content Include="Styles\bootstrap.min.css" />
     <Content Include="Styles\jquery.Jcrop.css" />
     <Content Include="Styles\jquery.Jcrop.min.css" />
     <Content Include="Styles\modal.css" />
