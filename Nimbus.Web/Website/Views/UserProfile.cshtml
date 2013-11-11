@@ -5,16 +5,21 @@
 }
 
 @Scripts.Render("~/Scripts/jquery.form.js")
-
 @Scripts.Render("~/Scripts/jquery.Jcrop.js")
 @Styles.Render("~/Styles/jquery.Jcrop.css")
 
 @Scripts.Render("~/Scripts/UserUtilis.js")
 @Scripts.Render("~/Scripts/ViewUserScripts.js")
 
+@*Chamadas de btns*@
 <script>
-    shown = false;
+    $(document).ready(function () {
+        $('#btnSaveEdit').click(function () {
+            SaveEditProfile();
+        });
+    });
 </script>
+
 
 <div class="content-top">
     <div class="cont-left">
@@ -141,7 +146,6 @@
                 </div>
             </footer>
         </div>
-
         <a href="#!" id="closeModalMessage" class="modal-close" title="Close this modal" data-close="Close"
            data-dismiss="modal">×</a>
     </section>
@@ -199,7 +203,7 @@
         </div>
         <footer>
             <!-- Footer -->
-            <button id="btnSaveEdit" onclick="SaveEditProfile();">Salvar</button>
+            <button id="btnSaveEdit">Salvar</button>
         </footer>
     </div>
     <a href="#!" id="closeModalEdit" class="modal-close" title="Close this modal" data-close="Close"

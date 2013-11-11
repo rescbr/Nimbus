@@ -184,22 +184,4 @@
         ]
     });
 
-$(document).ready(function () {
- $('form[name=sendMessage]').ajaxForm({
-            dataType: 'json',
-            success: function (returnvalue) {
-                 if(returnvalue.isok == false)
-                 {
-                    window.alert(returnvalue.message);
-                 }
-                 else
-                     {
-                     window.alert(returnvalue.message);
-                     document.getElementById('closeModal').click();
-                     }
-            }
-        });
-
-     });
 </script>
-
