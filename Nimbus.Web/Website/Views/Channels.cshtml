@@ -5,6 +5,7 @@
 }
 
 @Scripts.Render(("~/Scripts/jquery.form.js"))
+@Scripts.Render("~/Scripts/ViewChannelScripts.js")
 
 <div id="divCapa">
     <img src="@Model.CurrentChannel.ImgUrl" id="imgCapa" height="192" alt="" width="864" />
@@ -16,7 +17,6 @@
     }
 </div>
 
-@Scripts.Render("~/Scripts/ViewChannelScripts.js")
 
 <div id="nameChannelPage">
     <h1>@Model.CurrentChannel.Name</h1>
@@ -153,7 +153,7 @@
                     </p>
                     <p>
                         Assunto:
-                        <input name="txtTitleMsg" type="text" maxlength="100" />
+                        <input id="txtTitleMsg" name="txtTitleMsg" type="text" maxlength="100" />
                     </p><br />
                     <p>
                         <textarea id="txtTextMsg" name="txtTextMsg" rows="10" cols="60" class="ckeditor"></textarea>
@@ -165,8 +165,6 @@
                 <button id="btnEnviar" onclick="ajaxSendMessage(@Model.CurrentChannel.Id);">Enviar</button>
             </footer>
         }
-
-
     </div>
 
     <a href="#!" id="closeModal" class="modal-close" title="Close this modal" data-close="Close"
@@ -184,22 +182,4 @@
         ]
     });
 
-$(document).ready(function () {
- $('form[name=sendMessage]').ajaxForm({
-            dataType: 'json',
-            success: function (returnvalue) {
-                 if(returnvalue.isok == false)
-                 {
-                    window.alert(returnvalue.message);
-                 }
-                 else
-                     {
-                     window.alert(returnvalue.message);
-                     document.getElementById('closeModal').click();
-                     }
-            }
-        });
-
-     });
 </script>
-
