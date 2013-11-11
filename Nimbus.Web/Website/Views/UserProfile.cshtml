@@ -11,15 +11,6 @@
 @Scripts.Render("~/Scripts/UserUtilis.js")
 @Scripts.Render("~/Scripts/ViewUserScripts.js")
 
-@*Chamadas de btns*@
-<script>
-    $(document).ready(function () {
-        $('#btnSaveEdit').click(function () {
-            SaveEditProfile();
-        });
-    });
-</script>
-
 
 <div class="content-top">
     <div class="cont-left">
@@ -70,28 +61,32 @@
       
 
         <div class="aboutUser">
-            <h1>@Model.User.FirstName @Model.User.LastName</h1>
-            <p>Idade: @Model.User.Age</p>
+            <h1><label id="lblName">@Model.User.FirstName @Model.User.LastName</label></h1>
+            <p>Idade:<label id="lblAge"> @Model.User.Age</label></p>
             @if (!string.IsNullOrEmpty(Model.User.City) && !string.IsNullOrEmpty(Model.User.State))
             {
-                <p>@Model.User.City - @Model.User.State</p>
+                <p><label id="lblCity">@Model.User.City - @Model.User.State</label></p>
+            }
+            @if (!string.IsNullOrEmpty(Model.User.Country))
+            {
+                <p><label id="lblCountry">@Model.User.Country</label></p> 
             }
             @if (!string.IsNullOrEmpty(Model.User.Occupation))
             {
-                <p>Profissão:@Model.User.Occupation</p>
+                <p>Profissão:<label id="lblOccupation"> @Model.User.Occupation</label></p>
             }
             @if (!string.IsNullOrEmpty(Model.User.Interest))
             {
-                <p>Interesses: @Model.User.Interest</p>
+                <p>Interesses:<label id="lblInterest">  @Model.User.Interest</label></p>
             }
             @if (!string.IsNullOrEmpty(Model.User.Experience))
             {
-                <p>Experiências: @Model.User.Experience</p>
+                <p>Experiências:<label id="lblExperience">  @Model.User.Experience</label></p>
             }
             @if (!string.IsNullOrEmpty(Model.User.About))
             {
                 <p>Outras informações: </p>
-                <p class="AboutUser-other">@Model.User.About</p>
+                <p class="AboutUser-other"><label id="lblAbout"> @Model.User.About</label></p>
             }
 
         </div>
@@ -199,11 +194,12 @@
             <p><label style="color:black">País: </label><input id="txtCountry" value="@Model.User.Country" /></p>
             <p><label style="color:black">Profissão: </label><input id="txtOccupation" value="@Model.User.Occupation" /></p>
             <p><label style="color:black">Interesses: </label><input id="txtInterest" value="@Model.User.Interest" /></p>
-            <p><label style="color:black">Experiência: </label><input id="txtExperience" value="@Model.User.Experience" /></p>            
+            <p><label style="color:black">Experiência: </label><input id="txtExperience" value="@Model.User.Experience" /></p>    
+            <p><label style="color:black">Outras informações: </label><input id="txtAbout" value="@Model.User.About" /></p>           
         </div>
         <footer>
             <!-- Footer -->
-            <button id="btnSaveEdit">Salvar</button>
+            <button id="btnSaveEdit" onclick="SaveEditProfile();">Salvar</button>
         </footer>
     </div>
     <a href="#!" id="closeModalEdit" class="modal-close" title="Close this modal" data-close="Close"

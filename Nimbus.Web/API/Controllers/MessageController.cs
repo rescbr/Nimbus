@@ -39,6 +39,7 @@ namespace Nimbus.Web.API.Controllers
 
                             var roles = db.SelectParam<Role>(r => r.ChannelId == message.ChannelId && (r.MessageManager == true || r.IsOwner == true));
 
+                            //add todos os destinatarios dono + moderadores do canal
                             foreach (var item in roles)
                             {
                                 Nimbus.Model.Receiver receiver = new Model.Receiver();
@@ -47,6 +48,14 @@ namespace Nimbus.Web.API.Controllers
                                 receiver.Name = db.SelectParam<User>(u => u.Id == item.UserId).Select(s => s.FirstName + " " + s.LastName).FirstOrDefault();
                                 listReceiver.Add(receiver);
                             }
+                            //add a msg para o 'sender'
+                                    Nimbus.Model.Receiver sender = new Model.Receiver();
+                                    sender.IsOwner = db.SelectParam<Role>(r => r.ChannelId == message.ChannelId && r.UserId == NimbusUser.UserId)
+                                                                               .Select(c => c.IsOwner).FirstOrDefault();
+                                    sender.UserId = NimbusUser.UserId;
+                                    sender.Name = NimbusUser.FirstName + " " + NimbusUser.LastName;
+                                    listReceiver.Add(sender);
+
                                //add a  msg                                                 
                                 Message dadosMsg = new Message
                                 {
@@ -94,7 +103,7 @@ namespace Nimbus.Web.API.Controllers
 
                                     //Notificação
                                     var notification = new Notifications.MessageNotification();
-                                    notification.NewMessage(dadosMsg.Title, listReceiver.Select(l => l.UserId).ToList());
+                                    notification.NewMessage(dadosMsg.Title, listReceiver.Where(l => l.UserId != NimbusUser.UserId ).Select(l => l.UserId).ToList());
 
                                 }
                                 catch (Exception ex)

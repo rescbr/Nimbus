@@ -103,9 +103,9 @@ namespace Nimbus.Web.API.Controllers
                         currentUser.Interest = HttpUtility.HtmlEncode(user.Interest);
                         currentUser.Occupation = HttpUtility.HtmlEncode(user.Occupation);
                         currentUser.Experience = HttpUtility.HtmlEncode(user.Experience);
+                        currentUser.About = HttpUtility.HtmlEncode(user.About);
                         currentUser.BirthDate = currentUser.BirthDate;
 
-                      // db.Update<User>(currentUser, usr => usr.Id == NimbusUser.UserId);
                         db.Save(currentUser);
                     }
                 }

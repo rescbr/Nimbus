@@ -53,6 +53,7 @@ function SaveEditProfile()
     var occupation = document.getElementById('txtOccupation').value;
     var interest = document.getElementById('txtInterest').value;
     var experience = document.getElementById('txtExperience').value;
+    var about = document.getElementById('txtAbout').value;
     allow = true;
     if(firstName == "")
     {
@@ -74,6 +75,7 @@ function SaveEditProfile()
         ajaxData['Occupation'] = occupation;
         ajaxData['Interest'] = interest;
         ajaxData['Experience'] = experience;
+        ajaxData['About'] = about;
 
         $.ajax({
             url: "/api/user/EditProfile",
@@ -94,7 +96,23 @@ function SaveEditProfile()
                         country.value = "";
                         occupation.value = "";
                         interest.value = "";
-                        experience.value = "";                        
+                        experience.value = "";
+                        document.getElementById('lblName').value = newData.FirstName + " " + newData.LastName;
+
+                        var place = "";
+                        if(newData.City != "" && newData.State != "")
+                            place = newData.City + " - " + newData.State;
+                        else if(newData.City != "" && newData.State == "")
+                            place = newData.City
+                        else if(newData.City == "" && newData.State != "")
+                            place = newData.State
+                        document.getElementById('lblCity').value = place;
+                        
+                        document.getElementById('lblOccupation').value = newData.Occupation;
+                        document.getElementById('lblCountry').value = newData.Country;
+                        document.getElementById('lblInterest').value = newData.Interest;
+                        document.getElementById('lblExperience').value = newData.Experience;
+                        document.getElementById('lblAbout').value = newData.de;
                     }
                 },
                 400: function () {
