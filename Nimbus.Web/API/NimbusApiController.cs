@@ -102,10 +102,12 @@ namespace Nimbus.Web.API
         /// <typeparam name="T">Tipo da nova instância ApiController</typeparam>
         /// <returns>Nova instância da ApiController T com o mesmo contexto da requisição atual.</returns>
         [NonAction]
-        public T ClonedContextInstance<T>() where T : ApiController, new()
+        public T ClonedContextInstance<T>() where T : NimbusApiController, new()
         {
             T instance = new T();
             instance.ControllerContext = this.ControllerContext;
+            instance.NimbusUser = this.NimbusUser;
+            instance.NimbusOrganization = this.NimbusOrganization;
 
             return instance;
         }

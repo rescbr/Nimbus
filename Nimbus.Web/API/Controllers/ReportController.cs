@@ -30,7 +30,7 @@ namespace Nimbus.Web.API.Controllers
                         try
                         {
                             int reportID = -1;                            
-                            //report comment
+                            //report comments
                             if (dados.typeReport.ToLower() == "comment")
                             {
                                 var report = new Nimbus.Model.ORM.CommentReported

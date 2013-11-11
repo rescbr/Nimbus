@@ -1,0 +1,20 @@
+﻿@model Nimbus.Model.Bags.CommentBag
+
+<div id="divComment_@Model.Id" style="display:block; float:none">
+    <div style="float:left">
+        <img src="@Model.AvatarUrl" id="imgTopic_@Model.Id" height="48" alt="" width="48" />
+    </div>
+    <div>
+        <p>
+            <label id="lblUserName_@Model.Id">@Model.UserName</label>
+            <label id="lblPostedOn_@Model.Id">@Model.PostedOn</label>
+            @if (Model.IsDeletable)
+            {
+                <a href="#" id="btnDelete_@Model.Id" title="Deletar" onclick="ajaxDeleteComment(@Model.Id,'divComment_@Model.Id' );">X</a>
+            }
+        </p>
+    </div>
+    <div style="float:left">
+        <p><label id="lblText_@Model.Id">@Model.Text</label></p>
+    </div>
+</div>

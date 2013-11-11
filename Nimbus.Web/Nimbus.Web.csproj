@@ -625,6 +625,7 @@
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
+    <None Include="Website\Views\CommentPartials\PartialComment.cshtml" />
     <Content Include="Website\Views\Home.cshtml" />
     <Content Include="Website\Views\TrendingTopics.cshtml" />
     <Content Include="Website\Views\PostsLista.cshtml" />
@@ -648,6 +649,7 @@
     <Content Include="Website\Views\TopicText.cshtml" />
     <Content Include="Website\Views\TopicVideo.cshtml" />
     <Content Include="Website\Views\TopicAvalicao.cshtml" />
+    <Content Include="Website\Views\CommentPartials\PartialTopicComment.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\Controllers\DatabaseController.cs" />
@@ -666,6 +668,7 @@
     <Compile Include="Configuration.cs" />
     <Compile Include="Const.cs" />
     <Compile Include="NimbusAuthorizeAttribute.cs" />
+    <Compile Include="Notifications\CommentNotification.cs" />
     <Compile Include="Notifications\MessageNotification.cs" />
     <Compile Include="Notifications\NimbusHub.cs" />
     <Compile Include="Notifications\NimbusNotificationBase.cs" />
@@ -674,6 +677,7 @@
     <Compile Include="Utils\ImageManipulation.cs" />
     <Compile Include="Utils\RemoveHTMLString.cs" />
     <Compile Include="Website\Controllers\ChannelController.cs" />
+    <Compile Include="Website\Controllers\CommentController.cs" />
     <Compile Include="Website\Controllers\TopicController.cs" />
     <Compile Include="Website\Controllers\TrendingTopicController.cs" />
     <Compile Include="Website\Models\TopicModel.cs" />

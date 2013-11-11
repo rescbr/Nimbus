@@ -1,0 +1,30 @@
+﻿@model List<Nimbus.Model.Bags.CommentBag>
+
+@if (Model.Count > 0)
+{
+    foreach (var comment in Model)
+    {
+        <br />
+        <div id="divContentComment_@comment.Id" style="background-color:chocolate;">
+            @{ Html.RenderPartial("~/Website/Views/CommentPartials/PartialComment.cshtml", comment); }
+
+            @foreach (var child in comment.CommentChild)
+            {
+                Html.RenderPartial("~/Website/Views/CommentPartials/PartialComment.cshtml", child);
+            }
+            <br />
+            <div id="divAnswerTopic_@comment.Id" style="display:block">
+                <button id="bntAnswer_@comment.Id" onclick="EnableDivHiddenBtn('divComment_@comment.Id', 'bntAnswer_@comment.Id');" value="Responder">Responder</button>
+            </div>
+
+            <div id="divComment_@comment.Id" style="display:none">
+                <textarea id="txtaAnswer_@comment.Id" name="txtaAnswerTopic" cols="30" rows="2"></textarea>
+                <button id="btnSendAnswer" onclick="ajaxAnswerComment(0,@comment.Id, @comment.ChannelId, @comment.TopicId, 'txtaAnswer_@comment.Id');" value="Enviar">Enviar</button>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <strong>Seja o primeiro a comentar!</strong>
+}
