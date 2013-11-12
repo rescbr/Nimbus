@@ -394,3 +394,56 @@ function ajaxSendMessage(id)
         });
     }
 }
+
+function ajaxLoadTags(id) {
+    //para cada tag colocar um x delete
+    //incluir na div divTags
+    //salvar nova tag
+    //abrir o modal-tags
+    $.ajax({
+        url: "/api/Channel/ShowTagChannelEdit/" + id,       
+        type: "GET",
+        contentType: "application/json;charset=utf-8",
+        statusCode: {
+            200: function (newData) {
+                if (newData.length > 0) {
+                    //incluir itens na div
+                    var listTag = [];
+                    var string ="";
+                    for (var i = 0; i < newData.length; i++) {
+                        listTag[i]= "<p>#" + newData[i].TagName +
+                                        "<a href=\"#\" onclick=\"ajaxdeleteTag("+ newData[i].Id +", "+id+");\">X</a>" +
+                                    "</p>";
+                    }
+                    if (newData.length < 5) {
+                        string = "<input id=\"txtNewTag\" type=\"text\" value=\"Nova tag\" onclick=\"this.value=''\" />" +
+                                      "<button id=\"btnSaveTag\" onclick=\"ajaxNewTag(" + id + ");\">Adicionar</button>";
+                    }
+                    else
+                    {
+                        string = "<p>Você já possui o limite máximo de tags aceitas por canal.</p>";
+                    }
+                    var includeDiv = "<div>" + listTag + "</div>" +
+                                     "<div>" + string + "</div>";
+
+                    document.getElementById('divTags').innerHTML = includeDiv;
+                    
+                }
+            },
+
+            400: function () {
+                //erro
+                window.alert("Erro ao processar requisição. Tente novamente mais tarde.");
+            }
+        }
+    });
+
+}
+
+function ajaxEditTag(idChannel)
+{
+}
+
+function ajaxdeleteTag(idTag, idChannel)
+{
+}

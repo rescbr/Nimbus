@@ -102,38 +102,6 @@ namespace Nimbus.Web.Website.Controllers
             return Json(new { url = pathFinal });
         }
 
-        //[Authorize]  ---> método passado para o ajax, falta testar pq esta dando prob com autentificaçao
-        //[HttpPost]
-        //[ValidateInput(false)]
-        //public ActionResult SendMessage(int id)
-        //{
-        //    var messageApi = ClonedContextInstance<API.Controllers.MessageController>();
-        //    try
-        //    {
-        //        List<MessageBag> receivers = messageApi.ChannelReceivedMessages(id);
-
-        //        Nimbus.Model.ORM.Message message = new Nimbus.Model.ORM.Message();
-        //        message.ChannelId = id;
-        //        message.Text = HttpUtility.HtmlEncode(Request.Unvalidated["txtTextMsg"]);
-        //        message.Title = HttpUtility.HtmlEncode(Request.Unvalidated["txtTitleMsg"]);
-
-        //       message = messageApi.SendMessageChannel(message);               
-        //        if (message.Id > 0)//salvou com sucesso
-        //        {                   
-        //            return Json(new {isok=true, message="Mensagem enviada com sucesso."});
-
-        //        }
-        //        else
-        //        {
-        //            return Json(new { isok = false, message = "Não foi possível enviar sua mensagem. Tente novamente mais tarde." });                                  
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-        //}
-
        
     }             
 }

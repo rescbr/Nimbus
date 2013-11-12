@@ -89,7 +89,7 @@
          || Model.CurrentChannel.OwnerId == Model.CurrentUser.UserId)
     {
         <div class="editTag">
-            <p>Editar Tags</p>
+            <p><a href="#modal-tags" id="openModalTag" onclick="ajaxLoadTags(@Model.CurrentChannel.Id);">Editar tags</a></p>
         </div>
     }
     
@@ -120,6 +120,7 @@
     }
 </div>
 
+@*Modal para enviar msg*@
 <section class="semantic-content" id="modal-text" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
     <div class="modal-inner">
         <header id="modal-label">
@@ -170,6 +171,38 @@
     <a href="#!" id="closeModal" class="modal-close" title="Close this modal" data-close="Close"
        data-dismiss="modal">×</a>
 </section>
+
+@*Modal para editar Tags*@
+<section class="semantic-content" id="modal-tags" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
+    <div class="modal-inner">
+        <header id="modal-label">
+            <!-- Header -->
+            Mensagem
+        </header>
+
+        @if (Model.RolesCurrentUser.Contains("channelmanager") || Model.CurrentChannel.OwnerId == Model.CurrentUser.UserId)
+        {
+            <div id="divTags" class="modal-content">
+                <!-- The modals content -->
+                <!--Incluido por pelo js ajaxLoadTags-->
+            </div>
+
+            <footer>
+                <!-- Footer -->
+                <button id="btnSaveTag" onclick="ajaxEditTag(@Model.CurrentChannel.Id);">Enviar</button>
+            </footer>
+        }
+        else
+        {
+            <p>Você não permissão para realizar esta operação.</p> 
+        }
+    </div>
+
+    <a href="#!" id="closeModalTag" class="modal-close" title="Close this modal" data-close="Close"
+       data-dismiss="modal">×</a>
+</section>
+
+
 
 @*Sempre manter no fim da página*@
 <script type="text/javascript">
