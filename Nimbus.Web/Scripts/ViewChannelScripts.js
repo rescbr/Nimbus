@@ -421,7 +421,7 @@ function ajaxLoadTags(id) {
                     {
                         string = "<p>Você já possui o limite máximo de tags aceitas por canal.</p>";
                     }
-                    var includeDiv = "<div>" + listTag + "</div>" +
+                    var includeDiv = "<div id=\"divModalTags\">" + listTag + "</div>" +
                                      "<div>" + string + "</div>";
 
                     document.getElementById('divTags').innerHTML = includeDiv;                   
@@ -436,8 +436,37 @@ function ajaxLoadTags(id) {
     });
 }
 
-function ajaxEditTag(idChannel)
-{
+function ajaxNewTag(id) {
+    var txt = document.getElementById('txtNewTag').value;
+    if (txt != null && txt != "")
+    {
+      
+        $.ajax({
+            url: "/api/Channel/AddTagsChannel/" + id + "?tag=" + encodeURIComponent(txt),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            statusCode: {
+                200: function (newData) {
+                    if (newData.Id > 0) {
+                        var newTag = "<div id=\"divTag_" + newData.Id + "\">" +
+                                        "<p>#" + newData.TagName +
+                                           "<input type=\"button\" onclick=\"ajaxdeleteTag(" + newData.Id + ", " + id + ");\" value=\"X\"></input>" +
+                                        "</p>" +
+                                   "</div>";
+                        document.getElementById('divModalTags').innerHTML = newTag;
+
+                        var tagInfo = "<label id=\"lblTag_"+newData.Id + "\">" + newData.TagName + "</label>";
+                        document.getElementsByClassName('tagChannel').innerHTML = tagInfo;
+                    }
+                },
+
+                400: function () {
+                    //erro
+                    window.alert("Não foi possível realizar esta operação. Tente novamente mais tarde.");
+                }
+            }
+        });
+    }
 }
 
 function ajaxdeleteTag(idTag, id)

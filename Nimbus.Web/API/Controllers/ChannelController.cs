@@ -121,35 +121,28 @@ namespace Nimbus.Web.API.Controllers
         /// <returns>Lista de tags existentes</returns>
         [NonAction]
         [HttpGet]
-        public List<Tag> ValidateTag(List<string> listtag)
+        public Tag ValidateTag(string tag)
         {
-            List<Tag> returntags = new List<Tag>();
+            Tag returntag = new Tag();
             try
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
                     string text = string.Empty;
-                    foreach (string item in listtag)
+                    text = tag;
+                    int pos = text.IndexOf("#");
+                    if(pos != -1)
                     {
-                        int i = 0;
-                        text = item;
-                        while (text.StartsWith("#"))
-                        {
-                            text = text.Substring(i + 1);
-                            i++;
-                        }
-                        Tag tag = new Tag();
-                        tag = db.SelectParam<Tag>(tg => tg.TagName.ToLower() == text.ToLower()).FirstOrDefault();
-                        if (tag != null)
-                            returntags.Add(tag);
+                        text = text.Substring(pos + 1);
                     }
+                    returntag = db.SelectParam<Tag>(tg => tg.TagName.ToLower() == text.ToLower()).FirstOrDefault();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
-            return returntags;
+            return returntag;
         }
 
 
@@ -911,8 +904,10 @@ namespace Nimbus.Web.API.Controllers
         /// <param name="tagsList"></param>
         /// <returns></returns>
         [HttpPost]
-        public List<string> AddTagsChannel(int id, List<string> tagsList)
+        public Tag AddTagsChannel(int id, string tag)
         {
+            Tag newTag = new Tag();
+            tag = tag.Trim('#');
             try
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
@@ -932,10 +927,9 @@ namespace Nimbus.Web.API.Controllers
                                 //colocar restrição para canal free
                                 if (isPrivate == false)
                                 {
-                                    int countTag = db.SelectParam<TagChannel>(ch => ch.ChannelId == id).Count();
+                                    int countTag = db.SelectParam<TagChannel>(ch => ch.ChannelId == id && ch.Visible == true).Count();
                                     if (countTag <= 4)
                                     {
-                                        tagsList = tagsList.Take(5 - (countTag + 1)).ToList();
                                         allOk = true;
                                     }
                                     else
@@ -951,40 +945,43 @@ namespace Nimbus.Web.API.Controllers
                                 //add as tags
                                 if (allOk == true)
                                 {
-                                    List<Tag> tagsExist = new List<Tag>();
-                                    tagsExist = ValidateTag(tagsList); //retorna as tags já existentes no sistema
+                                    Tag tagsExist = new Tag();
+                                    tagsExist = ValidateTag(tag); //retorna as tags já existentes no sistema
 
-                                    foreach (string item in tagsList)
-                                    {
-                                        if (tagsExist.Exists(tg => tg.TagName.ToLower() == item.ToLower()))
+                                   if(tagsExist != null)
+                                   {
+                                        //já existe
+                                        TagChannel tagChannel = new TagChannel
                                         {
-                                            //já existe
-                                            TagChannel tagChannel = new TagChannel
-                                            {
-                                                ChannelId = id,
-                                                TagId = tagsExist.Where(t => t.TagName.ToLower() == item.ToLower()).Select(t => t.Id).First(),
-                                                Visible = true
-                                            };
-                                            db.Save(tagChannel);
-                                        }
-                                        else
-                                        {
-                                            //criar uma nova tag na tabela
-                                            Tag tag = new Tag
-                                            {
-                                                TagName = item
-                                            };
-                                            db.Save(tag);
+                                            ChannelId = id,
+                                            TagId = tagsExist.Id,
+                                            Visible = true
+                                        };
+                                        db.Save(tagChannel);
 
-                                            TagChannel tagChannel = new TagChannel
-                                            {
-                                                ChannelId = id,
-                                                TagId = (int)db.GetLastInsertId(),
-                                                Visible = true
-                                            };
-                                            db.Save(tagChannel);
-                                        }
+                                        newTag.Id = tagsExist.Id;
+                                        newTag.TagName = tagsExist.TagName;
                                     }
+                                    else
+                                    {
+                                        //criar uma nova tag na tabela
+                                        Tag ntag = new Tag
+                                        {
+                                            TagName = tag
+                                        };
+                                        db.Save(ntag);
+
+                                        TagChannel tagChannel = new TagChannel
+                                        {
+                                            ChannelId = id,
+                                            TagId = (int)db.GetLastInsertId(),
+                                            Visible = true
+                                        };
+                                        db.Save(tagChannel);
+
+                                        newTag.TagName = ntag.TagName;
+                                        newTag.Id = ntag.Id;
+                                    }                                   
                                 }
                             }
                             else
@@ -1005,7 +1002,7 @@ namespace Nimbus.Web.API.Controllers
             {
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
-            return tagsList;
+            return newTag;
         }
 
         /// <summary>

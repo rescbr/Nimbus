@@ -348,15 +348,15 @@ namespace Nimbus.Web.API.Controllers
                                     listComments.Add(bag);
 
                                     //para cada comentário que vai ser mostrado, atualizar o BD sinalizando-o como não novo.
-                                    var dado = new Nimbus.Model.Comment() { IsNew = false };
-                                    db.Update<Nimbus.Model.Comment>(dado, cmt => cmt.Id == item.Id);
-                                    trans.Commit();
+                                    //var dado = new Nimbus.Model.Comment() { IsNew = false };
+                                    //db.Update<Nimbus.Model.Comment>(dado, cmt => cmt.Id == item.Id);
+                                   // trans.Commit();
                                 }
                             }
                         }
                         catch (Exception ex)
                         {
-                            trans.Rollback();
+                            //trans.Rollback();
                             throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
                         }
                     }
