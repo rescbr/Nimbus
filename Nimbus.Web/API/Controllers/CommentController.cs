@@ -26,52 +26,9 @@ namespace Nimbus.Web.API.Controllers
         [HttpPost]
         public Comment NewComment(Comment comment)
         {
-            try
-            {
-                using (var db = DatabaseFactory.OpenDbConnection())
-                {
-                    using (var trans = db.OpenTransaction(System.Data.IsolationLevel.ReadCommitted))
-                    {
-                        try
-                        {
-                            bool isOwner = db.SelectParam<Role>(r => r.ChannelId == comment.ChannelId).Exists(u => u.UserId == NimbusUser.UserId
-                                                                                                                                  && u.IsOwner == true);
-
-                            bool isManager = db.SelectParam<Role>(r => r.ChannelId == comment.ChannelId).Exists(u => u.UserId == NimbusUser.UserId &&
-                                                                                     (u.TopicManager == true || u.ChannelMagager == true));
-                            comment.Text = HttpUtility.HtmlEncode(comment.Text);
-
-                            //caso o usuário seja adm/dono deve marcar como IsAnswer true, pois na hora de mostrar no canal quais sao os novos comentários
-                            // o método irá ignorar as 'respostas' (pois foram realizadas pelo próprio usuário)
-                            if (isManager || isOwner == true)
-                                comment.IsAnswer = true;
-                            else
-                                comment.IsAnswer = false;
-
-                            comment.ParentId = null;
-                            comment.PostedOn = DateTime.Now;
-                            comment.UserId = NimbusUser.UserId;
-                            comment.Visible = true;
-                            comment.IsNew = true;
-                            db.Insert(comment);
-
-                            comment.Id = (int)db.GetLastInsertId();
-                            trans.Commit();
-                        }
-                        catch (Exception ex)
-                        {
-                            trans.Rollback();
-                            throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
-            }
-
-            return comment;
+            //A diferença entre NewComment e AnswerComment é que ParentId = null.
+            comment.ParentId = null;
+            return AnswerComment(comment);
         }
 
         /// <summary>
@@ -130,6 +87,10 @@ namespace Nimbus.Web.API.Controllers
             {
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
+
+            //deu tudo certo, passa a bola pra notificação notificar
+            var cNotif = new Notifications.CommentNotification();
+            cNotif.NewComment(answer);
             return answer;
         }
 
@@ -207,6 +168,49 @@ namespace Nimbus.Web.API.Controllers
             catch (Exception ex)
             {
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+            }
+        }
+
+        /// <summary>
+        /// Pega um comentario
+        /// </summary>
+        /// <param name="id">id do comentario</param>
+        /// <returns>um comentario, uai</returns>
+        [HttpGet]
+        public CommentBag GetComment(int id)
+        {
+            using (var db = DatabaseFactory.OpenDbConnection())
+            {
+                Comment comment = db.Where<Comment>(c => c.Id == id).FirstOrDefault();
+                if (comment == null) throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "Comment not found"));
+
+                Channel chn = db.Where<Channel>(c => c.Id == comment.ChannelId).FirstOrDefault();
+                User user = db.Where<User>(u => u.Id == comment.UserId).FirstOrDefault();
+                ChannelController cc = ClonedContextInstance<ChannelController>();
+                var userRoles = cc.ReturnRolesUser(chn.Id);
+                bool isOwnerOrManager = (NimbusUser.UserId == chn.OwnerId ||
+                    userRoles.Contains("channelmanager") ||
+                    userRoles.Contains("topicmanager"));
+
+                CommentBag bag = new CommentBag()
+                {
+                    AvatarUrl = user.AvatarUrl,
+                    UserName = HttpUtility.HtmlDecode(user.FirstName + " " + user.LastName),
+                    UserId = user.Id,
+                    Id = comment.Id,
+                    Text = HttpUtility.HtmlDecode(comment.Text),
+                    ParentId = comment.ParentId,
+                    PostedOn = comment.PostedOn,
+                    IsNew = comment.IsNew,
+                    IsAnswer = comment.IsAnswer,
+                    TopicId = comment.TopicId,
+                    IsParent = comment.ParentId > 0 ? false : true,
+                    ChannelId = comment.ChannelId,
+                    CommentChild = null,
+                    IsDeletable = (user.Id == NimbusUser.UserId || isOwnerOrManager)
+                };
+
+                return bag;
             }
         }
 

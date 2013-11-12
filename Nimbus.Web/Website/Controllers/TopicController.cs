@@ -36,9 +36,9 @@ namespace Nimbus.Web.Website.Controllers
         }
 
         /// <summary>
-        /// Retorna os comentários já parseados
+        /// Retorna os comentários de um topico em HTML
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">id do tópico</param>
         /// <returns></returns>
         public ActionResult Comments(int id) 
         {
@@ -47,6 +47,18 @@ namespace Nimbus.Web.Website.Controllers
 
             return View("~/Website/Views/CommentPartials/PartialTopicComment.cshtml", comments);
 
+        }
+
+        /// <summary>
+        /// Retorna apenas um comentario
+        /// </summary>
+        /// <param name="id">id do comentario</param>
+        /// <returns></returns>
+        public ActionResult Comment(int id)
+        {
+            var commentApi = ClonedContextInstance<API.Controllers.CommentController>();
+            var bag = commentApi.GetComment(id);
+            return View("~/Website/Views/CommentPartials/PartialComment.cshtml", bag);
         }
 
     }

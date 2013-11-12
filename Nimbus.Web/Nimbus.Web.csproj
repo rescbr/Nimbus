@@ -677,7 +677,6 @@
     <Compile Include="Utils\ImageManipulation.cs" />
     <Compile Include="Utils\RemoveHTMLString.cs" />
     <Compile Include="Website\Controllers\ChannelController.cs" />
-    <Compile Include="Website\Controllers\CommentController.cs" />
     <Compile Include="Website\Controllers\TopicController.cs" />
     <Compile Include="Website\Controllers\TrendingTopicController.cs" />
     <Compile Include="Website\Models\TopicModel.cs" />

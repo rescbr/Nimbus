@@ -14,10 +14,10 @@
             }
             <br />
             <div id="divAnswerTopic_@comment.Id" style="display:block">
-                <button id="bntAnswer_@comment.Id" onclick="EnableDivHiddenBtn('divComment_@comment.Id', 'bntAnswer_@comment.Id');" value="Responder">Responder</button>
+                <button id="bntAnswer_@comment.Id" onclick="EnableDivHiddenBtn('divAnswerComment_@comment.Id', 'bntAnswer_@comment.Id');" value="Responder">Responder</button>
             </div>
 
-            <div id="divComment_@comment.Id" style="display:none">
+            <div id="divAnswerComment_@comment.Id" style="display:none">
                 <textarea id="txtaAnswer_@comment.Id" name="txtaAnswerTopic" cols="30" rows="2"></textarea>
                 <button id="btnSendAnswer" onclick="ajaxAnswerComment(0,@comment.Id, @comment.ChannelId, @comment.TopicId, 'txtaAnswer_@comment.Id');" value="Enviar">Enviar</button>
             </div>
@@ -26,5 +26,5 @@
 }
 else
 {
-    <strong>Seja o primeiro a comentar!</strong>
+    <div id="divNoComments"><strong>Seja o primeiro a comentar!</strong></div>
 }

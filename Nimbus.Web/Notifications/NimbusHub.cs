@@ -11,6 +11,10 @@ namespace Nimbus.Web.Notifications
     //[Authorize]
     public class NimbusHub : Hub
     {
+        public void RegisterTopicCommentNotifications(int topicId)
+        {
+            Groups.Add(Context.ConnectionId, GetTopicGroupName(topicId));
+        }
 
         public override Task OnConnected()
         {
@@ -41,6 +45,12 @@ namespace Nimbus.Web.Notifications
         {
             return "user" + userId.ToString();
         }
+
+        public static string GetTopicGroupName(int topicId)
+        {
+            return "topic" + topicId.ToString();
+        }
+
     }
 
     

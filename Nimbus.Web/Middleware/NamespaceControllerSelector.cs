@@ -71,7 +71,7 @@ namespace Nimbus.Web.Middleware
             return dictionary;
         }
 
-        // Get a value from the route data, if present.
+        // GetComment a value from the route data, if present.
         private static T GetRouteVariable<T>(IHttpRouteData routeData, string name)
         {
             object result = null;
@@ -90,7 +90,7 @@ namespace Nimbus.Web.Middleware
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            // Get the namespace and controller variables from the route data.
+            // GetComment the namespace and controller variables from the route data.
             string namespaceName = GetRouteVariable<string>(routeData, NamespaceKey);
             if (namespaceName == null)
             {

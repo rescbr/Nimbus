@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nimbus.Model.ORM;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -7,12 +8,17 @@ namespace Nimbus.Web.Notifications
 {
     public class CommentNotification : NimbusNotificationBase
     {
-        public void NewComment(string msg, List<int> userIds)
+        
+        public void NewComment(Comment comment)
         {
-            foreach (var uid in userIds)
-            {
-                NimbusHubContext.Clients.Group(NimbusHub.GetGroupName(uid)).newMessageNotification(msg);
-            }
+            string topicGroup = NimbusHub.GetTopicGroupName(comment.TopicId);
+            NimbusHubContext.Clients.Group(topicGroup)
+                .newTopicCommentNotification(new
+                {
+                    commentId = comment.Id,
+                    parentId = comment.ParentId,
+                    topicId = comment.TopicId
+                });
         }
     }
 }
