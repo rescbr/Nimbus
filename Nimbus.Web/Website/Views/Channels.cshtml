@@ -80,7 +80,7 @@
         <p class="tagChannel">
             @foreach (var item in Model.Tags)
             {
-                <label>#@item.TagName</label>
+                <label id="lblTag_@item.Id">#@item.TagName</label>
             }
         </p>
     </div>

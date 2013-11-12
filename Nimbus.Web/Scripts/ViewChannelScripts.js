@@ -407,9 +407,11 @@ function ajaxLoadTags(id) {
                     var listTag = "";
                     var string ="";
                     for (var i = 0; i < newData.length; i++) {
-                        listTag += "<p><label id=\"lblTag"+newData[i].Id+"\">#" + newData[i].TagName + "</label>"+
-                                        "<a href=\"#\" onclick=\"ajaxdeleteTag("+ newData[i].Id +", "+id+");\">X</a>" +
-                                    "</p>";
+                        listTag += "<div id=\"divTag_"+ newData[i].Id + "\">"+
+                                        "<p>#" + newData[i].TagName +
+                                           "<input type=\"button\" onclick=\"ajaxdeleteTag(" + newData[i].Id + ", " + id + ");\" value=\"X\"></input>" +
+                                        "</p>" +
+                                   "</div>";
                     }
                     if (newData.length < 5) {
                         string = "<input id=\"txtNewTag\" type=\"text\" value=\"Nova tag\" onclick=\"this.value=''\" />" +
@@ -447,7 +449,8 @@ function ajaxdeleteTag(idTag, id)
         statusCode: {
             200: function (newData) {
                 if (newData == true) {
-                    document.getElementById('lblTag' + idTag).style.display = "none";
+                    document.getElementById('divTag_' + idTag).style.display = "none";
+                    document.getElementById("lblTag_" + idTag).style.display = "none";                   
                 }
             },
 
