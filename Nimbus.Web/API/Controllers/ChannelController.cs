@@ -1012,41 +1012,31 @@ namespace Nimbus.Web.API.Controllers
         /// Troca a visibilidade (deleta) a tag escolhida
         /// </summary>
         /// <param name="channelID"></param>
-        /// <param name="tagList"></param>
+        /// <param name="tagID></param>
         /// <returns></returns>
         [HttpDelete]
-        public List<int> DeleteTagChannel(int id, List<int> tagList)
+        public bool DeleteTagChannel(int id, int tagID)
         {
+            bool isDelete = false;
             try
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    using (var trans = db.OpenTransaction(System.Data.IsolationLevel.ReadCommitted))
-                    {
-                        try
-                        {
-                            bool isOWner = IsOwner(id);
-                            bool isManager = IsManager(id);
 
-                            if (isOWner == true || isManager == true)//usuario possui permissao
-                            {
-                                foreach (int item in tagList)
-                                {
-                                    var dado = new TagChannel() { Visible = false };
-                                    db.Update<TagChannel>(dado, ch => ch.ChannelId == item);
-                                    db.Save(dado);
-                                }
-                            }
-                            else
-                            {
-                                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotAcceptable, "sem permissao"));
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            trans.Rollback();
-                            throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
-                        }
+                    bool isOWner = IsOwner(id);
+                    bool isManager = IsManager(id);
+
+                    if (isOWner == true || isManager == true)//usuario possui permissao
+                    {
+                        TagChannel dado = db.SelectParam<TagChannel>(ch => ch.ChannelId == id && ch.TagId == tagID).FirstOrDefault();
+                        dado.Visible = false;
+
+                        db.Update<TagChannel>(dado);
+                        isDelete = true;
+                    }
+                    else
+                    {
+                        throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotAcceptable, "sem permissao"));
                     }
                 }
             }
@@ -1054,7 +1044,7 @@ namespace Nimbus.Web.API.Controllers
             {
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
-            return tagList;
+            return isDelete;
         }
 
         /// <summary>

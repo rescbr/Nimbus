@@ -8,8 +8,8 @@ namespace Nimbus.Model
 {
     public class TagChannel
     {
-        public int TagId { get; set; }
-        public int ChannelId { get; set; }
-        public bool Visible { get; set; }
+        public virtual int TagId { get; set; }
+        public virtual int ChannelId { get; set; }
+        public virtual bool Visible { get; set; }
     }
 }

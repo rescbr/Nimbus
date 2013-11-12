@@ -395,11 +395,7 @@ function ajaxSendMessage(id)
     }
 }
 
-function ajaxLoadTags(id) {
-    //para cada tag colocar um x delete
-    //incluir na div divTags
-    //salvar nova tag
-    //abrir o modal-tags
+function ajaxLoadTags(id) { 
     $.ajax({
         url: "/api/Channel/ShowTagChannelEdit/" + id,       
         type: "GET",
@@ -408,10 +404,10 @@ function ajaxLoadTags(id) {
             200: function (newData) {
                 if (newData.length > 0) {
                     //incluir itens na div
-                    var listTag = [];
+                    var listTag = "";
                     var string ="";
                     for (var i = 0; i < newData.length; i++) {
-                        listTag[i]= "<p>#" + newData[i].TagName +
+                        listTag += "<p><label id=\"lblTag"+newData[i].Id+"\">#" + newData[i].TagName + "</label>"+
                                         "<a href=\"#\" onclick=\"ajaxdeleteTag("+ newData[i].Id +", "+id+");\">X</a>" +
                                     "</p>";
                     }
@@ -426,8 +422,7 @@ function ajaxLoadTags(id) {
                     var includeDiv = "<div>" + listTag + "</div>" +
                                      "<div>" + string + "</div>";
 
-                    document.getElementById('divTags').innerHTML = includeDiv;
-                    
+                    document.getElementById('divTags').innerHTML = includeDiv;                   
                 }
             },
 
@@ -437,13 +432,29 @@ function ajaxLoadTags(id) {
             }
         }
     });
-
 }
 
 function ajaxEditTag(idChannel)
 {
 }
 
-function ajaxdeleteTag(idTag, idChannel)
+function ajaxdeleteTag(idTag, id)
 {
+    $.ajax({
+        url: "/api/Channel/DeleteTagChannel/" + id + "?tagID=" + idTag,
+        type: "DELETE",
+        contentType: "application/json;charset=utf-8",
+        statusCode: {
+            200: function (newData) {
+                if (newData == true) {
+                    document.getElementById('lblTag' + idTag).style.display = "none";
+                }
+            },
+
+            400: function () {
+                //erro
+                window.alert("Não foi possível realizar esta operação. Tente novamente mais tarde.");
+            }
+        }
+    });
 }

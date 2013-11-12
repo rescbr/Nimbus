@@ -10,10 +10,10 @@ namespace Nimbus.Model.ORM
     public class TagChannel : Nimbus.Model.TagChannel
     {
        [References(typeof(TagChannel))]
-        public int TagId { get; set; }
+        public override int TagId { get; set; }
 
         [References(typeof(Channel))]
-        public int ChannelId { get; set; }
+        public override int ChannelId { get; set; }
 
     }
 }
