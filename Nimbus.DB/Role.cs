@@ -21,5 +21,6 @@ namespace Nimbus.Model
         public bool IsOwner { get; set; }
         public bool Paid { get; set; }
         public bool Accepted { get; set; }
+
     }
 }

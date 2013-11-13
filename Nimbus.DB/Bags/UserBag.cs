@@ -11,6 +11,7 @@ namespace Nimbus.Model.Bags
         public int  Age {get;set;}
         public int Interaction { get; set; }
 
+        public string RoleInChannel { get; set; }
                
     }
 }

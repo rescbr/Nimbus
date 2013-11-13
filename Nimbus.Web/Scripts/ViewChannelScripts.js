@@ -398,39 +398,75 @@ function ajaxSendMessage(id)
 function ajaxLoadModeratorEdit(id)
 {
     $.ajax({
-        url: "/api/Channel/ShowModerators/" + id,
+        url: "/api/Channel/ShowModeratorsEdit/" + id,
         type: "GET",
         contentType: "application/json;charset=utf-8",
         statusCode: {
             200: function (newData) {
-                if (newData.length > 0) {
+                if (newData.length > 0) {                   
                     //incluir itens na div
-                    var listTag = "";
+                    var listModerador= "";
                     var string = "";
                     for (var i = 0; i < newData.length; i++) {
-                        listTag += "<div id=\"divTag_" + newData[i].Id + "\">" +
-                                        "<p>#" + newData[i].TagName +
-                                           "<input type=\"button\" onclick=\"ajaxdeleteTag(" + newData[i].Id + ", " + id + ");\" value=\"X\"></input>" +
+                        listModerador += "<div id=\"divModerator_" + newData[i].Id + "\">" +
+                                         "<p>" +
+                                         "<img src=\"" + newData[i].AvatarUrl + "\" title=\"" + newData[i].FirstName + "\" />" +
+                                         "<label>" + newData[i].FirstName + " " + newData[i].LastName + "</label>" +
+                                         "<input type=\"text\" disabled value=\"" + newData[i].RoleInChannel + "\" />" +
+                                         "<img src=\"/images/Utils/edit.png\" onclick=\"ajaxEditModerator(" + id + "," + newData[i].Id + ");\" title=\"Editar\" />" +
+                                         "<img src=\"/images/Utils/delete.png\" onclick=\"ajaxDeleteModerator(" + id + "," + newData[i].Id + ");\" title=\"Deletar\" />" +
                                         "</p>" +
-                                   "</div>";
+                                    "</div>" +
+                                    "<div id=\"divEditModerator_" + newData[i].Id + "\">" +
+
+                                    "</div>";
                     }
                     if (newData.length < 5) {
-                        string = "<input id=\"txtNewTag\" type=\"text\" value=\"Nova tag\" onclick=\"this.value=''\" />" +
-                                      "<button id=\"btnSaveTag\" onclick=\"ajaxNewTag(" + id + ");\">Adicionar</button>";
+                        string = "<input id=\"txtNewModerator\" type=\"text\" value=\"Adicionar moderador\" onclick=\"this.value=''\" />" +
+                                      "<button id=\"btnAddModerator\" onclick=\"ajaxNewModerator(" + id + ");\">Adicionar</button>";
                     }
                     else {
-                        string = "<p>Você já possui o limite máximo de tags aceitas por canal.</p>";
+                        string = "<p>Você já possui o limite máximo de moderadores aceitos por canal.</p>";
                     }
-                    var includeDiv = "<div id=\"divModalTags\">" + listTag + "</div>" +
+                    var includeDiv = "<div id=\"divModalModerators\">" + listModerador + "</div>" +
                                      "<div>" + string + "</div>";
 
-                    document.getElementById('divTags').innerHTML = includeDiv;
+                    document.getElementById('divEditModerators').innerHTML = includeDiv;
                 }
             },
 
             400: function () {
                 //erro
                 window.alert("Erro ao processar requisição. Tente novamente mais tarde.");
+            }
+        }
+    });
+}
+
+function ajaxNewModerator(id)
+{
+}
+
+function ajaxEditModerator(id, idUser)
+{
+}
+
+function ajaxDeleteModerator(id, idUser)
+{
+    $.ajax({
+        url: "/api/Channel/DeleteModeratorChannel/" + id + "?userID=" + idUser,
+        type: "DELETE",
+        contentType: "application/json;charset=utf-8",
+        statusCode: {
+            200: function (newData) {
+                if (newData == true) {
+                    document.getElementById('divModerator_' + idUser).style.display = "none";
+                }
+            },
+
+            400: function () {
+                //erro
+                window.alert("Não foi possível realizar esta operação. Tente novamente mais tarde.");
             }
         }
     });
