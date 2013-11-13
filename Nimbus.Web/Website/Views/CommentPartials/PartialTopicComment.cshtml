@@ -4,7 +4,6 @@
 {
     foreach (var comment in Model)
     {
-        <br />
         <div id="divContentComment_@comment.Id" style="background-color:chocolate;">
             @{ Html.RenderPartial("~/Website/Views/CommentPartials/PartialComment.cshtml", comment); }
 
@@ -19,7 +18,7 @@
 
             <div id="divAnswerComment_@comment.Id" style="display:none">
                 <textarea id="txtaAnswer_@comment.Id" name="txtaAnswerTopic" cols="30" rows="2"></textarea>
-                <button id="btnSendAnswer" onclick="ajaxAnswerComment(0,@comment.Id, @comment.ChannelId, @comment.TopicId, 'txtaAnswer_@comment.Id');" value="Enviar">Enviar</button>
+                <button id="btnSendAnswer" onclick="ajaxAnswerComment(0, @comment.Id, @comment.ChannelId, @comment.TopicId, 'txtaAnswer_@comment.Id');" value="Enviar">Enviar</button>
             </div>
         </div>
     }

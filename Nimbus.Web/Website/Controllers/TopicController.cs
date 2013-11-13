@@ -1,4 +1,5 @@
-﻿using Nimbus.Web.Website.Models;
+﻿using Nimbus.Model.Bags;
+using Nimbus.Web.Website.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,7 +44,8 @@ namespace Nimbus.Web.Website.Controllers
         public ActionResult Comments(int id) 
         {
             var commentApi = ClonedContextInstance<API.Controllers.CommentController>();
-            var comments = commentApi.ShowTopicComment(id);
+            //var comments = commentApi.ShowTopicComment(id);
+            var comments = commentApi.AllTopicComments(id);
 
             return View("~/Website/Views/CommentPartials/PartialTopicComment.cshtml", comments);
 
@@ -59,6 +61,14 @@ namespace Nimbus.Web.Website.Controllers
             var commentApi = ClonedContextInstance<API.Controllers.CommentController>();
             var bag = commentApi.GetComment(id);
             return View("~/Website/Views/CommentPartials/PartialComment.cshtml", bag);
+        }
+
+        public ActionResult ParentComment(int id)
+        {
+            var commentApi = ClonedContextInstance<API.Controllers.CommentController>();
+            var bag = new List<CommentBag>();
+            bag.Add(commentApi.GetParentComment(id));
+            return View("~/Website/Views/CommentPartials/PartialTopicComment.cshtml", bag);
         }
 
     }

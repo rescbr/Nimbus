@@ -73,9 +73,11 @@
         <h2>Comentários</h2>
         <div id="divAllComments" style="float:right">
             @{ Html.RenderAction("Comments", "Topic", new { id = Model.CurrentTopic.Id }); }
+            @* renato: favor deixar essa div aqui, tks. *@
+            <div id="placeholderAfterLastComment"></div>
         </div>
 
-        <div style="float:right">
+        <div id="divAddNewComment" style="float:right">
             <br /><br />
             <h2 style="margin-bottom:5px;">Comentar</h2>
             <textarea id="txtacomentario" cols="50" rows="5"></textarea>
