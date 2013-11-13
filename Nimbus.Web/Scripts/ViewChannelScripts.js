@@ -395,6 +395,47 @@ function ajaxSendMessage(id)
     }
 }
 
+function ajaxLoadModeratorEdit(id)
+{
+    $.ajax({
+        url: "/api/Channel/ShowTagChannelEdit/" + id,
+        type: "GET",
+        contentType: "application/json;charset=utf-8",
+        statusCode: {
+            200: function (newData) {
+                if (newData.length > 0) {
+                    //incluir itens na div
+                    var listTag = "";
+                    var string = "";
+                    for (var i = 0; i < newData.length; i++) {
+                        listTag += "<div id=\"divTag_" + newData[i].Id + "\">" +
+                                        "<p>#" + newData[i].TagName +
+                                           "<input type=\"button\" onclick=\"ajaxdeleteTag(" + newData[i].Id + ", " + id + ");\" value=\"X\"></input>" +
+                                        "</p>" +
+                                   "</div>";
+                    }
+                    if (newData.length < 5) {
+                        string = "<input id=\"txtNewTag\" type=\"text\" value=\"Nova tag\" onclick=\"this.value=''\" />" +
+                                      "<button id=\"btnSaveTag\" onclick=\"ajaxNewTag(" + id + ");\">Adicionar</button>";
+                    }
+                    else {
+                        string = "<p>Você já possui o limite máximo de tags aceitas por canal.</p>";
+                    }
+                    var includeDiv = "<div id=\"divModalTags\">" + listTag + "</div>" +
+                                     "<div>" + string + "</div>";
+
+                    document.getElementById('divTags').innerHTML = includeDiv;
+                }
+            },
+
+            400: function () {
+                //erro
+                window.alert("Erro ao processar requisição. Tente novamente mais tarde.");
+            }
+        }
+    });
+}
+
 function ajaxLoadTags(id) { 
     $.ajax({
         url: "/api/Channel/ShowTagChannelEdit/" + id,       

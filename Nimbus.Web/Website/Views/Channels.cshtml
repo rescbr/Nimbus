@@ -33,6 +33,12 @@
         </p>
     }
 
+    @if (Model.CurrentChannel.OwnerId == Model.CurrentUser.UserId || Model.RolesCurrentUser.Contains("moderatormanager")
+        || Model.RolesCurrentUser.Contains("channelmanager"))
+    {
+        <a href="#modal-moderators" onclick="ajaxLoadModeratorEdit(@Model.CurrentChannel.Id);">Editar moderadores</a>
+    }
+
     <div class="infoTitleChannel">
         <h2>Número de seguidores</h2>
         <p class="numberIco">
@@ -62,7 +68,7 @@
             {
                 <p id="txtPartChannel">
                     Você ainda não participou deste canal.<br>
-                    Desfrute do conteúdo e seja ativo para aumentar sua porcentagem!
+                    Desfrute do conteúdo e torne-se ativo para aumentar sua porcentagem!
                 </p>
             }
             else
@@ -177,7 +183,7 @@
     <div class="modal-inner">
         <header id="modal-label">
             <!-- Header -->
-            Mensagem
+            Editar tags
         </header>
 
         @if (Model.RolesCurrentUser.Contains("channelmanager") || Model.CurrentChannel.OwnerId == Model.CurrentUser.UserId)
@@ -202,6 +208,36 @@
        data-dismiss="modal">×</a>
 </section>
 
+@*Modal de edição de moderadores*@
+<section class="semantic-content" id="modal-moderators" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
+    <div class="modal-inner">
+        <header id="modal-label">
+            <!-- Header -->
+            Editar moderadores
+        </header>
+
+        @if (Model.RolesCurrentUser.Contains("channelmanager") || Model.CurrentChannel.OwnerId == Model.CurrentUser.UserId
+            || Model.RolesCurrentUser.Contains("moderatormanager"))
+        {
+            <div id="divEditModerators" class="modal-content">
+                <!-- The modals content -->
+                <!--Incluido por pelo js ajaxLoadTags-->
+            </div>
+
+            <footer>
+                <!-- Footer -->
+                <button id="btnSaveTag" onclick="ajaxEditTag(@Model.CurrentChannel.Id);">Enviar</button>
+            </footer>
+        }
+        else
+        {
+            <p>Você não permissão para realizar esta operação.</p>
+        }
+    </div>
+
+    <a href="#!" id="closeModalTag" class="modal-close" title="Close this modal" data-close="Close"
+       data-dismiss="modal">×</a>
+</section>
 
 
 @*Sempre manter no fim da página*@
