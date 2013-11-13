@@ -25,19 +25,20 @@
 <div id="divInfCanal">
     <p>Dono:<a href="/userprofile" class="nameOwner"> @Model.CurrentChannel.OwnerName</a></p>
     <p>Moderadores:</p>
+    <div id="divAllModerators">
+        @foreach (var item in Model.Moderators)
+        {
+            <p>
+                <a href="/userprofile/index/@item.Id" class="nameMod"> @item.FirstName + @item.LastName</a>
+            </p>
+        }
 
-    @foreach (var item in Model.Moderators)
-    {
-        <p>
-            <a href="/userprofile/index/@item.Id" class="nameMod"> @item.FirstName + @item.LastName</a>
-        </p>
-    }
-
-    @if (Model.CurrentChannel.OwnerId == Model.CurrentUser.UserId || Model.RolesCurrentUser.Contains("moderatormanager")
+        @if (Model.CurrentChannel.OwnerId == Model.CurrentUser.UserId || Model.RolesCurrentUser.Contains("moderatormanager")
         || Model.RolesCurrentUser.Contains("channelmanager"))
-    {
-        <a href="#modal-moderators" onclick="ajaxLoadModeratorEdit(@Model.CurrentChannel.Id);">Editar moderadores</a>
-    }
+        {
+            <a href="#modal-moderators" onclick="ajaxLoadModeratorEdit(@Model.CurrentChannel.Id);">Editar moderadores</a>
+        }
+    </div>
 
     <div class="infoTitleChannel">
         <h2>Número de seguidores</h2>

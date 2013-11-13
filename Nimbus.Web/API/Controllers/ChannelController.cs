@@ -290,7 +290,8 @@ namespace Nimbus.Web.API.Controllers
                                 bag.RoleInChannel = "Moderar moderadores";
                             else if (item.TopicManager == true)
                                 bag.RoleInChannel = "Moderar tópicos";
-
+                            else if (item.UserManager == true)
+                                bag.RoleInChannel = "Moderar usuários";
 
                             moderators.Add(bag);
                         }
@@ -837,9 +838,10 @@ namespace Nimbus.Web.API.Controllers
         /// <param name="userModerator"></param>
         /// <returns></returns>
         [HttpPost]
-        public Role AddModerator(Role userModerator, int id)
+        public UserBag AddModerator(Role userModerator)
         {
             //TODO: notificação
+            UserBag bag = new UserBag();
             try
             {
                 using(var db = DatabaseFactory.OpenDbConnection())
@@ -849,17 +851,17 @@ namespace Nimbus.Web.API.Controllers
                         try
                         {
                             bool prox = false;
-                            bool allow = db.SelectParam<Role>(role => role.UserId == NimbusUser.UserId && role.ChannelId == id)
+                            bool allow = db.SelectParam<Role>(role => role.UserId == NimbusUser.UserId && role.ChannelId == userModerator.ChannelId)
                                                                                 .Exists (role => role.IsOwner == true || role.ModeratorManager == true);
 
 
-                            int countModerator = db.SelectParam<Role>(mdr => mdr.ChannelId == id &&
+                            int countModerator = db.SelectParam<Role>(mdr => mdr.ChannelId == userModerator.ChannelId &&
                                                                                       (mdr.ModeratorManager == true || mdr.MessageManager == true
                                                                                        || mdr.ChannelMagager == true || mdr.TopicManager == true 
                                                                                        || mdr.UserManager == true)).Count();
 
                             //organizationId == 0 => nimbus, portanto free
-                            int orgID = db.SelectParam<Channel>(ch => ch.Id == id).Select(ch => ch.OrganizationId).FirstOrDefault();
+                            int orgID = db.SelectParam<Channel>(ch => ch.Id == userModerator.ChannelId).Select(ch => ch.OrganizationId).FirstOrDefault();
 
                             if (allow == true)
                             {
@@ -882,7 +884,9 @@ namespace Nimbus.Web.API.Controllers
                             
                             if (prox == true)
                             {
-                                Role role = db.SelectParam<Role>(r => r.ChannelId == id && r.UserId == userModerator.UserId).FirstOrDefault();
+                                Role role = db.SelectParam<Role>(r => r.ChannelId == userModerator.ChannelId && r.UserId == userModerator.UserId).FirstOrDefault();
+                                User user = db.SelectParam<User>(u => u.Id == userModerator.UserId).FirstOrDefault();
+                                
                                 //verifica se já existe e havia sido 'deletado'
                                 if (role != null)
                                 {
@@ -892,12 +896,37 @@ namespace Nimbus.Web.API.Controllers
                                     role.TopicManager = userModerator.TopicManager;
                                     role.UserManager = userModerator.UserManager;
 
-                                    db.Update<Role>(role);
+                                    db.Update<Role>(role);                                   
                                 }
                                 else
                                 {
                                     db.Save(userModerator);
-                                }                             
+                                }
+
+                                bag.Id = user.Id;
+                                bag.FirstName = user.FirstName;
+                                bag.LastName = user.LastName;
+                                bag.AvatarUrl = user.AvatarUrl;                                   
+
+                                if (userModerator.ChannelMagager)
+                                    bag.RoleInChannel = "";
+
+                                if (userModerator.MessageManager)
+                                    bag.RoleInChannel = "Moderar mensagens";
+
+                                if (userModerator.ModeratorManager)
+                                    bag.RoleInChannel = "Moderar moderadores";
+
+                                if (userModerator.TopicManager)
+                                    bag.RoleInChannel = "Moderar tópicos";
+
+                                if (userModerator.UserManager)
+                                    bag.RoleInChannel = "Moderar usuários";
+
+                                if (userModerator.ChannelMagager == true && userModerator.MessageManager == true && userModerator.ModeratorManager == true
+                                    && userModerator.TopicManager == true && userModerator.UserManager == true)
+                                    bag.RoleInChannel = "Todas";
+                                    
                             }
                             else
                             {
@@ -917,7 +946,7 @@ namespace Nimbus.Web.API.Controllers
             {
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
-            return userModerator;
+            return bag;
         }
 
         /// <summary>
