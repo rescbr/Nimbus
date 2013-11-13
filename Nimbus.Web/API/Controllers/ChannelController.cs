@@ -1101,6 +1101,81 @@ namespace Nimbus.Web.API.Controllers
         }
 
         /// <summary>
+        /// Método que muda a permissao de um moderador
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="userId"></param>
+        /// <param name="permission"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public string EditPermissionModerator(int id, int userId, int permission)
+        {
+            string newPermission = "";
+            try
+            {
+                using(var db = DatabaseFactory.OpenDbConnection())
+                {
+                    Role currentRole = db.SelectParam<Role>(r => r.ChannelId == id && r.UserId == userId).FirstOrDefault();
+                    if (currentRole != null)
+                    {
+                        if (permission == 0)
+                        {
+                            currentRole.ChannelMagager = true;
+                            currentRole.TopicManager = false;
+                            currentRole.MessageManager = false;
+                            currentRole.ModeratorManager = false;
+                            currentRole.UserManager = false;
+                            newPermission = "Todas";
+                        }
+                        else if (permission == 1)
+                        {
+                            currentRole.ChannelMagager = false;
+                            currentRole.TopicManager = false;
+                            currentRole.MessageManager = true;
+                            currentRole.ModeratorManager = false;
+                            currentRole.UserManager = false;
+                            newPermission = "Moderar mensagens";
+                        }
+                        else if (permission == 2)
+                        {
+                            currentRole.ChannelMagager = false;
+                            currentRole.TopicManager = false;
+                            currentRole.MessageManager = false;
+                            currentRole.ModeratorManager = true;
+                            currentRole.UserManager = false;
+                            newPermission = "Moderar moderadores";
+                        }
+                        else if (permission == 3)
+                        {
+                            currentRole.ChannelMagager = false;
+                            currentRole.TopicManager = true;
+                            currentRole.MessageManager = false;
+                            currentRole.ModeratorManager = false;
+                            currentRole.UserManager = false;
+                            newPermission = "Moderar tópicos";
+                        }
+                        else if (permission == 4)
+                        {
+                            currentRole.ChannelMagager = false;
+                            currentRole.TopicManager = false;
+                            currentRole.MessageManager = false;
+                            currentRole.ModeratorManager = false;
+                            currentRole.UserManager = true;
+                            newPermission = "Moderar usuários";
+                        }
+
+                        db.Update<Role>(currentRole);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+            }
+            return newPermission;
+        }
+
+        /// <summary>
         /// Troca a visibilidade (deleta) a tag escolhida
         /// </summary>
         /// <param name="channelID"></param>

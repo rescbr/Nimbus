@@ -528,6 +528,29 @@ function ajaxEditModerator(id, idUser)
 
 }
 
+function saveNewPermission(id, idUser, permission)
+{
+    EditPermissionModerator
+    $.ajax({
+        url: "/api/Channel/EditPermissionModerator/" + id + "?userId=" + idUser + "?permission="+permission,
+        type: "POST",
+        contentType: "application/json;charset=utf-8",
+        statusCode: {
+            200: function (newData) {
+                if (newData != "") {
+                   //TODO: colocar p inserir na view e retirar o campo de ediçao da tela
+                }
+            },
+
+            400: function () {
+                //erro
+                window.alert("Não foi possível realizar esta operação. Tente novamente mais tarde.");
+            }
+        }
+    });
+
+}
+
 function ajaxDeleteModerator(id, idUser)
 {
     $.ajax({
