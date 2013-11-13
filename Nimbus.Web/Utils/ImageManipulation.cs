@@ -22,7 +22,7 @@ namespace Nimbus.Web.Utils
 
         public void Crop(int x1, int y1, int x2, int y2)
         {
-            // Get height and width of current image
+            // GetComment height and width of current image
             int width = (x2 - x1);
             int height = (y2 - y1);
 
@@ -46,7 +46,7 @@ namespace Nimbus.Web.Utils
             // Declare variable for the conversion
             float ratio;
 
-            // Get height and width of current image
+            // GetComment height and width of current image
             int width = (int)img.Width;
             int height = (int)img.Height;
 
