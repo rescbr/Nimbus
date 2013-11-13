@@ -15,12 +15,12 @@ function newTopicCommentNotification(notif) {
                 200: function (htmlData) {
                     var wrapperDiv = document.createElement("div");
                     wrapperDiv.innerHTML = htmlData;
-                    var recvElement = wrapperDiv.firstChild;
-                    parentDiv.insertBefore(recvElement, document.getElementById("divAnswerComment_" + notif.parentId));
+                    var recvElement = wrapperDiv.firstElementChild  ;
+                    parentDiv.insertBefore(recvElement, document.getElementById("divAnswerTopic_" + notif.parentId));
                 }
             }
         });
-    } else  {//if (document.getElementById("divNoComments") !== null) {
+    } else if (document.getElementById("divNoComments") !== null) {
         //renderiza todos os comentarios
         $.ajax({
             url: "/topic/comments/" + notif.topicId,
@@ -32,6 +32,22 @@ function newTopicCommentNotification(notif) {
                 }
             }
         });
+    } else {
+        $.ajax({
+            url: "/topic/parentcomment/" + notif.commentId,
+            type: "GET",
+            contentType: "text/html;charset=utf-8",
+            statusCode: {
+                200: function (htmlData) {
+                    var wrapperDiv = document.createElement("div");
+                    wrapperDiv.innerHTML = htmlData;
+                    var recvElement = wrapperDiv.firstElementChild;
+                    document.getElementById("divAllComments").insertBefore(recvElement,
+                        document.getElementById("placeholderAfterLastComment"));
+                }
+            }
+        });
+
     }
 }
 

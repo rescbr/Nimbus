@@ -53,24 +53,8 @@
                 <div id="divComments">
                     <p>Novos Comentários</p>
                     @foreach (var item in Model.Comments.Take(10).OrderByDescending(c => c.PostedOn))
-                    { 
-                        <div id="divComment_@item.Id" style="display:block">
-                            <div id="divInfoComment" name="divInfoComment">
-                                <input type="hidden" value="@item.Id" />
-                                <a id="linkUserProfile" href="userprofile/@item.UserId">
-                                    <img id="user+@item.UserId" src="@item.AvatarUrl" />
-                                    @item.UserName
-                                </a>
-                                @item.TopicName
-                                @item.PostedOn
-                                @item.Text
-                                <button id="btnAnswerChComment" onclick="EnableDivHiddenBtn('divAnswer_@item.Id', 'btnAnswerChComment');">Responder</button>
-                            </div>
-                            <div id="divAnswer_@item.Id" name="divAnswer+@item.Id" style="display:none">
-                               <textarea rows="10" cols="30" id="txtaAnswer" name="txtaAnswer" maxlength="500"></textarea>
-                                <button id="btnAnswerComment" onclick="ajaxAnswerComment(@item.ParentId, @item.Id, @item.ChannelId, @item.TopicId, 'txtaAnswer');">Enviar</button>                                
-                            </div>
-                        </div>
+                    {
+                        Html.RenderAction("ParentComment", "Topic", new { id = item.Id });
                     }
               </div>
         }
