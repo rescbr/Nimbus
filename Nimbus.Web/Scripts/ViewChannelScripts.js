@@ -398,7 +398,7 @@ function ajaxSendMessage(id)
 function ajaxLoadModeratorEdit(id)
 {
     $.ajax({
-        url: "/api/Channel/ShowTagChannelEdit/" + id,
+        url: "/api/Channel/ShowModerators/" + id,
         type: "GET",
         contentType: "application/json;charset=utf-8",
         statusCode: {
