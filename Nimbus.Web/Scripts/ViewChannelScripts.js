@@ -403,10 +403,11 @@ function ajaxLoadModeratorEdit(id)
         contentType: "application/json;charset=utf-8",
         statusCode: {
             200: function (newData) {
+                var listModerador = "";
+                var string = "";
+                var includeDiv = "";
                 if (newData.length > 0) {                   
-                    //incluir itens na div
-                    var listModerador= "";
-                    var string = "";
+                    //incluir itens na div                    
                     for (var i = 0; i < newData.length; i++) {
                         listModerador += "<div id=\"divModerator_" + newData[i].Id + "\">" +
                                          "<p>" +
@@ -420,19 +421,25 @@ function ajaxLoadModeratorEdit(id)
                                     "<div id=\"divEditModerator_" + newData[i].Id + "\">" +
 
                                     "</div>";
-                    }
-                    if (newData.length < 5) {
-                        string = "<input id=\"txtNewModerator\" type=\"text\" value=\"Adicionar moderador\" onclick=\"this.value=''\" />" +
-                                      "<button id=\"btnAddModerator\" onclick=\"ajaxNewModerator(" + id + ");\">Adicionar</button>";
-                    }
-                    else {
-                        string = "<p>Você já possui o limite máximo de moderadores aceitos por canal.</p>";
-                    }
-                    var includeDiv = "<div id=\"divModalModerators\">" + listModerador + "</div>" +
-                                     "<div>" + string + "</div>";
-
-                    document.getElementById('divEditModerators').innerHTML = includeDiv;
+                    }                   
                 }
+                if (newData.length < 5) {
+                    string = "<input id=\"txtNewModerator\" type=\"text\" value=\"Adicionar moderador\" onclick=\"this.value=''\" />" +
+                                  "<button id=\"btnAddModerator\" onclick=\"ajaxNewModerator(" + id + ");\">Adicionar</button>";
+                }
+                else {
+                    string = "<p>Você já possui o limite máximo de moderadores aceitos por canal.</p>";
+                }
+                if (listModerador === "") {
+                    includeDiv = "<div id=\"divModalModerators\">Adicione um moderador para seu canal.</div>" +
+                                      "<div>" + string + "</div>";
+                }
+                else
+                {                  
+                   includeDiv = "<div id=\"divModalModerators\">" + listModerador + "</div>" +
+                                   "<div>" + string + "</div>";
+                }
+                document.getElementById('divEditModerators').innerHTML = includeDiv;
             },
 
             400: function () {
