@@ -99,7 +99,6 @@ function ajaxSaveNewTopic(channelID)
     if (divTipoTopic == "divExam") {
         enumTopicType = 3;
 
-        //TODO
         var questionData = {}
         var listQuestion = []
         var listPerg = document.getElementsByName('enunciado');
@@ -197,7 +196,7 @@ function ajaxEditTopic()
         text = CKEDITOR.instances.txtaTextMsg.getData();
     }
     if (enumTopicType == 3) {
-        //TODO
+        //TODO editar exam
     }
         
     if (title != "" && shortDescription != "" && topicId > 0 && (text != "" || video != "" || exam != "")) {
