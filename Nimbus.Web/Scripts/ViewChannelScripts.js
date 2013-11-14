@@ -175,7 +175,6 @@ function ajaxSaveNewTopic(channelID)
     
 }
 
-
 function ajaxEditTopic()
 {
     var video;
@@ -354,3 +353,217 @@ function ajaxDeleteComment(commentId, divName)
 
 }
 
+function ajaxSendMessage(id)
+{
+    ajaxMessage = {};
+    var text = CKEDITOR.instances.txtTextMsg.getData();
+    var title = document.getElementById('txtTitleMsg').value;
+
+    if (text != "") {
+        ajaxMessage["Text"] = text;
+        ajaxMessage["ChannelId"] = id;
+        if (title != "")
+            ajaxMessage["Title"] = title;
+        else
+            ajaxMessage["Title"] = "Sem assunto";
+
+        $.ajax({
+            url: "/api/Message/SendMessageChannel/" + id, 
+            data: JSON.stringify(ajaxMessage),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            statusCode: {
+                200: function (newData) {
+
+                    if (newData.Id > 0) {
+                        //fechar modal
+                        document.getElementById('closeModal').click();
+                        //limpar campos
+                        text.value = "";
+                        title.value = "";
+                        //aviso
+                        window.alert("Mensagem enviada com sucesso.");
+                    }
+                },
+
+                400: function () {
+                    //erro
+                    window.alert("Não foi possível enviar sua mensagem. Tente novamente mais tarde.");
+                }
+            }
+        });
+    }
+}
+
+function ajaxLoadModeratorEdit(id)
+{
+    $.ajax({
+        url: "/api/Channel/ShowModeratorsEdit/" + id,
+        type: "GET",
+        contentType: "application/json;charset=utf-8",
+        statusCode: {
+            200: function (newData) {
+                if (newData.length > 0) {                   
+                    //incluir itens na div
+                    var listModerador= "";
+                    var string = "";
+                    for (var i = 0; i < newData.length; i++) {
+                        listModerador += "<div id=\"divModerator_" + newData[i].Id + "\">" +
+                                         "<p>" +
+                                         "<img src=\"" + newData[i].AvatarUrl + "\" title=\"" + newData[i].FirstName + "\" />" +
+                                         "<label>" + newData[i].FirstName + " " + newData[i].LastName + "</label>" +
+                                         "<input type=\"text\" disabled value=\"" + newData[i].RoleInChannel + "\" />" +
+                                         "<img src=\"/images/Utils/edit.png\" onclick=\"ajaxEditModerator(" + id + "," + newData[i].Id + ");\" title=\"Editar\" />" +
+                                         "<img src=\"/images/Utils/delete.png\" onclick=\"ajaxDeleteModerator(" + id + "," + newData[i].Id + ");\" title=\"Deletar\" />" +
+                                        "</p>" +
+                                    "</div>" +
+                                    "<div id=\"divEditModerator_" + newData[i].Id + "\">" +
+
+                                    "</div>";
+                    }
+                    if (newData.length < 5) {
+                        string = "<input id=\"txtNewModerator\" type=\"text\" value=\"Adicionar moderador\" onclick=\"this.value=''\" />" +
+                                      "<button id=\"btnAddModerator\" onclick=\"ajaxNewModerator(" + id + ");\">Adicionar</button>";
+                    }
+                    else {
+                        string = "<p>Você já possui o limite máximo de moderadores aceitos por canal.</p>";
+                    }
+                    var includeDiv = "<div id=\"divModalModerators\">" + listModerador + "</div>" +
+                                     "<div>" + string + "</div>";
+
+                    document.getElementById('divEditModerators').innerHTML = includeDiv;
+                }
+            },
+
+            400: function () {
+                //erro
+                window.alert("Erro ao processar requisição. Tente novamente mais tarde.");
+            }
+        }
+    });
+}
+
+function ajaxNewModerator(id)
+{
+}
+
+function ajaxEditModerator(id, idUser)
+{
+}
+
+function ajaxDeleteModerator(id, idUser)
+{
+    $.ajax({
+        url: "/api/Channel/DeleteModeratorChannel/" + id + "?userID=" + idUser,
+        type: "DELETE",
+        contentType: "application/json;charset=utf-8",
+        statusCode: {
+            200: function (newData) {
+                if (newData == true) {
+                    document.getElementById('divModerator_' + idUser).style.display = "none";
+                }
+            },
+
+            400: function () {
+                //erro
+                window.alert("Não foi possível realizar esta operação. Tente novamente mais tarde.");
+            }
+        }
+    });
+}
+
+function ajaxLoadTags(id) { 
+    $.ajax({
+        url: "/api/Channel/ShowTagChannelEdit/" + id,       
+        type: "GET",
+        contentType: "application/json;charset=utf-8",
+        statusCode: {
+            200: function (newData) {
+                if (newData.length > 0) {
+                    //incluir itens na div
+                    var listTag = "";
+                    var string ="";
+                    for (var i = 0; i < newData.length; i++) {
+                        listTag += "<div id=\"divTag_"+ newData[i].Id + "\">"+
+                                        "<p>#" + newData[i].TagName +
+                                           "<input type=\"button\" onclick=\"ajaxdeleteTag(" + newData[i].Id + ", " + id + ");\" value=\"X\"></input>" +
+                                        "</p>" +
+                                   "</div>";
+                    }
+                    if (newData.length < 5) {
+                        string = "<input id=\"txtNewTag\" type=\"text\" value=\"Nova tag\" onclick=\"this.value=''\" />" +
+                                      "<button id=\"btnSaveTag\" onclick=\"ajaxNewTag(" + id + ");\">Adicionar</button>";
+                    }
+                    else
+                    {
+                        string = "<p>Você já possui o limite máximo de tags aceitas por canal.</p>";
+                    }
+                    var includeDiv = "<div id=\"divModalTags\">" + listTag + "</div>" +
+                                     "<div>" + string + "</div>";
+
+                    document.getElementById('divTags').innerHTML = includeDiv;                   
+                }
+            },
+
+            400: function () {
+                //erro
+                window.alert("Erro ao processar requisição. Tente novamente mais tarde.");
+            }
+        }
+    });
+}
+
+function ajaxNewTag(id) {
+    var txt = document.getElementById('txtNewTag').value;
+    if (txt != null && txt != "")
+    {
+      
+        $.ajax({
+            url: "/api/Channel/AddTagsChannel/" + id + "?tag=" + encodeURIComponent(txt),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            statusCode: {
+                200: function (newData) {
+                    if (newData.Id > 0) {
+                        var newTag = "<div id=\"divTag_" + newData.Id + "\">" +
+                                        "<p>#" + newData.TagName +
+                                           "<input type=\"button\" onclick=\"ajaxdeleteTag(" + newData.Id + ", " + id + ");\" value=\"X\"></input>" +
+                                        "</p>" +
+                                   "</div>";
+                        document.getElementById('divModalTags').innerHTML = newTag;
+
+                        var tagInfo = "<label id=\"lblTag_"+newData.Id + "\">" + newData.TagName + "</label>";
+                        document.getElementsByClassName('tagChannel').innerHTML = tagInfo;
+                    }
+                },
+
+                400: function () {
+                    //erro
+                    window.alert("Não foi possível realizar esta operação. Tente novamente mais tarde.");
+                }
+            }
+        });
+    }
+}
+
+function ajaxdeleteTag(idTag, id)
+{
+    $.ajax({
+        url: "/api/Channel/DeleteTagChannel/" + id + "?tagID=" + idTag,
+        type: "DELETE",
+        contentType: "application/json;charset=utf-8",
+        statusCode: {
+            200: function (newData) {
+                if (newData == true) {
+                    document.getElementById('divTag_' + idTag).style.display = "none";
+                    document.getElementById("lblTag_" + idTag).style.display = "none";                   
+                }
+            },
+
+            400: function () {
+                //erro
+                window.alert("Não foi possível realizar esta operação. Tente novamente mais tarde.");
+            }
+        }
+    });
+}

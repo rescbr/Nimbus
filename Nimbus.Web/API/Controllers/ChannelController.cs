@@ -15,6 +15,7 @@ namespace Nimbus.Web.API.Controllers
     /// <summary>
     /// Controle sobre todas as funções realizadas para os Canais.
     /// </summary>
+    [NimbusAuthorize]
     public class ChannelController : NimbusApiController
     {
         /// <summary>
@@ -120,35 +121,28 @@ namespace Nimbus.Web.API.Controllers
         /// <returns>Lista de tags existentes</returns>
         [NonAction]
         [HttpGet]
-        public List<Tag> ValidateTag(List<string> listtag)
+        public Tag ValidateTag(string tag)
         {
-            List<Tag> returntags = new List<Tag>();
+            Tag returntag = new Tag();
             try
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
                     string text = string.Empty;
-                    foreach (string item in listtag)
+                    text = tag;
+                    int pos = text.IndexOf("#");
+                    if(pos != -1)
                     {
-                        int i = 0;
-                        text = item;
-                        while (text.StartsWith("#"))
-                        {
-                            text = text.Substring(i + 1);
-                            i++;
-                        }
-                        Tag tag = new Tag();
-                        tag = db.SelectParam<Tag>(tg => tg.TagName.ToLower() == text.ToLower()).FirstOrDefault();
-                        if (tag != null)
-                            returntags.Add(tag);
+                        text = text.Substring(pos + 1);
                     }
+                    returntag = db.SelectParam<Tag>(tg => tg.TagName.ToLower() == text.ToLower()).FirstOrDefault();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
-            return returntags;
+            return returntag;
         }
 
 
@@ -157,7 +151,6 @@ namespace Nimbus.Web.API.Controllers
         /// </summary>
         /// <param name="channelID"></param>
         /// <returns></returns>
-        [Authorize]
         [HttpGet]
         public List<Tag> ShowTagChannel(int id = 0)
         {
@@ -186,11 +179,46 @@ namespace Nimbus.Web.API.Controllers
         }
 
         /// <summary>
+        /// Método que lista as tags de um channel caso o usuário tenha permissao para editá-las
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public List<Tag> ShowTagChannelEdit(int id = 0)
+        {
+            
+            List<Tag> tagChannel = new List<Tag>();
+            try
+            {
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {
+                    bool allow = db.SelectParam<Role>(r => r.UserId == NimbusUser.UserId).Exists(r => r.IsOwner == true || r.ChannelMagager == true);
+                    if (allow == true)
+                    {
+                        ICollection<int> tagList = db.SelectParam<TagChannel>(tg => tg.ChannelId == id && tg.Visible == true).Select(tg => tg.TagId).ToList();
+                        foreach (int item in tagList)
+                        {
+                            Tag tag = db.SelectParam<Tag>(tg => tg.Id == item).FirstOrDefault();
+                            if (tag != null)
+                            {
+                                tagChannel.Add(tag);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+            }
+            return tagChannel;
+        }
+
+        /// <summary>
         /// Método retorna todos os moderadores do canal
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [Authorize]
         [HttpGet]
         public List<User> ShowModerators(int id = 0)
         {
@@ -223,11 +251,64 @@ namespace Nimbus.Web.API.Controllers
         }
 
         /// <summary>
+        /// Método que retornar os moderadores de um canal e uma string referente a permissão que eles tem, 
+        /// deve ser usado para exibir em tela de edição
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public List<UserBag> ShowModeratorsEdit(int id = 0)
+        {
+            List<UserBag> moderators = new List<UserBag>();
+            try
+            {
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {
+                    ICollection<Role> roleList = db.SelectParam<Role>(rl => rl.ChannelId == id).Where(rl => (rl.ChannelMagager == true ||
+                                                                                        rl.MessageManager == true ||
+                                                                                        rl.ModeratorManager == true ||
+                                                                                        rl.TopicManager == true ||
+                                                                                        rl.UserManager == true) && rl.IsOwner == false).ToList();
+                    foreach (Role item in roleList)
+                    {
+                        User user = db.SelectParam<User>(us => us.Id == item.UserId).FirstOrDefault();
+                        if (user != null)
+                        {
+                            UserBag bag = new UserBag();
+                            bag.FirstName = user.FirstName;
+                            bag.LastName = user.LastName;
+                            bag.Id = user.Id;
+                            bag.AvatarUrl = user.AvatarUrl;
+                            if (item.MessageManager == true && item.ModeratorManager == true &&
+                               item.TopicManager == true && item.UserManager == true)
+                            {
+                                bag.RoleInChannel = "Todas";
+                            }
+                            else if (item.MessageManager == true)
+                                bag.RoleInChannel = "Moderar mensagens";
+                            else if (item.ModeratorManager == true)
+                                bag.RoleInChannel = "Moderar moderadores";
+                            else if (item.TopicManager == true)
+                                bag.RoleInChannel = "Moderar tópicos";
+
+
+                            moderators.Add(bag);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+            }
+            return moderators;
+        }
+
+        /// <summary>
         /// Método que retorna os usuarios que moderam o canal com permissao p/ ver/responder as mensagens
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [Authorize]
         [HttpGet]
         public List<User> GetMessageModerators(int id = 0)
         {
@@ -261,7 +342,6 @@ namespace Nimbus.Web.API.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [Authorize]
         [HttpGet]
         public List<string> ReturnRolesUser(int id = 0)
         {
@@ -299,7 +379,6 @@ namespace Nimbus.Web.API.Controllers
         /// carregar informações gerais do canal
         /// </summary>
         /// <returns></returns>
-        [Authorize]
         [HttpGet]
         public ChannelBag ShowChannel(int id = 0)
         {
@@ -386,7 +465,6 @@ namespace Nimbus.Web.API.Controllers
         /// </summary>
         /// <param name="q">query de pesquisa</param>
         /// <returns></returns>
-        [Authorize]
         [HttpGet]
         public List<Channel> SearchChannel(string q)
         {
@@ -453,7 +531,6 @@ namespace Nimbus.Web.API.Controllers
         /// visualizar 'meus canais'
         /// </summary>
         /// <returns></returns>        
-        [Authorize]
         [HttpGet]
         public List<Channel> MyChannel()
         {
@@ -490,7 +567,6 @@ namespace Nimbus.Web.API.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [Authorize]
         [HttpGet]
         public List<Channel> UserChannelPaid(int id)
         {
@@ -526,6 +602,7 @@ namespace Nimbus.Web.API.Controllers
        ///visualizar canais moderados
        /// </summary>
        /// <returns></returns>
+        [HttpGet]
         public List<Channel> ModeratorChannel()
         {
             List<Channel> listChannel = new List<Channel>();
@@ -562,7 +639,6 @@ namespace Nimbus.Web.API.Controllers
         /// retorna uma lista com os resumos de todos os canais disponíveis no nimbus 
         /// </summary>
         /// <returns></returns>
-        [Authorize]
         [HttpGet]
         public List<Channel> AllChannel(int id)
         {
@@ -594,7 +670,6 @@ namespace Nimbus.Web.API.Controllers
         /// retorna uma lista com todos os canais follow do usuário dentro da org
         /// </summary>
         /// <returns></returns>
-        [Authorize]
         [HttpGet]
         public List<Channel> FollowsChannel(int id)
         {
@@ -624,7 +699,11 @@ namespace Nimbus.Web.API.Controllers
             return listChannel;
         }
 
-        [Authorize]
+        /// <summary>
+        /// Método para retornar os channels que o usuário vai ler mais tarde
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet]
         public List<Channel> showReadLaterChannel(int id)
         {
@@ -663,7 +742,6 @@ namespace Nimbus.Web.API.Controllers
         /// </summary>
         /// <param name="channelID"></param>
         /// <returns></returns>
-        [Authorize]
         [HttpDelete]
         public bool DeleteChannel(int id)
         {
@@ -698,7 +776,6 @@ namespace Nimbus.Web.API.Controllers
         /// </summary>
         /// <param name="channelID"></param>
         /// <returns></returns>
-        [Authorize]
         [HttpPut]
         public bool FollowChannel(int id)
         {
@@ -759,9 +836,8 @@ namespace Nimbus.Web.API.Controllers
         /// </summary>
         /// <param name="userModerator"></param>
         /// <returns></returns>
-        [Authorize]
         [HttpPost]
-        public List<Role> AddModerator(List<Role> userModerator, int id)
+        public Role AddModerator(Role userModerator, int id)
         {
             //TODO: notificação
             try
@@ -806,10 +882,22 @@ namespace Nimbus.Web.API.Controllers
                             
                             if (prox == true)
                             {
-                                foreach (Role item in userModerator)
+                                Role role = db.SelectParam<Role>(r => r.ChannelId == id && r.UserId == userModerator.UserId).FirstOrDefault();
+                                //verifica se já existe e havia sido 'deletado'
+                                if (role != null)
                                 {
-                                    db.Save(item);
-                                }                               
+                                    role.ChannelMagager = userModerator.ChannelMagager;
+                                    role.MessageManager = userModerator.MessageManager;
+                                    role.ModeratorManager = userModerator.ModeratorManager;
+                                    role.TopicManager = userModerator.TopicManager;
+                                    role.UserManager = userModerator.UserManager;
+
+                                    db.Update<Role>(role);
+                                }
+                                else
+                                {
+                                    db.Save(userModerator);
+                                }                             
                             }
                             else
                             {
@@ -838,7 +926,6 @@ namespace Nimbus.Web.API.Controllers
         /// <param name="channelID"></param>
         /// <param name="readOn"></param>
         /// <returns></returns>
-        [Authorize]
         [HttpPut]
         public bool ReadChannelLater(int id, DateTime readOn)
         {
@@ -882,10 +969,11 @@ namespace Nimbus.Web.API.Controllers
         /// <param name="channelID"></param>
         /// <param name="tagsList"></param>
         /// <returns></returns>
-        [Authorize]
         [HttpPost]
-        public List<string> AddTagsChannel(int id, List<string> tagsList)
+        public Tag AddTagsChannel(int id, string tag)
         {
+            Tag newTag = new Tag();
+            tag = tag.Trim('#');
             try
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
@@ -905,10 +993,9 @@ namespace Nimbus.Web.API.Controllers
                                 //colocar restrição para canal free
                                 if (isPrivate == false)
                                 {
-                                    int countTag = db.SelectParam<TagChannel>(ch => ch.ChannelId == id).Count();
+                                    int countTag = db.SelectParam<TagChannel>(ch => ch.ChannelId == id && ch.Visible == true).Count();
                                     if (countTag <= 4)
                                     {
-                                        tagsList = tagsList.Take(5 - (countTag + 1)).ToList();
                                         allOk = true;
                                     }
                                     else
@@ -924,40 +1011,43 @@ namespace Nimbus.Web.API.Controllers
                                 //add as tags
                                 if (allOk == true)
                                 {
-                                    List<Tag> tagsExist = new List<Tag>();
-                                    tagsExist = ValidateTag(tagsList); //retorna as tags já existentes no sistema
+                                    Tag tagsExist = new Tag();
+                                    tagsExist = ValidateTag(tag); //retorna as tags já existentes no sistema
 
-                                    foreach (string item in tagsList)
-                                    {
-                                        if (tagsExist.Exists(tg => tg.TagName.ToLower() == item.ToLower()))
+                                   if(tagsExist != null)
+                                   {
+                                        //já existe
+                                        TagChannel tagChannel = new TagChannel
                                         {
-                                            //já existe
-                                            TagChannel tagChannel = new TagChannel
-                                            {
-                                                ChannelId = id,
-                                                TagId = tagsExist.Where(t => t.TagName.ToLower() == item.ToLower()).Select(t => t.Id).First(),
-                                                Visible = true
-                                            };
-                                            db.Save(tagChannel);
-                                        }
-                                        else
-                                        {
-                                            //criar uma nova tag na tabela
-                                            Tag tag = new Tag
-                                            {
-                                                TagName = item
-                                            };
-                                            db.Save(tag);
+                                            ChannelId = id,
+                                            TagId = tagsExist.Id,
+                                            Visible = true
+                                        };
+                                        db.Save(tagChannel);
 
-                                            TagChannel tagChannel = new TagChannel
-                                            {
-                                                ChannelId = id,
-                                                TagId = (int)db.GetLastInsertId(),
-                                                Visible = true
-                                            };
-                                            db.Save(tagChannel);
-                                        }
+                                        newTag.Id = tagsExist.Id;
+                                        newTag.TagName = tagsExist.TagName;
                                     }
+                                    else
+                                    {
+                                        //criar uma nova tag na tabela
+                                        Tag ntag = new Tag
+                                        {
+                                            TagName = tag
+                                        };
+                                        db.Save(ntag);
+
+                                        TagChannel tagChannel = new TagChannel
+                                        {
+                                            ChannelId = id,
+                                            TagId = (int)db.GetLastInsertId(),
+                                            Visible = true
+                                        };
+                                        db.Save(tagChannel);
+
+                                        newTag.TagName = ntag.TagName;
+                                        newTag.Id = ntag.Id;
+                                    }                                   
                                 }
                             }
                             else
@@ -978,49 +1068,38 @@ namespace Nimbus.Web.API.Controllers
             {
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
-            return tagsList;
+            return newTag;
         }
 
         /// <summary>
         /// Troca a visibilidade (deleta) a tag escolhida
         /// </summary>
         /// <param name="channelID"></param>
-        /// <param name="tagList"></param>
+        /// <param name="tagID></param>
         /// <returns></returns>
-        [Authorize]
         [HttpDelete]
-        public List<int> DeleteTagChannel(int id, List<int> tagList)
+        public bool DeleteTagChannel(int id, int tagID)
         {
+            bool isDelete = false;
             try
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    using (var trans = db.OpenTransaction(System.Data.IsolationLevel.ReadCommitted))
-                    {
-                        try
-                        {
-                            bool isOWner = IsOwner(id);
-                            bool isManager = IsManager(id);
 
-                            if (isOWner == true || isManager == true)//usuario possui permissao
-                            {
-                                foreach (int item in tagList)
-                                {
-                                    var dado = new TagChannel() { Visible = false };
-                                    db.Update<TagChannel>(dado, ch => ch.ChannelId == item);
-                                    db.Save(dado);
-                                }
-                            }
-                            else
-                            {
-                                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotAcceptable, "sem permissao"));
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            trans.Rollback();
-                            throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
-                        }
+                    bool isOWner = IsOwner(id);
+                    bool isManager = IsManager(id);
+
+                    if (isOWner == true || isManager == true)//usuario possui permissao
+                    {
+                        TagChannel dado = db.SelectParam<TagChannel>(ch => ch.ChannelId == id && ch.TagId == tagID).FirstOrDefault();
+                        dado.Visible = false;
+
+                        db.Update<TagChannel>(dado);
+                        isDelete = true;
+                    }
+                    else
+                    {
+                        throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotAcceptable, "sem permissao"));
                     }
                 }
             }
@@ -1028,7 +1107,53 @@ namespace Nimbus.Web.API.Controllers
             {
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
-            return tagList;
+            return isDelete;
+        }
+
+        /// <summary>
+        /// Método que retira a permissão do usuário para moderar o canal
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="userID"></param>
+        /// <returns></returns>
+        [HttpDelete]
+        public bool DeleteModeratorChannel(int id, int userID)
+        {
+            bool isDelete = false;
+            try
+            {
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {
+
+                    bool isOWner = IsOwner(id);
+                    bool isManager = db.SelectParam<Role>(r => r.ChannelId == id && r.UserId == NimbusUser.UserId).Exists(r => r.IsOwner == true || 
+                                                                                                                              r.ChannelMagager == true ||
+                                                                                                                              r.ModeratorManager == true);
+
+                    if (isOWner == true || isManager == true)//usuario possui permissao
+                    {
+                        Role role = db.SelectParam<Role>(r => r.UserId == userID && r.ChannelId == id).FirstOrDefault();
+                        role.Accepted = false;
+                        role.ChannelMagager = false;
+                        role.MessageManager = false;
+                        role.ModeratorManager = false;
+                        role.TopicManager = false;
+                        role.UserManager = false;
+
+                        db.Update<Role>(role);
+                        isDelete = true;
+                    }
+                    else
+                    {
+                        throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotAcceptable, "sem permissao"));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+            }
+            return isDelete;
         }
 
         /// <summary>
@@ -1036,7 +1161,6 @@ namespace Nimbus.Web.API.Controllers
         /// </summary>
         /// <param name="newChannel"></param>
         /// <returns></returns>
-        [Authorize]
         [HttpPost]
         public Channel NewChannel(Channel channel)
         {
@@ -1114,7 +1238,6 @@ namespace Nimbus.Web.API.Controllers
         /// </summary>
         /// <param name="editChannel"></param>
         /// <returns></returns>
-        [Authorize]
         [HttpPut]
         public Channel EditChannel(Channel editChannel)
         {
@@ -1166,7 +1289,6 @@ namespace Nimbus.Web.API.Controllers
         /// </summary>
         /// <param name="vote"></param>
         /// <returns></returns>
-        [Authorize]
         [HttpPut]
         public int VoteChannel(int vote, int id)
         {
@@ -1240,7 +1362,6 @@ namespace Nimbus.Web.API.Controllers
         /// </summary>
         /// <param name="channelID"></param>
         /// <returns></returns>
-        [Authorize]
         [HttpGet]
         public List<User> ListPendingUSer(int id)
         {
@@ -1284,7 +1405,6 @@ namespace Nimbus.Web.API.Controllers
         /// </summary>
         /// <param name="dados"></param>
         /// <returns></returns>
-        [Authorize]
         [HttpPut]
         public ChannelBag AcceptUser(ChannelBag dados)
         {            
@@ -1322,7 +1442,6 @@ namespace Nimbus.Web.API.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [Authorize]
         [HttpGet]
         public int RankingChannel(int id)
         {

@@ -5,12 +5,12 @@
 }
 
 @Scripts.Render("~/Scripts/jquery.form.js")
-
 @Scripts.Render("~/Scripts/jquery.Jcrop.js")
 @Styles.Render("~/Styles/jquery.Jcrop.css")
 
 @Scripts.Render("~/Scripts/UserUtilis.js")
-@Scripts.Render("~/Scripts/ViewYserScripts.js")
+@Scripts.Render("~/Scripts/ViewUserScripts.js")
+
 
 <div class="content-top">
     <div class="cont-left">
@@ -41,7 +41,6 @@
     }
 </div>
 
-<div class="wrapperUserProfile">
     <div class="proBar">
         <div class="profileImg">
             @if (Model.User.Id == Model.CurrentUser.UserId)
@@ -56,34 +55,38 @@
 
         @*Se for o usuário do perfil*@
         @if (Model.User.Id == Model.CurrentUser.UserId)
-        {
-            <div id="profileEdit">
-                <p>Edit</p>
-            </div>
-        }
+            {
+                <a href="#modal-editProfile" class="call-modal">Editar</a>
+            }
+      
+
         <div class="aboutUser">
-            <h1>@Model.User.FirstName @Model.User.LastName</h1>
-            <p>Idade: @Model.User.Age</p>
+            <h1><label id="lblName">@Model.User.FirstName @Model.User.LastName</label></h1>
+            <p>Idade:<label id="lblAge"> @Model.User.Age</label></p>
             @if (!string.IsNullOrEmpty(Model.User.City) && !string.IsNullOrEmpty(Model.User.State))
             {
-                <p>@Model.User.City - @Model.User.State</p>
+                <p><label id="lblCity">@Model.User.City - @Model.User.State</label></p>
+            }
+            @if (!string.IsNullOrEmpty(Model.User.Country))
+            {
+                <p><label id="lblCountry">@Model.User.Country</label></p> 
             }
             @if (!string.IsNullOrEmpty(Model.User.Occupation))
             {
-                <p>Profissão:@Model.User.Occupation</p>
+                <p>Profissão:<label id="lblOccupation"> @Model.User.Occupation</label></p>
             }
             @if (!string.IsNullOrEmpty(Model.User.Interest))
             {
-                <p>Interesses: @Model.User.Interest</p>
+                <p>Interesses:<label id="lblInterest">  @Model.User.Interest</label></p>
             }
             @if (!string.IsNullOrEmpty(Model.User.Experience))
             {
-                <p>Experiências: @Model.User.Experience</p>
+                <p>Experiências:<label id="lblExperience">  @Model.User.Experience</label></p>
             }
             @if (!string.IsNullOrEmpty(Model.User.About))
             {
                 <p>Outras informações: </p>
-                <p class="AboutUser-other">@Model.User.About</p>
+                <p class="AboutUser-other"><label id="lblAbout"> @Model.User.About</label></p>
             }
 
         </div>
@@ -134,12 +137,11 @@
             <footer>
                 <!-- Footer -->
                 <div class="accRef">
-                    <a href="#" onclick="SendMessageProfile(@Model.User.Id);">Enviar</a>
+                    <button onclick="SendMessageProfile(@Model.User.Id);">Enviar</button>
                 </div>
             </footer>
         </div>
-
-        <a href="#!" class="modal-close" title="Close this modal" data-close="Close"
+        <a href="#!" id="closeModalMessage" class="modal-close" title="Close this modal" data-close="Close"
            data-dismiss="modal">×</a>
     </section>
 
@@ -177,11 +179,38 @@
            data-dismiss="modal">×</a>
     </section>
 
+<section class="semantic-content" id="modal-editProfile" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
+    <div class="modal-inner">
+        <header id="modal-label">
+            <!-- Header -->
+            Editar perfil
+        </header>
+        <div class="modal-content">
+            <!-- The modals content -->
+            <p><label style="color:black">Nome: </label> <input id="txtFirstName" value="@Model.User.FirstName" /></p>
+            <p><label style="color:black">Sobrenome: </label><input id="txtLastName" value="@Model.User.LastName" /></p>
+            <p><label style="color:black">Cidade: </label><input id="txtCity" value="@Model.User.City" /></p>
+            <p><label style="color:black">Estado: </label><input id="txtState" value="@Model.User.State" /></p>
+            <p><label style="color:black">País: </label><input id="txtCountry" value="@Model.User.Country" /></p>
+            <p><label style="color:black">Profissão: </label><input id="txtOccupation" value="@Model.User.Occupation" /></p>
+            <p><label style="color:black">Interesses: </label><input id="txtInterest" value="@Model.User.Interest" /></p>
+            <p><label style="color:black">Experiência: </label><input id="txtExperience" value="@Model.User.Experience" /></p>    
+            <p><label style="color:black">Outras informações: </label><input id="txtAbout" value="@Model.User.About" /></p>           
+        </div>
+        <footer>
+            <!-- Footer -->
+            <button id="btnSaveEdit" onclick="SaveEditProfile();">Salvar</button>
+        </footer>
+    </div>
+    <a href="#!" id="closeModalEdit" class="modal-close" title="Close this modal" data-close="Close"
+       data-dismiss="modal">×</a>
+</section>
+
     <div style="float:left;">
         @RenderPage("~/Website/Views/PrivateProfileTopBar.cshtml")
     </div>
 
-</div>
+
     @*Sempre manter no fim da página*@
     <script type="text/javascript">
         CKEDITOR.replace('txtTextMsg', {

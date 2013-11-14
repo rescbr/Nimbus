@@ -7,23 +7,16 @@
     CurrentQuestion = '1';
 </script>
 
-@*
-  Atualizações
-  Mas vistos
-  Todos
-  Novo Tópico
-  Mensagens
-*@
 @Scripts.Render("~/Scripts/jquery.form.js")
 
 <div class="wrapperChannel">
     <nav class="chanTopBar">
         <ul class="sbs">
-            <li class="press"><a name="divNotifications" onclick="EnableDiv(this.name, 'currentDiv');">Atualizações</a></li>
-            <li class="press"><a name="divPopularTopics" onclick="EnableDiv(this.name, 'currentDiv');">Mais vistos</a></li>
-            <li class="press"><a name="divAllTopics" onclick="EnableDiv(this.name, 'currentDiv');">Todos</a></li>
-            <li class="press"><a name="divNewTopic" onclick="EnableDiv(this.name, 'currentDiv');">Novo tópico</a></li>
-            <li class="press"><a name="divMessages" onclick="EnableDiv(this.name, 'currentDiv');">Mensagens</a></li>
+            <li class="press"><a name="divNotifications" onclick="EnableDiv(this.name, 'currentDiv');" class="linkTopChanBar"><p>Atualizações</p></a></li>
+            <li class="press"><a name="divPopularTopics" onclick="EnableDiv(this.name, 'currentDiv');" class="linkTopChanBar"><p>Mais vistos</p></a></li>
+            <li class="press"><a name="divAllTopics" onclick="EnableDiv(this.name, 'currentDiv');" class="linkTopChanBar"><p>Todos</p></a></li>
+            <li class="press"><a name="divNewTopic" onclick="EnableDiv(this.name, 'currentDiv');" class="linkTopChanBar"><p>Novo tópico</p></a></li>
+            <li class="press"><a name="divMessages" onclick="EnableDiv(this.name, 'currentDiv');" class="linkTopChanBar"><p>Mensagens</p></a></li>
         </ul>
     </nav>
 
@@ -60,24 +53,8 @@
                 <div id="divComments">
                     <p>Novos Comentários</p>
                     @foreach (var item in Model.Comments.Take(10).OrderByDescending(c => c.PostedOn))
-                    { 
-                        <div id="divComment_@item.Id" style="display:block">
-                            <div id="divInfoComment" name="divInfoComment">
-                                <input type="hidden" value="@item.Id" />
-                                <a id="linkUserProfile" href="userprofile/@item.UserId">
-                                    <img id="user+@item.UserId" src="@item.AvatarUrl" />
-                                    @item.UserName
-                                </a>
-                                @item.TopicName
-                                @item.PostedOn
-                                @item.Text
-                                <button id="btnAnswerChComment" onclick="EnableDivHiddenBtn('divAnswer_@item.Id', 'btnAnswerChComment');">Responder</button>
-                            </div>
-                            <div id="divAnswer_@item.Id" name="divAnswer+@item.Id" style="display:none">
-                               <textarea rows="10" cols="30" id="txtaAnswer" name="txtaAnswer" maxlength="500"></textarea>
-                                <button id="btnAnswerComment" onclick="ajaxAnswerComment(@item.ParentId, @item.Id, @item.ChannelId, @item.TopicId, 'txtaAnswer');">Enviar</button>                                
-                            </div>
-                        </div>
+                    {
+                        Html.RenderAction("ParentComment", "Topic", new { id = item.Id });
                     }
               </div>
         }

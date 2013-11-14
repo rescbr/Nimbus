@@ -33,17 +33,6 @@ namespace Nimbus.Web.Middleware
 
         void app_EndRequest(object sender, EventArgs e)
         {
-            try
-            {
-                HttpApplication app = (HttpApplication)sender;
-                if (app.Context.Items[Const.Auth.RequestPerformance] != null)
-                {
-                    var authtime = (DateTime.UtcNow -
-                        (DateTime)(app.Context.Items[Const.Auth.RequestPerformance])).TotalMilliseconds;
-                    app.Context.Response.AddHeader("X-Nimbus-Perf-TotalReqT", authtime.ToString());
-                }
-            }
-            catch { }
         }
 
         void app_BeginRequest(object sender, EventArgs e)

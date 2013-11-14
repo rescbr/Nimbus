@@ -15,6 +15,7 @@ namespace Nimbus.Web.API.Controllers
     /// <summary>
     /// Controle sobre todas as funções realizadas para as Mensagens
     /// </summary>
+    [NimbusAuthorize]
     public class MessageController : NimbusApiController
     {              
         /// <summary>
@@ -22,7 +23,6 @@ namespace Nimbus.Web.API.Controllers
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        [Authorize]
         [HttpPost]
         public Message SendMessageChannel(Message message)
         {           
@@ -39,6 +39,7 @@ namespace Nimbus.Web.API.Controllers
 
                             var roles = db.SelectParam<Role>(r => r.ChannelId == message.ChannelId && (r.MessageManager == true || r.IsOwner == true));
 
+                            //add todos os destinatarios dono + moderadores do canal
                             foreach (var item in roles)
                             {
                                 Nimbus.Model.Receiver receiver = new Model.Receiver();
@@ -47,6 +48,14 @@ namespace Nimbus.Web.API.Controllers
                                 receiver.Name = db.SelectParam<User>(u => u.Id == item.UserId).Select(s => s.FirstName + " " + s.LastName).FirstOrDefault();
                                 listReceiver.Add(receiver);
                             }
+                            //add a msg para o 'sender'
+                                    Nimbus.Model.Receiver sender = new Model.Receiver();
+                                    sender.IsOwner = db.SelectParam<Role>(r => r.ChannelId == message.ChannelId && r.UserId == NimbusUser.UserId)
+                                                                               .Select(c => c.IsOwner).FirstOrDefault();
+                                    sender.UserId = NimbusUser.UserId;
+                                    sender.Name = NimbusUser.FirstName + " " + NimbusUser.LastName;
+                                    listReceiver.Add(sender);
+
                                //add a  msg                                                 
                                 Message dadosMsg = new Message
                                 {
@@ -54,8 +63,8 @@ namespace Nimbus.Web.API.Controllers
                                     ChannelId = message.ChannelId,
                                     Date = DateTime.Now,
                                     ReadStatus = false,
-                                    Text = message.Text,
-                                    Title = message.Title,
+                                    Text = HttpUtility.HtmlEncode(message.Text),
+                                    Title = HttpUtility.HtmlEncode(message.Title),
                                     Visible = true,
                                     Receivers = listReceiver
                                 };
@@ -94,7 +103,7 @@ namespace Nimbus.Web.API.Controllers
 
                                     //Notificação
                                     var notification = new Notifications.MessageNotification();
-                                    notification.NewMessage(dadosMsg.Title, listReceiver.Select(l => l.UserId).ToList());
+                                    notification.NewMessage(dadosMsg.Title, listReceiver.Where(l => l.UserId != NimbusUser.UserId ).Select(l => l.UserId).ToList());
 
                                 }
                                 catch (Exception ex)
@@ -119,9 +128,14 @@ namespace Nimbus.Web.API.Controllers
             return message;
         }
 
-        [Authorize]
+        /// <summary>
+        /// método que envia uma mensagem pelo profile do usuario
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="receiverId"></param>
+        /// <returns></returns>
         [HttpPost]
-        public Message SendMessageUser(Message message, int receiverId)
+        public Message SendMessageUser(Message message, int id)
         {
             try
             {
@@ -133,25 +147,25 @@ namespace Nimbus.Web.API.Controllers
                         {
                             //Lembrar: se owner = true, quando mostrar na view colocar: Nimbus   
 
-                            List<Nimbus.Model.Receiver> listReceiver = new List<Nimbus.Model.Receiver>();                             
+                            List<Nimbus.Model.Receiver> listReceiver = new List<Nimbus.Model.Receiver>();         
+                    
                                 Nimbus.Model.Receiver receiver = new Model.Receiver();
                                 receiver.IsOwner = true; //a msg é enviada para o perfil, logo não importa esse item
-                                receiver.UserId = receiverId;
-                                receiver.Name = db.SelectParam<User>(u => u.Id == receiverId).Select(s => s.FirstName + " " + s.LastName).FirstOrDefault();
+                                receiver.UserId = id;
+                                receiver.Name = db.SelectParam<User>(u => u.Id == id).Select(s => s.FirstName + " " + s.LastName).FirstOrDefault();
                                 listReceiver.Add(receiver);
 
                             //add quem enviou para os 'receivers', pois ele deve ter controle sobre o que ele enviou tbm.
                                 Nimbus.Model.Receiver sendReceiver = new Model.Receiver();
-                                receiver.IsOwner = true;
-                                receiver.UserId = NimbusUser.UserId;
-                                receiver.Name = NimbusUser.FirstName + " " + NimbusUser.LastName;
+                                sendReceiver.IsOwner = true;
+                                sendReceiver.UserId = NimbusUser.UserId;
+                                sendReceiver.Name = NimbusUser.FirstName + " " + NimbusUser.LastName;
                                 listReceiver.Add(sendReceiver);
 
                             //add a  msg                                                 
                             Message dadosMsg = new Message
                             {
                                 SenderId = NimbusUser.UserId,
-                                ChannelId = message.ChannelId,
                                 Date = DateTime.Now,
                                 ReadStatus = false,
                                 Text = HttpUtility.HtmlEncode(message.Text),
@@ -194,7 +208,7 @@ namespace Nimbus.Web.API.Controllers
 
                                 //Notificação
                                 var notification = new Notifications.MessageNotification();
-                                notification.NewMessage(dadosMsg.Title, listReceiver.Select(l => l.UserId).ToList());
+                                notification.NewMessage(dadosMsg.Title, listReceiver.Where(l =>l.UserId != NimbusUser.UserId).Select(l => l.UserId).ToList());
 
                             }
                             catch (Exception ex)
@@ -223,7 +237,6 @@ namespace Nimbus.Web.API.Controllers
         /// mostra todas as mensagens que o usuário recebeu, mostra no perfil do usuário
         /// </summary>
         /// <returns></returns>
-        [Authorize]
         [HttpGet]
         public List<MessageBag> ReceivedMessages()
         {
@@ -270,7 +283,6 @@ namespace Nimbus.Web.API.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [Authorize]
         [HttpGet]
         public List<MessageBag> ChannelReceivedMessages(int id = 0)
         {          
@@ -325,7 +337,6 @@ namespace Nimbus.Web.API.Controllers
         /// lista as mensagens enviadas pelo usuário
         /// </summary>
         /// <returns></returns>
-        [Authorize]
         [HttpGet]
         public List<Message> SentMessages()
         {
@@ -370,7 +381,6 @@ namespace Nimbus.Web.API.Controllers
         /// </summary>
         /// <param name="listID"></param>
         /// <returns></returns>
-        [Authorize]
         [HttpDelete]
         public List<int> DeleteMessages(List<int> listID)
         {

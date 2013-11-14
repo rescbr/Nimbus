@@ -5,6 +5,7 @@
 }
 
 @Scripts.Render(("~/Scripts/jquery.form.js"))
+@Scripts.Render("~/Scripts/ViewChannelScripts.js")
 
 <div id="divCapa">
     <img src="@Model.CurrentChannel.ImgUrl" id="imgCapa" height="192" alt="" width="864" />
@@ -16,7 +17,6 @@
     }
 </div>
 
-@Scripts.Render("~/Scripts/ViewChannelScripts.js")
 
 <div id="nameChannelPage">
     <h1>@Model.CurrentChannel.Name</h1>
@@ -33,8 +33,14 @@
         </p>
     }
 
+    @if (Model.CurrentChannel.OwnerId == Model.CurrentUser.UserId || Model.RolesCurrentUser.Contains("moderatormanager")
+        || Model.RolesCurrentUser.Contains("channelmanager"))
+    {
+        <a href="#modal-moderators" onclick="ajaxLoadModeratorEdit(@Model.CurrentChannel.Id);">Editar moderadores</a>
+    }
+
     <div class="infoTitleChannel">
-        <h2>Numero de seguidores</h2>
+        <h2>Número de seguidores</h2>
         <p class="numberIco">
             @*colocar icone de total de seguidores*@
             @Model.CurrentChannel.countFollowers
@@ -42,7 +48,7 @@
     </div>
 
     <div class="infoTitleChannel">
-        <h2>Numero de Likes</h2>
+        <h2>Número de Likes</h2>
         <p class="numberIco">
             @*colocar icone pontuaçao*@
             @Model.CurrentChannel.CountVotes
@@ -62,7 +68,7 @@
             {
                 <p id="txtPartChannel">
                     Você ainda não participou deste canal.<br>
-                    Desfrute do conteúdo e seja ativo para aumentar sua porcentagem!
+                    Desfrute do conteúdo e torne-se ativo para aumentar sua porcentagem!
                 </p>
             }
             else
@@ -80,7 +86,7 @@
         <p class="tagChannel">
             @foreach (var item in Model.Tags)
             {
-                <label>#@item.TagName</label>
+                <label id="lblTag_@item.Id">#@item.TagName</label>
             }
         </p>
     </div>
@@ -89,7 +95,7 @@
          || Model.CurrentChannel.OwnerId == Model.CurrentUser.UserId)
     {
         <div class="editTag">
-            <p>Editar Tags</p>
+            <p><a href="#modal-tags" id="openModalTag" onclick="ajaxLoadTags(@Model.CurrentChannel.Id);">Editar tags</a></p>
         </div>
     }
     
@@ -120,6 +126,7 @@
     }
 </div>
 
+@*Modal para enviar msg*@
 <section class="semantic-content" id="modal-text" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
     <div class="modal-inner">
         <header id="modal-label">
@@ -129,9 +136,7 @@
 
         @if (Model.CurrentChannel.OwnerId != Model.CurrentUser.UserId)
         {
-            <form action="/channel/SendMessage/@Model.CurrentChannel.Id" method="post" enctype="multipart/form-data" id="sendMessage" name="sendMessage">
-            <div class="modal-content">
-                
+            <div class="modal-content">                
                     <!-- The modals content -->
                     <p>
                         Para:
@@ -155,28 +160,86 @@
                     </p>
                     <p>
                         Assunto:
-                        <input name="txtTitleMsg" type="text" maxlength="100" />
+                        <input id="txtTitleMsg" name="txtTitleMsg" type="text" maxlength="100" />
                     </p><br />
                     <p>
                         <textarea id="txtTextMsg" name="txtTextMsg" rows="10" cols="60" class="ckeditor"></textarea>
-                    </p>
-                    
-                
+                    </p>   
             </div>
 
             <footer>
                 <!-- Footer -->
-                <input type="submit" value="Enviar" id="btnEnviar" />
+                <button id="btnEnviar" onclick="ajaxSendMessage(@Model.CurrentChannel.Id);">Enviar</button>
             </footer>
-            </form>
         }
-
-
     </div>
 
     <a href="#!" id="closeModal" class="modal-close" title="Close this modal" data-close="Close"
        data-dismiss="modal">×</a>
 </section>
+
+@*Modal para editar Tags*@
+<section class="semantic-content" id="modal-tags" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
+    <div class="modal-inner">
+        <header id="modal-label">
+            <!-- Header -->
+            Editar tags
+        </header>
+
+        @if (Model.RolesCurrentUser.Contains("channelmanager") || Model.CurrentChannel.OwnerId == Model.CurrentUser.UserId)
+        {
+            <div id="divTags" class="modal-content">
+                <!-- The modals content -->
+                <!--Incluido por pelo js ajaxLoadTags-->
+            </div>
+
+            <footer>
+                <!-- Footer -->
+                <button id="btnSaveTag" onclick="ajaxEditTag(@Model.CurrentChannel.Id);">Enviar</button>
+            </footer>
+        }
+        else
+        {
+            <p>Você não permissão para realizar esta operação.</p> 
+        }
+    </div>
+
+    <a href="#!" id="closeModalTag" class="modal-close" title="Close this modal" data-close="Close"
+       data-dismiss="modal">×</a>
+</section>
+
+@*Modal de edição de moderadores*@
+<section class="semantic-content" id="modal-moderators" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
+    <div class="modal-inner">
+        <header id="modal-label">
+            <!-- Header -->
+            Editar moderadores
+        </header>
+
+        @if (Model.RolesCurrentUser.Contains("channelmanager") || Model.CurrentChannel.OwnerId == Model.CurrentUser.UserId
+            || Model.RolesCurrentUser.Contains("moderatormanager"))
+        {
+            <div id="divEditModerators" class="modal-content">
+                <!-- The modals content -->
+                <!--Incluido por pelo js ajaxLoadTags-->
+               
+            </div>
+
+            <footer>
+                <!-- Footer -->
+                <button id="btnSaveTag" onclick="ajaxEditTag(@Model.CurrentChannel.Id);">Enviar</button>
+            </footer>
+        }
+        else
+        {
+            <p>Você não permissão para realizar esta operação.</p>
+        }
+    </div>
+
+    <a href="#!" id="closeModalTag" class="modal-close" title="Close this modal" data-close="Close"
+       data-dismiss="modal">×</a>
+</section>
+
 
 @*Sempre manter no fim da página*@
 <script type="text/javascript">
@@ -189,22 +252,4 @@
         ]
     });
 
-$(document).ready(function () {
- $('form[name=sendMessage]').ajaxForm({
-            dataType: 'json',
-            success: function (returnvalue) {
-                 if(returnvalue.isok == false)
-                 {
-                    window.alert(returnvalue.message);
-                 }
-                 else
-                     {
-                     window.alert(returnvalue.message);
-                     document.getElementById('closeModal').click();
-                     }
-            }
-        });
-
-     });
 </script>
-

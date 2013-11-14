@@ -7,6 +7,7 @@ using System.Web.Http;
 using ServiceStack.OrmLite;
 using Nimbus.Model.ORM;
 using Nimbus.Model.Bags;
+using System.Web;
 
 namespace Nimbus.Web.API.Controllers
 {
@@ -14,6 +15,7 @@ namespace Nimbus.Web.API.Controllers
     /// <summary>
     /// Controle sobre todas as funções realizadas para os Usuários.
     /// </summary>
+    [NimbusAuthorize]
     public class UserController : NimbusApiController
     {
 
@@ -22,7 +24,6 @@ namespace Nimbus.Web.API.Controllers
         ///<summary>
         ///exibir informações perfil usuário logado
         ///</summary>
-        [Authorize]
         [HttpGet]
         public UserBag showProfile()
         {
@@ -32,7 +33,6 @@ namespace Nimbus.Web.API.Controllers
         ///<sumary>
         ///método padrão de exibir perfil
         /// </sumary>
-        //[Authorize]
         [HttpGet]
         public UserBag showProfile(int? id)
         {
@@ -121,16 +121,30 @@ namespace Nimbus.Web.API.Controllers
         /// </summary>
         /// <param name="profile"></param>
         /// <returns>bool</returns>        
-        [Authorize]
-        [HttpPut]
+        [AllowAnonymous]
+        [HttpPost]
         public User EditProfile(User user)
         {
             try
             {
                 using(var db = DatabaseFactory.OpenDbConnection())
                 {
-                    db.Update<User>(user, usr => usr.Id == NimbusUser.UserId);
-                    db.Save(user);
+                    User currentUser = db.SelectParam<User>(us => us.Id == NimbusUser.UserId).FirstOrDefault();
+                    if (currentUser != null)
+                    {
+                        currentUser.FirstName = HttpUtility.HtmlEncode(user.FirstName);
+                        currentUser.LastName = HttpUtility.HtmlEncode(user.LastName);
+                        currentUser.City = HttpUtility.HtmlEncode(user.City);
+                        currentUser.State = HttpUtility.HtmlEncode(user.State);
+                        currentUser.Country = HttpUtility.HtmlEncode(user.Country);
+                        currentUser.Interest = HttpUtility.HtmlEncode(user.Interest);
+                        currentUser.Occupation = HttpUtility.HtmlEncode(user.Occupation);
+                        currentUser.Experience = HttpUtility.HtmlEncode(user.Experience);
+                        currentUser.About = HttpUtility.HtmlEncode(user.About);
+                        currentUser.BirthDate = currentUser.BirthDate;
+
+                        db.Save(currentUser);
+                    }
                 }
 
                 return user;
@@ -141,7 +155,7 @@ namespace Nimbus.Web.API.Controllers
             }
         }
          
-
+        [AllowAnonymous]
         [HttpPost]
         public User CreateProfile(User user)
         {
@@ -168,8 +182,9 @@ namespace Nimbus.Web.API.Controllers
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        [Authorize]
+        
         [HttpPost]
+        [AllowAnonymous]
         public UserInfoPayment CreateInfoUser(UserInfoPayment user)
         {
             try

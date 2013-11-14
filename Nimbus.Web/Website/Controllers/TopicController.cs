@@ -1,4 +1,5 @@
-﻿using Nimbus.Web.Website.Models;
+﻿using Nimbus.Model.Bags;
+using Nimbus.Web.Website.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,9 +8,9 @@ using System.Web.Mvc;
 
 namespace Nimbus.Web.Website.Controllers
 {
+    [Authorize]
     public class TopicController : NimbusWebController
     {
-        [Authorize]
         public ActionResult Index(int id)
         {
             var channelApi = ClonedContextInstance<API.Controllers.ChannelController>();
@@ -27,12 +28,48 @@ namespace Nimbus.Web.Website.Controllers
                 CurrentTopic = aux,
                 CurrentChannel = channelApi.ShowChannel(aux.ChannelId),
                 CurrentUser = NimbusUser,
-                Comments = commentApi.ShowTopicComment(id),
-                RolesCurrentUser = channelApi.ReturnRolesUser(aux.ChannelId),
+                Comments = null, // commentApi.ShowTopicComment(id), //Renato: usar a Action Comments
+                RolesCurrentUser = null, //channelApi.ReturnRolesUser(aux.ChannelId), //Renato: migrado para a API de Comentário
                 Category = topicApi.CategoryTopic( aux.Id),
                 NumFavorites = topicApi.CountFavorite(id)
             };
             return View("Topic", topic);
         }
+
+        /// <summary>
+        /// Retorna os comentários de um topico em HTML
+        /// </summary>
+        /// <param name="id">id do tópico</param>
+        /// <returns></returns>
+        public ActionResult Comments(int id) 
+        {
+            var commentApi = ClonedContextInstance<API.Controllers.CommentController>();
+            //var comments = commentApi.ShowTopicComment(id);
+            var comments = commentApi.AllTopicComments(id);
+
+            return View("~/Website/Views/CommentPartials/PartialTopicComment.cshtml", comments);
+
+        }
+
+        /// <summary>
+        /// Retorna apenas um comentario
+        /// </summary>
+        /// <param name="id">id do comentario</param>
+        /// <returns></returns>
+        public ActionResult Comment(int id)
+        {
+            var commentApi = ClonedContextInstance<API.Controllers.CommentController>();
+            var bag = commentApi.GetComment(id);
+            return View("~/Website/Views/CommentPartials/PartialComment.cshtml", bag);
+        }
+
+        public ActionResult ParentComment(int id)
+        {
+            var commentApi = ClonedContextInstance<API.Controllers.CommentController>();
+            var bag = new List<CommentBag>();
+            bag.Add(commentApi.GetParentComment(id));
+            return View("~/Website/Views/CommentPartials/PartialTopicComment.cshtml", bag);
+        }
+
     }
 }

@@ -91,7 +91,7 @@ namespace Nimbus.Web.API.Controllers
 
         #endregion
 
-        #region Criar e Mostrar tópico (Post e Get)
+        #region Criar e Mostrar tópico (Post e GetComment)
         /// <summary>
         /// Criar um novo tópico
         /// </summary>
