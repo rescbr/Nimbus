@@ -429,7 +429,8 @@ function ajaxLoadModeratorEdit(id)
                     }                   
                 }
                 if (newData.length < 5) {
-                    string = "<input id=\"txtNewModerator\" type=\"text\" value=\"Adicionar moderador\" onclick=\"this.value=''\" />" +
+                    //coloca o campo de buscar um novo moderador, esse campo é preenchido pelo método acima value=\"Adicionar moderador\" onclick=\"this.value=''\"
+                    string = "<input id=\"search\" type=\"text\"/>" +
                                   "<button id=\"btnAddModerator\" onclick=\"ajaxNewModerator(" + id + ");\">Adicionar</button>";
                 }
                 else {
@@ -454,6 +455,8 @@ function ajaxLoadModeratorEdit(id)
         }
     });
 }
+
+
 
 function ajaxNewModerator(id,userId)
 {
@@ -666,3 +669,12 @@ function ajaxdeleteTag(idTag, id)
         }
     });
 }
+
+/*método q busca os moderadores*/
+$('search').autocomplete({
+    serviceUrl: '/api/user/SearchNewModerador/' + currentChannel,
+    paramName: "q",
+    onSelect: function (suggestion) {
+        alert('You selected: ' + suggestion.FirstName + ', ' + suggestion.Id + ',' + suggestion.AvatarUrl);
+    }
+});

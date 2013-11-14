@@ -118,7 +118,7 @@ namespace Nimbus.Web.API.Controllers
                         try
                         {
                             //se ele é pai => apaga ele e os filhos
-                            // se ele é um filho => deixa visible, coloca foto do usuario como avatar padrao, tira o nome e coloca texto como: comentario removido
+                            // se ele é um filho => deixa visible, coloca fo to do usuario como avatar padrao, tira o nome e coloca texto como: comentario removido
                             Comment cmt = new Comment();
                             CommentBag bag = new CommentBag();
                             cmt = db.SelectParam<Comment>(c => c.Id == comment.Id).FirstOrDefault();

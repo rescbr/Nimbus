@@ -27,6 +27,8 @@ namespace Nimbus.Web.API
                     {
                         org = (db.Where<Model.ORM.Organization>(o => o.Cname == host)
                             .FirstOrDefault() as Model.ORM.Organization);
+                        if (org == null)
+                            org = db.Where<Model.ORM.Organization>(o => o.Id == 1).FirstOrDefault();
                     }
                     return org;
                 }
