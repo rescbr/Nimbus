@@ -77,6 +77,43 @@ namespace Nimbus.Web.API.Controllers
             }
         }
 
+
+        /// <summary>
+        /// Search para Usuarios
+        /// </summary>
+        /// <param name="q">Query de Pesquisa</param>
+        /// <returns></returns>
+        [HttpGet]
+        public List<User> SearchUser(string q)
+        {
+            List<User> users = new List<User>();
+            if (!string.IsNullOrEmpty(q))
+            {
+                int idOrg = NimbusOrganization.Id;
+                try
+                {
+                    using (var db = DatabaseFactory.OpenDbConnection())
+                    {
+                        users = db.SelectParam<User>(usr => (usr.FirstName.Contains(q) ||
+                                                                usr.LastName.Contains(q) ||
+                                                                usr.Occupation.Contains(q) ||
+                                                                usr.Interest.Contains(q)  ));
+                            
+                        
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+                }
+            }
+            else
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Nenhum registro encontrado para '" + q + "'"));
+            }
+            return users;
+        }
+
         #endregion
 
         /// <summary>
