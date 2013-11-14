@@ -99,7 +99,6 @@ function ajaxSaveNewTopic(channelID)
     if (divTipoTopic == "divExam") {
         enumTopicType = 3;
 
-        //TODO
         var questionData = {}
         var listQuestion = []
         var listPerg = document.getElementsByName('enunciado');
@@ -197,7 +196,7 @@ function ajaxEditTopic()
         text = CKEDITOR.instances.txtaTextMsg.getData();
     }
     if (enumTopicType == 3) {
-        //TODO
+        //TODO editar exam
     }
         
     if (title != "" && shortDescription != "" && topicId > 0 && (text != "" || video != "" || exam != "")) {
@@ -398,39 +397,175 @@ function ajaxSendMessage(id)
 function ajaxLoadModeratorEdit(id)
 {
     $.ajax({
-        url: "/api/Channel/ShowTagChannelEdit/" + id,
+        url: "/api/Channel/ShowModeratorsEdit/" + id,
         type: "GET",
         contentType: "application/json;charset=utf-8",
         statusCode: {
             200: function (newData) {
-                if (newData.length > 0) {
-                    //incluir itens na div
-                    var listTag = "";
-                    var string = "";
+                var listModerador = "";
+                var string = "";
+                var includeDiv = "";
+                if (newData.length > 0) {                   
+                    //incluir itens na div                    
                     for (var i = 0; i < newData.length; i++) {
-                        listTag += "<div id=\"divTag_" + newData[i].Id + "\">" +
-                                        "<p>#" + newData[i].TagName +
-                                           "<input type=\"button\" onclick=\"ajaxdeleteTag(" + newData[i].Id + ", " + id + ");\" value=\"X\"></input>" +
+                        listModerador += "<div id=\"divModerator_" + newData[i].Id + "\">" +
+                                         "<p>" +
+                                         "<img src=\"" + newData[i].AvatarUrl + "\" title=\"" + newData[i].FirstName + "\" />" +
+                                         "<label>" + newData[i].FirstName + " " + newData[i].LastName + "</label>" +
+                                         "<input type=\"text\" disabled value=\"" + newData[i].RoleInChannel + "\" />" +
+                                         "<img src=\"/images/Utils/edit.png\" onclick=\"ajaxEditModerator(" + id + "," + newData[i].Id + ");\" title=\"Editar\" />" +
+                                         "<img src=\"/images/Utils/delete.png\" onclick=\"ajaxDeleteModerator(" + id + "," + newData[i].Id + ");\" title=\"Deletar\" />" +
                                         "</p>" +
-                                   "</div>";
-                    }
-                    if (newData.length < 5) {
-                        string = "<input id=\"txtNewTag\" type=\"text\" value=\"Nova tag\" onclick=\"this.value=''\" />" +
-                                      "<button id=\"btnSaveTag\" onclick=\"ajaxNewTag(" + id + ");\">Adicionar</button>";
-                    }
-                    else {
-                        string = "<p>Você já possui o limite máximo de tags aceitas por canal.</p>";
-                    }
-                    var includeDiv = "<div id=\"divModalTags\">" + listTag + "</div>" +
-                                     "<div>" + string + "</div>";
-
-                    document.getElementById('divTags').innerHTML = includeDiv;
+                                    "</div>" +
+                                    "<div id=\"divEditModerator_" + newData[i].Id + "\">" +
+                                     "<select id=\"permissionSelect\">"+
+                                      "<option value=\"0\">Todas</option>"+
+                                      "<option value=\"1\">Moderar mensagens</option>" +
+                                      "<option value=\"2\">Moderar moderadores</option>" +
+                                      "<option value=\"3\">Moderar tópicos</option>" +
+                                      "<option value=\"4\">Moderar usuários</option>" +
+                                    "</select>"+
+                                    "</div>";
+                    }                   
                 }
+                if (newData.length < 5) {
+                    string = "<input id=\"txtNewModerator\" type=\"text\" value=\"Adicionar moderador\" onclick=\"this.value=''\" />" +
+                                  "<button id=\"btnAddModerator\" onclick=\"ajaxNewModerator(" + id + ");\">Adicionar</button>";
+                }
+                else {
+                    string = "<p>Você já possui o limite máximo de moderadores aceitos por canal.</p>";
+                }
+                if (listModerador === "") {
+                    includeDiv = "<div id=\"divModalModerators\">Adicione um moderador para seu canal.</div>" +
+                                      "<div>" + string + "</div>";
+                }
+                else
+                {                  
+                   includeDiv = "<div id=\"divModalModerators\">" + listModerador + "</div>" +
+                                   "<div>" + string + "</div>";
+                }
+                document.getElementById('divEditModerators').innerHTML = includeDiv;
             },
 
             400: function () {
                 //erro
                 window.alert("Erro ao processar requisição. Tente novamente mais tarde.");
+            }
+        }
+    });
+}
+
+function ajaxNewModerator(id,userId)
+{
+    var select = document.getElementById("permissionSelect").selectedIndex;
+    var option = document.getElementById("permissionSelect").options;
+    var permission = option[select].value;
+
+    ajaxData = {};
+    
+    ajaxData["ChannelId"] = id;
+    ajaxData["UserId"] = userId;
+
+    if (permission == "0")
+        ajaxData["ChannelMagager"] = true;
+
+    if (permission == "1")
+        ajaxData["MessageManager"] = true;
+
+    if (permission == "2")
+        ajaxData["ModeratorManager"] = true;
+
+    if (permission == "3")
+        ajaxData["TopicManager"] = true;
+
+    if (permission == "4")
+        ajaxData["UserManager"] = true;
+
+
+    $.ajax({
+        url: "/api/Channel/AddModerator" ,
+        type: "POST",
+        data: JSON.stringify(ajaxData),
+        contentType: "application/json;charset=utf-8",
+        statusCode: {
+            200: function (newData) {
+                if (newData.Id > 0) {
+                    var newModerator = "<div id=\"divModerator_" + newData.Id + "\">" +
+                                         "<p>" +
+                                         "<img src=\"" + newData.AvatarUrl + "\" title=\"" + newData.FirstName + "\" />" +
+                                         "<label>" + newData.FirstName + " " + newData.LastName + "</label>" +
+                                         "<input type=\"text\" disabled value=\"" + newData.RoleInChannel + "\" />" +
+                                         "<img src=\"/images/Utils/edit.png\" onclick=\"ajaxEditModerator(" + id + "," + newData.Id + ");\" title=\"Editar\" />" +
+                                         "<img src=\"/images/Utils/delete.png\" onclick=\"ajaxDeleteModerator(" + id + "," + newData.Id + ");\" title=\"Deletar\" />" +
+                                        "</p>" +
+                                    "</div>" +
+                                    "<div id=\"divEditModerator_" + newData.Id + "\">" +
+
+                                    "</div>";
+
+                    document.getElementById('divEditModerators').innerHTML = newModerator;
+                    
+                    document.getElementById('divAllModerators').innerHTML = "<p>"+
+                                                                                "<a href=\"/userprofile/index/"+ newData.Id+ "\" class=\"nameMod\">"+ 
+                                                                                       newData.FirstName + " "+ newData.LastName +
+                                                                                "</a>"+
+                                                                            "</p>";
+                }
+            },
+
+            400: function () {
+                //erro
+                window.alert("Não foi possível realizar esta operação. Tente novamente mais tarde.");
+            }
+        }
+    });
+
+} 
+
+function ajaxEditModerator(id, idUser)
+{
+
+}
+
+function saveNewPermission(id, idUser, permission)
+{
+    EditPermissionModerator
+    $.ajax({
+        url: "/api/Channel/EditPermissionModerator/" + id + "?userId=" + idUser + "?permission="+permission,
+        type: "POST",
+        contentType: "application/json;charset=utf-8",
+        statusCode: {
+            200: function (newData) {
+                if (newData != "") {
+                   //TODO: colocar p inserir na view e retirar o campo de ediçao da tela
+                }
+            },
+
+            400: function () {
+                //erro
+                window.alert("Não foi possível realizar esta operação. Tente novamente mais tarde.");
+            }
+        }
+    });
+
+}
+
+function ajaxDeleteModerator(id, idUser)
+{
+    $.ajax({
+        url: "/api/Channel/DeleteModeratorChannel/" + id + "?userID=" + idUser,
+        type: "DELETE",
+        contentType: "application/json;charset=utf-8",
+        statusCode: {
+            200: function (newData) {
+                if (newData == true) {
+                    document.getElementById('divModerator_' + idUser).style.display = "none";
+                }
+            },
+
+            400: function () {
+                //erro
+                window.alert("Não foi possível realizar esta operação. Tente novamente mais tarde.");
             }
         }
     });

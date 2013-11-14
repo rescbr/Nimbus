@@ -251,6 +251,61 @@ namespace Nimbus.Web.API.Controllers
         }
 
         /// <summary>
+        /// Método que retornar os moderadores de um canal e uma string referente a permissão que eles tem, 
+        /// deve ser usado para exibir em tela de edição
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public List<UserBag> ShowModeratorsEdit(int id = 0)
+        {
+            List<UserBag> moderators = new List<UserBag>();
+            try
+            {
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {
+                    ICollection<Role> roleList = db.SelectParam<Role>(rl => rl.ChannelId == id).Where(rl => (rl.ChannelMagager == true ||
+                                                                                        rl.MessageManager == true ||
+                                                                                        rl.ModeratorManager == true ||
+                                                                                        rl.TopicManager == true ||
+                                                                                        rl.UserManager == true) && rl.IsOwner == false).ToList();
+                    foreach (Role item in roleList)
+                    {
+                        User user = db.SelectParam<User>(us => us.Id == item.UserId).FirstOrDefault();
+                        if (user != null)
+                        {
+                            UserBag bag = new UserBag();
+                            bag.FirstName = user.FirstName;
+                            bag.LastName = user.LastName;
+                            bag.Id = user.Id;
+                            bag.AvatarUrl = user.AvatarUrl;
+                            if (item.MessageManager == true && item.ModeratorManager == true &&
+                               item.TopicManager == true && item.UserManager == true)
+                            {
+                                bag.RoleInChannel = "Todas";
+                            }
+                            else if (item.MessageManager == true)
+                                bag.RoleInChannel = "Moderar mensagens";
+                            else if (item.ModeratorManager == true)
+                                bag.RoleInChannel = "Moderar moderadores";
+                            else if (item.TopicManager == true)
+                                bag.RoleInChannel = "Moderar tópicos";
+                            else if (item.UserManager == true)
+                                bag.RoleInChannel = "Moderar usuários";
+
+                            moderators.Add(bag);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+            }
+            return moderators;
+        }
+
+        /// <summary>
         /// Método que retorna os usuarios que moderam o canal com permissao p/ ver/responder as mensagens
         /// </summary>
         /// <param name="id"></param>
@@ -783,9 +838,10 @@ namespace Nimbus.Web.API.Controllers
         /// <param name="userModerator"></param>
         /// <returns></returns>
         [HttpPost]
-        public List<Role> AddModerator(List<Role> userModerator, int id)
+        public UserBag AddModerator(Role userModerator)
         {
             //TODO: notificação
+            UserBag bag = new UserBag();
             try
             {
                 using(var db = DatabaseFactory.OpenDbConnection())
@@ -795,17 +851,17 @@ namespace Nimbus.Web.API.Controllers
                         try
                         {
                             bool prox = false;
-                            bool allow = db.SelectParam<Role>(role => role.UserId == NimbusUser.UserId && role.ChannelId == id)
+                            bool allow = db.SelectParam<Role>(role => role.UserId == NimbusUser.UserId && role.ChannelId == userModerator.ChannelId)
                                                                                 .Exists (role => role.IsOwner == true || role.ModeratorManager == true);
 
 
-                            int countModerator = db.SelectParam<Role>(mdr => mdr.ChannelId == id &&
+                            int countModerator = db.SelectParam<Role>(mdr => mdr.ChannelId == userModerator.ChannelId &&
                                                                                       (mdr.ModeratorManager == true || mdr.MessageManager == true
                                                                                        || mdr.ChannelMagager == true || mdr.TopicManager == true 
                                                                                        || mdr.UserManager == true)).Count();
 
                             //organizationId == 0 => nimbus, portanto free
-                            int orgID = db.SelectParam<Channel>(ch => ch.Id == id).Select(ch => ch.OrganizationId).FirstOrDefault();
+                            int orgID = db.SelectParam<Channel>(ch => ch.Id == userModerator.ChannelId).Select(ch => ch.OrganizationId).FirstOrDefault();
 
                             if (allow == true)
                             {
@@ -828,10 +884,49 @@ namespace Nimbus.Web.API.Controllers
                             
                             if (prox == true)
                             {
-                                foreach (Role item in userModerator)
+                                Role role = db.SelectParam<Role>(r => r.ChannelId == userModerator.ChannelId && r.UserId == userModerator.UserId).FirstOrDefault();
+                                User user = db.SelectParam<User>(u => u.Id == userModerator.UserId).FirstOrDefault();
+                                
+                                //verifica se já existe e havia sido 'deletado'
+                                if (role != null)
                                 {
-                                    db.Save(item);
-                                }                               
+                                    role.ChannelMagager = userModerator.ChannelMagager;
+                                    role.MessageManager = userModerator.MessageManager;
+                                    role.ModeratorManager = userModerator.ModeratorManager;
+                                    role.TopicManager = userModerator.TopicManager;
+                                    role.UserManager = userModerator.UserManager;
+
+                                    db.Update<Role>(role);                                   
+                                }
+                                else
+                                {
+                                    db.Save(userModerator);
+                                }
+
+                                bag.Id = user.Id;
+                                bag.FirstName = user.FirstName;
+                                bag.LastName = user.LastName;
+                                bag.AvatarUrl = user.AvatarUrl;                                   
+
+                                if (userModerator.ChannelMagager)
+                                    bag.RoleInChannel = "";
+
+                                if (userModerator.MessageManager)
+                                    bag.RoleInChannel = "Moderar mensagens";
+
+                                if (userModerator.ModeratorManager)
+                                    bag.RoleInChannel = "Moderar moderadores";
+
+                                if (userModerator.TopicManager)
+                                    bag.RoleInChannel = "Moderar tópicos";
+
+                                if (userModerator.UserManager)
+                                    bag.RoleInChannel = "Moderar usuários";
+
+                                if (userModerator.ChannelMagager == true && userModerator.MessageManager == true && userModerator.ModeratorManager == true
+                                    && userModerator.TopicManager == true && userModerator.UserManager == true)
+                                    bag.RoleInChannel = "Todas";
+                                    
                             }
                             else
                             {
@@ -851,7 +946,7 @@ namespace Nimbus.Web.API.Controllers
             {
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
-            return userModerator;
+            return bag;
         }
 
         /// <summary>
@@ -1006,6 +1101,81 @@ namespace Nimbus.Web.API.Controllers
         }
 
         /// <summary>
+        /// Método que muda a permissao de um moderador
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="userId"></param>
+        /// <param name="permission"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public string EditPermissionModerator(int id, int userId, int permission)
+        {
+            string newPermission = "";
+            try
+            {
+                using(var db = DatabaseFactory.OpenDbConnection())
+                {
+                    Role currentRole = db.SelectParam<Role>(r => r.ChannelId == id && r.UserId == userId).FirstOrDefault();
+                    if (currentRole != null)
+                    {
+                        if (permission == 0)
+                        {
+                            currentRole.ChannelMagager = true;
+                            currentRole.TopicManager = false;
+                            currentRole.MessageManager = false;
+                            currentRole.ModeratorManager = false;
+                            currentRole.UserManager = false;
+                            newPermission = "Todas";
+                        }
+                        else if (permission == 1)
+                        {
+                            currentRole.ChannelMagager = false;
+                            currentRole.TopicManager = false;
+                            currentRole.MessageManager = true;
+                            currentRole.ModeratorManager = false;
+                            currentRole.UserManager = false;
+                            newPermission = "Moderar mensagens";
+                        }
+                        else if (permission == 2)
+                        {
+                            currentRole.ChannelMagager = false;
+                            currentRole.TopicManager = false;
+                            currentRole.MessageManager = false;
+                            currentRole.ModeratorManager = true;
+                            currentRole.UserManager = false;
+                            newPermission = "Moderar moderadores";
+                        }
+                        else if (permission == 3)
+                        {
+                            currentRole.ChannelMagager = false;
+                            currentRole.TopicManager = true;
+                            currentRole.MessageManager = false;
+                            currentRole.ModeratorManager = false;
+                            currentRole.UserManager = false;
+                            newPermission = "Moderar tópicos";
+                        }
+                        else if (permission == 4)
+                        {
+                            currentRole.ChannelMagager = false;
+                            currentRole.TopicManager = false;
+                            currentRole.MessageManager = false;
+                            currentRole.ModeratorManager = false;
+                            currentRole.UserManager = true;
+                            newPermission = "Moderar usuários";
+                        }
+
+                        db.Update<Role>(currentRole);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+            }
+            return newPermission;
+        }
+
+        /// <summary>
         /// Troca a visibilidade (deleta) a tag escolhida
         /// </summary>
         /// <param name="channelID"></param>
@@ -1029,6 +1199,52 @@ namespace Nimbus.Web.API.Controllers
                         dado.Visible = false;
 
                         db.Update<TagChannel>(dado);
+                        isDelete = true;
+                    }
+                    else
+                    {
+                        throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotAcceptable, "sem permissao"));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+            }
+            return isDelete;
+        }
+
+        /// <summary>
+        /// Método que retira a permissão do usuário para moderar o canal
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="userID"></param>
+        /// <returns></returns>
+        [HttpDelete]
+        public bool DeleteModeratorChannel(int id, int userID)
+        {
+            bool isDelete = false;
+            try
+            {
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {
+
+                    bool isOWner = IsOwner(id);
+                    bool isManager = db.SelectParam<Role>(r => r.ChannelId == id && r.UserId == NimbusUser.UserId).Exists(r => r.IsOwner == true || 
+                                                                                                                              r.ChannelMagager == true ||
+                                                                                                                              r.ModeratorManager == true);
+
+                    if (isOWner == true || isManager == true)//usuario possui permissao
+                    {
+                        Role role = db.SelectParam<Role>(r => r.UserId == userID && r.ChannelId == id).FirstOrDefault();
+                        role.Accepted = false;
+                        role.ChannelMagager = false;
+                        role.MessageManager = false;
+                        role.ModeratorManager = false;
+                        role.TopicManager = false;
+                        role.UserManager = false;
+
+                        db.Update<Role>(role);
                         isDelete = true;
                     }
                     else
