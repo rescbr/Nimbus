@@ -19,6 +19,22 @@ namespace Nimbus.Web.API.Controllers
     public class UserController : NimbusApiController
     {
 
+        public class UserAutoCompleteResponse
+        {
+            public class UserData
+            {
+                public int Id { get; set; }
+                public string AvatarUrl { get; set; }
+            }
+            public string value { get; set; }
+            public UserData data { get; set; }
+        }
+
+        public class SuggestionWrapper
+        {
+            public List<UserAutoCompleteResponse> suggestions { get; set; }
+        }
+
         #region métodos de exibir informações do perfil
 
         ///<summary>
@@ -43,7 +59,7 @@ namespace Nimbus.Web.API.Controllers
                     if (id == null)
                         id = NimbusUser.UserId;
 
-                    var user = db.SelectParam<User>(usr => usr.Id == id).FirstOrDefault();      
+                    var user = db.SelectParam<User>(usr => usr.Id == id).FirstOrDefault();
                     UserBag userBag = new UserBag();
                     userBag.Id = user.Id;
                     userBag.About = user.About;
@@ -57,13 +73,13 @@ namespace Nimbus.Web.API.Controllers
                     userBag.LastName = user.LastName;
                     userBag.Occupation = user.Occupation;
                     userBag.State = user.State;
-                    userBag.Age =(int)Math.Floor((DateTime.Now.Subtract(user.BirthDate).Days)/365.25);
+                    userBag.Age = (int)Math.Floor((DateTime.Now.Subtract(user.BirthDate).Days) / 365.25);
                     userBag.Interaction = 0;//TODO: arrumar p valor certo - pensar nas regras
-               
+
                     //throw http exception
                     if (userBag == null)
                     {
-                        throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, 
+                        throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound,
                             "this item does not exist"));
                     }
 
@@ -97,9 +113,9 @@ namespace Nimbus.Web.API.Controllers
                         users = db.SelectParam<User>(usr => (usr.FirstName.Contains(q) ||
                                                                 usr.LastName.Contains(q) ||
                                                                 usr.Occupation.Contains(q) ||
-                                                                usr.Interest.Contains(q)  ));
-                            
-                        
+                                                                usr.Interest.Contains(q)));
+
+
                     }
                 }
                 catch (Exception ex)
@@ -114,13 +130,15 @@ namespace Nimbus.Web.API.Controllers
             return users;
         }
 
+
+
         /// <summary>
         /// Método que retorna os usuarios existentes excluindo os que já sao moderadores do canal
         /// </summary>
         /// <param name="q"></param>
         /// <returns></returns>
         [HttpGet]
-        public List<User> SearchNewModerador(int id, string q)
+        public SuggestionWrapper SearchNewModerador(int id, string q)
         {
             //List<Model.ORM.User> users = new List<Model.ORM.User>();
             if (!string.IsNullOrEmpty(q))
@@ -130,25 +148,30 @@ namespace Nimbus.Web.API.Controllers
                 {
                     using (var db = DatabaseFactory.OpenDbConnection())
                     {
-                        var listId = db.SelectParam<Role>(r => r.ChannelId == id && 
-                                                                            (r.IsOwner == false && r.ChannelMagager == false && 
-                                                                             r.MessageManager == false &&  r.ModeratorManager == false && 
-                                                                             r.TopicManager == false &&  r.UserManager == false))
-                                                                             .Select(r => r.UserId).ToList();
-                        List<User> users = new List<User>();
-                        foreach (int item in listId)
-                        {
-                             User user = db.SelectParam<User>(u => u.Id == item &&
-                                                               (u.FirstName.Contains(q) ||
-                                                               u.LastName.Contains(q) ||
-                                                               u.Occupation.Contains(q) ||
-                                                               u.Interest.Contains(q))).FirstOrDefault();
-                             if (user != null)
-                                 users.Add(user);
-                        }
+                        var roles = db.SelectParam<Role>(r => r.ChannelId == id &&
+                                                                            (r.IsOwner == false && r.ChannelMagager == false &&
+                                                                             r.MessageManager == false && r.ModeratorManager == false &&
+                                                                             r.TopicManager == false && r.UserManager == false));
 
-                       
-                        return users;
+                        var users = roles.Select(r => db.Where<User>(u => u.Id == r.UserId &&
+                                                              (u.FirstName.Contains(q) ||
+                                                              u.LastName.Contains(q) ||
+                                                              u.Occupation.Contains(q) ||
+                                                              u.Interest.Contains(q))).FirstOrDefault());
+
+                        //mapeia os usuários para o formato do jquery.autocomplete
+
+                        var resp = users.Select(x => new UserAutoCompleteResponse
+                        {
+                            value = x.FirstName + " " + x.LastName,
+                            data = new UserAutoCompleteResponse.UserData
+                            {
+                                Id = x.Id,
+                                AvatarUrl = x.AvatarUrl
+                            }
+                        });
+
+                        return new SuggestionWrapper { suggestions = resp.ToList() };
                     }
                 }
                 catch (Exception ex)
@@ -160,7 +183,7 @@ namespace Nimbus.Web.API.Controllers
             {
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Nenhum registro encontrado para '" + q + "'"));
             }
-            
+
         }
 
         #endregion
@@ -176,7 +199,7 @@ namespace Nimbus.Web.API.Controllers
         {
             try
             {
-                using(var db = DatabaseFactory.OpenDbConnection())
+                using (var db = DatabaseFactory.OpenDbConnection())
                 {
                     User currentUser = db.SelectParam<User>(us => us.Id == NimbusUser.UserId).FirstOrDefault();
                     if (currentUser != null)
@@ -203,7 +226,7 @@ namespace Nimbus.Web.API.Controllers
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
         }
-         
+
         [AllowAnonymous]
         [HttpPost]
         public User CreateProfile(User user)
@@ -215,7 +238,7 @@ namespace Nimbus.Web.API.Controllers
 
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    db.Insert(user);                    
+                    db.Insert(user);
                 }
 
                 return user;
@@ -231,7 +254,7 @@ namespace Nimbus.Web.API.Controllers
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        
+
         [HttpPost]
         [AllowAnonymous]
         public UserInfoPayment CreateInfoUser(UserInfoPayment user)
