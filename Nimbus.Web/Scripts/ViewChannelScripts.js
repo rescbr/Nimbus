@@ -57,7 +57,7 @@ function DisableOption(currentOpt, nameDiv)
     $("#"+ nameDiv + " ul").append(campo);
 }
 
-
+/*Métodos sobre os tópicos*/
 function SaveNewTopic(channelID, isEdit)
 {
     if (isEdit == false)
@@ -241,6 +241,7 @@ function ajaxTopicCallback(response) {
     }
 }
 
+/*Edit, delete, answer commentarios*/
 function ajaxAnswerComment(parentId,commentId, channelId, topicId, txtContent) {
     
     var ajaxData = {}
@@ -352,6 +353,7 @@ function ajaxDeleteComment(commentId, divName)
 
 }
 
+/*Mensagens*/
 function ajaxSendMessage(id)
 {
     ajaxMessage = {};
@@ -394,6 +396,7 @@ function ajaxSendMessage(id)
     }
 }
 
+/*Métodos sobre Moderadores*/
 function ajaxLoadModeratorEdit(id)
 {
     $.ajax({
@@ -413,11 +416,13 @@ function ajaxLoadModeratorEdit(id)
                                          "<p>" +
                                          "<img src=\"" + newData[i].AvatarUrl + "\" title=\"" + newData[i].FirstName + "\" />" +
                                          "<label>" + newData[i].FirstName + " " + newData[i].LastName + "</label>" +
-                                         "<input type=\"text\" disabled value=\"" + newData[i].RoleInChannel + "\" />" +
+                                         "<input id=\"inputUser_" + newData[i].Id + "\" type=\"text\" disabled value=\"" + newData[i].RoleInChannel + "\" />" +
+                                         "<div id=\"divUser_" + newData[i].Id + "\"></div>" +
                                          "<img src=\"/images/Utils/edit.png\" onclick=\"ajaxEditModerator(" + id + "," + newData[i].Id + ");\" title=\"Editar\" />" +
                                          "<img src=\"/images/Utils/delete.png\" onclick=\"ajaxDeleteModerator(" + id + "," + newData[i].Id + ");\" title=\"Deletar\" />" +
                                         "</p>" +
                                     "</div>" +
+                                    "Adicionar novo moderador:"+
                                     "<div id=\"divEditModerator_" + newData[i].Id + "\">" +
                                      "<select id=\"permissionSelect\">"+
                                       "<option value=\"0\">Todas</option>"+
@@ -527,9 +532,17 @@ function ajaxNewModerator(id,userId)
 
 } 
 
-function ajaxEditModerator(id, idUser)
-{
-
+function ajaxEditModerator(id, idUser) {
+    /*trocar o input por um select*/
+    select =  "<select id=\"newPermissionSelect_"+idUser+"\">" +
+                       "<option value=\"0\">Todas</option>" +
+                       "<option value=\"1\">Moderar mensagens</option>" +
+                       "<option value=\"2\">Moderar moderadores</option>" +
+                       "<option value=\"3\">Moderar tópicos</option>" +
+                       "<option value=\"4\">Moderar usuários</option>" +
+                       "</select>";
+    document.getElementById('inputUser_' + idUser).style.display = 'none';
+    document.getElementById('divUser_' + idUser).innerHTML = select;
 }
 
 function saveNewPermission(id, idUser, permission)
@@ -576,6 +589,7 @@ function ajaxDeleteModerator(id, idUser)
     });
 }
 
+/*Métodos sobre tags*/
 function ajaxLoadTags(id) { 
     $.ajax({
         url: "/api/Channel/ShowTagChannelEdit/" + id,       
@@ -672,6 +686,7 @@ function ajaxdeleteTag(idTag, id)
     });
 }
 
+/*Métodos gerais de edição*/
 function addAutocompleteToSearch() {
     /*método q busca os moderadores*/
     $('#search').autocomplete({
@@ -691,4 +706,26 @@ function ajaxLoadEditInfo(id, isOwner)
 
     if (roles.indexOf("moderatormanager") > -1|| roles.indexOf("channelmanager") > -1 || isOwner == true )
        ajaxLoadModeratorEdit(id);  
+}
+
+function ajaxSaveAllEdit(id)
+{
+    //tags -> são salvas assim que são criadas
+    //salvar nome
+    title = document.getElementById('txtEditTitle').value;
+    
+    //salvar novos moderadores
+    //alterou permissao
+    var obj = $("select[id*='newPermissionSelect_']");
+
+    for (var i = 0; i < obj.length; i++) {
+        idUser = obj[i].id.replace("newPermissionSelect_", "");
+
+        var select = obj[i].selectedIndex;
+        var option = obj[i].options;
+        var permission = option[select].value;
+
+        alert('user [' + idUser + "]  agora o value [" + permission);
+    }
+    
 }

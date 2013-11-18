@@ -279,11 +279,9 @@ namespace Nimbus.Web.API.Controllers
                             bag.LastName = user.LastName;
                             bag.Id = user.Id;
                             bag.AvatarUrl = user.AvatarUrl;
-                            if (item.MessageManager == true && item.ModeratorManager == true &&
-                               item.TopicManager == true && item.UserManager == true)
-                            {
+
+                            if (item.ChannelMagager == true)
                                 bag.RoleInChannel = "Todas";
-                            }
                             else if (item.MessageManager == true)
                                 bag.RoleInChannel = "Moderar mensagens";
                             else if (item.ModeratorManager == true)
