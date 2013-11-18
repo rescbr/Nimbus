@@ -16,6 +16,7 @@ namespace Nimbus.Web.API.Controllers
     /// <summary>
     /// Controle sobre todas as funções realizadas para os Tópicos
     /// </summary>
+    [NimbusAuthorize]
     public class TopicController : NimbusApiController
     {
         #region IsOwner e IsManager
@@ -97,7 +98,6 @@ namespace Nimbus.Web.API.Controllers
         /// </summary>
         /// <param name="topic"></param>
         /// <returns></returns>
-        [Authorize]
         [HttpPost]
         public Topic NewTopic(Topic topic)
         {
@@ -122,7 +122,7 @@ namespace Nimbus.Web.API.Controllers
                                 topic.CreatedOn = DateTime.Now;
                                 topic.LastModified = DateTime.Now;
                                 topic.Visibility = true;
-                                
+
                                 if (string.IsNullOrEmpty(topic.Price.ToString()))
                                 {
                                     topic.Price = 0;
@@ -132,7 +132,7 @@ namespace Nimbus.Web.API.Controllers
                                 topic.Text = HttpUtility.HtmlEncode(topic.Text);
                                 topic.Title = HttpUtility.HtmlEncode(topic.Title);
                                 topic.UrlVideo = HttpUtility.HtmlEncode(topic.UrlVideo);
-                                
+
                                 if (topic.TopicType == Model.Enums.TopicType.exam)
                                 {
                                     foreach (var item in topic.Question)
@@ -153,7 +153,7 @@ namespace Nimbus.Web.API.Controllers
                                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotAcceptable, "erro ao criar item"));
                             }
                         }
-                        catch(Exception ex)
+                        catch (Exception ex)
                         {
                             trans.Rollback();
                             throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
@@ -172,7 +172,6 @@ namespace Nimbus.Web.API.Controllers
         /// </summary>
         /// <param name="topic"></param>
         /// <returns></returns>
-        [Authorize]
         [HttpPost]
         public Topic EditTopic(Topic topic)
         {
@@ -241,7 +240,6 @@ namespace Nimbus.Web.API.Controllers
         /// carregar informações gerais de um tópico, chammar a função de comentarios e count favoritos
         /// </summary>
         /// <returns></returns>
-        [Authorize]
         [HttpGet]
         public Topic ShowTopic(int id)
         {
@@ -258,7 +256,7 @@ namespace Nimbus.Web.API.Controllers
 
                         topic.Title = HttpUtility.HtmlDecode(topic.Title);
                         //topic.Description = RemoveHTMLString.StripTagsCharArray(topic.Description); 
-                        topic.Description =HttpUtility.HtmlDecode(topic.Description);
+                        topic.Description = HttpUtility.HtmlDecode(topic.Description);
                         topic.Text = HttpUtility.HtmlDecode(topic.Text);
 
                         if (topic.TopicType == Nimbus.Model.Enums.TopicType.exam)
@@ -278,7 +276,7 @@ namespace Nimbus.Web.API.Controllers
                                 {
                                     item.TextQuestion = HttpUtility.HtmlDecode(item.TextQuestion);
                                     //colocar p opçoes e arrumar p retornar esse
-                                }                                
+                                }
                             }
                             #endregion
                         }
@@ -296,7 +294,6 @@ namespace Nimbus.Web.API.Controllers
         /// carregar informações gerais dos trending tópicos
         /// </summary>
         /// <returns></returns>
-        [Authorize]
         [HttpGet]
         public List<TopicBag> ShowTTopic(int id)
         {
@@ -308,16 +305,16 @@ namespace Nimbus.Web.API.Controllers
                     ICollection<int> idChannel;
                     if (id == 0)
                     {
-                         idChannel = db.SelectParam<Channel>(ch => ch.Visible == true && ch.OrganizationId == NimbusOrganization.Id)
-                                                             .Select(ch => ch.Id).ToList();
+                        idChannel = db.SelectParam<Channel>(ch => ch.Visible == true && ch.OrganizationId == NimbusOrganization.Id)
+                                                            .Select(ch => ch.Id).ToList();
                     }
                     else
                     {
-                         idChannel = db.SelectParam<Channel>(ch => ch.Visible == true && ch.OrganizationId == NimbusOrganization.Id && ch.CategoryId == id)
-                                                             .Select(ch => ch.Id).ToList();
+                        idChannel = db.SelectParam<Channel>(ch => ch.Visible == true && ch.OrganizationId == NimbusOrganization.Id && ch.CategoryId == id)
+                                                            .Select(ch => ch.Id).ToList();
 
                     }
-                    //COLOCAR P APARECER DE DFATO SO OS TRENDING
+                    //TODO: COLOCAR P APARECER DE DFATO SO OS TRENDING
                     ICollection<Topic> tpcs = db.SelectParam<Topic>(tp => tp.Visibility == true && idChannel.Contains(tp.ChannelId)).ToList();
                     foreach (var item in tpcs)
                     {
@@ -359,7 +356,6 @@ namespace Nimbus.Web.API.Controllers
         /// </summary>
         /// <param name="q">Query de Pesquisa</param>
         /// <returns></returns>
-        [Authorize]
         [HttpGet]
         public List<Topic> SearchTopic(string q)
         {
@@ -438,7 +434,6 @@ namespace Nimbus.Web.API.Controllers
         /// método de exibir tópicos em resumo, filtra por categoriam modificação e popularidade
         /// </summary>
         /// <returns></returns>
-        [Authorize]
         [HttpGet]
         public List<TopicBag> AbstTopic(string viewBy = null, int channelID = 0, int categoryID = 0)
         {
@@ -448,62 +443,62 @@ namespace Nimbus.Web.API.Controllers
                 List<int> idChannel = new List<int>();
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                   int idOrg = NimbusOrganization.Id ;
+                    int idOrg = NimbusOrganization.Id;
 
-                   //verifica se o canal que esta tentando acessar é válido e existe
-                   if (channelID > 0)
-                   {
-                       bool isValid = db.SelectParam<Channel>(ch => ch.Id == channelID && ch.Visible == true && ch.OrganizationId == idOrg)
-                                                                   .Exists(ch => ch.Id == channelID);
-                       if (isValid)
-                       {
-                           idChannel.Add(channelID);
-                       }
-                       else
-                       {
-                           idChannel = null;
-                       }
-                   }
-                   //busca todos os canais da categoria da organizacao
-                   else if (categoryID > 0)
-                   {
+                    //verifica se o canal que esta tentando acessar é válido e existe
+                    if (channelID > 0)
+                    {
+                        bool isValid = db.SelectParam<Channel>(ch => ch.Id == channelID && ch.Visible == true && ch.OrganizationId == idOrg)
+                                                                    .Exists(ch => ch.Id == channelID);
+                        if (isValid)
+                        {
+                            idChannel.Add(channelID);
+                        }
+                        else
+                        {
+                            idChannel = null;
+                        }
+                    }
+                    //busca todos os canais da categoria da organizacao
+                    else if (categoryID > 0)
+                    {
 
-                       idChannel = db.SelectParam<Channel>(ch => ch.OrganizationId == idOrg && ch.Visible == true && ch.CategoryId == categoryID)
-                                                                           .Select(ch => ch.Id).ToList();
-                   }
-                   //busca todos os canais em geral da organizacao                      
-                   else
-                   {
-                       idChannel = db.SelectParam<Channel>(ch => ch.OrganizationId == idOrg && ch.Visible == true)
-                                                                             .Select(ch => ch.Id).ToList();
-                   }
+                        idChannel = db.SelectParam<Channel>(ch => ch.OrganizationId == idOrg && ch.Visible == true && ch.CategoryId == categoryID)
+                                                                            .Select(ch => ch.Id).ToList();
+                    }
+                    //busca todos os canais em geral da organizacao                      
+                    else
+                    {
+                        idChannel = db.SelectParam<Channel>(ch => ch.OrganizationId == idOrg && ch.Visible == true)
+                                                                              .Select(ch => ch.Id).ToList();
+                    }
 
-                   if (idChannel.Count > 0)
-                   {
-                       
-                       List<Topic> topic = db.Where<Topic>(tp => tp.Visibility == true);
-                       topic = topic.Where(t => idChannel.Contains(t.ChannelId)).ToList();
-                                         
-                       if (topic.Count > 0)
-                       {
-                           foreach (var item in topic)
-                           {
-                               int count = db.SelectParam<ViewByTopic>(vt => vt.TopicId == item.Id).Select(vt => vt.CountView).FirstOrDefault();
-                               TopicBag bag = new TopicBag()
-                               {
-                                   Id = item.Id,
-                                   Description = item.Description,
-                                   Title = item.Title,
-                                   TopicType = item.TopicType,
-                                   ImgUrl = item.ImgUrl,
-                                   LastModified = item.LastModified,
-                                   Count = count                                  
-                                  
-                               };
-                               tpcList.Add(bag);
-                           }
-                       }
-                   }   
+                    if (idChannel.Count > 0)
+                    {
+
+                        List<Topic> topic = db.Where<Topic>(tp => tp.Visibility == true);
+                        topic = topic.Where(t => idChannel.Contains(t.ChannelId)).ToList();
+
+                        if (topic.Count > 0)
+                        {
+                            foreach (var item in topic)
+                            {
+                                int count = db.SelectParam<ViewByTopic>(vt => vt.TopicId == item.Id).Select(vt => vt.CountView).FirstOrDefault();
+                                TopicBag bag = new TopicBag()
+                                {
+                                    Id = item.Id,
+                                    Description = item.Description,
+                                    Title = item.Title,
+                                    TopicType = item.TopicType,
+                                    ImgUrl = item.ImgUrl,
+                                    LastModified = item.LastModified,
+                                    Count = count
+
+                                };
+                                tpcList.Add(bag);
+                            }
+                        }
+                    }
                 }
             }
             catch (Exception ex)
@@ -514,34 +509,33 @@ namespace Nimbus.Web.API.Controllers
             if (viewBy.ToLower() == "bymodified")
                 return tpcList.OrderBy(tp => tp.LastModified).ToList();
             else if (viewBy.ToLower() == "bypopularity")
-               return tpcList.OrderBy(tp => tp.Count).ToList();
+                return tpcList.OrderBy(tp => tp.Count).ToList();
             else
-               return tpcList;
+                return tpcList;
         }
-             
+
         /// <summary>
         /// método de favoritar/desfavoritar o tópico
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [Authorize]
         [HttpPut]
         public bool TopicFavorite(int id)
         {
             bool flag = false;
             try
             {
-                using(var db = DatabaseFactory.OpenDbConnection())
+                using (var db = DatabaseFactory.OpenDbConnection())
                 {
                     UserTopicFavorite user = new UserTopicFavorite();
                     user = db.SelectParam<UserTopicFavorite>(us => us.UserId == NimbusUser.UserId && us.TopicId == id).FirstOrDefault();
                     UserTopicFavorite usrFavorite = new UserTopicFavorite();
                     if (user == null) //nunca favoritou
                     {
-                            usrFavorite.UserId = NimbusUser.UserId;
-                            usrFavorite.TopicId = id;
-                            usrFavorite.FavoritedOn = DateTime.Now;
-                            usrFavorite.Visible = true;
+                        usrFavorite.UserId = NimbusUser.UserId;
+                        usrFavorite.TopicId = id;
+                        usrFavorite.FavoritedOn = DateTime.Now;
+                        usrFavorite.Visible = true;
                         db.Insert(usrFavorite);
                         flag = true;
                     }
@@ -569,7 +563,6 @@ namespace Nimbus.Web.API.Controllers
         /// <param name="topicID"></param>
         /// <param name="readOn"></param>
         /// <returns></returns>
-        [Authorize]
         [HttpPost]
         public bool ReadChannelLater(int id, DateTime? readOn = null)
         {
@@ -613,7 +606,7 @@ namespace Nimbus.Web.API.Controllers
         [NonAction]
         public bool ValidateShowTopic(int id)
         {
-            bool allow = false; 
+            bool allow = false;
             try
             {
                 //ver permissao p vizualizar => se é pago = ter pagado, se é privado = ser aceito
@@ -659,13 +652,12 @@ namespace Nimbus.Web.API.Controllers
             }
             return allow;
         }
-              
+
         /// <summary>
         /// Método de retornar o numero de favoritos de um tópico
         /// </summary>
         /// <param name="topicID"></param>
         /// <returns></returns>
-        [Authorize]
         [HttpGet]
         public int CountFavorite(int id)
         {
@@ -678,8 +670,8 @@ namespace Nimbus.Web.API.Controllers
                 }
             }
             catch (Exception ex)
-            {                
-                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
             return count;
         }
@@ -689,7 +681,6 @@ namespace Nimbus.Web.API.Controllers
         /// </summary>
         /// <param name="channelID"></param>
         /// <returns></returns>
-        [Authorize]
         [HttpGet]
         public CategoryBag CategoryTopic(int id)
         {
@@ -700,7 +691,7 @@ namespace Nimbus.Web.API.Controllers
                 {
                     int channlId = db.SelectParam<Topic>(t => t.Id == id).Select(t => t.ChannelId).FirstOrDefault();
                     if (channlId > 0)
-                    { 
+                    {
                         int catID = db.SelectParam<Channel>(ch => ch.Id == channlId && ch.Visible == true).Select(ch => ch.CategoryId).FirstOrDefault();
                         Category ctg = new Category();
                         ctg = db.SelectParam<Category>(ct => ct.Id == catID).FirstOrDefault();
@@ -725,7 +716,6 @@ namespace Nimbus.Web.API.Controllers
         /// </summary>
         /// <param name="idCategory"></param>
         /// <returns></returns>
-        [Authorize]
         [HttpGet]
         public List<Ad> ShowAds(int id = -1)
         {
@@ -736,12 +726,12 @@ namespace Nimbus.Web.API.Controllers
                 {
                     if (id == -1) //não tem categoria, anuncio generico
                     {
-                        listAds = db.SelectParam<Ad>(ad => ad.Visible == true);                                               
+                        listAds = db.SelectParam<Ad>(ad => ad.Visible == true);
                     }
                     else
                     {
-                        listAds = db.SelectParam<Ad>(ad => ad.Visible == true && ad.CategoryId == id);                               
-                    }               
+                        listAds = db.SelectParam<Ad>(ad => ad.Visible == true && ad.CategoryId == id);
+                    }
                 }
             }
             catch (Exception ex)
@@ -786,7 +776,6 @@ namespace Nimbus.Web.API.Controllers
         /// <param name="topicID"></param>
         /// <param name="tagsList"></param>
         /// <returns></returns>
-        [Authorize]
         [HttpPost]
         public List<string> AddTagsTopic(int id, List<string> tagsList)
         {
@@ -800,7 +789,7 @@ namespace Nimbus.Web.API.Controllers
                         {
                             bool isOwner = IsOwner(id, "topic");
                             bool isManager = IsManager(id, "topic");
-                            int channelID = db.SelectParam<Topic>(tp => tp.Id == id && tp.Visibility==true).Select(tp => tp.ChannelId).FirstOrDefault();
+                            int channelID = db.SelectParam<Topic>(tp => tp.Id == id && tp.Visibility == true).Select(tp => tp.ChannelId).FirstOrDefault();
 
                             bool isPrivate = db.SelectParam<Channel>(ch => ch.Id == channelID).Select(p => p.IsPrivate).FirstOrDefault();
                             bool allOk = false;
@@ -917,7 +906,7 @@ namespace Nimbus.Web.API.Controllers
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
