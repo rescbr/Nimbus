@@ -405,6 +405,7 @@ function ajaxLoadModeratorEdit(id)
                 var listModerador = "";
                 var string = "";
                 var includeDiv = "";
+                var autocomplete = false;
                 if (newData.length > 0) {                   
                     //incluir itens na div                    
                     for (var i = 0; i < newData.length; i++) {
@@ -432,7 +433,7 @@ function ajaxLoadModeratorEdit(id)
                     //coloca o campo de buscar um novo moderador, esse campo é preenchido pelo método acima value=\"Adicionar moderador\" onclick=\"this.value=''\"
                     string = "<input id=\"search\" type=\"text\"/>" +
                                   "<button id=\"btnAddModerator\" onclick=\"ajaxNewModerator(" + id + ");\">Adicionar</button>";
-                    addAutocompleteToSearch();
+                    autocomplete = true;
                 }
                 else {
                     string = "<p>Você já possui o limite máximo de moderadores aceitos por canal.</p>";
@@ -447,7 +448,7 @@ function ajaxLoadModeratorEdit(id)
                                    "<div>" + string + "</div>";
                 }
                 document.getElementById('divEditModerators').innerHTML = includeDiv;
-
+                if (autocomplete) addAutocompleteToSearch();
 
             },
 
@@ -677,7 +678,7 @@ function addAutocompleteToSearch() {
         serviceUrl: '/api/user/SearchNewModerador/' + currentChannel,
         paramName: "q",
         onSelect: function (suggestion) {
-            alert('You selected: ' + suggestion.FirstName + ', ' + suggestion.Id + ',' + suggestion.AvatarUrl);
+            alert('You selected: ' + suggestion.value + ', ' + suggestion.data.Id + ',' + suggestion.data   .AvatarUrl);
         }
     });
     //$("#search").setAttribute("autocomplete", "on");
