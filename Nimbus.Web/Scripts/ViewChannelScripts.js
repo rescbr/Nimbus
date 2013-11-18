@@ -684,6 +684,11 @@ function addAutocompleteToSearch() {
     //$("#search").setAttribute("autocomplete", "on");
 }
 
-function ajaxEditInfo(id)
+function ajaxLoadEditInfo(id, isOwner)
 {
+    if (roles.indexOf("channelmanager") > -1 || isOwner == true)
+        ajaxLoadTags(id);
+
+    if (roles.indexOf("moderatormanager") > -1|| roles.indexOf("channelmanager") > -1 || isOwner == true )
+       ajaxLoadModeratorEdit(id);  
 }
