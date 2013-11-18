@@ -80,12 +80,10 @@ a, a:hover, a:visited {
     margin:             0 auto;
 }
 
-.container {/*
-    background:         #FFFFFF;*/
+.container {  
 	width:              960px;
 	height:             48px;
-	margin:             0 auto;/*
-	border:             2px solid #BE1E2D;*/
+	margin:             0 auto;
 	clear:              both;
 	line-height:        3.5em;
 }
@@ -136,8 +134,10 @@ nav.center {
 }
 
 .center li:active, .center li:hover {
+    background:         #2b2d2e;
     border-bottom:      5px solid #87c240;
     height:             43px;
+    cursor:             pointer;
 }
 nav.right {
 	display:            inline-block;
@@ -512,6 +512,7 @@ div#profileEdit {
     text-align:         center;
     font-weight:        normal;
     font-size:          1em;
+    cursor:             pointer;
 }
 
 div.aboutUser {
@@ -802,23 +803,17 @@ div.divTopic-grade {
     font-size:        small;
     height:           50px;
     text-decoration:  none;
+    cursor:           pointer;
 }
-div.headerTopic-grade{
+
+div.headerTopic-grade {
     width:             180px;
     height:            150px;
     background:        #2b2d2e;
 }
-/*
-.headerTopic-grade h1 {
-    line-height:       4em;
-    text-align:        center;
-    color:             #FFFFFF;
-    font-size:         small;
-    height:            50px;
-}
-*/
+
 .imgTopic-grade {
-    background:         #87c240;
+    background:         #4fbd86;
     width:              180px;
     height:             100px;
 }
@@ -1031,6 +1026,7 @@ nav.chanTopBar {
 .chanTopBar p:hover, .chanTopBar p:active {
     text-decoration:    none;
     color:              #87c240;
+    cursor:             pointer;
 }
 
 .wrapperChannel div.divTopic-grade:first-child {
@@ -1055,6 +1051,287 @@ p#txtPartChannel {
     font-size:          1.2em;
     color:              #bcbec0;
 }
+/*------------------ fim Channel Page --------------*/
+/*------------------ Topic Page --------------------*/
+
+/*------------------ Channel Page --------------------*/
+/* Info - parte da esquerda e capa */
+
+/* follow e nome
+div.followChannelPage {
+    position:           relative;
+    left:               760px;
+    top:                -60px;
+    width:              80px;
+    background:         #2b2d2e;
+    line-height:        2.4em;
+    z-index:            999999;
+    cursor:             pointer;
+}
+
+.followChannelPage p {
+    text-align:         center;
+    font-size:          1.2em;
+    color:              #FFFFFF;
+}
+div#nameChannelPage {
+    position:           absolute;
+    top:                150px;
+    margin-left:        68px;
+    z-index:            9999;
+}
+
+#nameChannelPage h1{
+
+    color:              #000000;
+    font-weight:        bold;
+}
+*/
+
+#imgTopic {
+    background:         #bcbec0;
+    top:                142px;
+    position:           absolute;
+    margin-left:        68px;
+    z-index:            999999;
+}
+
+div#divInfTopic {
+    top:                0;
+    margin-left:        48px;
+    width:              200px;
+    height:             100%;
+    background:         #f1f2f2;
+    float:              left;
+    padding:            10px 10px 0 10px;
+}
+
+h1#nameTopicPage {
+    margin-left:        10px;
+    text-align:         left;
+    margin-top:         55px;
+}
+
+p.txtInfTopic {
+    margin-left:        10px;
+    padding:            24px 0 12px 0;
+    text-align:         justify;
+    color:              #000000;
+    font-size:          small;
+}
+
+button#btnEditTopic {
+    top:                0;
+    position:           relative;
+    background:         #2b2d2e;
+    color:              #FFFFFF;
+}
+
+h1.favTopic {
+    text-align:         center;
+    margin:             12px 10px 24px 10px;
+}
+
+p.catTopic{
+    color:              #87c240;
+    text-align:         center;
+    font-size:          1.7em;
+    margin-top:         20px;
+    margin-bottom:      20px;
+}
+
+div#btnEditTopic {
+    margin:             0 auto;
+    background:         #2b2d2e;
+    width:              80px;
+    height:             26px;
+    cursor:             pointer;
+}
+
+#btnEditTopic:hover, #btnEditTopic p:hover {
+    color:              #87c240;
+    cursor:             pointer;
+}
+
+#btnEditTopic p {
+    color:              #FFFFFF;
+    text-align:         center;
+    font-size:          small;
+}
+
+/* Content - Parte da direita */
+div.divContentTopic {
+    margin:             0 auto;
+    width:              644px;
+    float:              left;
+}
+
+div.contentTitleTopic {
+    margin-left:        24px;
+    margin-bottom:      24px;
+    margin-top:         24px;
+    width:              620px;
+}
+
+.contentTitleTopic h2 {
+    border-bottom:      1px solid #87c240;
+    font-size:          1.3em;
+    height:             1.3em;
+}
+
+/* Comentarios */
+div.divComentario { /*Toda a parte do comentário*/
+    margin-left:       48px;
+    width:             600px;
+    background:        #4fbd86;
+}
+
+div.blocoComment { /*Bloco de comentário*/
+    background:        #BE1E2D;
+    margin:            4px 0 4px 0;
+    display:           block;
+    float:             none;
+    height:            auto;
+}
+
+div.firstBlockComment { /*Primeiro comentário*/
+    display:            block;
+    width:              500px;
+    height:             auto;
+    float:              none;
+}
+
+div.imgComment {
+    height:             48px;
+    width:              48px;
+}
+
+div.divCommentContent { /* conteudo do comentario - nome, hora, data, texto */
+    float:              left;
+    margin-left:        10px;
+    background:         #f1f2f2;
+    width:              400px;
+}
+
+p.titleCommentContent {
+    text-align:        left;
+    color:              #4b4b4b;
+    font-size:          small;
+    font-weight:        bold;
+    width:              400px;
+}
+
+p.txtCommentContent {
+    text-align:         justify;
+    color:              #000000;
+    font-size:          small;
+    font-weight:        normal;
+    width:              400px;
+}
+
+div.divChildComment {
+    float:              none;
+    margin:             10px 0 0 48px;
+}
+
+/**/
+
+#divNotification {
+    background:         #d1d3d4;
+    margin-bottom:      20px;
+    margin-top:         20px;
+    margin-left:        10px;
+    width:              590px;
+    height:             70px;
+    border-bottom:      2px solid #87c240;
+}
+
+#imgNotification {
+    background:         #bcbec0;
+    width:              60px;
+    height:             60px;
+    float:              left;
+    margin:             5px;
+}
+
+p#timeNotification {
+    margin-right:       5px;
+    float:              right;
+    font-size:          xx-small;
+}
+
+p#txtNotification {
+    padding-top:          24px;
+    font-size:           medium;
+}
+
+
+/*Top Bar*/
+nav.chanTopBar {
+    width:              644px;
+    height:             39px;
+    background:         #2b2d2e;
+    font-weight:        normal;
+    color:              #FFFFFF;
+}
+
+.chanTopBar li {
+    width:              129px;
+    text-align:         center;
+    line-height:        3em;
+}
+
+.chanTopBar li:last-child {
+    width:              128px;
+}
+
+.chanTopBar li:hover {
+    background:         #2b2d2e;
+    border-bottom:      2px solid #87c240;
+    height:             36px;
+    color:              #87c240;
+    cursor:             pointer;
+}
+
+/* Content */
+.chanTopBar p {
+    text-align:         center;
+    width:              128px;
+    height:             39px;
+    text-decoration:    none;
+    color:              #FFFFFF;
+}
+
+.chanTopBar p:hover, .chanTopBar p:active {
+    text-decoration:    none;
+    color:              #87c240;
+    cursor:             pointer;
+}
+
+.wrapperChannel div.divTopic-grade:first-child {
+    margin-left:        10px;
+}
+
+.wrapperChannel div.divTopic-grade:last-child {
+    margin-right:       10px;
+}
+
+div#divNotifications, div#divComments, div#divPopularTopics, div#divAllTopics {
+    margin:             0 auto;
+    height:             100%;
+}
+
+p#txtPartChannel {
+    margin-top:         20px;
+    margin-bottom:      20px;
+    margin-left:        10px;
+    margin-right:       10px;
+    text-align:         left;
+    font-size:          1.2em;
+    color:              #bcbec0;
+}
+/*------------------ fim Topic Page ----------------*/
+
 /*------------------ fim middle --------------------*/
 
 
