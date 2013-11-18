@@ -8,6 +8,7 @@ using ServiceStack.OrmLite;
 using Nimbus.Model.ORM;
 using Nimbus.Model.Bags;
 using System.Web;
+using System.Diagnostics;
 
 namespace Nimbus.Web.API.Controllers
 {
@@ -144,23 +145,22 @@ namespace Nimbus.Web.API.Controllers
             if (!string.IsNullOrEmpty(q))
             {
                 int idOrg = NimbusOrganization.Id;
-                try
+                using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    using (var db = DatabaseFactory.OpenDbConnection())
+                    var roles = db.SelectParam<Role>(r => r.ChannelId == id &&
+                                                                        (r.IsOwner == false && r.ChannelMagager == false &&
+                                                                         r.MessageManager == false && r.ModeratorManager == false &&
+                                                                         r.TopicManager == false && r.UserManager == false));
+
+                    var users = roles.Select(r => db.Where<User>(u => u.Id == r.UserId &&
+                                                          (u.FirstName.Contains(q) ||
+                                                          u.LastName.Contains(q) ||
+                                                          u.Occupation.Contains(q) ||
+                                                          u.Interest.Contains(q))).FirstOrDefault())
+                                                          .Where(uu => uu != null);
+
+                    if (users.Count() > 0)
                     {
-                        var roles = db.SelectParam<Role>(r => r.ChannelId == id &&
-                                                                            (r.IsOwner == false && r.ChannelMagager == false &&
-                                                                             r.MessageManager == false && r.ModeratorManager == false &&
-                                                                             r.TopicManager == false && r.UserManager == false));
-
-                        var users = roles.Select(r => db.Where<User>(u => u.Id == r.UserId &&
-                                                              (u.FirstName.Contains(q) ||
-                                                              u.LastName.Contains(q) ||
-                                                              u.Occupation.Contains(q) ||
-                                                              u.Interest.Contains(q))).FirstOrDefault());
-
-                        //mapeia os usuários para o formato do jquery.autocomplete
-
                         var resp = users.Select(x => new UserAutoCompleteResponse
                         {
                             value = x.FirstName + " " + x.LastName,
@@ -173,15 +173,15 @@ namespace Nimbus.Web.API.Controllers
 
                         return new SuggestionWrapper { suggestions = resp.ToList() };
                     }
-                }
-                catch (Exception ex)
-                {
-                    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+                    else
+                    {
+                        throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Nenhum registro encontrado para '" + q + "'"));
+                    }
                 }
             }
             else
             {
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Nenhum registro encontrado para '" + q + "'"));
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Query em branco"));
             }
 
         }
