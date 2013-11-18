@@ -114,6 +114,55 @@ namespace Nimbus.Web.API.Controllers
             return users;
         }
 
+        /// <summary>
+        /// Método que retorna os usuarios existentes excluindo os que já sao moderadores do canal
+        /// </summary>
+        /// <param name="q"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public List<User> SearchNewModerador(int id, string q)
+        {
+            //List<Model.ORM.User> users = new List<Model.ORM.User>();
+            if (!string.IsNullOrEmpty(q))
+            {
+                int idOrg = NimbusOrganization.Id;
+                try
+                {
+                    using (var db = DatabaseFactory.OpenDbConnection())
+                    {
+                        var listId = db.SelectParam<Role>(r => r.ChannelId == id && 
+                                                                            (r.IsOwner == false && r.ChannelMagager == false && 
+                                                                             r.MessageManager == false &&  r.ModeratorManager == false && 
+                                                                             r.TopicManager == false &&  r.UserManager == false))
+                                                                             .Select(r => r.UserId).ToList();
+                        List<User> users = new List<User>();
+                        foreach (int item in listId)
+                        {
+                             User user = db.SelectParam<User>(u => u.Id == item &&
+                                                               (u.FirstName.Contains(q) ||
+                                                               u.LastName.Contains(q) ||
+                                                               u.Occupation.Contains(q) ||
+                                                               u.Interest.Contains(q))).FirstOrDefault();
+                             if (user != null)
+                                 users.Add(user);
+                        }
+
+                       
+                        return users;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+                }
+            }
+            else
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Nenhum registro encontrado para '" + q + "'"));
+            }
+            
+        }
+
         #endregion
 
         /// <summary>

@@ -5,7 +5,11 @@
 }
 
 @Scripts.Render(("~/Scripts/jquery.form.js"))
-@Scripts.Render("~/Scripts/ViewChannelScripts.js")
+@Scripts.Render("~/Scripts/jquery.autocomplete.js")
+
+<script>
+    currentChannel = @Model.CurrentChannel.Id
+</script>
 
 <div id="divCapa">
     <img src="@Model.CurrentChannel.ImgUrl" id="imgCapa" height="192" alt="" width="864" />
@@ -254,3 +258,4 @@
     });
 
 </script>
+@Scripts.Render("~/Scripts/ViewChannelScripts.js")
