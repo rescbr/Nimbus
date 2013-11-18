@@ -1167,16 +1167,102 @@ div.divContentTopic {
 }
 
 div.contentTitleTopic {
-    margin-left:        10px;
+    margin-left:        24px;
     margin-bottom:      24px;
     margin-top:         24px;
-    width:              600px;
+    width:              620px;
 }
 
 .contentTitleTopic h2 {
     border-bottom:      1px solid #87c240;
     font-size:          1.3em;
     height:             1.3em;
+}
+
+/* Comentarios */
+div.divComentario { /*Toda a parte do comentário*/
+    margin-left:       48px;
+    width:             600px;
+    background:        #4fbd86;
+}
+
+div.blocoComment { /*Bloco de comentário*/
+    background:        #BE1E2D;
+    margin:            4px 0 4px 0;
+    display:           block;
+    float:             none;
+    height:            auto;
+}
+
+div.firstBlockComment { /*Primeiro comentário*/
+    display:            block;
+    width:              500px;
+    height:             auto;
+    float:              none;
+}
+
+div.imgComment {
+    height:             48px;
+    width:              48px;
+}
+
+div.divCommentContent { /* conteudo do comentario - nome, hora, data, texto */
+    float:              left;
+    margin-left:        10px;
+    background:         #f1f2f2;
+    width:              400px;
+}
+
+p.titleCommentContent {
+    text-align:        left;
+    color:              #4b4b4b;
+    font-size:          small;
+    font-weight:        bold;
+    width:              400px;
+}
+
+p.txtCommentContent {
+    text-align:         justify;
+    color:              #000000;
+    font-size:          small;
+    font-weight:        normal;
+    width:              400px;
+}
+
+div.divChildComment {
+    float:              none;
+    margin:             10px 0 0 48px;
+}
+
+/**/
+
+#divNotification {
+    background:         #d1d3d4;
+    margin-bottom:      20px;
+    margin-top:         20px;
+    margin-left:        10px;
+    width:              590px;
+    height:             70px;
+    border-bottom:      2px solid #87c240;
+}
+
+#imgNotification {
+    background:         #bcbec0;
+    width:              60px;
+    height:             60px;
+    float:              left;
+    margin:             5px;
+}
+
+p#timeNotification {
+    margin-right:       5px;
+    float:              right;
+    font-size:          xx-small;
+}
+
+p#txtNotification {
+    padding-top:          24px;
+    font-size:           medium;
 }
 
 
