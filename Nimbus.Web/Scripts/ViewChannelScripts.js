@@ -459,8 +459,6 @@ function ajaxLoadModeratorEdit(id)
     });
 }
 
-
-
 function ajaxNewModerator(id,userId)
 {
     var select = document.getElementById("permissionSelect").selectedIndex;
@@ -683,4 +681,8 @@ function addAutocompleteToSearch() {
         }
     });
     //$("#search").setAttribute("autocomplete", "on");
+}
+
+function ajaxEditInfo(id)
+{
 }

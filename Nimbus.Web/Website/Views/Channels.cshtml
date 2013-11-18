@@ -188,20 +188,52 @@
     <div class="modal-inner">
         <header id="modal-label">
             <!-- Header -->
-            Editar tags
+            Editar canal
         </header>
 
         @if (Model.RolesCurrentUser.Contains("channelmanager") || Model.CurrentChannel.OwnerId == Model.CurrentUser.UserId)
         {
-            <div id="divTags" class="modal-content">
-                <!-- The modals content -->
-                <!--Incluido por pelo js ajaxLoadTags-->
-            </div>
+            <div>
+                <p>Nome do canal:</p>
+                <input type="text" value="@Model.CurrentChannel.Name" maxlength="150" />
+            </div> 
+        }
 
-            <footer>
-                <!-- Footer -->
-                <button id="btnSaveTag" onclick="ajaxEditTag(@Model.CurrentChannel.Id);">Enviar</button>
-            </footer>
+        @if (Model.RolesCurrentUser.Contains("channelmanager") || Model.CurrentChannel.OwnerId == Model.CurrentUser.UserId
+            || Model.RolesCurrentUser.Contains("moderatormanager"))
+        {
+            <div>
+                <p>Moderadores:</p>
+                <div id="divEditModerators" class="modal-content">
+                    <!-- The modals content -->
+                    <!--Incluido por pelo js ajaxLoadTags-->
+                </div>
+
+                <div id="btnEditModerator">
+                    <button id="btnSaveModerator" onclick="alert('colocar o método');">Salvar</button>
+                </div>
+            </div>
+        }
+        @if (Model.RolesCurrentUser.Contains("channelmanager") || Model.CurrentChannel.OwnerId == Model.CurrentUser.UserId)
+        {
+            
+                   /*editar as tags*/
+                    <div>
+                        <p>Tags:</p>
+                        <div id="divTags" class="modal-content">
+                            <!-- The modals content -->
+                            <!--Incluido por pelo js ajaxLoadTags-->
+
+                        </div>
+                         <div id="btnSaveTag">
+                            <button id="btnSaveTag" onclick="ajaxEditTag(@Model.CurrentChannel.Id);">Salvar</button>
+                        </div>
+                    </div>
+
+                    <footer>
+                     <!-- Footer -->
+              
+                    </footer>
         }
         else
         {
@@ -233,6 +265,39 @@
             <footer>
                 <!-- Footer -->
                 <button id="btnSaveTag" onclick="ajaxEditTag(@Model.CurrentChannel.Id);">Enviar</button>
+            </footer>
+        }
+        else
+        {
+            <p>Você não permissão para realizar esta operação.</p>
+        }
+    </div>
+
+    <a href="#!" id="closeModalTag" class="modal-close" title="Close this modal" data-close="Close"
+       data-dismiss="modal">×</a>
+</section>
+
+@*Modal de edição das info do channel*@
+<section class="semantic-content" id="modal-moderators" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
+    <div class="modal-inner">
+        <header id="modal-label">
+            <!-- Header -->
+            Editar informações do canal
+        </header>
+
+        @if (Model.RolesCurrentUser.Contains("channelmanager") || Model.CurrentChannel.OwnerId == Model.CurrentUser.UserId)
+        {
+            <div id="divEditInfo" class="modal-content">
+                <!-- The modals content -->
+                <p>Nome:<input type="text" value="@Model.CurrentChannel.Name" maxlength="150" /></p>
+                <p></p>
+               
+
+            </div>
+
+            <footer>
+                <!-- Footer -->
+                <button id="btnSaveEditInfo" onclick="ajaxEditInfo(@Model.CurrentChannel.Id);">Enviar</button>
             </footer>
         }
         else
