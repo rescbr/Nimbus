@@ -863,14 +863,14 @@ namespace Nimbus.Web.API.Controllers
 
                             if (allow == true)
                             {
-                                if (orgID == 0) //canais free, portanto permite apenas 5 moderadores
+                                if (orgID == 1) //canais free, portanto permite apenas 5 moderadores
                                 {
                                     if (countModerator < 5)
                                         prox = true;
                                     else
                                         prox = false;
                                 }
-                                else if (orgID != 0)
+                                else if (orgID != 1)
                                 {
                                     prox = true;
                                 }

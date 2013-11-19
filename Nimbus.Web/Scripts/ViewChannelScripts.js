@@ -409,6 +409,7 @@ function ajaxLoadModeratorEdit(id)
                 var string = "";
                 var includeDiv = "";
                 var autocomplete = false;
+
                 if (newData.length > 0) {                   
                     //incluir itens na div                    
                     for (var i = 0; i < newData.length; i++) {
@@ -421,23 +422,23 @@ function ajaxLoadModeratorEdit(id)
                                          "<img src=\"/images/Utils/edit.png\" onclick=\"ajaxEditModerator(" + id + "," + newData[i].Id + ");\" title=\"Editar\" />" +
                                          "<img src=\"/images/Utils/delete.png\" onclick=\"ajaxDeleteModerator(" + id + "," + newData[i].Id + ");\" title=\"Deletar\" />" +
                                         "</p>" +
-                                    "</div>" +
-                                    "Adicionar novo moderador:"+
-                                    "<div id=\"divEditModerator_" + newData[i].Id + "\">" +
-                                     "<select id=\"permissionSelect\">"+
-                                      "<option value=\"0\">Todas</option>"+
-                                      "<option value=\"1\">Moderar mensagens</option>" +
-                                      "<option value=\"2\">Moderar moderadores</option>" +
-                                      "<option value=\"3\">Moderar tópicos</option>" +
-                                      "<option value=\"4\">Moderar usuários</option>" +
-                                    "</select>"+
                                     "</div>";
                     }                   
                 }
                 if (newData.length < 5) {
                     //coloca o campo de buscar um novo moderador, esse campo é preenchido pelo método acima value=\"Adicionar moderador\" onclick=\"this.value=''\"
                     string = "<input id=\"search\" type=\"text\"/>" +
-                                  "<button id=\"btnAddModerator\" onclick=\"ajaxNewModerator(" + id + ");\">Adicionar</button>";
+                              "<br/>Permissão:"+
+                                    "<div id=\"divEditModerator\">" +
+                                         "<select id=\"permissionSelect\">" +
+                                          "<option value=\"0\">Todas</option>" +
+                                          "<option value=\"1\">Moderar mensagens</option>" +
+                                          "<option value=\"2\">Moderar moderadores</option>" +
+                                          "<option value=\"3\">Moderar tópicos</option>" +
+                                          "<option value=\"4\">Moderar usuários</option>" +
+                                        "</select>" +
+                                    "</div>"+
+                           "<button id=\"btnAddModerator\" onclick=\"ajaxNewModerator();\">Adicionar</button>";
                     autocomplete = true;
                 }
                 else {
@@ -465,70 +466,92 @@ function ajaxLoadModeratorEdit(id)
     });
 }
 
-function ajaxNewModerator(id,userId)
+function addAutocompleteToSearch() {
+    /*método q busca os moderadores*/
+    $('#search').autocomplete({
+        serviceUrl: '/api/user/SearchNewModerador/' + currentChannel,
+        paramName: "q",
+        onSelect: function (suggestion) {
+            newModeratorId = suggestion.data.Id;
+        }
+    });
+}
+
+function ajaxNewModerator()
 {
     var select = document.getElementById("permissionSelect").selectedIndex;
     var option = document.getElementById("permissionSelect").options;
     var permission = option[select].value;
 
     ajaxData = {};
-    
+    id = currentChannel;
     ajaxData["ChannelId"] = id;
-    ajaxData["UserId"] = userId;
+    ajaxData["UserId"] = newModeratorId;
 
     if (permission == "0")
         ajaxData["ChannelMagager"] = true;
+    else
+        ajaxData["ChannelMagager"] = false;
 
     if (permission == "1")
         ajaxData["MessageManager"] = true;
+    else
+        ajaxData["MessageManager"] = false;
 
     if (permission == "2")
         ajaxData["ModeratorManager"] = true;
+    else
+        ajaxData["ModeratorManager"] = false;
 
     if (permission == "3")
         ajaxData["TopicManager"] = true;
+    else
+        ajaxData["TopicManager"] = false;
 
     if (permission == "4")
         ajaxData["UserManager"] = true;
+    else
+        ajaxData["UserManager"] = false;
 
+    if (newModeratorId != null) {
+        $.ajax({
+            url: "/api/Channel/AddModerator",
+            type: "POST",
+            data: JSON.stringify(ajaxData),
+            contentType: "application/json;charset=utf-8",
+            statusCode: {
+                200: function (newData) {
+                    if (newData.Id > 0) {
+                        var newModerator = "<div id=\"divModerator_" + newData.Id + "\">" +
+                                             "<p>" +
+                                             "<img src=\"" + newData.AvatarUrl + "\" title=\"" + newData.FirstName + "\" />" +
+                                             "<label>" + newData.FirstName + " " + newData.LastName + "</label>" +
+                                             "<input type=\"text\" disabled value=\"" + newData.RoleInChannel + "\" />" +
+                                             "<img src=\"/images/Utils/edit.png\" onclick=\"ajaxEditModerator(" + id + "," + newData.Id + ");\" title=\"Editar\" />" +
+                                             "<img src=\"/images/Utils/delete.png\" onclick=\"ajaxDeleteModerator(" + id + "," + newData.Id + ");\" title=\"Deletar\" />" +
+                                            "</p>" +
+                                        "</div>" +
+                                        "<div id=\"divEditModerator_" + newData.Id + "\">" +
 
-    $.ajax({
-        url: "/api/Channel/AddModerator" ,
-        type: "POST",
-        data: JSON.stringify(ajaxData),
-        contentType: "application/json;charset=utf-8",
-        statusCode: {
-            200: function (newData) {
-                if (newData.Id > 0) {
-                    var newModerator = "<div id=\"divModerator_" + newData.Id + "\">" +
-                                         "<p>" +
-                                         "<img src=\"" + newData.AvatarUrl + "\" title=\"" + newData.FirstName + "\" />" +
-                                         "<label>" + newData.FirstName + " " + newData.LastName + "</label>" +
-                                         "<input type=\"text\" disabled value=\"" + newData.RoleInChannel + "\" />" +
-                                         "<img src=\"/images/Utils/edit.png\" onclick=\"ajaxEditModerator(" + id + "," + newData.Id + ");\" title=\"Editar\" />" +
-                                         "<img src=\"/images/Utils/delete.png\" onclick=\"ajaxDeleteModerator(" + id + "," + newData.Id + ");\" title=\"Deletar\" />" +
-                                        "</p>" +
-                                    "</div>" +
-                                    "<div id=\"divEditModerator_" + newData.Id + "\">" +
+                                        "</div>";
 
-                                    "</div>";
+                        document.getElementById('divEditModerators').innerHTML = newModerator;
 
-                    document.getElementById('divEditModerators').innerHTML = newModerator;
-                    
-                    document.getElementById('divAllModerators').innerHTML = "<p>"+
-                                                                                "<a href=\"/userprofile/index/"+ newData.Id+ "\" class=\"nameMod\">"+ 
-                                                                                       newData.FirstName + " "+ newData.LastName +
-                                                                                "</a>"+
-                                                                            "</p>";
+                        document.getElementById('divAllModerators').innerHTML = "<p>" +
+                                                                                    "<a href=\"/userprofile/index/" + newData.Id + "\" class=\"nameMod\">" +
+                                                                                           newData.FirstName + " " + newData.LastName +
+                                                                                    "</a>" +
+                                                                                "</p>";
+                    }
+                },
+
+                400: function () {
+                    //erro
+                    window.alert("Não foi possível realizar esta operação. Tente novamente mais tarde.");
                 }
-            },
-
-            400: function () {
-                //erro
-                window.alert("Não foi possível realizar esta operação. Tente novamente mais tarde.");
             }
-        }
-    });
+        });
+    }
 
 } 
 
@@ -664,17 +687,6 @@ function ajaxdeleteTag(idTag, id)
 }
 
 /*Métodos gerais de edição*/
-function addAutocompleteToSearch() {
-    /*método q busca os moderadores*/
-    $('#search').autocomplete({
-        serviceUrl: '/api/user/SearchNewModerador/' + currentChannel,
-        paramName: "q",
-        onSelect: function (suggestion) {
-            alert('You selected: ' + suggestion.value + ', ' + suggestion.data.Id + ',' + suggestion.data   .AvatarUrl);
-        }
-    });
-    //$("#search").setAttribute("autocomplete", "on");
-}
 
 function ajaxLoadEditInfo(id, isOwner)
 {
@@ -687,12 +699,13 @@ function ajaxLoadEditInfo(id, isOwner)
 
 function ajaxSaveAllEdit(id)
 {
-    //tags -> são salvas assim que são criadas
+    //tags e novos moderadores -> são salvas assim que são criadas
     //salvar nome
     title = document.getElementById('txtEditTitle').value;
     
-    //salvar novos moderadores
-    //alterou permissao
+    /*salvar novos moderadores*/
+
+    //alterou somente a permissao
     var obj = $("select[id*='newPermissionSelect_']");
 
     for (var i = 0; i < obj.length; i++) {

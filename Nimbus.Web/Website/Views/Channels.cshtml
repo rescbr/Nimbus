@@ -23,7 +23,9 @@
     else if (Model.CurrentChannel.OwnerId == Model.CurrentChannel.userID || Model.RolesCurrentUser.Contains("channelmanager")
                                                                          || Model.RolesCurrentUser.Contains("moderatormanager"))
     {
-
+        <script>
+            newModeratorId = null;
+        </script>
         <a href="#modal-edit" onclick="ajaxLoadEditInfo(@Model.CurrentChannel.Id, true);">
             <div class="followChannelPage">
                 <p>Editar</p>
@@ -222,6 +224,7 @@
 
                     <footer>
                      <!-- Footer -->
+                        <button id="btnSaveAllEdit" onclick="ajaxSaveAllEdit(@Model.CurrentChannel.Id);">Salvar</button>
                     </footer>
         }
         else

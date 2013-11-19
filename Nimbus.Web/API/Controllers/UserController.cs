@@ -148,11 +148,12 @@ namespace Nimbus.Web.API.Controllers
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
                     var roles = db.SelectParam<Role>(r => r.ChannelId == id &&
-                                                                        (r.IsOwner == false && r.ChannelMagager == false &&
-                                                                         r.MessageManager == false && r.ModeratorManager == false &&
-                                                                         r.TopicManager == false && r.UserManager == false));
+                                                                        (r.IsOwner == true || r.ChannelMagager == true ||
+                                                                         r.MessageManager == true || r.ModeratorManager == true ||
+                                                                         r.TopicManager == true || r.UserManager == true));
 
-                    var users = roles.Select(r => db.Where<User>(u => u.Id == r.UserId &&
+                    
+                    var users = roles.Select(r => db.Where<User>(u => u.Id != r.UserId &&
                                                           (u.FirstName.Contains(q) ||
                                                           u.LastName.Contains(q) ||
                                                           u.Occupation.Contains(q) ||
