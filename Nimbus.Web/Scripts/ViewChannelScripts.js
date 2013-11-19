@@ -726,11 +726,7 @@ function ajaxLoadEditInfo(id, isOwner)
 function ajaxSaveAllEdit(id)
 {
     //tags e novos moderadores -> são salvas assim que são criadas
-    //salvar nome
-    title = document.getElementById('txtEditTitle').value;
-    
-    /*salvar novos moderadores*/
-
+    var success = false;
     //alterou somente a permissao
     var obj = $("select[id*='newPermissionSelect_']");
 
@@ -746,17 +742,53 @@ function ajaxSaveAllEdit(id)
             contentType: "application/json;charset=utf-8",
             statusCode: {
                 200: function (newData) {
-                    if (newData != "") {
-                       //ver
-                    }
+                    success = true;
                 },
 
                 400: function () {
                     //erro
                     window.alert("Não foi possível realizar esta operação. Tente novamente mais tarde.");
+                    success = false;
                 }
             }
         });
     }
-    
+    //salvar nome
+    if (success == true) {
+        title = document.getElementById('txtEditTitle').value;
+        ajaxData = {};
+        ajaxData['Name'] = title;
+        if(document.getElementsByName('openComment')[0].isChecked)
+            ajaxData['OpenToComments'] = true;
+        if (document.getElementsByName('openComment')[1].isChecked)
+            ajaxData['OpenToComments'] = false;
+
+        var category = document.getElementById('slcCategory');
+        var select = category.selectedIndex;
+        var option = obcategory.options;
+        var categoryId = option[select].value;
+        ajaxData['CategoryId'] = categoryId;
+        if (title != null && title != "") {
+            $.ajax({
+                url: "/api/Channel/EditChannel",
+                type: "POST",
+                data: JSON.stringify(ajaxData),
+                contentType: "application/json;charset=utf-8",
+                statusCode: {
+                    200: function (newData) {
+                        success = true;
+                    },
+
+                    400: function () {
+                        //erro
+                        window.alert("Não foi possível realizar esta operação. Tente novamente mais tarde.");
+                        success = false;
+                    }
+                }
+            });
+        }
+    }
+    if (success == true)
+        //fechar modal
+        document.getElementById('closeModalEdit').click();
 }

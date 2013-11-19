@@ -198,6 +198,37 @@
             <div>
                 <p>Nome do canal:</p>
                 <input id="txtEditTitle" type="text" value="@Model.CurrentChannel.Name" maxlength="150" />
+                <p>
+                    Categoria:
+                    <select id="slcCategory" name="slcCategory">
+                        @foreach (var item in Model.Category.OrderBy(c => c.Name))
+                        {
+                            if(item.Id == Model.CurrentChannel.CategoryId)
+                            {
+                                <option value="@item.Id">@item.Name</option>
+                            }
+                            else
+                            {
+                                <option value="@item.Id">@item.Name</option>
+                            }
+                        }
+                    </select>
+                </p>
+
+                <p>
+                    Aberto para comentários:
+                    @if(Model.CurrentChannel.OpenToComments == true)
+                    { 
+                        <input type="radio" name="openComment" value="Sim" checked required />                         
+                        <input type="radio" name="openComment" value="Não" required />                                                                                            
+                    }
+                    else
+                    { 
+                        <input type="radio" name="openComment" value="Sim"  required /> 
+                        <input type="radio" name="openComment" value="Não" checked required />
+                    }                                                                                      
+                </p>
+                
             </div>
         }
 
@@ -234,7 +265,7 @@
         }
     </div>
 
-    <a href="#!" id="closeModalTag" class="modal-close" title="Close this modal" data-close="Close"
+    <a href="#!" id="closeModalEdit" class="modal-close" title="Close this modal" data-close="Close"
        data-dismiss="modal">×</a>
 </section>
 

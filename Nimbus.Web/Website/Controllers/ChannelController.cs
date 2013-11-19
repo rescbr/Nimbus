@@ -25,6 +25,7 @@ namespace Nimbus.Web.Website.Controllers
             var msgApi = ClonedContextInstance<API.Controllers.MessageController>();
             var topicApi = ClonedContextInstance<API.Controllers.TopicController>();
             var commentApi = ClonedContextInstance<API.Controllers.CommentController>();
+            var categoryApi = ClonedContextInstance<API.Controllers.CategoryController>();
 
             var channel = new ChannelModel()
             {
@@ -37,7 +38,8 @@ namespace Nimbus.Web.Website.Controllers
                 CurrentUser = NimbusUser,
                 RolesCurrentUser = channelApi.ReturnRolesUser(id),
                 CcMessageReceiver = channelApi.GetMessageModerators(id),
-                NewTopic = null
+                NewTopic = null,
+                Category = categoryApi.showAllCategory()
             };
             return View("Channels", channel);
         }

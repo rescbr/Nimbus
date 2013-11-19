@@ -432,6 +432,7 @@ namespace Nimbus.Web.API.Controllers
                         string firstName = db.SelectParam<User>(us => us.Id == channel.OwnerId).Select(us => us.FirstName).FirstOrDefault();
                         string lastName = db.SelectParam<User>(us => us.Id == channel.OwnerId).Select(us => us.LastName).FirstOrDefault();
                         showChannel.Name = channel.Name;
+                        showChannel.CategoryId = channel.CategoryId;
                         showChannel.Id = channel.Id;
                         showChannel.countFollowers = channel.Followers.ToString();
                         showChannel.OrganizationId = channel.OrganizationId;
@@ -1340,7 +1341,7 @@ namespace Nimbus.Web.API.Controllers
         /// </summary>
         /// <param name="editChannel"></param>
         /// <returns></returns>
-        [HttpPut]
+        [HttpPost]
         public Channel EditChannel(Channel editChannel)
         {
             Channel channel = new Channel();
@@ -1356,20 +1357,18 @@ namespace Nimbus.Web.API.Controllers
                     {
                         channel = db.SelectParam<Channel>(chn => chn.Id == editChannel.Id && chn.Visible == true).FirstOrDefault();
 
-                        channel.Name = editChannel.Name;
-                        channel.CategoryId = editChannel.CategoryId;
-                        channel.Description = editChannel.Description;
-                        channel.ImgUrl = editChannel.ImgUrl;
-                        channel.IsCourse = editChannel.IsCourse;
+                        channel.Name = !string.IsNullOrEmpty(editChannel.Name) ? System.Web.HttpUtility.HtmlEncode(editChannel.Name) : channel.Name;
+                        channel.CategoryId = editChannel.CategoryId > 0? editChannel.CategoryId : channel.CategoryId;
+                        channel.Description = !string.IsNullOrEmpty(editChannel.Description)? System.Web.HttpUtility.HtmlEncode(editChannel.Description): channel.Description;
+                        channel.ImgUrl = db.SelectParam<Category>(c => c.Id == editChannel.CategoryId).Select(c => c.ImageUrl).FirstOrDefault();
+                        channel.IsCourse = editChannel.IsCourse ;
                         channel.IsPrivate = editChannel.IsPrivate;
                         channel.LastModification = DateTime.Now;
                         channel.OpenToComments = editChannel.OpenToComments;
-                        channel.OrganizationId = editChannel.OrganizationId;
-                        channel.Price = editChannel.Price;
+                        channel.Price = editChannel.Price != -1? editChannel.Price : 0;
                         channel.Visible = editChannel.Visible;
                         
-                        db.Update(channel);
-                        db.Save(channel);
+                        db.Update<Channel>(channel);
                         //TODO: Notificação
                     }
                     else 
