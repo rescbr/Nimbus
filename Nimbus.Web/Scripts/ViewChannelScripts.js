@@ -713,7 +713,6 @@ function ajaxdeleteTag(idTag, id)
 }
 
 /*Métodos gerais de edição*/
-
 function ajaxLoadEditInfo(id, isOwner)
 {
     if (roles.indexOf("channelmanager") > -1 || isOwner == true)
