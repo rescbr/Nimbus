@@ -1,20 +1,23 @@
 ﻿@model Nimbus.Model.Bags.CommentBag
 
-<div id="divComment_@Model.Id" style="display:block; float:none">
+<div id="divComment_@Model.Id">
     <div style="float:left">
         <img src="@Model.AvatarUrl" id="imgTopic_@Model.Id" height="48" alt="" width="48" />
     </div>
-    <div>
-        <p>
-            <label id="lblUserName_@Model.Id">@Model.UserName</label>
-            <label id="lblPostedOn_@Model.Id">@Model.PostedOn</label>
+    <div class="divCommentContent">
+        <p class="titleCommentContent">
+            <label id="lblUserName_@Model.Id" style="color: #2b2d2e; font-weight: bold; font-size: medium">@Model.UserName</label>
+            <label id="lblPostedOn_@Model.Id" style="color: #bcbec0; font-weight: normal; font-size: small">@Model.PostedOn</label>
             @if (Model.IsDeletable)
             {
-                <a href="#" id="btnDelete_@Model.Id" title="Deletar" onclick="ajaxDeleteComment(@Model.Id,'divComment_@Model.Id' );">X</a>
+                <a href="#" id="btnDelete_@Model.Id" title="Deletar" onclick="ajaxDeleteComment(@Model.Id,'divComment_@Model.Id' );">
+                    <img src="../../../images/delete.png" />
+                </a>
             }
         </p>
+        <p class="txtCommentContent">
+            <label id="lblText_@Model.Id">@Model.Text</label>
+        </p>
     </div>
-    <div style="float:left">
-        <p><label id="lblText_@Model.Id">@Model.Text</label></p>
-    </div>
+
 </div>

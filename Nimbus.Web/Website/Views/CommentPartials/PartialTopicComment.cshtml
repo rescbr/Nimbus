@@ -4,26 +4,39 @@
 {
     foreach (var comment in Model)
     {
-        <div id="divContentComment_@comment.Id" style="background-color:chocolate;">
-            @{ Html.RenderPartial("~/Website/Views/CommentPartials/PartialComment.cshtml", comment); }
-
+        <div id="divContentComment_@comment.Id" class="blockComment">
+            <div class="firstBlockComment">
+                @{   Html.RenderPartial("~/Website/Views/CommentPartials/PartialComment.cshtml", comment); }
+            </div>
+           
             @foreach (var child in comment.CommentChild)
             {
-                Html.RenderPartial("~/Website/Views/CommentPartials/PartialComment.cshtml", child);
+                <div class="divChildComment">
+                   @{ Html.RenderPartial("~/Website/Views/CommentPartials/PartialComment.cshtml", child); }
+                </div>
             }
-            <br />
-            <div id="divAnswerTopic_@comment.Id" style="display:block">
-                <button id="bntAnswer_@comment.Id" onclick="EnableDivHiddenBtn('divAnswerComment_@comment.Id', 'bntAnswer_@comment.Id');" value="Responder">Responder</button>
+    
+            <div id="divAnswerTopic_@comment.Id" style="margin-top: 4px;">
+                <div class="replyTopBtn" id="bntAnswer_@comment.Id" onclick="EnableDivHiddenBtn('divAnswerComment_@comment.Id', 'bntAnswer_@comment.Id');">
+                    <p>
+                        Responder
+                    </p>
+                </div>
             </div>
 
-            <div id="divAnswerComment_@comment.Id" style="display:none">
-                <textarea id="txtaAnswer_@comment.Id" name="txtaAnswerTopic" cols="30" rows="2"></textarea>
-                <button id="btnSendAnswer" onclick="ajaxAnswerComment(0, @comment.Id, @comment.ChannelId, @comment.TopicId, 'txtaAnswer_@comment.Id');" value="Enviar">Enviar</button>
+            <div id="divAnswerComment_@comment.Id" style="display:none; margin-left: 74px">
+                <textarea id="txtaAnswer_@comment.Id" name="txtaAnswerTopic" cols="50" rows="2" style="border: 1px solid #87c240"></textarea>
+                <div class="replyTopBtn" id="btnSendAnswer" onclick="ajaxAnswerComment(0, @comment.Id, @comment.ChannelId, @comment.TopicId, 'txtaAnswer_@comment.Id');">
+                    <p>
+                        Enviar
+                    </p>
+                </div>
             </div>
+
         </div>
     }
 }
 else
 {
-    <div id="divNoComments"><strong>Seja o primeiro a comentar!</strong></div>
+    <div id="divNoComments" class="divComentario"><strong>Seja o primeiro a comentar!</strong></div>
 }
