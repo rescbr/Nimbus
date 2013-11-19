@@ -8,6 +8,11 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
 	vertical-align:     baseline;
 }
 /* HTML5 display-role reset for older browsers */
+html, body {
+    height:             100%;
+    Padding:            0;
+    Margin:             0;
+}
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
 	display:            block;
 }
@@ -69,6 +74,10 @@ a, a:hover, a:visited {
     color:              #000000;
 }
 /*------------------ começo header --------------------*/
+
+#wrap {
+    min-height:         100%;
+}
 
 #header {
     background:         #2b2d2e;
@@ -183,23 +192,27 @@ div.exitbutton {
 
 .wrapper {
 	position:           absolute;
-	width:              100%;
 	top:                48px;
 	left:               0px;
+    width:              100%;
+    min-height:         100%;
+    height:             auto !important;
+    height:             100%;
+    padding-bottom:     200px;
 }
 
 .container-body {
 	width:              960px;
-	height:             300px;
 	margin:             0 auto;
-	clear:              none;
-	line-height:        2em;
+	clear:              both;
+	line-height:        2em;/*
+    float:              left;*/
 }
 
 .middle-body {
 /*	margin:             24px;*/
 }
-    
+
 /*------------------ Trending Topics topo --------------------*/
 
 .content-top {
@@ -507,11 +520,15 @@ div#profileEdit {
     text-align:         center;
 }
 
-.sendMessage p, .sendMessage a, .sendMessage a:hover, .sendMessage a:active {
-    color:              #87c240;
+.sendMessage p, .sendMessage a{
+    color:              #FFFFFF;
     text-align:         center;
     font-weight:        normal;
     font-size:          1em;
+}
+
+.sendMessage p:hover, .sendMessage a:hover, .sendMessage a:active {
+    color:              #87c240;
     cursor:             pointer;
 }
 
@@ -610,6 +627,9 @@ nav.profTopBar {
 /*Tab*/
 div.wrapperUser {
     float:              left;
+    width:              644px;
+    height:             100%;
+    min-height:         480px;
 }
 
 div.tabContent {
@@ -760,7 +780,7 @@ div#divChannel {
     float:             left;
     margin:            24px;
     width:             180px;
-    height:            auto;
+    height:            150px;
     background:        #d1d3d4;
 }
 
@@ -864,16 +884,12 @@ p.contentTopic-grade{
 /*------------------ Post Tópicos fim --------------------*/
 
 /*------------------ Public Profile --------------------*/
-div.myChannels, div.modChannels{
+div.publicChanUserProfile{
     padding-top:        40px;
     padding-bottom:     40px;
-    float:              none;
+    clear:              left;
+    display:            block;
 }
-
-div.myChannels h1, div.modChannels h1{
-    padding-bottom:     20px;
-}
-
 
 /*------------------ Channel Page --------------------*/
 /* Info - parte da esquerda e capa */
@@ -904,7 +920,7 @@ div#nameChannelPage {
     position:           absolute;
     top:                150px;
     margin-left:        68px;
-    z-index:            9999;
+    z-index:            999;
 }
 
 #nameChannelPage h1{
@@ -1136,6 +1152,7 @@ div#nameChannelPage {
     position:           absolute;
     margin-left:        68px;
     z-index:            999999;
+    float:              none;
 }
 
 div#divInfTopic {
@@ -1219,6 +1236,10 @@ div.contentTitleTopic {
     border-bottom:      1px solid #87c240;
     font-size:          1.3em;
     height:             1.3em;
+}
+
+div.contentPageTopic {
+    margin:             48px 0 48px 24px;
 }
 
 /* Comentarios */
@@ -1305,6 +1326,16 @@ div#btnSendAnswer {
     font-size:          small;
 }
 
+div.delComment {
+    margin-left:        480px;
+    margin-top:         2px;
+    position:           absolute;
+}
+
+.divChildComment div.delComment {
+    margin-left:        456px;
+}
+
 /**/
 
 #divNotification {
@@ -1332,8 +1363,8 @@ p#timeNotification {
 }
 
 p#txtNotification {
-    padding-top:          24px;
-    font-size:           medium;
+    padding-top:        24px;
+    font-size:          medium;
 }
 
 
@@ -1402,10 +1433,20 @@ p#txtPartChannel {
     color:              #bcbec0;
 }
 /*------------------ fim Topic Page ----------------*/
-
 /*------------------ fim middle --------------------*/
 
+/*----------------- começo footer -------------------*/
 
+div#footer {/*
+    position:           absolute;
+    bottom:             0;
+    height:             200px;
+    background:         #2b2d2e;
+    width:              100%;*/
+}
+
+
+/*------------------- fim footer --------------------*/
 /*----- começo Botoes interativos / JS & JQuery ----*/
 .press {
      cursor:           pointer;
@@ -1415,7 +1456,7 @@ p#txtPartChannel {
     cursor:            pointer;
 }
 
-.userpic:hover, .logo:hover, .BSearch:hover, .BTrTop:hover, .BTop:hover, .BNews:hover, .press:hover, .accRef:hover, .sendMessage:hover, #profileEdit:hover, .c-lista:hover .c-grade:hover, .postFoBoxL_l:hover, .postFoBoxR_l:hover, .postFoBoxL_g:hover, .postFoBoxR_g:hover, .post_m:hover, .chanPaidImg:hover {
+.userpic:hover, .logo:hover, .BSearch:hover, .BTrTop:hover, .BTop:hover, .BNews:hover, .press:hover, .accRef:hover, #profileEdit:hover, .c-lista:hover .c-grade:hover, .postFoBoxL_l:hover, .postFoBoxR_l:hover, .postFoBoxL_g:hover, .postFoBoxR_g:hover, .post_m:hover, .chanPaidImg:hover {
 	background:        #bcbec0;
     cursor:            pointer;
 }

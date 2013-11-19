@@ -1,32 +1,49 @@
-﻿@model Nimbus.Web.Website.Models.LoginModel
-@{Layout = "~/Website/Views/Shared/_Layout.cshtml";}
+﻿@model Nimbus.Web.Website.Models.UserProfileModel
 
 <div class="wrapperUser">
-    <nav class="cont-right">
-		<ul class="sbs">
-			<li>
-				<div class="c-lista">
-					<div class="ret1"></div>
-					<div class="ret2"></div>
-				</div>
-			</li>
-			<li>
-				<div class="c-grade">
-					<div class="quad1"></div>
-					<div class="quad2"></div>
-					<div class="quad3"></div>
-					<div class="quad4"></div>
-				</div>
-			</li>
-		</ul>
-	</nav>
-    <div class="myChannels">
+  
+    <div class="publicChanUserProfile">
         <h1>Meus Canais</h1>
-        @*PostsGrade/PostsLista*@
+        @*PostsGrade/PostsLista*@       
+            @foreach (var item in Model.MyChannels)
+            {
+                @*Imagem*@
+                <div id="divChannel">
+                    <a href="/channel/index/@item.Id">
+                        <div id="headerChannel">
+                            <h1>@item.Name</h1>
+                            <img src="@item.ImgUrl" id="imgChannel" alt="blabla" title="blabla">
+                        </div>
+                    </a>
+                </div>
+
+            }
+        @if (Model.MyChannels.Count() <= 0)
+        {
+            <p>Nenhum canal criado.</p>
+        }
     </div>
     
-    <div class="modChannels">
+    <div class="publicChanUserProfile">
         <h1>Canais Moderados</h1>
         @*PostsGrade/PostsLista*@
+        @foreach (var item in Model.ChannelMannager)
+        {
+            @*Imagem*@
+            <div id="divChannel">
+                <a href="/channel/index/@item.Id">
+                    <div id="headerChannel">
+                        <h1>@item.Name</h1>
+                        <img src="@item.ImgUrl" id="imgChannel" alt="blabla" title="blabla">
+                    </div>
+                </a>
+            </div>
+
+        }
+        @if (Model.ChannelMannager.Count() <= 0)
+        {
+            <p>Nenhum canal sendo moderado.</p>
+        }
     </div>
+
 </div>

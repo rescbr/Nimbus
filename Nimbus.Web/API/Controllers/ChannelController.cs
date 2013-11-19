@@ -389,7 +389,7 @@ namespace Nimbus.Web.API.Controllers
                 {
                     AlertChannelPay alert = new AlertChannelPay();
                     bool allow = false;
-
+                    bool accepted = false;
                     Channel channel = db.SelectParam<Channel>(ch => ch.Visible == true && ch.Id == id).FirstOrDefault();
 
                     #region verifica permissão
@@ -398,7 +398,7 @@ namespace Nimbus.Web.API.Controllers
                         if (channel.Price > 0 || channel.IsPrivate == true)
                         {
                             bool paid = Paid(id);
-                            bool accepted = IsAccepted(id);
+                            accepted = IsAccepted(id);
 
                             if (paid == true || accepted == true)
                             {
@@ -417,9 +417,11 @@ namespace Nimbus.Web.API.Controllers
                                 }
                             }
                         }
-                        else 
-                        allow = true;
-                    
+                        else
+                        {
+                            allow = true;
+                            accepted = true;
+                        }
                     } 
                     #endregion
 
@@ -431,14 +433,16 @@ namespace Nimbus.Web.API.Controllers
                         int userComment = listComments.Where(us => us.UserId == NimbusUser.UserId).Count();
                         string firstName = db.SelectParam<User>(us => us.Id == channel.OwnerId).Select(us => us.FirstName).FirstOrDefault();
                         string lastName = db.SelectParam<User>(us => us.Id == channel.OwnerId).Select(us => us.LastName).FirstOrDefault();
+
                         showChannel.Name = channel.Name;
                         showChannel.CategoryId = channel.CategoryId;
                         showChannel.Id = channel.Id;
-                        showChannel.countFollowers = channel.Followers.ToString();
+                        showChannel.countFollowers = db.Where<ChannelUser>(c => c.ChannelId == id && c.Follow == true && c.Visible == true).Count().ToString();
                         showChannel.OrganizationId = channel.OrganizationId;
                         showChannel.OwnerId = channel.OwnerId;
                         showChannel.Price = channel.Price;
                         showChannel.OpenToComments = channel.OpenToComments;
+                        showChannel.UserFollow = db.SelectParam<ChannelUser>(ch => ch.ChannelId == id && ch.Visible == true && ch.Follow == true).Exists(ch => ch.UserId == NimbusUser.UserId);
                         if (userComment > 0 && listComments.Count > 0)
                         {
                             showChannel.participationChannel = ((userComment * 100) / listComments.Count()).ToString();
@@ -448,7 +452,7 @@ namespace Nimbus.Web.API.Controllers
                         showChannel.ImgUrl = channel.ImgUrl;
                         showChannel.OwnerName = firstName + " " + lastName;
                         showChannel.CountVotes = db.SelectParam<VoteChannel>(vt => vt.ChannelId == id).Select(vt => vt.Score).Count();
-                        
+                        showChannel.isAccept = accepted;
                     }
                 }
             }
@@ -532,15 +536,20 @@ namespace Nimbus.Web.API.Controllers
         /// </summary>
         /// <returns></returns>        
         [HttpGet]
-        public List<Channel> MyChannel()
+        public List<Channel> MyChannel(int? id = 0)
         {
             List<Channel> listChannel = new List<Channel>();
             try
             {
                 using(var db = DatabaseFactory.OpenDbConnection())
                 {
-                   List<int> idsChannel = db.SelectParam<Role>(rl => rl.IsOwner == true && rl.UserId == NimbusUser.UserId).Select(rl => rl.ChannelId).ToList();
-                    
+                    if (id == null)
+                    {
+                        id = NimbusUser.UserId;
+                    }
+                   List<int> idsChannel = db.SelectParam<Role>(rl => rl.IsOwner == true && rl.UserId == id).Select(rl => rl.ChannelId).ToList();
+                   List<Category> listCategory = db.Select<Category>();
+
                     foreach (int item in idsChannel)
                     {
                         Channel channel = (from chn in db.SelectParam<Channel>(chn => chn.Visible == true && chn.Id == item) 
@@ -549,7 +558,8 @@ namespace Nimbus.Web.API.Controllers
                                                 Id = chn.Id,
                                                 Name = chn.Name,
                                                 OrganizationId = chn.OrganizationId,
-                                                ImgUrl = chn.ImgUrl
+                                                ImgUrl = listCategory.Where(c=> c.Id == chn.CategoryId).Select(c => c.ImageUrl).FirstOrDefault()
+                                                
                                             }).FirstOrDefault();
                         listChannel.Add(channel);
                     }                       
@@ -603,16 +613,23 @@ namespace Nimbus.Web.API.Controllers
        /// </summary>
        /// <returns></returns>
         [HttpGet]
-        public List<Channel> ModeratorChannel()
+        public List<Channel> ModeratorChannel(int? id = 0)
         {
             List<Channel> listChannel = new List<Channel>();
             try
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    List<int> idsChannel = db.SelectParam<Role>(rl => rl.IsOwner == false && rl.ModeratorManager == true && rl.UserId == NimbusUser.UserId)
-                                                                        .Select(rl => rl.ChannelId).ToList();
+                    if (id == null)
+                        id = NimbusUser.UserId;
 
+                    List<int> idsChannel = db.SelectParam<Role>(rl => rl.IsOwner == false && (rl.ModeratorManager == true ||
+                                                                                              rl.ChannelMagager == true ||
+                                                                                              rl.MessageManager == true ||
+                                                                                              rl.TopicManager == true ||
+                                                                                              rl.UserManager == true)&& rl.UserId == id)
+                                                                        .Select(rl => rl.ChannelId).ToList();
+                    List<Category> listCategory = db.Select<Category>();
                     foreach (int item in idsChannel)
                     {
                         Channel channel = (from chn in db.SelectParam<Channel>(chn => chn.Visible == true && chn.Id == item)
@@ -621,7 +638,7 @@ namespace Nimbus.Web.API.Controllers
                                            OrganizationId = chn.OrganizationId,
                                            Id = chn.Id,
                                            Name = chn.Name,
-                                           ImgUrl = chn.ImgUrl
+                                           ImgUrl = listCategory.Where(c => c.Id == chn.CategoryId).Select(c => c.ImageUrl).FirstOrDefault()
                                        }).FirstOrDefault();
 
                         listChannel.Add(channel);
@@ -681,12 +698,14 @@ namespace Nimbus.Web.API.Controllers
                 {                    
                     listUserChannel = db.SelectParam<ChannelUser>(ch => ch.UserId == NimbusUser.UserId && ch.Visible == true && ch.Follow == true)
                                                                  .Select(ch => ch.ChannelId).ToList();
+                    ICollection<Category> listCategry = db.Select<Category>();
                     if (listUserChannel.Count > 0)
                     {
                         foreach (int item in listUserChannel)
                         {
                             Channel channel = new Channel();
                             channel = db.SelectParam<Channel>(ch => ch.Visible == true && ch.OrganizationId == id && ch.Id == item).First();
+                            channel.ImgUrl = listCategry.Where(c => c.Id == channel.CategoryId).Select(c => c.ImageUrl).FirstOrDefault();
                             listChannel.Add(channel);
                         }
                     }                    
@@ -776,59 +795,62 @@ namespace Nimbus.Web.API.Controllers
         /// </summary>
         /// <param name="channelID"></param>
         /// <returns></returns>
-        [HttpPut]
-        public bool FollowChannel(int id)
+        [HttpPost]
+        public ChannelUser FollowChannel(int id)
         {
             //TODO : notificação
-            bool follow = false;
             try
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    Channel channel = db.Query<Channel>("SELECT Channel.Price, Channel.IsPrivate" +
-                                                                                "FROM Channel" +
-                                                                                "WHERE Channel.Id ={0} AND Channel.Visible = true", id).FirstOrDefault();
-                    bool accepted = true;
+                    ChannelUser channelUser = new ChannelUser();
+                    Channel channel = db.SelectParam<Channel>(c => c.Id == id && c.Visible == true).FirstOrDefault();
+                    bool accepted = false;
                     if (channel.IsPrivate == false)
                     {
                         accepted = true;
                     }
                      ChannelUser user = db.SelectParam<ChannelUser>(chn => chn.UserId == NimbusUser.UserId &&
                                                                            chn.ChannelId == id).FirstOrDefault();
-                        if (user == null)//novato
-                        {
-                            db.Insert<ChannelUser>(new ChannelUser
-                            {
-                                ChannelId = id,
-                                Interaction = 0,
-                                Follow = true,
-                                Vote = false,
-                                UserId = NimbusUser.UserId,
-                                Accepted = accepted
-                            });
-                            follow = true;
-                        }
-                        else //já existia
-                        {
-                            if (user.Follow == false)
-                            {
-                                db.UpdateOnly(new ChannelUser { Follow = true}, usr => usr.Follow, usr => usr.UserId == NimbusUser.UserId);
-                                follow = true;
-                            }
-                            else if (user.Follow == true)
-                            {
-                               db.UpdateOnly(new ChannelUser { Follow = false}, usr => usr.Follow, usr => usr.UserId == NimbusUser.UserId);
-                               follow = false;
-                            }
-                        }
-                    
+                     if (user == null)//novato
+                     {
+
+                         channelUser.ChannelId = id;
+                         channelUser.Interaction = 0;
+                         channelUser.Follow = true;
+                         channelUser.Vote = false;
+                         channelUser.UserId = NimbusUser.UserId;
+                         channelUser.Accepted = accepted;
+                         channelUser.Visible = true;
+                         db.Insert<ChannelUser>(channelUser);
+
+                     }
+                     else //já existia
+                     {
+                         if (user.Follow == false)
+                         {
+                             db.UpdateOnly(new ChannelUser { Follow = true }, usr => usr.Follow, usr => usr.UserId == NimbusUser.UserId);                             
+                             channelUser.Follow = true;
+                         }
+                         else if (user.Follow == true)
+                         {
+                             db.UpdateOnly(new ChannelUser { Follow = false }, usr => usr.Follow, usr => usr.UserId == NimbusUser.UserId);
+                             channelUser.Follow = false;
+                         }
+                         channelUser.ChannelId = id;
+                         channelUser.Interaction = user.Interaction;                         
+                         channelUser.Vote = user.Vote;
+                         channelUser.UserId = NimbusUser.UserId;
+                         channelUser.Accepted = user.Accepted;
+                         channelUser.Visible = true;
+                     }
+                     return channelUser;
                 }
             }
             catch (Exception ex)
             {
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
-            return follow;
         }
                     
         /// <summary>

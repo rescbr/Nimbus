@@ -14,38 +14,22 @@
 
 <div class="content-top">
     <div class="cont-left">
-        <h1 class="userNProfBar">User's Name</h1>
-    </div>
-
-    @*Se não for o usuário*@
     @if (Model.User.Id != Model.CurrentUser.UserId)
         {
-        <nav class="cont-right">
-            <ul class="sbs">
-                <li>
-                    <div class="c-lista">
-                        <div class="ret1"></div>
-                        <div class="ret2"></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="c-grade">
-                        <div class="quad1"></div>
-                        <div class="quad2"></div>
-                        <div class="quad3"></div>
-                        <div class="quad4"></div>
-                    </div>
-                </li>
-            </ul>
-        </nav>
-    }
+         <h1 class="userNProfBar">@Model.User.FirstName @Model.User.LastName</h1>
+        }
+        else
+        {
+         <h1 class="userNProfBar">@Model.CurrentUser.FirstName @Model.CurrentUser.LastName</h1>
+        }
+    </div>
 </div>
 
     <div class="proBar">
         <div class="profileImg">
             @if (Model.User.Id == Model.CurrentUser.UserId)
             {
-                <a href="#modal-img" class="call-modal"><img src="@Model.User.AvatarUrl" alt="Avatar" title="Editar Avatar" id="useravatar" /></a>
+                <a href="#modal-img" class="call-modal"><img src="@Model.CurrentUser.AvatarUrl" alt="Avatar" title="Editar Avatar" id="useravatar" /></a>
             }
             else
             {
@@ -94,9 +78,11 @@
         @*Se não for o usuário*@
         @if (Model.User.Id != Model.CurrentUser.UserId)
         {
-            <div class="sendMessage">
-                <p><a href="#modal-text" class="call-modal">Enviar Mensagem</a></p> <!-- clicavel -->
-            </div>
+            <a href="#modal-text" class="call-modal">
+                <div class="sendMessage">
+                    <p>Enviar Mensagem</p> <!-- clicavel -->
+                </div>
+            </a>
         }
         else
         {
@@ -206,9 +192,18 @@
        data-dismiss="modal">×</a>
 </section>
 
-    <div style="float:left;">
-        @RenderPage("~/Website/Views/PrivateProfileTopBar.cshtml")
-    </div>
+        @if(Model.User.Id == Model.CurrentUser.UserId)
+        { 
+            <div style="float:left;">
+            @RenderPage("~/Website/Views/PrivateProfileTopBar.cshtml")
+            </div>
+        }
+        else
+        {
+            <div style="float: left; background: #f1f2f2">
+           @RenderPage("~/Website/Views/PublicUserContent.cshtml")
+            </div>
+        }
 
 
     @*Sempre manter no fim da página*@

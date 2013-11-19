@@ -25,7 +25,7 @@
             </div>
 
             <div id="divAnswerComment_@comment.Id" style="display:none; margin-left: 74px">
-                <textarea id="txtaAnswer_@comment.Id" name="txtaAnswerTopic" cols="50" rows="2" style="border: 1px solid #87c240"></textarea>
+                <textarea id="txtaAnswer_@comment.Id" name="txtaAnswerTopic" cols="50" rows="2" style="border: 1px solid #87c240; max-width: 384px; min-width: 384px"></textarea>
                 <div class="replyTopBtn" id="btnSendAnswer" onclick="ajaxAnswerComment(0, @comment.Id, @comment.ChannelId, @comment.TopicId, 'txtaAnswer_@comment.Id');">
                     <p>
                         Enviar

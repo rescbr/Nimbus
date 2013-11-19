@@ -9,17 +9,39 @@
 
 <script>
     currentChannel = @Model.CurrentChannel.Id;
-    roles = @Html.Raw(Json.Encode(Model.RolesCurrentUser));    
+    roles = @Html.Raw(Json.Encode(Model.RolesCurrentUser));   
+    countFollowers = @Model.CurrentChannel.countFollowers;
 </script>
 
 <div id="divCapa">
     <img src="@Model.CurrentChannel.ImgUrl" id="imgCapa" height="192" alt="" width="864" />
     @if (Model.CurrentChannel.OwnerId != Model.CurrentUser.UserId)
+{
+    if (Model.CurrentChannel.UserFollow == true && Model.CurrentChannel.isAccept == true)
     {
-        <div class="followChannelPage">
-            <p>Seguir</p>
-        </div>
+        <a href="#" onclick="ajaxFollowChannel(@Model.CurrentChannel.Id);">
+            <div class="followChannelPage">
+                <p id="pFollow">Deixar de seguir</p>
+            </div>
+        </a>
     }
+    else if (Model.CurrentChannel.UserFollow == true && Model.CurrentChannel.isAccept == false)
+    {
+
+                 <div class="followChannelPage">
+                     <p id="pFollow">Aguardando aprovação</p> 
+                 </div>
+    }
+    else if(Model.CurrentChannel.UserFollow == false)
+    {
+        <a href="#" onclick="ajaxFollowChannel(@Model.CurrentChannel.Id);">
+            <div class="followChannelPage">
+                <p id="pFollow">Seguir</p>
+            </div>
+        </a>
+    }
+
+}
     else if (Model.CurrentChannel.OwnerId == Model.CurrentChannel.userID || Model.RolesCurrentUser.Contains("channelmanager")
                                                                          || Model.RolesCurrentUser.Contains("moderatormanager"))
     {
@@ -47,15 +69,15 @@
         @foreach (var item in Model.Moderators)
         {
             <p>
-                <a href="/userprofile/index/@item.Id" class="nameMod"> @item.FirstName + @item.LastName</a>
+                <a href="/userprofile/index/@item.Id" class="nameMod"> @item.FirstName @item.LastName</a>
             </p>
         }      
     </div>
 
     <div class="infoTitleChannel">
         <h2>Número de seguidores</h2>
-        <p class="numberIco">
-            @*colocar icone de total de seguidores*@
+        <p id="pCountFollowers" class="numberIco">
+            @*colocar icone de total de seguidores*@            
             @Model.CurrentChannel.countFollowers
         </p>
     </div>

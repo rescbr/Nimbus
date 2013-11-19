@@ -9,7 +9,7 @@
     <link rel="stylesheet" type="text/css" href="/Styles/Style.css" />
 
     <title>@ViewBag.Title - Nimbus</title>
-
+    
 </head>
 <body>
     @* não esquecer de minificar =) *@
@@ -19,25 +19,25 @@
     @Scripts.Render(("~/Scripts/ckeditor/ckeditor.js"))
     @Scripts.Render(("~/Scripts/jquery-2.0.3.js"))
 
+    <div id="wrap">
+        <header id="header">
+            <div class="container">
+                <nav class="logo">
+                    <ul class="sbs">
+                        <li><div class="userlogo"></div></li>
+                        <!-- <img src="userlogo.png"> -->
+                        <li><h1>Logo</h1></li>
+                    </ul>
+                </nav>
 
-    <header id="header">
-        <div class="container">
-            <nav class="logo">
-                <ul class="sbs">
-                    <li><div class="userlogo"></div></li>
-                    <!-- <img src="userlogo.png"> -->
-                    <li><h1>Logo</h1></li>
-                </ul>
-            </nav>
-
-            <nav class="center">
-                <ul class="sbs">
-                    <a href="#"><li class="BSearch">Search</li></a>
-                    <a href="/TrendingTopics"><li class="BTrTop">Trending</li></a>
-                    <a href="#"><li class="BTop">Top</li></a>
-                    <a href="#"><li class="BNews">News</li></a>
-                </ul>
-            </nav>
+                <nav class="center">
+                    <ul class="sbs">
+                        <a href="#"><li class="BSearch">Search</li></a>
+                        <a href="../TrendingTopics"><li class="BTrTop">Trending</li></a>
+                        <a href="#"><li class="BTop">Top</li></a>
+                        <a href="#"><li class="BNews">News</li></a>
+                    </ul>
+                </nav>
             @if (user != null)
             {
                 <nav class="right">
@@ -48,26 +48,25 @@
                     </ul>
                 </nav>
             }
-        </div>
-    </header>
+            </div>
+        </header>
 
-    <div class="wrapper">
-        <div class="container-body">
-            <div class="middle-body">
-                @RenderBody()
+        <div class="wrapper">
+            <div class="container-body">
+                <div class="middle-body">
+                    @RenderBody()
             </div>
         </div>
+        </div>
+        <div id="footer">
+            <!-- blablablabla-->
+        </div>
     </div>
-
-    <footer id="footer">
-        <!-- blablablabla-->
-    </footer>
-    @if (User.Identity.IsAuthenticated)
-    {
+    @if (User.Identity.IsAuthenticated) {
         @Scripts.Render("~/Scripts/jquery.signalR-2.0.0.js")
         @Scripts.Render("~/signalr/hubs")
         @Scripts.Render("~/Scripts/Notifications.js")
     }
-
+    
 </body>
 </html>

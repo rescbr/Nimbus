@@ -67,6 +67,7 @@
         </ul>
     </nav>
 
+    <div class="contentPageTopic">
     @*Topico em formato texto*@
     @if (Model.CurrentTopic.TopicType == Nimbus.Model.Enums.TopicType.exam)
     {
@@ -82,7 +83,7 @@
         @*Topico avaliacao*@
         @RenderPage("~/Website/Views/TopicText.cshtml")
     }
-
+    </div>
 
 
 @*</div>*@
@@ -107,7 +108,7 @@
             <div class="infoTitleChannel">
                 <h2>Comentar</h2>
             </div>
-            <textarea id="txtacomentario" cols="60" rows="5" style="width: 536px; border: 1px solid #87c240; margin-left: 48px"></textarea>
+            <textarea id="txtacomentario" cols="60" rows="5" style="width: 536px; border: 1px solid #87c240; margin-left: 48px; min-width: 536px; max-width: 536px"></textarea>
             <div class="replyTopBtn" id="btnNewComment" onclick="ajaxSaveNewComment(@Model.CurrentTopic.Id, @Model.CurrentTopic.ChannelId,'txtacomentario');">
                 <p>
                     Enviar
