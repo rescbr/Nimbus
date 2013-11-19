@@ -969,12 +969,12 @@ div.editTag {
     cursor:             pointer;
 }
 
-div.editTag:hover, .editTag p:hover {
+div.editTag:hover, .editTag p:hover, .editTag a:hover {
     color:              #87c240;
     cursor:             pointer;
 }
 
-.editTag p {
+.editTag p, .editTag a {
     color:              #FFFFFF;
     text-align:         center;
     font-size:          small;
@@ -1053,6 +1053,48 @@ p#txtPartChannel {
 }
 /*------------------ fim Channel Page --------------*/
 /*------------------ Topic Page --------------------*/
+
+/*Top Bar*/
+nav.topicTopBar {
+    width:              644px;
+    height:             39px;
+    background:         #2b2d2e;
+    font-weight:        normal;
+    color:              #FFFFFF;
+}
+
+.topicTopBar li {
+    width:              215px;
+    text-align:         center;
+    line-height:        3em;
+}
+
+.topicTopBar li:last-child {
+    width:              214px;
+}
+
+.topicTopBar li:hover {
+    background:         #2b2d2e;
+    border-bottom:      2px solid #87c240;
+    height:             36px;
+    color:              #87c240;
+    cursor:             pointer;
+}
+
+/* Content */
+.topicTopBar p {
+    text-align:         center;
+    width:              214px;
+    height:             39px;
+    text-decoration:    none;
+    color:              #FFFFFF;
+}
+
+.topicTopBar p:hover, .topicTopBar p:active {
+    text-decoration:    none;
+    color:              #87c240;
+    cursor:             pointer;
+}
 
 /*------------------ Channel Page --------------------*/
 /* Info - parte da esquerda e capa */
@@ -1182,23 +1224,28 @@ div.contentTitleTopic {
 /* Comentarios */
 div.divComentario { /*Toda a parte do comentário*/
     margin-left:       48px;
-    width:             600px;
-    background:        #4fbd86;
+    width:             552px;
+    background:        #FFFFFF;
 }
 
-div.blocoComment { /*Bloco de comentário*/
-    background:        #BE1E2D;
+div.blockComment { /*Bloco de comentário*/
+    background:        #FFFFFF;
     margin:            4px 0 4px 0;
     display:           block;
     float:             none;
-    height:            auto;
 }
 
 div.firstBlockComment { /*Primeiro comentário*/
+    background:         #FFFFFF;
     display:            block;
-    width:              500px;
     height:             auto;
     float:              none;
+}
+
+div.divChildComment {
+    display:            block;
+    float:              none;
+    margin:             10px 0 0 24px;
 }
 
 div.imgComment {
@@ -1207,10 +1254,13 @@ div.imgComment {
 }
 
 div.divCommentContent { /* conteudo do comentario - nome, hora, data, texto */
-    float:              left;
-    margin-left:        10px;
-    background:         #f1f2f2;
-    width:              400px;
+    margin-left:        52px;
+    background:         #FFFFFF;
+    width:              500px;
+}
+
+.divChildComment div.divCommentContent { /* conteudo do comentario - nome, hora, data, texto */
+    width:              476px;
 }
 
 p.titleCommentContent {
@@ -1226,12 +1276,33 @@ p.txtCommentContent {
     color:              #000000;
     font-size:          small;
     font-weight:        normal;
-    width:              400px;
 }
 
-div.divChildComment {
-    float:              none;
-    margin:             10px 0 0 48px;
+
+div.replyTopBtn{
+    border:             none;
+    margin-left:        472px;
+    background:         #2b2d2e;
+    width:              80px;
+    height:             26px;
+    cursor:             pointer;
+    display:            block;
+    z-index:            9999999;
+}
+
+div#btnSendAnswer {
+    margin-left:        398px;
+}
+
+.replyTopBtn:hover, .replyTopBtn p:hover {
+    color:              #87c240;
+    cursor:             pointer;
+}
+
+.replyTopBtn p {
+    color:              #FFFFFF;
+    text-align:         center;
+    font-size:          small;
 }
 
 /**/

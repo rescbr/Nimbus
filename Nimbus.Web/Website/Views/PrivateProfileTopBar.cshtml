@@ -51,57 +51,18 @@
     </div>
 
     <div id="divMyChannels" style="display:none;">
-       @* Como os canais nao tem texto, eles so tem um estilo de visualizacao
-
-       <nav class="cont-right">
-            <ul class="sbs">
-                <li>
-                    <div name="post_lista" class="c-lista" onclick="ChangeTo(this.name, 'currentType');">
-                        <!-- imagem icone lista -->
-                        <div class=" ret1"></div>
-                        <div class="ret2"></div>
-                    </div>
-                </li>
-                <li>
-                    <div name="post_grade" class="c-grade" onclick="ChangeTo(this.name, 'currentType');">
-                        <!-- imagem icone grade -->
-                        <div class="quad1"></div>
-                        <div class="quad2"></div>
-                        <div class="quad3"></div>
-                        <div class="quad4"></div>
-                    </div>
-                </li>
-            </ul>
-        </nav>*@
-
         @if (Model.CurrentUser.UserId == Model.User.Id)
         {
             foreach (var item in Model.MyChannels)
             {
                 @*Imagem*@
             <div id="divChannel">
-                <div id="headerChannel">
-                    <h1>@item.Name</h1>
-                    <img src="@item.ImgUrl" id="imgChannel" alt="blabla" title="blabla">
-                </div>
-
-                @* novo layout nao tem descricao nos posts de canais
-                <div id="contetChannel">
-                    <p>
-                        @item.Description
-                    </p>
-                </div>
-                *@
-                @* novo layout nao tem botao nos posts de canais
-                <div class="footerChannel">
-                    <div class="postFoBoxL_g">
-                        <p onclick="unFollow(@item.Id);">Desfavoritar</p> //parte comentada > chamar js passando item.id
+                <a href="/channel/index/@item.Id">
+                    <div id="headerChannel">
+                        <h1>@item.Name</h1>
+                        <img src="@item.ImgUrl" id="imgChannel" alt="blabla" title="blabla">
                     </div>
-                    <div class="postFoBoxR_g">
-                        <p onclick="openChannel(@item.Id);">Ler</p>
-                    </div>
-                </div>
-                *@
+                </a>
             </div>
 
             }
@@ -109,54 +70,20 @@
     </div>
 
     <div id="divChannelFollows" style="display:none;">
-        <nav class="cont-right">
-            <ul class="sbs">
-                <li>
-                    <div class="c-lista">
-                        <!-- imagem icone lista -->
-                        <div class="ret1"></div>
-                        <div class="ret2"></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="c-grade">
-                        <!-- imagem icone grade -->
-                        <div class="quad1"></div>
-                        <div class="quad2"></div>
-                        <div class="quad3"></div>
-                        <div class="quad4"></div>
-                    </div>
-                </li>
-            </ul>
-        </nav>
 
         @if (Model.CurrentUser.UserId == Model.User.Id)
         {
             foreach (var item in Model.ChannelFollow)
             {
-                @*Imagem e texto*@
-                <div class="post_g">
-                    <div class="postHeader_g">
-                        <h1>@item.Name</h1>
-                        <div class="postImg_g">
-                            <img src="@item.ImgUrl" alt="blabla" title="blabla">
+                @*Imagem*@
+                <div id="divChannel">
+                    <a href="/channel/index/@item.Id">
+                        <div id="headerChannel">
+                            <h1>@item.Name</h1>
+                            <img src="@item.ImgUrl" id="imgChannel" alt="blabla" title="blabla">
                         </div>
-                    </div>
-                    <div class="postContent_g">
-                        <p>
-                            @item.Description
-                        </p>
-                    </div>
-                    <div class="postFooter_g">
-                        <div class="press PostFoBoxL_g">
-                            <p onclick="unFollow(@item.Id);">Desfavoritar</p> @*chamar js passando item.id*@
-                                            </div>
-                        <div class="postFoBoxR_g">
-                            <p onclick="openChannel(@item.Id);">Ler</p>
-                        </div>
-                    </div>
+                    </a>
                 </div>
-
             }
         }
     </div>
@@ -188,28 +115,25 @@
             foreach (var item in Model.ReadLater)
             {
                 @*Imagem e texto*@
-                <div class="post_g">
-                    <div class="postHeader_g">
-                        <h1>@item.Name</h1>
-                        <div class="postImg_g">
-                            <img src="@item.ImgUrl" alt="blabla" title="blabla">
+                <div class="divTopic-grade">
+                    <a href="/topic/index/@item.Id">
+                        <div class="headerTopic-grade">
+                            <h1>@item.Name</h1>
+                            <img src="@item.ImgUrl" alt="@item.Name" title="@item.Name" width="180" height="100">
                         </div>
-                    </div>
-                    <div class="postContent_g">
-                        <p>
-                            @item.Description
-                        </p>
-                    </div>
-                    <div class="postFooter_g">
-                        <div class="press PostFoBoxL_g">
+                    </a>
+                    <p class="contentTopic-grade">
+                        @item.Description
+                    </p>
+                    <div class="footerTopic-grade">
+                        <div class="btnLeftTopic-grade">
                             <p onclick="unFollow(@item.Id);">Desfavoritar</p> @*chamar js passando item.id*@
-                                            </div>
-                        <div class="postFoBoxR_g">
-                            <p onclick="openChannel(@item.Id);">Ler</p>
+                        </div>
+                        <div class="btnRightTopic-grade">
+                            <p onclick="openChannel(@item.Id);">Ler</p> @*adicionar aos favoritos*@
                         </div>
                     </div>
                 </div>
-
             }
         }
     </div>
