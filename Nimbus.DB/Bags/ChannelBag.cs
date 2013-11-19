@@ -15,6 +15,7 @@ namespace Nimbus.Model.Bags
         public bool isAccept { get; set; }
         public int userID { get; set; }
 
+        public bool UserFollow { get; set; }
         public string OwnerName { get; set; }
 
         public int CountVotes { get; set; }

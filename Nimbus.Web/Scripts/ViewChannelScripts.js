@@ -1,5 +1,30 @@
 ﻿//deve conter nesse scprits, os scripts utilizados  APENAS nas views de CHANNEL
 
+/*Métodos de interações gerais*/
+function ajaxFollowChannel(id)
+{
+    $.ajax({
+        url: "/api/channel/FollowChannel/" + id,
+        type: "POST",
+        contentType: "application/json;charset=utf-8",
+        statusCode: {
+            200: function (newData) {
+                if (newData.Follow == true && newData.Accepted == true)
+                    document.getElementById('pFollow').value = "Deixar de seguir";
+                else if (newData.Follow == true && newData.Accepted == false)
+                    document.getElementById('pFollow').value = "Aguardando aprovação";
+                else if (newData.Follow == false)
+                    document.getElementById('pFollow').value = "Seguir";
+            },
+
+            400: function () {
+                window.alert("Não foi possível realizar esta operação. Tente novamente mais tarde.");
+            }
+        }
+    });
+}
+
+
 function CreatedDivQuestion()
 {
     var nextPerg= parseInt(CurrentQuestion) + 1; //variavel global

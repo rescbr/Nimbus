@@ -255,10 +255,10 @@
     <Content Include="images\CapaChannel\filosofia.png" />
     <Content Include="images\CapaChannel\fotografia.png" />
     <Content Include="images\CapaChannel\jardinagem.png" />
-    <Content Include="images\CapaChannel\linguas.png" />
+    <Content Include="images\CapaChannel\idiomas.png" />
     <Content Include="images\CapaChannel\literatura.png" />
     <Content Include="images\CapaChannel\musica.png" />
-    <Content Include="images\CapaChannel\programacao.png" />
+    <Content Include="images\CapaChannel\computacao.png" />
     <Content Include="images\CapaChannel\saude.png" />
     <Content Include="images\CapaChannel\televisao.png" />
     <Content Include="images\CapaChannel\vestibular.png" />
