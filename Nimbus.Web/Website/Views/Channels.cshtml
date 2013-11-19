@@ -25,6 +25,7 @@
     {
         <script>
             newModeratorId = null;
+            countModerator = @Model.Moderators.Count();
         </script>
         <a href="#modal-edit" onclick="ajaxLoadEditInfo(@Model.CurrentChannel.Id, true);">
             <div class="followChannelPage">
