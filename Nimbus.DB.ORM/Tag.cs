@@ -10,7 +10,7 @@ namespace Nimbus.Model.ORM
     public class Tag: Nimbus.Model.Tag
     {
         [AutoIncrement]
-        public  int Id { get; set; }
+        public override int Id { get; set; }
 
 
     }
