@@ -8,6 +8,11 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
 	vertical-align:     baseline;
 }
 /* HTML5 display-role reset for older browsers */
+html, body {
+    height:             100%;
+    Padding:            0;
+    Margin:             0;
+}
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
 	display:            block;
 }
@@ -69,6 +74,10 @@ a, a:hover, a:visited {
     color:              #000000;
 }
 /*------------------ começo header --------------------*/
+
+#wrap {
+    min-height:         100%;
+}
 
 #header {
     background:         #2b2d2e;
@@ -183,23 +192,27 @@ div.exitbutton {
 
 .wrapper {
 	position:           absolute;
-	width:              100%;
 	top:                48px;
 	left:               0px;
+    width:              100%;
+    min-height:         100%;
+    height:             auto !important;
+    height:             100%;
+    padding-bottom:     200px;
 }
 
 .container-body {
 	width:              960px;
-	height:             300px;
 	margin:             0 auto;
-	clear:              none;
-	line-height:        2em;
+	clear:              both;
+	line-height:        2em;/*
+    float:              left;*/
 }
 
 .middle-body {
 /*	margin:             24px;*/
 }
-    
+
 /*------------------ Trending Topics topo --------------------*/
 
 .content-top {
@@ -904,7 +917,7 @@ div#nameChannelPage {
     position:           absolute;
     top:                150px;
     margin-left:        68px;
-    z-index:            9999;
+    z-index:            999;
 }
 
 #nameChannelPage h1{
@@ -1136,6 +1149,7 @@ div#nameChannelPage {
     position:           absolute;
     margin-left:        68px;
     z-index:            999999;
+    float:              none;
 }
 
 div#divInfTopic {
@@ -1219,6 +1233,10 @@ div.contentTitleTopic {
     border-bottom:      1px solid #87c240;
     font-size:          1.3em;
     height:             1.3em;
+}
+
+div.contentPageTopic {
+    margin:             48px 0 48px 24px;
 }
 
 /* Comentarios */
@@ -1305,6 +1323,16 @@ div#btnSendAnswer {
     font-size:          small;
 }
 
+div.delComment {
+    margin-left:        480px;
+    margin-top:         2px;
+    position:           absolute;
+}
+
+.divChildComment div.delComment {
+    margin-left:        456px;
+}
+
 /**/
 
 #divNotification {
@@ -1332,8 +1360,8 @@ p#timeNotification {
 }
 
 p#txtNotification {
-    padding-top:          24px;
-    font-size:           medium;
+    padding-top:        24px;
+    font-size:          medium;
 }
 
 
@@ -1402,10 +1430,20 @@ p#txtPartChannel {
     color:              #bcbec0;
 }
 /*------------------ fim Topic Page ----------------*/
-
 /*------------------ fim middle --------------------*/
 
+/*----------------- começo footer -------------------*/
 
+div#footer {/*
+    position:           absolute;
+    bottom:             0;
+    height:             200px;
+    background:         #2b2d2e;
+    width:              100%;*/
+}
+
+
+/*------------------- fim footer --------------------*/
 /*----- começo Botoes interativos / JS & JQuery ----*/
 .press {
      cursor:           pointer;
