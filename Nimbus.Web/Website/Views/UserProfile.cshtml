@@ -23,29 +23,6 @@
          <h1 class="userNProfBar">@Model.CurrentUser.FirstName @Model.CurrentUser.LastName</h1>
         }
     </div>
-
-    @*Se não for o usuário*@
-    @if (Model.User.Id != Model.CurrentUser.UserId)
-        {
-        <nav class="cont-right">
-            <ul class="sbs">
-                <li>
-                    <div class="c-lista">
-                        <div class="ret1"></div>
-                        <div class="ret2"></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="c-grade">
-                        <div class="quad1"></div>
-                        <div class="quad2"></div>
-                        <div class="quad3"></div>
-                        <div class="quad4"></div>
-                    </div>
-                </li>
-            </ul>
-        </nav>
-        }
 </div>
 
     <div class="proBar">
@@ -215,16 +192,18 @@
        data-dismiss="modal">×</a>
 </section>
 
-    <div style="float:left;">
         @if(Model.User.Id == Model.CurrentUser.UserId)
         { 
+            <div style="float:left;">
             @RenderPage("~/Website/Views/PrivateProfileTopBar.cshtml")
+            </div>
         }
         else
         {
+            <div style="float: left; background: #f1f2f2">
            @RenderPage("~/Website/Views/PublicUserContent.cshtml")
+            </div>
         }
-    </div>
 
 
     @*Sempre manter no fim da página*@
