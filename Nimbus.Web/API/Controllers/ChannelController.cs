@@ -830,12 +830,12 @@ namespace Nimbus.Web.API.Controllers
                          if (user.Follow == false)
                          {
                              db.UpdateOnly(new ChannelUser { Follow = true }, usr => usr.Follow, usr => usr.UserId == NimbusUser.UserId);                             
-                             channelUser.Follow = false;
+                             channelUser.Follow = true;
                          }
                          else if (user.Follow == true)
                          {
                              db.UpdateOnly(new ChannelUser { Follow = false }, usr => usr.Follow, usr => usr.UserId == NimbusUser.UserId);
-                             channelUser.Follow = true;
+                             channelUser.Follow = false;
                          }
                          channelUser.ChannelId = id;
                          channelUser.Interaction = user.Interaction;                         

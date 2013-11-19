@@ -9,12 +9,22 @@ function ajaxFollowChannel(id)
         contentType: "application/json;charset=utf-8",
         statusCode: {
             200: function (newData) {
-                if (newData.Follow == true && newData.Accepted == true)
-                    document.getElementById('pFollow').value = "Deixar de seguir";
+                count = parseInt(countFollowers);
+                if (newData.Follow == true && newData.Accepted == true) {
+                    document.getElementById('pFollow').innerHTML = "Deixar de seguir";
+                    document.getElementById('pCountFollowers').innerHTML = (count + 1).toString();
+                }
                 else if (newData.Follow == true && newData.Accepted == false)
-                    document.getElementById('pFollow').value = "Aguardando aprovação";
-                else if (newData.Follow == false)
-                    document.getElementById('pFollow').value = "Seguir";
+                    document.getElementById('pFollow').innerHTML = "Aguardando aprovação";
+                else if (newData.Follow == false) {
+                    document.getElementById('pFollow').innerHTML = "Seguir";
+                    if (count > 1)
+                        count = count - 1;
+                    else
+                        couunt = 0;
+                    document.getElementById('pCountFollowers').innerHTML = count.toString();
+                }
+
             },
 
             400: function () {

@@ -9,7 +9,8 @@
 
 <script>
     currentChannel = @Model.CurrentChannel.Id;
-    roles = @Html.Raw(Json.Encode(Model.RolesCurrentUser));    
+    roles = @Html.Raw(Json.Encode(Model.RolesCurrentUser));   
+    countFollowers = @Model.CurrentChannel.countFollowers;
 </script>
 
 <div id="divCapa">
@@ -75,8 +76,8 @@
 
     <div class="infoTitleChannel">
         <h2>Número de seguidores</h2>
-        <p class="numberIco">
-            @*colocar icone de total de seguidores*@
+        <p id="pCountFollowers" class="numberIco">
+            @*colocar icone de total de seguidores*@            
             @Model.CurrentChannel.countFollowers
         </p>
     </div>
