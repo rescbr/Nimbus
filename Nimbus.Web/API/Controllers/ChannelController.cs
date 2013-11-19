@@ -899,7 +899,7 @@ namespace Nimbus.Web.API.Controllers
                                 }
                                 else
                                 {
-                                    db.Save(userModerator);
+                                    db.Insert(userModerator);
                                 }
 
                                 bag.Id = user.Id;
@@ -1223,39 +1223,34 @@ namespace Nimbus.Web.API.Controllers
         public bool DeleteModeratorChannel(int id, int userID)
         {
             bool isDelete = false;
-            try
+            using (var db = DatabaseFactory.OpenDbConnection())
             {
-                using (var db = DatabaseFactory.OpenDbConnection())
+
+                bool isOWner = IsOwner(id);
+                bool isManager = db.SelectParam<Role>(r => r.ChannelId == id && r.UserId == NimbusUser.UserId).Exists(r => r.IsOwner == true ||
+                                                                                                                          r.ChannelMagager == true ||
+                                                                                                                          r.ModeratorManager == true);
+
+                if (isOWner == true || isManager == true)//usuario possui permissao
                 {
+                    Role role = db.SelectParam<Role>(r => r.UserId == userID && r.ChannelId == id).FirstOrDefault();
+                    if (role == null) throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotAcceptable, "usuário não é moderador"));
+                    role.Accepted = false;
+                    role.ChannelMagager = false;
+                    role.MessageManager = false;
+                    role.ModeratorManager = false;
+                    role.TopicManager = false;
+                    role.UserManager = false;
 
-                    bool isOWner = IsOwner(id);
-                    bool isManager = db.SelectParam<Role>(r => r.ChannelId == id && r.UserId == NimbusUser.UserId).Exists(r => r.IsOwner == true || 
-                                                                                                                              r.ChannelMagager == true ||
-                                                                                                                              r.ModeratorManager == true);
-
-                    if (isOWner == true || isManager == true)//usuario possui permissao
-                    {
-                        Role role = db.SelectParam<Role>(r => r.UserId == userID && r.ChannelId == id).FirstOrDefault();
-                        role.Accepted = false;
-                        role.ChannelMagager = false;
-                        role.MessageManager = false;
-                        role.ModeratorManager = false;
-                        role.TopicManager = false;
-                        role.UserManager = false;
-
-                        db.Update<Role>(role);
-                        isDelete = true;
-                    }
-                    else
-                    {
-                        throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotAcceptable, "sem permissao"));
-                    }
+                    db.Update<Role>(role);
+                    isDelete = true;
+                }
+                else
+                {
+                    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotAcceptable, "sem permissao"));
                 }
             }
-            catch (Exception ex)
-            {
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
-            }
+
             return isDelete;
         }
 
