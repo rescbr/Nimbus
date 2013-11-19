@@ -33,10 +33,11 @@ namespace Nimbus.Web.Website.Controllers
                 ChannelPaid = channelApi.UserChannelPaid(NimbusUser.UserId),
                 User =  userApi.showProfile(id),
                 ChannelFollow = channelApi.FollowsChannel(NimbusOrganization.Id),
-                MyChannels = channelApi.MyChannel(),
+                MyChannels = channelApi.MyChannel(id),
                 ReadLater = channelApi.showReadLaterChannel(NimbusOrganization.Id),
                 Messages = msgApi.ReceivedMessages(),
-                Categories = categoryApi.showAllCategory()
+                Categories = categoryApi.showAllCategory(),
+                ChannelMannager = channelApi.ModeratorChannel(id)
             };
             return View("UserProfile", userprofile);
         }

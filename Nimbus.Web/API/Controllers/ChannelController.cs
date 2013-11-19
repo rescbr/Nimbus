@@ -532,14 +532,18 @@ namespace Nimbus.Web.API.Controllers
         /// </summary>
         /// <returns></returns>        
         [HttpGet]
-        public List<Channel> MyChannel()
+        public List<Channel> MyChannel(int? id = 0)
         {
             List<Channel> listChannel = new List<Channel>();
             try
             {
                 using(var db = DatabaseFactory.OpenDbConnection())
                 {
-                   List<int> idsChannel = db.SelectParam<Role>(rl => rl.IsOwner == true && rl.UserId == NimbusUser.UserId).Select(rl => rl.ChannelId).ToList();
+                    if (id == null)
+                    {
+                        id = NimbusUser.UserId;
+                    }
+                   List<int> idsChannel = db.SelectParam<Role>(rl => rl.IsOwner == true && rl.UserId == id).Select(rl => rl.ChannelId).ToList();
                    List<Category> listCategory = db.Select<Category>();
 
                     foreach (int item in idsChannel)
@@ -605,16 +609,23 @@ namespace Nimbus.Web.API.Controllers
        /// </summary>
        /// <returns></returns>
         [HttpGet]
-        public List<Channel> ModeratorChannel()
+        public List<Channel> ModeratorChannel(int? id = 0)
         {
             List<Channel> listChannel = new List<Channel>();
             try
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    List<int> idsChannel = db.SelectParam<Role>(rl => rl.IsOwner == false && rl.ModeratorManager == true && rl.UserId == NimbusUser.UserId)
-                                                                        .Select(rl => rl.ChannelId).ToList();
+                    if (id == null)
+                        id = NimbusUser.UserId;
 
+                    List<int> idsChannel = db.SelectParam<Role>(rl => rl.IsOwner == false && (rl.ModeratorManager == true ||
+                                                                                              rl.ChannelMagager == true ||
+                                                                                              rl.MessageManager == true ||
+                                                                                              rl.TopicManager == true ||
+                                                                                              rl.UserManager == true)&& rl.UserId == id)
+                                                                        .Select(rl => rl.ChannelId).ToList();
+                    List<Category> listCategory = db.Select<Category>();
                     foreach (int item in idsChannel)
                     {
                         Channel channel = (from chn in db.SelectParam<Channel>(chn => chn.Visible == true && chn.Id == item)
@@ -623,7 +634,7 @@ namespace Nimbus.Web.API.Controllers
                                            OrganizationId = chn.OrganizationId,
                                            Id = chn.Id,
                                            Name = chn.Name,
-                                           ImgUrl = chn.ImgUrl
+                                           ImgUrl = listCategory.Where(c => c.Id == chn.CategoryId).Select(c => c.ImageUrl).FirstOrDefault()
                                        }).FirstOrDefault();
 
                         listChannel.Add(channel);
