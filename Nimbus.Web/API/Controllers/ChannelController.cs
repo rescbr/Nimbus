@@ -279,11 +279,9 @@ namespace Nimbus.Web.API.Controllers
                             bag.LastName = user.LastName;
                             bag.Id = user.Id;
                             bag.AvatarUrl = user.AvatarUrl;
-                            if (item.MessageManager == true && item.ModeratorManager == true &&
-                               item.TopicManager == true && item.UserManager == true)
-                            {
+
+                            if (item.ChannelMagager == true)
                                 bag.RoleInChannel = "Todas";
-                            }
                             else if (item.MessageManager == true)
                                 bag.RoleInChannel = "Moderar mensagens";
                             else if (item.ModeratorManager == true)
@@ -865,14 +863,14 @@ namespace Nimbus.Web.API.Controllers
 
                             if (allow == true)
                             {
-                                if (orgID == 0) //canais free, portanto permite apenas 5 moderadores
+                                if (orgID == 1) //canais free, portanto permite apenas 5 moderadores
                                 {
                                     if (countModerator < 5)
                                         prox = true;
                                     else
                                         prox = false;
                                 }
-                                else if (orgID != 0)
+                                else if (orgID != 1)
                                 {
                                     prox = true;
                                 }

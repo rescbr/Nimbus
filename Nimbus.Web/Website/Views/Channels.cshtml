@@ -8,7 +8,8 @@
 @Scripts.Render("~/Scripts/jquery.autocomplete.js")
 
 <script>
-    currentChannel = @Model.CurrentChannel.Id
+    currentChannel = @Model.CurrentChannel.Id;
+    roles = @Html.Raw(Json.Encode(Model.RolesCurrentUser));    
 </script>
 
 <div id="divCapa">
@@ -18,6 +19,18 @@
         <div class="followChannelPage">
             <p>Seguir</p>
         </div>
+    }
+    else if (Model.CurrentChannel.OwnerId == Model.CurrentChannel.userID || Model.RolesCurrentUser.Contains("channelmanager")
+                                                                         || Model.RolesCurrentUser.Contains("moderatormanager"))
+    {
+        <script>
+            newModeratorId = null;
+        </script>
+        <a href="#modal-edit" onclick="ajaxLoadEditInfo(@Model.CurrentChannel.Id, true);">
+            <div class="followChannelPage">
+                <p>Editar</p>
+            </div>
+        </a>
     }
 </div>
 
@@ -35,13 +48,7 @@
             <p>
                 <a href="/userprofile/index/@item.Id" class="nameMod"> @item.FirstName + @item.LastName</a>
             </p>
-        }
-
-        @if (Model.CurrentChannel.OwnerId == Model.CurrentUser.UserId || Model.RolesCurrentUser.Contains("moderatormanager")
-        || Model.RolesCurrentUser.Contains("channelmanager"))
-        {
-            <a href="#modal-moderators" onclick="ajaxLoadModeratorEdit(@Model.CurrentChannel.Id);">Editar moderadores</a>
-        }
+        }      
     </div>
 
     <div class="infoTitleChannel">
@@ -53,7 +60,7 @@
     </div>
 
     <div class="infoTitleChannel">
-        <h2>Número de Likes</h2>
+        <h2>Nota do canal</h2>
         <p class="numberIco">
             @*colocar icone pontuaçao*@
             @Model.CurrentChannel.CountVotes
@@ -62,9 +69,11 @@
 
     @if (Model.CurrentChannel.OwnerId != Model.CurrentUser.UserId)
     {
-        <div class="sendMessage">
-            <p><a href="#modal-text" class="call-modal">Enviar Mensagem</a></p> <!-- clicavel -->
-        </div>
+        <a href="#modal-text" class="call-modal">
+            <div class="sendMessage">
+                <p>Enviar Mensagem</p> <!-- clicavel -->
+            </div>
+        </a>
     }
 
     <div class="infoTitleChannel">
@@ -94,16 +103,8 @@
                 <label id="lblTag_@item.Id">#@item.TagName</label>
             }
         </p>
-    </div>
+    </div>   
 
-    @if (Model.RolesCurrentUser.Contains("channelmanager")
-         || Model.CurrentChannel.OwnerId == Model.CurrentUser.UserId)
-    {
-        <div class="editTag">
-            <p><a href="#modal-tags" id="openModalTag" onclick="ajaxLoadTags(@Model.CurrentChannel.Id);">Editar tags</a></p>
-        </div>
-    }
-    
     <div class="infoTitleChannel divCanaisRelacionados">
         <h2>Canais Relacionados</h2>
         <div class="channels">
@@ -141,7 +142,7 @@
 
         @if (Model.CurrentChannel.OwnerId != Model.CurrentUser.UserId)
         {
-            <div class="modal-content">                
+            <div class="modal-content">
                     <!-- The modals content -->
                     <p>
                         Para:
@@ -169,7 +170,7 @@
                     </p><br />
                     <p>
                         <textarea id="txtTextMsg" name="txtTextMsg" rows="10" cols="60" class="ckeditor"></textarea>
-                    </p>   
+                    </p>
             </div>
 
             <footer>
@@ -184,56 +185,47 @@
 </section>
 
 @*Modal para editar Tags*@
-<section class="semantic-content" id="modal-tags" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
+<section class="semantic-content" id="modal-edit" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
     <div class="modal-inner">
         <header id="modal-label">
             <!-- Header -->
-            Editar tags
+            Editar canal
         </header>
 
         @if (Model.RolesCurrentUser.Contains("channelmanager") || Model.CurrentChannel.OwnerId == Model.CurrentUser.UserId)
         {
-            <div id="divTags" class="modal-content">
-                <!-- The modals content -->
-                <!--Incluido por pelo js ajaxLoadTags-->
+            <div>
+                <p>Nome do canal:</p>
+                <input id="txtEditTitle" type="text" value="@Model.CurrentChannel.Name" maxlength="150" />
             </div>
-
-            <footer>
-                <!-- Footer -->
-                <button id="btnSaveTag" onclick="ajaxEditTag(@Model.CurrentChannel.Id);">Enviar</button>
-            </footer>
         }
-        else
-        {
-            <p>Você não permissão para realizar esta operação.</p> 
-        }
-    </div>
-
-    <a href="#!" id="closeModalTag" class="modal-close" title="Close this modal" data-close="Close"
-       data-dismiss="modal">×</a>
-</section>
-
-@*Modal de edição de moderadores*@
-<section class="semantic-content" id="modal-moderators" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
-    <div class="modal-inner">
-        <header id="modal-label">
-            <!-- Header -->
-            Editar moderadores
-        </header>
 
         @if (Model.RolesCurrentUser.Contains("channelmanager") || Model.CurrentChannel.OwnerId == Model.CurrentUser.UserId
             || Model.RolesCurrentUser.Contains("moderatormanager"))
         {
-            <div id="divEditModerators" class="modal-content">
-                <!-- The modals content -->
-                <!--Incluido por pelo js ajaxLoadTags-->
-               
+            <div>
+                <p>Moderadores:</p>
+                <div id="divEditModerators" class="modal-content">
+                    <!-- The modals content -->
+                    <!--Incluido por pelo js ajaxLoadTags-->
+                </div>
             </div>
+        }
+        @if (Model.RolesCurrentUser.Contains("channelmanager") || Model.CurrentChannel.OwnerId == Model.CurrentUser.UserId)
+        {
+                   /*editar as tags*/
+                    <div>
+                        <p>Tags:</p>
+                        <div id="divTags" class="modal-content">
+                            <!--Incluido por pelo js ajaxLoadTags-->
+                        </div>
+                        <button id="btnSaveTag" onclick="ajaxEditTag(@Model.CurrentChannel.Id);">Salvar</button>
+                    </div>
 
-            <footer>
-                <!-- Footer -->
-                <button id="btnSaveTag" onclick="ajaxEditTag(@Model.CurrentChannel.Id);">Enviar</button>
-            </footer>
+                    <footer>
+                     <!-- Footer -->
+                        <button id="btnSaveAllEdit" onclick="ajaxSaveAllEdit(@Model.CurrentChannel.Id);">Salvar</button>
+                    </footer>
         }
         else
         {

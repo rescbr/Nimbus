@@ -487,8 +487,8 @@
             // Build suggestions inner HTML:
             $.each(that.suggestions, function (i, suggestion) {
                 html += '<div class="' + className + '" data-index="' + i + '">' +
-                            '<img id=\"avatar_'+formatResult(suggestion, Id)+'" src="'+formatResult(suggestion,AvatarUrl) + '" />'+
-                            formatResult(suggestion, FirstName) +
+                            '<img id=\"avatar_' + suggestion.data.Id + '" src="' + suggestion.data.AvatarUrl + '" />'+
+                            formatResult(suggestion, value) +
                          '</div>';
             });
 
