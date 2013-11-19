@@ -9,7 +9,7 @@
     <link rel="stylesheet" type="text/css" href="/Styles/Style.css" />
 
     <title>@ViewBag.Title - Nimbus</title>
-    
+
 </head>
 <body>
     @* não esquecer de minificar =) *@
@@ -38,16 +38,16 @@
                         <a href="#"><li class="BNews">News</li></a>
                     </ul>
                 </nav>
-            @if (user != null)
-            {
-                <nav class="right">
-                    <ul class="sbs">
-                        <li><div class="userpic"><img src="@user.AvatarUrl" width="35" height="35" id="smallavatar"/></div></li>
-                        <li><h2 class="userName">@user.FirstName</h2></li>@*
-                            <li><div class="press exitbutton">x</div></li>*@
-                    </ul>
-                </nav>
-            }
+                @if (user != null)
+                {
+                    <nav class="right">
+                        <ul class="sbs">
+                            <li><div class="userpic"><img src="@user.AvatarUrl" width="35" height="35" id="smallavatar" /></div></li>
+                            <li><h2 class="userName">@user.FirstName</h2></li>@*
+                                <li><div class="press exitbutton">x</div></li>*@
+                        </ul>
+                    </nav>
+                }
             </div>
         </header>
 
@@ -55,18 +55,19 @@
             <div class="container-body">
                 <div class="middle-body">
                     @RenderBody()
+                </div>
             </div>
-        </div>
         </div>
         <div id="footer">
             <!-- blablablabla-->
         </div>
     </div>
-    @if (User.Identity.IsAuthenticated) {
+    @if (User.Identity.IsAuthenticated)
+    {
         @Scripts.Render("~/Scripts/jquery.signalR-2.0.0.js")
         @Scripts.Render("~/signalr/hubs")
         @Scripts.Render("~/Scripts/Notifications.js")
     }
-    
+
 </body>
 </html>
