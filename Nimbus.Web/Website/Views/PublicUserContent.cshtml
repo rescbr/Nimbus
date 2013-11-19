@@ -2,7 +2,7 @@
 
 <div class="wrapperUser">
   
-    <div class="myChannels">
+    <div class="publicChanUserProfile">
         <h1>Meus Canais</h1>
         @*PostsGrade/PostsLista*@       
             @foreach (var item in Model.MyChannels)
@@ -24,25 +24,26 @@
         }
     </div>
     
-    <div class="modChannels">
+    <div class="publicChanUserProfile">
         <h1>Canais Moderados</h1>
         @*PostsGrade/PostsLista*@
-            @foreach (var item in Model.ChannelMannager)
-            {
-                @*Imagem*@
-                <div id="divChannel">
-                    <a href="/channel/index/@item.Id">
-                        <div id="headerChannel">
-                            <h1>@item.Name</h1>
-                            <img src="@item.ImgUrl" id="imgChannel" alt="blabla" title="blabla">
-                        </div>
-                    </a>
-                </div>
+        @foreach (var item in Model.ChannelMannager)
+        {
+            @*Imagem*@
+            <div id="divChannel">
+                <a href="/channel/index/@item.Id">
+                    <div id="headerChannel">
+                        <h1>@item.Name</h1>
+                        <img src="@item.ImgUrl" id="imgChannel" alt="blabla" title="blabla">
+                    </div>
+                </a>
+            </div>
 
-            }
+        }
         @if (Model.ChannelMannager.Count() <= 0)
         {
-            <p>Nenhum canal sendo moderado.</p> 
+            <p>Nenhum canal sendo moderado.</p>
         }
     </div>
+
 </div>
