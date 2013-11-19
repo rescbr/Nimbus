@@ -247,6 +247,7 @@
                 success: function (data) {
                     //jcrop.destroy();
                     $("#useravatar").attr("src", data.url);
+                    $("#smallavatar").attr("src", data.url);
                     //document.getElementById("useravatar").src = data.url;
                     //fechar modal aqui
                     $("#modal-img").attr("style", "display:none");

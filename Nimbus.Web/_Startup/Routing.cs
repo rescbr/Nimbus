@@ -70,7 +70,7 @@ namespace Nimbus.Web.Startup
             routes.MapRoute(
                 name: "DefaultWithoutAction",
                 url: "{controller}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+                defaults: new { controller = "UserProfile", action = "Index", id = UrlParameter.Optional }
             );
         }
 
