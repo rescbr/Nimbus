@@ -9,12 +9,15 @@ namespace Nimbus.Model.ORM
 {
     public class RoleTopic  : Nimbus.Model.RoleTopic
     {
+        [PrimaryKey]
         [References(typeof(Channel))]
         public override int ChannelId { get; set; }
 
+        [PrimaryKey]
         [References(typeof(Topic))]
         public override int TopicId { get; set; }
 
+        [PrimaryKey]
         [References(typeof(User))]
         public override int UserId { get; set; }
 

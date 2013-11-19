@@ -426,8 +426,10 @@ function ajaxLoadModeratorEdit(id)
                     }                   
                 }
                 if (newData.length < 5) {
+                    //atualiza a global
+                    countModerator = newData.length;
                     //coloca o campo de buscar um novo moderador, esse campo é preenchido pelo método acima value=\"Adicionar moderador\" onclick=\"this.value=''\"
-                    string = "<input id=\"search\" type=\"text\"/>" +
+                    string = "Nome:<input id=\"search\" type=\"text\"/>" +
                               "<br/>Permissão:"+
                                     "<div id=\"divEditModerator\">" +
                                          "<select id=\"permissionSelect\">" +
@@ -522,26 +524,48 @@ function ajaxNewModerator()
             statusCode: {
                 200: function (newData) {
                     if (newData.Id > 0) {
-                        var newModerator = "<div id=\"divModerator_" + newData.Id + "\">" +
+                        if (countModerator < 5) {
+                            //coloca o campo de buscar um novo moderador, esse campo é preenchido pelo método acima value=\"Adicionar moderador\" onclick=\"this.value=''\"
+                            var string = "<br/>Nome:<input id=\"search\" type=\"text\"/>" +
+                                      "<br/>Permissão:" +
+                                            "<div id=\"divEditModerator\">" +
+                                                 "<select id=\"permissionSelect\">" +
+                                                  "<option value=\"0\">Todas</option>" +
+                                                  "<option value=\"1\">Moderar mensagens</option>" +
+                                                  "<option value=\"2\">Moderar moderadores</option>" +
+                                                  "<option value=\"3\">Moderar tópicos</option>" +
+                                                  "<option value=\"4\">Moderar usuários</option>" +
+                                                "</select>" +
+                                            "</div>" +
+                                   "<button id=\"btnAddModerator\" onclick=\"ajaxNewModerator();\">Adicionar</button>";
+                            autocomplete = true;
+                        }
+                        else {
+                            string = "<p>Este canal já possui a quantidade máxima de moderadores permitido.</p>";
+                        }
+
+                        var newDivModerator = "<div id=\"divModerator_" + newData.Id + "\">" +
                                              "<p>" +
                                              "<img src=\"" + newData.AvatarUrl + "\" title=\"" + newData.FirstName + "\" />" +
                                              "<label>" + newData.FirstName + " " + newData.LastName + "</label>" +
-                                             "<input type=\"text\" disabled value=\"" + newData.RoleInChannel + "\" />" +
+                                             "<input id=\"inputUser_" + newData.Id + "\" type=\"text\" disabled value=\"" + newData.RoleInChannel + "\" />" +
+                                             "<div id=\"divUser_" + newData.Id + "\"></div>" +
                                              "<img src=\"/images/Utils/edit.png\" onclick=\"ajaxEditModerator(" + id + "," + newData.Id + ");\" title=\"Editar\" />" +
                                              "<img src=\"/images/Utils/delete.png\" onclick=\"ajaxDeleteModerator(" + id + "," + newData.Id + ");\" title=\"Deletar\" />" +
                                             "</p>" +
                                         "</div>" +
                                         "<div id=\"divEditModerator_" + newData.Id + "\">" +
+                                        "</div>"+
+                                        "<div>"+ string + "</div>";  
 
-                                        "</div>";
+                        if (autocomplete) addAutocompleteToSearch();  
 
-                        document.getElementById('divEditModerators').innerHTML = newModerator;
+                        document.getElementById('divEditModerators').innerHTML = newDivModerator ;
 
-                        document.getElementById('divAllModerators').innerHTML = "<p>" +
-                                                                                    "<a href=\"/userprofile/index/" + newData.Id + "\" class=\"nameMod\">" +
-                                                                                           newData.FirstName + " " + newData.LastName +
-                                                                                    "</a>" +
-                                                                                "</p>";
+                        newModeretor = "<p>" +
+                                         "<a href=\"/userprofile/index/" + newData.Id + "\" class=\"nameMod\">" + newData.FirstName + " " + newData.LastName + "</a>" +
+                                       "</p>";
+                        document.getElementById('divAllModerators').innerHTML = newModeretor;
                     }
                 },
 
@@ -564,6 +588,7 @@ function ajaxEditModerator(id, idUser) {
                        "<option value=\"3\">Moderar tópicos</option>" +
                        "<option value=\"4\">Moderar usuários</option>" +
                        "</select>";
+
     document.getElementById('inputUser_' + idUser).style.display = 'none';
     document.getElementById('divUser_' + idUser).innerHTML = select;
 }
@@ -578,6 +603,7 @@ function ajaxDeleteModerator(id, idUser)
             200: function (newData) {
                 if (newData == true) {
                     document.getElementById('divModerator_' + idUser).style.display = "none";
+                    countModerator = (countModerator - 1);
                 }
             },
 
@@ -687,7 +713,6 @@ function ajaxdeleteTag(idTag, id)
 }
 
 /*Métodos gerais de edição*/
-
 function ajaxLoadEditInfo(id, isOwner)
 {
     if (roles.indexOf("channelmanager") > -1 || isOwner == true)
@@ -700,11 +725,7 @@ function ajaxLoadEditInfo(id, isOwner)
 function ajaxSaveAllEdit(id)
 {
     //tags e novos moderadores -> são salvas assim que são criadas
-    //salvar nome
-    title = document.getElementById('txtEditTitle').value;
-    
-    /*salvar novos moderadores*/
-
+    var success = false;
     //alterou somente a permissao
     var obj = $("select[id*='newPermissionSelect_']");
 
@@ -720,17 +741,53 @@ function ajaxSaveAllEdit(id)
             contentType: "application/json;charset=utf-8",
             statusCode: {
                 200: function (newData) {
-                    if (newData != "") {
-                        //TODO: colocar p inserir na view e retirar o campo de ediçao da tela
-                    }
+                    success = true;
                 },
 
                 400: function () {
                     //erro
                     window.alert("Não foi possível realizar esta operação. Tente novamente mais tarde.");
+                    success = false;
                 }
             }
         });
     }
-    
+    //salvar nome
+    if (success == true) {
+        title = document.getElementById('txtEditTitle').value;
+        ajaxData = {};
+        ajaxData['Name'] = title;
+        if(document.getElementsByName('openComment')[0].isChecked)
+            ajaxData['OpenToComments'] = true;
+        if (document.getElementsByName('openComment')[1].isChecked)
+            ajaxData['OpenToComments'] = false;
+
+        var category = document.getElementById('slcCategory');
+        var select = category.selectedIndex;
+        var option = obcategory.options;
+        var categoryId = option[select].value;
+        ajaxData['CategoryId'] = categoryId;
+        if (title != null && title != "") {
+            $.ajax({
+                url: "/api/Channel/EditChannel",
+                type: "POST",
+                data: JSON.stringify(ajaxData),
+                contentType: "application/json;charset=utf-8",
+                statusCode: {
+                    200: function (newData) {
+                        success = true;
+                    },
+
+                    400: function () {
+                        //erro
+                        window.alert("Não foi possível realizar esta operação. Tente novamente mais tarde.");
+                        success = false;
+                    }
+                }
+            });
+        }
+    }
+    if (success == true)
+        //fechar modal
+        document.getElementById('closeModalEdit').click();
 }

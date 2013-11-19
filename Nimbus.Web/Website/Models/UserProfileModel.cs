@@ -22,5 +22,7 @@ namespace Nimbus.Web.Website.Models
         public List<MessageBag> Messages { get; set; }
 
         public List<Category> Categories { get; set; }
+
+        public List<Channel> ChannelMannager { get; set; }
     }
 }

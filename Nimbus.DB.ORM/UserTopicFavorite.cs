@@ -9,9 +9,11 @@ namespace Nimbus.Model.ORM
 {
     public class UserTopicFavorite : Nimbus.Model.UserTopicFavorite
     {      
+        [PrimaryKey]
         [References(typeof(User))]
         public override int UserId { get; set; }
 
+        [PrimaryKey]
         [References(typeof(Topic))]
         public override int TopicId { get; set; }
 
