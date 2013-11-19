@@ -2,7 +2,7 @@
 
 <script type="text/javascript">
     //global
-    currentDiv = 'divNotifications';
+    currentDiv = 'divPopularTopics';
     divTipoTopic = '';
     CurrentQuestion = '1';
 </script>
@@ -12,53 +12,15 @@
 <div class="wrapperChannel">
     <nav class="chanTopBar">
         <ul class="sbs">
-            <li class="press"><a name="divNotifications" onclick="EnableDiv(this.name, 'currentDiv');" class="linkTopChanBar"><p>Atualizações</p></a></li>
             <li class="press"><a name="divPopularTopics" onclick="EnableDiv(this.name, 'currentDiv');" class="linkTopChanBar"><p>Mais vistos</p></a></li>
             <li class="press"><a name="divAllTopics" onclick="EnableDiv(this.name, 'currentDiv');" class="linkTopChanBar"><p>Todos</p></a></li>
+            <li class="press"><a name="divNotifications" onclick="EnableDiv(this.name, 'currentDiv');" class="linkTopChanBar"><p>Atualizações</p></a></li>
             <li class="press"><a name="divNewTopic" onclick="EnableDiv(this.name, 'currentDiv');" class="linkTopChanBar"><p>Novo tópico</p></a></li>
             <li class="press"><a name="divMessages" onclick="EnableDiv(this.name, 'currentDiv');" class="linkTopChanBar"><p>Mensagens</p></a></li>
         </ul>
     </nav>
 
     <div>
-        <div id="divNotifications">
-        @*ultimos topicos + ultimos comentarios*@
-        @*TODO:colocar script p 'ver mais' index de pagina*@
-        @foreach (var item in Model.AllTopics.Take(15).OrderByDescending(m => m.LastModified))
-        {
-           @*Imagem e texto*@
-                <div class="divTopic-grade">
-                    <a href="/topic/index/@item.Id">
-                        <div class="headerTopic-grade">
-                            <h1>@item.Title</h1>
-                            <img src="@item.ImgUrl" alt="@item.TopicType.ToString()" title="@item.Title" width="180" height="100">
-                        </div>
-                    </a>
-                    <p class="contentTopic-grade">
-                        @item.Description
-                    </p>
-                    <div class="footerTopic-grade">
-                        <div class="btnLeftTopic-grade">
-                            <p onclick="unReadLater();">Ler mais tarde</p> @*chamar js passando item.id*@
-                        </div>
-                        <div class="btnRightTopic-grade">
-                            <p>s2</p> @*adicionar aos favoritos*@
-                        </div>
-                    </div>
-                </div>
-        }
-
-        @if (Model.Comments.Count > 0)
-        {
-                <div id="divComments">
-                    <p>Novos Comentários</p>
-                    @foreach (var item in Model.Comments.Take(10).OrderByDescending(c => c.PostedOn))
-                    {
-                        Html.RenderAction("ParentComment", "Topic", new { id = item.Id });
-                    }
-              </div>
-        }
-        </div>
 
         <div id="divPopularTopics" style="display:none;">
             @foreach (var item in Model.AllTopics.OrderByDescending(m => m.Count))
@@ -109,6 +71,49 @@
                             <p>s2</p> @*adicionar aos favoritos*@
                         </div>
                     </div>
+                </div>
+            }
+        </div>
+
+
+        <div id="divNotifications">
+        @* Mudar o estilo de Notificações *@
+
+        @*ultimos topicos + ultimos comentarios*@
+        @*TODO:colocar script p 'ver mais' index de pagina*@
+        @foreach (var item in Model.AllTopics.Take(15).OrderByDescending(m => m.LastModified))
+        {
+            @*Notificações - Precisa colocar as Tags ( no perfil do usuario tambem )*@
+            <div id="divNotification" style="display:block;">
+                @*para cada item da lista que ele recber//TODO*@
+                <div>
+                    <img id="imgNotification" src="#" />
+                </div>
+                <div id="attChoice">
+                    <div id="btnAccept">
+                        <p>Aceitar</p>
+                    </div>
+                    <div id="btnAccept">
+                        <p>Recusar</p>
+                    </div>
+                </div>
+                <p id="timeNotification">
+                    @*hora x     data x*@
+                    00:00 - 12:12
+                </p>
+                <p id="txtNotification">
+                    texto generico
+                </p>
+            </div>
+            }
+            @if (Model.Comments.Count > 0)
+            {
+                <div id="divComments">
+                    <p>Novos Comentários</p>
+                    @foreach (var item in Model.Comments.Take(10).OrderByDescending(c => c.PostedOn))
+                    {
+                        Html.RenderAction("ParentComment", "Topic", new { id = item.Id });
+                    }
                 </div>
             }
         </div>
