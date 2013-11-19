@@ -74,7 +74,7 @@
         @if (Model.CurrentUser.UserId == Model.User.Id)
         {
             foreach (var item in Model.ChannelFollow)
-            {
+            {               
                 @*Imagem*@
                 <div id="divChannel">
                     <a href="/channel/index/@item.Id">
@@ -156,7 +156,7 @@
             
             <div class="post_m" style="@readStat">
                 <div class="postHeImg_m">
-                    <img src=@item.AvatarUrl alt="blabla" title="blabla">
+                    <img src=@item.AvatarUrl  width="60" height="60">
                 </div>
                 <div class="post_Right_m">
                     <nav class="postHeaderLeft_m">

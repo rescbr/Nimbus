@@ -14,7 +14,14 @@
 
 <div class="content-top">
     <div class="cont-left">
-        <h1 class="userNProfBar">User's Name</h1>
+    @if (Model.User.Id != Model.CurrentUser.UserId)
+        {
+         <h1 class="userNProfBar">@Model.User.FirstName @Model.User.LastName</h1>
+        }
+        else
+        {
+         <h1 class="userNProfBar">@Model.CurrentUser.FirstName @Model.CurrentUser.LastName</h1>
+        }
     </div>
 
     @*Se não for o usuário*@
@@ -38,7 +45,7 @@
                 </li>
             </ul>
         </nav>
-    }
+        }
 </div>
 
     <div class="proBar">
@@ -94,9 +101,11 @@
         @*Se não for o usuário*@
         @if (Model.User.Id != Model.CurrentUser.UserId)
         {
-            <div class="sendMessage">
-                <p><a href="#modal-text" class="call-modal">Enviar Mensagem</a></p> <!-- clicavel -->
-            </div>
+            <a href="#modal-text" class="call-modal">
+                <div class="sendMessage">
+                    <p>Enviar Mensagem</p> <!-- clicavel -->
+                </div>
+            </a>
         }
         else
         {
@@ -207,7 +216,14 @@
 </section>
 
     <div style="float:left;">
-        @RenderPage("~/Website/Views/PrivateProfileTopBar.cshtml")
+        @if(Model.User.Id == Model.CurrentUser.UserId)
+        { 
+            @RenderPage("~/Website/Views/PrivateProfileTopBar.cshtml")
+        }
+        else
+        {
+           @RenderPage("~/Website/Views/PublicUserContent.cshtml")
+        }
     </div>
 
 

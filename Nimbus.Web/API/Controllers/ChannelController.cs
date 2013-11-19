@@ -540,7 +540,8 @@ namespace Nimbus.Web.API.Controllers
                 using(var db = DatabaseFactory.OpenDbConnection())
                 {
                    List<int> idsChannel = db.SelectParam<Role>(rl => rl.IsOwner == true && rl.UserId == NimbusUser.UserId).Select(rl => rl.ChannelId).ToList();
-                    
+                   List<Category> listCategory = db.Select<Category>();
+
                     foreach (int item in idsChannel)
                     {
                         Channel channel = (from chn in db.SelectParam<Channel>(chn => chn.Visible == true && chn.Id == item) 
@@ -549,7 +550,8 @@ namespace Nimbus.Web.API.Controllers
                                                 Id = chn.Id,
                                                 Name = chn.Name,
                                                 OrganizationId = chn.OrganizationId,
-                                                ImgUrl = chn.ImgUrl
+                                                ImgUrl = listCategory.Where(c=> c.Id == chn.CategoryId).Select(c => c.ImageUrl).FirstOrDefault()
+                                                
                                             }).FirstOrDefault();
                         listChannel.Add(channel);
                     }                       
@@ -681,12 +683,14 @@ namespace Nimbus.Web.API.Controllers
                 {                    
                     listUserChannel = db.SelectParam<ChannelUser>(ch => ch.UserId == NimbusUser.UserId && ch.Visible == true && ch.Follow == true)
                                                                  .Select(ch => ch.ChannelId).ToList();
+                    ICollection<Category> listCategry = db.Select<Category>();
                     if (listUserChannel.Count > 0)
                     {
                         foreach (int item in listUserChannel)
                         {
                             Channel channel = new Channel();
                             channel = db.SelectParam<Channel>(ch => ch.Visible == true && ch.OrganizationId == id && ch.Id == item).First();
+                            channel.ImgUrl = listCategry.Where(c => c.Id == channel.CategoryId).Select(c => c.ImageUrl).FirstOrDefault();
                             listChannel.Add(channel);
                         }
                     }                    
