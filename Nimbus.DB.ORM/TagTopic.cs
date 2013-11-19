@@ -9,9 +9,11 @@ namespace Nimbus.Model.ORM
 {
     public class TagTopic: Nimbus.Model.TagTopic
     {
-       [References(typeof(Tag))]
+        [PrimaryKey]
+        [References(typeof(Tag))]
         public int TagId { get; set; }
 
+        [PrimaryKey]
         [References(typeof(Topic))]
         public int TopicId { get; set; }
     }

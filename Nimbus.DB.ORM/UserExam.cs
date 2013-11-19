@@ -9,9 +9,11 @@ namespace Nimbus.Model.ORM
 {
     public  class UserExam : Nimbus.Model.UserExam
     {
+        [PrimaryKey]
         [References(typeof(User))]
         public override int UserId { get; set; }
 
+        [PrimaryKey]
         [References(typeof(Topic))]
         public override int ExamId { get; set; }
 
