@@ -174,17 +174,22 @@ namespace Nimbus.Web.Website.Controllers
                 var user = db.Where<User>(u => u.Id == NimbusUser.UserId).FirstOrDefault();
 
                 //apaga imagem antiga
-                var uriAntigo = new Uri(user.AvatarUrl).Segments;
-                var blobAntigo = new AzureBlob(Const.Azure.AvatarContainer, uriAntigo[uriAntigo.Length - 1]);
-                try { blobAntigo.Delete(); }
-                catch { }
-
+                if (user.AvatarUrl != null && user.AvatarUrl != "/images/Utils/person_icon.png")
+                {
+                    try
+                    {
+                        var uriAntigo = new Uri(user.AvatarUrl).Segments;
+                        var blobAntigo = new AzureBlob(Const.Azure.AvatarContainer, uriAntigo[uriAntigo.Length - 1]);
+                        blobAntigo.Delete();
+                    }
+                    catch { }
+                }
                 user.AvatarUrl = pathFinal;
                 db.Save(user);
 
                 //ATENÇÃO! Ao alterar informações presentes no NimbusUser, 
                 //lembre-se de atualizar no cache também!
-                Session[Const.UserSession] = DatabaseLogin.GetNimbusPrincipal(user);
+                //Session[Const.UserSession] = DatabaseLogin.GetNimbusPrincipal(user);
             }
 
             //depois que salvar no azure retorna por json p mostrar na tela a imagem final
