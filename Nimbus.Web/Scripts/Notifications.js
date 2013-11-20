@@ -1,5 +1,19 @@
-﻿function newMessageNotification(msg) {
-    alert(msg);
+﻿function makeElementFromHtml(htmlString) {
+    var auxDiv = document.createElement("div");
+    auxDiv.innerHTML = htmlString;
+    return auxDiv.firstElementChild;
+}
+
+function newMessageNotification(msg) {
+    try {
+        var wrapperUser = document.getElementById("wrapperUser");
+        var divMyChannels = document.getElementById("divMyChannels");
+        var msgElement = makeElementFromHtml(msg);
+
+        wrapperUser.insertBefore(msgElement, divMyChannels);
+        
+    } catch (e) { }
+    
 }
 
 function newTopicCommentNotification(notif) {
@@ -13,9 +27,7 @@ function newTopicCommentNotification(notif) {
             contentType: "text/html;charset=utf-8",
             statusCode: {
                 200: function (htmlData) {
-                    var wrapperDiv = document.createElement("div");
-                    wrapperDiv.innerHTML = htmlData;
-                    var recvElement = wrapperDiv.firstElementChild  ;
+                    var recvElement = makeElementFromHtml(htmlData);
                     parentDiv.insertBefore(recvElement, document.getElementById("divAnswerTopic_" + notif.parentId));
                 }
             }
@@ -39,9 +51,7 @@ function newTopicCommentNotification(notif) {
             contentType: "text/html;charset=utf-8",
             statusCode: {
                 200: function (htmlData) {
-                    var wrapperDiv = document.createElement("div");
-                    wrapperDiv.innerHTML = htmlData;
-                    var recvElement = wrapperDiv.firstElementChild;
+                    var recvElement = makeElementFromHtml(htmlData);
                     document.getElementById("divAllComments").insertBefore(recvElement,
                         document.getElementById("placeholderAfterLastComment"));
                 }
