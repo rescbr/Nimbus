@@ -741,8 +741,10 @@
     <Compile Include="Security\SessionManagement.cs" />
     <Compile Include="Utils\AzureBlob.cs" />
     <Compile Include="Utils\ImageManipulation.cs" />
+    <Compile Include="Utils\RazorTemplate.cs" />
     <Compile Include="Utils\RemoveHTMLString.cs" />
     <Compile Include="Website\Controllers\ChannelController.cs" />
+    <Compile Include="Website\Controllers\NotificationController.cs" />
     <Compile Include="Website\Controllers\TopicController.cs" />
     <Compile Include="Website\Controllers\TrendingTopicController.cs" />
     <Compile Include="Website\Models\TopicModel.cs" />
@@ -799,6 +801,10 @@
     <Content Include="SharedViews\HttpError.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Dependencies\RazorEngine.Core\RazorEngine.Core.csproj">
+      <Project>{d268f86d-2dab-4329-a75f-3bcf6d5bcdc4}</Project>
+      <Name>RazorEngine.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Nimbus.DB.ORM\Nimbus.Model.ORM.csproj">
       <Project>{7f04ec7a-7fdb-4bb5-b613-c134bc56a48d}</Project>
       <Name>Nimbus.Model.ORM</Name>

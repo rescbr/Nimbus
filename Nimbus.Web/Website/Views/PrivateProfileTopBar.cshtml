@@ -20,35 +20,8 @@
             <li class="=press"><a name="divNewChannel" onclick="EnableDiv(this.name, 'currentDiv');"><p>Novo Canal</p></a></li>	
 	    </ul>
     </nav>
+    @* NOTIFICAÇÕES *@
 
-    <div id="divNotification" style="display:block;">
-        @*para cada item da lista que ele recber//TODO*@
-        <div>
-            <img id="imgNotification" src="#" />
-        </div>
-        <div id="attChoice">
-            @*<button id="btnAccept" onclick="">Aceitar</button>*@
-                <div id="btnAccept">
-                    <p>Aceitar</p>
-                </div>
-
-                @*<button id="btnDecline" onclick="">Recusar</button>*@
-                <div id="btnAccept">
-                    <p>Recusar</p>
-                </div>
-        </div>
-
-        <p id="timeNotification">
-            @*hora x     data x*@
-            00:00 - 12:12
-        </p>
-
-        <p id="txtNotification">
-            texto generico
-        </p>
-        
-        
-    </div>
 
     <div id="divMyChannels" style="display:none;">
         @if (Model.CurrentUser.UserId == Model.User.Id)

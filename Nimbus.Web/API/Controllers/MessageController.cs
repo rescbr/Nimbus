@@ -17,7 +17,83 @@ namespace Nimbus.Web.API.Controllers
     /// </summary>
     [NimbusAuthorize]
     public class MessageController : NimbusApiController
-    {              
+    {
+
+        [NonAction]
+        internal Message SendMessageToList(Message message, List<Model.Receiver> listReceiver)
+        {
+            using (var db = DatabaseFactory.OpenDbConnection())
+            {
+                using (var trans = db.OpenTransaction(System.Data.IsolationLevel.ReadCommitted))
+                {
+                    try
+                    {
+                        //add a msg para o 'sender'
+                        Nimbus.Model.Receiver sender = new Model.Receiver();
+                        sender.IsOwner = db.SelectParam<Role>(r => r.ChannelId == message.ChannelId && r.UserId == NimbusUser.UserId)
+                                                                   .Select(c => c.IsOwner).FirstOrDefault();
+                        sender.UserId = NimbusUser.UserId;
+                        sender.Name = NimbusUser.FirstName + " " + NimbusUser.LastName;
+                        listReceiver.Add(sender);
+
+                        //add a  msg                                                 
+                        Message dadosMsg = new Message
+                        {
+                            SenderId = NimbusUser.UserId,
+                            ChannelId = message.ChannelId,
+                            Date = DateTime.Now,
+                            ReadStatus = false,
+                            Text = HttpUtility.HtmlEncode(message.Text),
+                            Title = HttpUtility.HtmlEncode(message.Title),
+                            Visible = true,
+                            Receivers = listReceiver
+                        };
+                        db.Save(dadosMsg);
+
+                        int idMesg = (int)db.GetLastInsertId();
+                        message.Id = idMesg;
+                        foreach (var item in listReceiver)
+                        {
+                            if (item.UserId == NimbusUser.UserId)
+                            {
+                                db.Insert(new ReceiverMessage
+                                {
+                                    IsOwner = item.IsOwner,
+                                    MessageId = idMesg,
+                                    UserId = item.UserId,
+                                    NameUser = item.Name,
+                                    Status = Nimbus.Model.Enums.MessageType.send
+                                });
+                            }
+                            else
+                            {
+                                db.Insert(new ReceiverMessage
+                                {
+                                    IsOwner = item.IsOwner,
+                                    MessageId = idMesg,
+                                    UserId = item.UserId,
+                                    NameUser = item.Name,
+                                    Status = Nimbus.Model.Enums.MessageType.received
+                                });
+                            }
+                        }
+                        trans.Commit();
+
+                        //Notificação
+                        var notification = new Notifications.MessageNotification();
+                        notification.NewMessage(dadosMsg, NimbusUser.UserId);
+
+                    }
+                    catch (Exception ex)
+                    {
+                        trans.Rollback();
+                        throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+                    }
+                }
+            }
+
+            return message;
+        }
         /// <summary>
         /// enviar mensagem através de um canal
         /// </summary>
@@ -25,107 +101,24 @@ namespace Nimbus.Web.API.Controllers
         /// <returns></returns>
         [HttpPost]
         public Message SendMessageChannel(Message message)
-        {           
-            try
+        {
+            //Lembrar: se owner = true, quando mostrar na view colocar: Nimbus     
+            List<Nimbus.Model.Receiver> listReceiver = new List<Model.Receiver>();
+            using (var db = DatabaseFactory.OpenDbConnection())
             {
-                using (var db = DatabaseFactory.OpenDbConnection())
+                var roles = db.SelectParam<Role>(r => r.ChannelId == message.ChannelId && (r.MessageManager == true || r.IsOwner == true));
+
+                //add todos os destinatarios dono + moderadores do canal
+                foreach (var item in roles)
                 {
-                    using (var trans = db.OpenTransaction(System.Data.IsolationLevel.ReadCommitted))
-                    {
-                        try
-                        {
-                            //Lembrar: se owner = true, quando mostrar na view colocar: Nimbus     
-                            List<Nimbus.Model.Receiver> listReceiver = new List<Model.Receiver>();
-
-                            var roles = db.SelectParam<Role>(r => r.ChannelId == message.ChannelId && (r.MessageManager == true || r.IsOwner == true));
-
-                            //add todos os destinatarios dono + moderadores do canal
-                            foreach (var item in roles)
-                            {
-                                Nimbus.Model.Receiver receiver = new Model.Receiver();
-                                receiver.IsOwner = item.IsOwner;
-                                receiver.UserId = item.UserId;
-                                receiver.Name = db.SelectParam<User>(u => u.Id == item.UserId).Select(s => s.FirstName + " " + s.LastName).FirstOrDefault();
-                                listReceiver.Add(receiver);
-                            }
-                            //add a msg para o 'sender'
-                                    Nimbus.Model.Receiver sender = new Model.Receiver();
-                                    sender.IsOwner = db.SelectParam<Role>(r => r.ChannelId == message.ChannelId && r.UserId == NimbusUser.UserId)
-                                                                               .Select(c => c.IsOwner).FirstOrDefault();
-                                    sender.UserId = NimbusUser.UserId;
-                                    sender.Name = NimbusUser.FirstName + " " + NimbusUser.LastName;
-                                    listReceiver.Add(sender);
-
-                               //add a  msg                                                 
-                                Message dadosMsg = new Message
-                                {
-                                    SenderId = NimbusUser.UserId,
-                                    ChannelId = message.ChannelId,
-                                    Date = DateTime.Now,
-                                    ReadStatus = false,
-                                    Text = HttpUtility.HtmlEncode(message.Text),
-                                    Title = HttpUtility.HtmlEncode(message.Title),
-                                    Visible = true,
-                                    Receivers = listReceiver
-                                };
-                                db.Save(dadosMsg);
-
-                                int idMesg = (int)db.GetLastInsertId();
-                                message.Id = idMesg;
-                                try
-                                {
-                                    foreach (var item in listReceiver)
-                                    {
-                                        if (item.UserId == NimbusUser.UserId)
-                                        {
-                                            db.Insert(new ReceiverMessage
-                                            {
-                                                IsOwner = item.IsOwner,
-                                                MessageId = idMesg,
-                                                UserId = item.UserId,
-                                                NameUser = item.Name,
-                                                Status = Nimbus.Model.Enums.MessageType.send
-                                            });
-                                        }
-                                        else
-                                        {
-                                            db.Insert(new ReceiverMessage
-                                            {
-                                                IsOwner = item.IsOwner,
-                                                MessageId = idMesg,
-                                                UserId = item.UserId,
-                                                NameUser = item.Name,
-                                                Status = Nimbus.Model.Enums.MessageType.received
-                                            });
-                                        }
-                                    }
-                                    trans.Commit();
-
-                                    //Notificação
-                                    var notification = new Notifications.MessageNotification();
-                                    notification.NewMessage(dadosMsg.Title, listReceiver.Where(l => l.UserId != NimbusUser.UserId ).Select(l => l.UserId).ToList());
-
-                                }
-                                catch (Exception ex)
-                                {
-                                    trans.Rollback();
-                                    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex)); 
-                                }
-                                
-                        }
-                        catch (Exception ex)
-                        {
-                            trans.Rollback();
-                            throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex)); 
-                        }
-                    }
+                    Nimbus.Model.Receiver receiver = new Model.Receiver();
+                    receiver.IsOwner = item.IsOwner;
+                    receiver.UserId = item.UserId;
+                    receiver.Name = db.SelectParam<User>(u => u.Id == item.UserId).Select(s => s.FirstName + " " + s.LastName).FirstOrDefault();
+                    listReceiver.Add(receiver);
                 }
             }
-            catch (Exception ex)
-            {
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
-            }
-            return message;
+            return SendMessageToList(message, listReceiver);
         }
 
         /// <summary>
@@ -137,102 +130,20 @@ namespace Nimbus.Web.API.Controllers
         [HttpPost]
         public Message SendMessageUser(Message message, int id)
         {
-            try
+            List<Nimbus.Model.Receiver> listReceiver = new List<Nimbus.Model.Receiver>();
+            using (var db = DatabaseFactory.OpenDbConnection())
             {
-                using (var db = DatabaseFactory.OpenDbConnection())
-                {
-                    using (var trans = db.OpenTransaction(System.Data.IsolationLevel.ReadCommitted))
-                    {
-                        try
-                        {
-                            //Lembrar: se owner = true, quando mostrar na view colocar: Nimbus   
-
-                            List<Nimbus.Model.Receiver> listReceiver = new List<Nimbus.Model.Receiver>();         
-                    
-                                Nimbus.Model.Receiver receiver = new Model.Receiver();
-                                receiver.IsOwner = true; //a msg é enviada para o perfil, logo não importa esse item
-                                receiver.UserId = id;
-                                receiver.Name = db.SelectParam<User>(u => u.Id == id).Select(s => s.FirstName + " " + s.LastName).FirstOrDefault();
-                                listReceiver.Add(receiver);
-
-                            //add quem enviou para os 'receivers', pois ele deve ter controle sobre o que ele enviou tbm.
-                                Nimbus.Model.Receiver sendReceiver = new Model.Receiver();
-                                sendReceiver.IsOwner = true;
-                                sendReceiver.UserId = NimbusUser.UserId;
-                                sendReceiver.Name = NimbusUser.FirstName + " " + NimbusUser.LastName;
-                                listReceiver.Add(sendReceiver);
-
-                            //add a  msg                                                 
-                            Message dadosMsg = new Message
-                            {
-                                SenderId = NimbusUser.UserId,
-                                Date = DateTime.Now,
-                                ReadStatus = false,
-                                Text = HttpUtility.HtmlEncode(message.Text),
-                                Title = HttpUtility.HtmlEncode(message.Title),
-                                Visible = true,
-                                Receivers = listReceiver
-                            };
-                            db.Save(dadosMsg);
-
-                            int idMesg = (int)db.GetLastInsertId();
-                            message.Id = idMesg;
-                            try
-                            {
-                                foreach (var item in listReceiver)
-                                {
-                                    if (item.UserId == NimbusUser.UserId)
-                                    {
-                                        db.Insert(new ReceiverMessage
-                                        {
-                                            IsOwner = item.IsOwner,
-                                            MessageId = idMesg,
-                                            UserId = item.UserId,
-                                            NameUser = item.Name,
-                                            Status = Nimbus.Model.Enums.MessageType.send
-                                        });                                      
-                                    }
-                                    else
-                                    {
-                                        db.Insert(new ReceiverMessage
-                                        {
-                                            IsOwner = item.IsOwner,
-                                            MessageId = idMesg,
-                                            UserId = item.UserId,
-                                            NameUser = item.Name,
-                                            Status = Nimbus.Model.Enums.MessageType.received
-                                        });
-                                    }
-                                }
-                                trans.Commit();
-
-                                //Notificação
-                                var notification = new Notifications.MessageNotification();
-                                notification.NewMessage(dadosMsg.Title, listReceiver.Where(l =>l.UserId != NimbusUser.UserId).Select(l => l.UserId).ToList());
-
-                            }
-                            catch (Exception ex)
-                            {
-                                trans.Rollback();
-                                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
-                            }
-
-                        }
-                        catch (Exception ex)
-                        {
-                            trans.Rollback();
-                            throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
-                        }
-                    }
-                }
+                Nimbus.Model.Receiver receiver = new Model.Receiver();
+                receiver.IsOwner = true; //a msg é enviada para o perfil, logo não importa esse item
+                receiver.UserId = id;
+                receiver.Name = db.SelectParam<User>(u => u.Id == id).Select(s => s.FirstName + " " + s.LastName).FirstOrDefault();
+                listReceiver.Add(receiver);
             }
-            catch (Exception ex)
-            {
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
-            }
-            return message;
+
+
+            return SendMessageToList(message, listReceiver);
         }
-    
+
         /// <summary>
         /// mostra todas as mensagens que o usuário recebeu, mostra no perfil do usuário
         /// </summary>
@@ -243,7 +154,7 @@ namespace Nimbus.Web.API.Controllers
             List<MessageBag> listMessage = new List<MessageBag>();
             try
             {
-                using(var db = DatabaseFactory.OpenDbConnection())
+                using (var db = DatabaseFactory.OpenDbConnection())
                 {
                     List<int> listIdMsg = new List<int>();
 
@@ -253,7 +164,7 @@ namespace Nimbus.Web.API.Controllers
                     foreach (int item in listIdMsg)
                     {
                         MessageBag bag = new MessageBag();
-                        Message msg  = db.SelectParam<Message>(m => m.Visible == true && m.Id == item).First();
+                        Message msg = db.SelectParam<Message>(m => m.Visible == true && m.Id == item).First();
                         bag.ChannelId = msg.ChannelId;
                         bag.Date = msg.Date;
                         bag.Id = msg.Id;
@@ -263,12 +174,12 @@ namespace Nimbus.Web.API.Controllers
                         bag.Text = msg.Text;
                         bag.Title = msg.Title;
                         bag.Visible = msg.Visible;
-                        bag.UserName = db.SelectParam<User>(u => u.Id == msg.SenderId).Select(u => u.FirstName).FirstOrDefault() 
-                                       + " " + db.SelectParam<User>(u => u.Id == msg.SenderId).Select(u => u.LastName).FirstOrDefault() ;
-                        bag.AvatarUrl = db.SelectParam<User>(u => u.Id == msg.SenderId).Select(u => u.AvatarUrl).FirstOrDefault() ;
-                        
+                        bag.UserName = db.SelectParam<User>(u => u.Id == msg.SenderId).Select(u => u.FirstName).FirstOrDefault()
+                                       + " " + db.SelectParam<User>(u => u.Id == msg.SenderId).Select(u => u.LastName).FirstOrDefault();
+                        bag.AvatarUrl = db.SelectParam<User>(u => u.Id == msg.SenderId).Select(u => u.AvatarUrl).FirstOrDefault();
+
                         listMessage.Add(bag);
-                    } 
+                    }
                 }
             }
             catch (Exception ex)
@@ -285,7 +196,7 @@ namespace Nimbus.Web.API.Controllers
         /// <returns></returns>
         [HttpGet]
         public List<MessageBag> ChannelReceivedMessages(int id = 0)
-        {          
+        {
 
             List<MessageBag> listMessage = new List<MessageBag>();
             try
@@ -346,7 +257,7 @@ namespace Nimbus.Web.API.Controllers
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
                     List<int> msgSend = new List<int>();
-                    msgSend = db.SelectParam<ReceiverMessage>(rm => rm.Status == Nimbus.Model.Enums.MessageType.send 
+                    msgSend = db.SelectParam<ReceiverMessage>(rm => rm.Status == Nimbus.Model.Enums.MessageType.send
                                                                    && rm.UserId == NimbusUser.UserId)
                                                                    .Select(rm => rm.MessageId).ToList();
 
@@ -365,7 +276,7 @@ namespace Nimbus.Web.API.Controllers
                             Title = HttpUtility.HtmlDecode(item.Title),
                             Visible = item.Visible
                         };
-                        listMessage.Add(msg);                        
+                        listMessage.Add(msg);
                     }
                 }
             }
@@ -374,8 +285,8 @@ namespace Nimbus.Web.API.Controllers
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
             return listMessage.OrderBy(d => d.Date).ToList();
-        }        
-       
+        }
+
         /// <summary>
         /// Troca a visibilidade das mensagens//excluir mensagem 
         /// </summary>
@@ -404,7 +315,7 @@ namespace Nimbus.Web.API.Controllers
             {
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
-            return listID; 
+            return listID;
         }
 
     }
