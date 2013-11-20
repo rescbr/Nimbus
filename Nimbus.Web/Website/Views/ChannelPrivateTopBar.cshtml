@@ -2,7 +2,7 @@
 
 <script type="text/javascript">
     //global
-    currentDiv = 'divPopularTopics';
+    currentDiv = 'divNotifications';
     divTipoTopic = '';
     CurrentQuestion = '1';
 </script>
@@ -12,15 +12,15 @@
 <div class="wrapperChannel">
     <nav class="chanTopBar">
         <ul class="sbs">
+            <li class="press"><a name="divNotifications" onclick="EnableDiv(this.name, 'currentDiv');" class="linkTopChanBar"><p>Atualizações</p></a></li>
             <li class="press"><a name="divPopularTopics" onclick="EnableDiv(this.name, 'currentDiv');" class="linkTopChanBar"><p>Mais vistos</p></a></li>
             <li class="press"><a name="divAllTopics" onclick="EnableDiv(this.name, 'currentDiv');" class="linkTopChanBar"><p>Todos</p></a></li>
-            <li class="press"><a name="divNotifications" onclick="EnableDiv(this.name, 'currentDiv');" class="linkTopChanBar"><p>Atualizações</p></a></li>
             <li class="press"><a name="divNewTopic" onclick="EnableDiv(this.name, 'currentDiv');" class="linkTopChanBar"><p>Novo tópico</p></a></li>
             <li class="press"><a name="divMessages" onclick="EnableDiv(this.name, 'currentDiv');" class="linkTopChanBar"><p>Mensagens</p></a></li>
         </ul>
     </nav>
 
-    <div>
+<div>
 
         <div id="divPopularTopics" style="display:none;">
             @foreach (var item in Model.AllTopics.OrderByDescending(m => m.Count))
@@ -130,10 +130,10 @@
                 </div>
             </p>
                 <form action='/channel/upload' method="post" enctype="multipart/form-data" name="imagem_original">
-                    <input type="file" name="imgTopic" id="imgTopic" />
-                    <input type="submit" value="Carregar" class="hidden" style="display:none" id="upload" />
-                    <input type="hidden" id="url" name="url" />
+                    <input type="file" name="inptImgTopic" id="inptImgTopic" />
+                    <input type="submit" value="Carregar" class="hidden" style="display:none" id="upload" /><br />
                     <label>Imagem de no máx. 5MB</label>
+                    <input type="hidden" id="url" name="url" />
                 </form>
         
             <p>
@@ -152,10 +152,11 @@
        
             <div id="divTypeTopic" style="display:none;">
                 <div id="divVideo" style="display:none;">
-                    <input type="text" id="iptnamevideo" name="iptnamevideo" value="URL do vídeo" onfocus="javascript: this.value = ''" onchange="getUrlVideo(this.name, 'iframeVideo');" />
+                    <input type="text" id="iptnamevideo" name="iptnamevideo" value="URL do vídeo" onfocus="javascript: this.value = ''"
+                                                    onchange="getUrlVideo(this.name, 'divFrameVideo','iframeVideo');" />
                     <label>Somente url do youtube</label><br />
-                    <div id="divFrameVideo" style="display:none">
-                        <iframe id="iframeVideo" width="420" height="345" name="iframeVideo"></iframe>
+                    <div id="divFrameVideo" style="display:none">                        
+                            <iframe name="iframeVideo" width="420" height="345" id="iframeVideo" src=""></iframe>
                     </div>
                 </div>
 
@@ -170,29 +171,34 @@
                     </p>
                 </div>
 
-                <div id="divExam" style="display:none;">
-                    <div id="divPergunta1">
-                        <p>Enunciado da questão:
-                    <input id="QuestionPerg1" name="enunciado" type="text" maxlength="600" />
-                        </p>
-                        <p>Respostas:</p>
-                         <div>
-                             <ul id="ulPerg1">
-                                <li id="liPerg1_opt1"> @*pergunta 1 _ opçao 1*@
-                                <input type="radio" name="radio" id="rdbPerg1_opt1" />
-                                <input id="txtPerg1_opt1" name="resposta" type="text" onfocus="javascript: this.value = ''" value="Opção 1" />
-                                </li>
-                                <li id="liPerg1_opt2" onclick="DisableOption('2', 'divPergunta1');">
-                                <input type="radio" name="radio" id="rdbPerg1_opt2" disabled="disabled" />
-                                <input id="txtPerg1_opt2" name="resposta" type="text" disabled="disabled" onfocus="javascript: this.value = ''" value="Opção 2" />
-                                 </li>
-                             </ul> 
+                <div>
+                    <div id="divExam" style="display:none;">
+                        <div id="divPergunta1">
+                            <p>
+                                Enunciado da questão:
+                                <input id="QuestionPerg1" name="enunciado" type="text" maxlength="600" />
+                            </p>
+                            <p>Respostas:</p>
+                            <div>
+                                <ul id="ulPerg1">
+                                    <li id="liPerg1_opt1">
+                                        @*pergunta 1 _ opçao 1*@
+                                        <input type="radio" name="radio" id="rdbPerg1_opt1" />
+                                        <input id="txtPerg1_opt1" name="resposta" type="text" onfocus="javascript: this.value = ''" value="Opção 1" />
+                                    </li>
+                                    <li id="liPerg1_opt2" onclick="DisableOption('2', 'divPergunta1');">
+                                        <input type="radio" name="radio" id="rdbPerg1_opt2" disabled="disabled" />
+                                        <input id="txtPerg1_opt2" name="resposta" type="text" disabled="disabled" onfocus="javascript: this.value = ''" value="Opção 2" />
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
+                    <button id="bntAddItem" onclick="CreatedDivQuestion();">Add item</button>
                 </div>
-                <button id="bntAddItem" onclick="CreatedDivQuestion();">Add item</button>
-                    <br />
-                    <button id="btnSalvar" onclick="SaveNewTopic(@Model.CurrentChannel.Id, false);">Salvar tópico</button>
+                <br />
+
+                <button id="btnSalvar" onclick="SaveNewTopic(@Model.CurrentChannel.Id, false);">Salvar tópico</button>
             </div>
         </div>
 
@@ -205,7 +211,9 @@
                     {
                             <div class="post_m">
                                 <div class="postHeImg_m">
-                                    <a href="userprofile/@item.SenderId"></a><img src=@item.AvatarUrl alt="blabla" title="blabla">
+                                    <a href="userprofile/@item.SenderId">
+                                        <img src=@item.AvatarUrl  style="height:60px; width:60px;" alt="Avatar" title="@item.UserName">
+                                    </a>
                                 </div>
                                 <div class="post_Right_m">
                                     <nav class="postHeaderLeft_m">
@@ -237,7 +245,7 @@
 
     $(document).ready(function () {
 
-        $(document).on('change', 'input[name=imgTopic]', function () {
+        $(document).on('change', 'input[name=inptImgTopic]', function () {
             $("#upload").click();
         });
 

@@ -1,7 +1,7 @@
 ﻿@using Nimbus.Extensions @* para utilizar o IList<>.Shuffle() *@
 @model Nimbus.Web.Website.Models.TopicModel
 
-<div>
+<div id="divCurrentExam">
     @for (int i = 0; i < Model.CurrentTopic.Question.Count; i++)
     {
         var question = Model.CurrentTopic.Question[i];
@@ -27,4 +27,25 @@
 
 
     *@
+</div>
+
+<div id="divNewExam" style="display:none;">
+    @for (int i = 0; i < Model.CurrentTopic.Question.Count; i++)
+    {
+        var question = Model.CurrentTopic.Question[i];
+        var answers = question.ChoicesAnswer.ToList();
+
+        <section>
+            <p>Pergunta:</p>
+            <p><strong>@(i + 1)</strong> -<input type="text" value="@question.TextQuestion" /></p>
+
+            <p>Respostas:</p>
+            @foreach (var answer in answers)
+            {
+                //imprime as questoes
+                <input type="radio" name="@i" value="@answer.Key" /><input type="text" value="@answer.Value" /><br />
+            }
+        </section>
+    }
+    
 </div>

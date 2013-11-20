@@ -31,7 +31,8 @@ namespace Nimbus.Web.Website.Controllers
                 Comments = null, // commentApi.ShowTopicComment(id), //Renato: usar a Action Comments
                 RolesCurrentUser = null, //channelApi.ReturnRolesUser(aux.ChannelId), //Renato: migrado para a API de Comentário
                 Category = topicApi.CategoryTopic( aux.Id),
-                NumFavorites = topicApi.CountFavorite(id)
+                NumFavorites = topicApi.CountFavorite(id),
+                NumLikes = topicApi.CountLikes(id)
             };
             return View("Topic", topic);
         }

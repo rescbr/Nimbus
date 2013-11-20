@@ -23,5 +23,7 @@ namespace Nimbus.Web.Website.Models
         public CategoryBag Category { get; set; }
 
         public int NumFavorites { get; set; }
+
+        public int NumLikes { get; set; }
     }
 }

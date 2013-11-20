@@ -28,15 +28,17 @@
 
     <h1 class="favTopic">
         <img src="/images/favorite_topic_icon.png" style="margin: 0px 0px -5px 10px;" />
-        @Model.NumFavorites
+        s2 @Model.NumFavorites
     </h1>
 
-    <div id="btnEditTopic" onclick="EditTopic();">
-        <p>Editar</p>
-    </div>
+    <a href="#" onclick="clickEditTopic(@Model.CurrentTopic.Id, '@Model.CurrentTopic.TopicType');">
+        <div id="btnEditTopic" >
+            <p>Editar</p>
+        </div>
+    </a>
 
     <div class="infoTitleChannel">
-        <h2>Número de seguidores</h2>
+        <h2>Categoria</h2>
         <p class="catTopic">
             @*Categoria*@
             @Model.Category.Name
@@ -47,7 +49,7 @@
         <h2>Número de Likes</h2>
         <p class="numberIco">
             @*colocar icone de likes*@
-            100
+            @Model.NumLikes
         </p>
     </div>
 
@@ -58,15 +60,7 @@
 
 
 <div id="divContentTopic" style="float:left; width: 644px;">
-    @*Falta os links certos pra barra do topico*@
-    <nav class="topicTopBar">
-        <ul class="sbs">
-            <li class="press"><a name="divAllTopics" onclick="EnableDiv(this.name, 'currentDiv');" class="linkTopChanBar"><p>Todos</p></a></li>
-            <li class="press"><a name="divNotifications" onclick="EnableDiv(this.name, 'currentDiv');" class="linkTopChanBar"><p>Atualizações</p></a></li>
-            <li class="press"><a name="divPopularTopics" onclick="EnableDiv(this.name, 'currentDiv');" class="linkTopChanBar"><p>Mais vistos</p></a></li>
-        </ul>
-    </nav>
-
+  
     <div class="contentPageTopic">
     @*Topico em formato texto*@
     @if (Model.CurrentTopic.TopicType == Nimbus.Model.Enums.TopicType.exam)

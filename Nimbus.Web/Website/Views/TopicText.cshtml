@@ -1,9 +1,13 @@
 ﻿@model Nimbus.Web.Website.Models.TopicModel
 
-<div>
+<div id="divCurrentText">
 
     <p>
          @(new HtmlString(Model.CurrentTopic.Text))
     </p>
 
+</div>
+
+<div id="divNewText" style="display:none;">
+    <textarea id="txtaArticle" required class="ckeditor">@Model.CurrentTopic.Text</textarea>
 </div>

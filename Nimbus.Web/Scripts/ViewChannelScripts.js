@@ -209,65 +209,6 @@ function ajaxSaveNewTopic(channelID)
     
 }
 
-function ajaxEditTopic()
-{
-    var video;
-    var text; var exam;
-    var ajaxData = {}
-    var title = document.getElementById("").value;
-    var ImgUrl = document.getElementById("").value;
-    var shortDescription = document.getElementById("").value;
-    var topicId = document.getElementById("").value;
-    var enumTopicType = document.getElementById(""), value;
-    var price = document.getElementById().value;
-
-    if (enumTopicType == 1) {
-        video = document.getElementById('iframeVideo').src;
-    }
-    if (enumTopicType == 0) {
-        text = CKEDITOR.instances.txtaArticle.getData();
-    }
-    if (enumTopicType == 2) {
-        text = CKEDITOR.instances.txtaTextMsg.getData();
-    }
-    if (enumTopicType == 3) {
-        //TODO editar exam
-    }
-        
-    if (title != "" && shortDescription != "" && topicId > 0 && (text != "" || video != "" || exam != "")) {
-        ajaxData["Title"] = title;
-        ajaxData["ImgUrl"] = ImgUrl;
-        ajaxData["Description"] = shortDescription;
-        ajaxData["ChannelId"] = channelID;
-        ajaxData["TopicType"] = enumTopicType;
-        ajaxData["Text"] = text;
-        ajaxData["UrlVideo"] = video;
-        ajaxData["Question"] = exam;
-        ajaxData["Price"] = price;
-        ajaxData["Id"] = topicId;
-
-        $.ajax({
-            url: "/api/topic/EditTopic",
-            data: JSON.stringify(ajaxData),
-            type: "POST",
-            contentType: "application/json;charset=utf-8",
-            statusCode: {
-                200: function (newData) {
-                    ajaxTopicCallback(newData);
-                    //liumpar campos
-                },
-
-                400: function () {
-                    //erro
-                    ajaxTopicCallback(newData);
-                }
-            }
-        });
-
-    }
-
-}
-
 function ajaxTopicCallback(response) {
     if (response.message) {
         alert(response.message);        
@@ -450,7 +391,7 @@ function ajaxLoadModeratorEdit(id)
                     for (var i = 0; i < newData.length; i++) {
                         listModerador += "<div id=\"divModerator_" + newData[i].Id + "\">" +
                                          "<p>" +
-                                         "<img src=\"" + newData[i].AvatarUrl + "\" title=\"" + newData[i].FirstName + "\" />" +
+                                         "<img src=\"" + newData[i].AvatarUrl + "\" title=\"" + newData[i].FirstName + "\" style=\"height:40px; width:40px;\" />" +
                                          "<label>" + newData[i].FirstName + " " + newData[i].LastName + "</label>" +
                                          "<input id=\"inputUser_" + newData[i].Id + "\" type=\"text\" disabled value=\"" + newData[i].RoleInChannel + "\" />" +
                                          "<div id=\"divUser_" + newData[i].Id + "\"></div>" +
@@ -581,7 +522,7 @@ function ajaxNewModerator()
 
                         var newDivModerator = "<div id=\"divModerator_" + newData.Id + "\">" +
                                              "<p>" +
-                                             "<img src=\"" + newData.AvatarUrl + "\" title=\"" + newData.FirstName + "\" />" +
+                                             "<img src=\"" + newData.AvatarUrl + "\" title=\"" + newData.FirstName + "\" style=\"height:40px; width:40px;\" />" +
                                              "<label>" + newData.FirstName + " " + newData.LastName + "</label>" +
                                              "<input id=\"inputUser_" + newData.Id + "\" type=\"text\" disabled value=\"" + newData.RoleInChannel + "\" />" +
                                              "<div id=\"divUser_" + newData.Id + "\"></div>" +
