@@ -66,8 +66,10 @@ $(function () {
     // Start the connection
     $.connection.hub.start().done(function () {;
         //requisicoes de registro
-        if (nimbusRegisterTopic !== null) {
-            registerTopicNotifications(nimbusRegisterTopic);
-        }
+        try {
+            if (nimbusRegisterTopic !== null) {
+                registerTopicNotifications(nimbusRegisterTopic);
+            }
+        } catch(e) {}
     });
 });
