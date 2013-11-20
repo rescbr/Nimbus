@@ -147,22 +147,43 @@ namespace Nimbus.Web.API.Controllers
                 int idOrg = NimbusOrganization.Id;
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    var roles = db.SelectParam<Role>(r => r.ChannelId == id &&
-                                                                        (r.IsOwner == true || r.ChannelMagager == true ||
-                                                                         r.MessageManager == true || r.ModeratorManager == true ||
-                                                                         r.TopicManager == true || r.UserManager == true));
 
+                   
                     
-                    var users = roles.Select(r => db.Where<User>(u => u.Id != r.UserId &&
-                                                          (u.FirstName.Contains(q) ||
-                                                          u.LastName.Contains(q) ||
-                                                          u.Occupation.Contains(q) ||
-                                                          u.Interest.Contains(q))).FirstOrDefault())
-                                                          .Where(uu => uu != null);
+                   var query = db.Query<Model.ORM.User>(
+                   #region Queryzinha
+@"
+SELECT [tUser].[Id], [tUser].[Email], [tUser].[Password], [tUser].[TOTPKey], [tUser].[BirthDate], [tUser].[Occupation], [tUser].[Interest], [tUser].[Experience], [tUser].[FirstName], [tUser].[LastName], [tUser].[AvatarUrl], [tUser].[About], [tUser].[City], [tUser].[State], [tUser].[Country]
+FROM [ChannelUser]
+INNER JOIN [Role] ON [ChannelUser].[ChannelId] = [Role].[ChannelId]
+OUTER APPLY (
 
-                    if (users.Count() > 0)
+    SELECT TOP (1) 1 AS [test], [User].[Id], [User].[Email], [User].[Password], [User].[TOTPKey], [User].[BirthDate], [User].[Occupation], [User].[Interest], [User].[Experience], [User].[FirstName], [User].[LastName], [User].[AvatarUrl], [User].[About], [User].[City], [User].[State], [User].[Country]
+    FROM [User]
+    WHERE ([User].[Id] = [ChannelUser].[UserId]) AND 
+			(([User].[FirstName] LIKE @strQuery) OR 
+			([User].[LastName] LIKE @strQuery) OR 
+			([User].[Occupation] LIKE @strQuery) OR 
+			([User].[Interest] LIKE @strQuery))
+    ) AS [tUser]
+	
+WHERE ([tUser].[test] IS NOT NULL) AND 
+	(((NOT ([Role].[IsOwner] = 1)) AND 
+	(NOT ([Role].[ChannelMagager] = 1)) AND 
+	(NOT ([Role].[MessageManager] = 1)) AND 
+	(NOT ([Role].[ModeratorManager] = 1)) AND 
+	(NOT ([Role].[TopicManager] = 1)) AND 
+	(NOT ([Role].[UserManager] = 1))) OR 
+	([Role].[UserId] <> [ChannelUser].[UserId])) AND 
+	([ChannelUser].[Visible] = 1) AND 
+	([ChannelUser].[ChannelId] = @chnIdParam)
+",
+                   #endregion
+ new { chnIdParam = id, strQuery = "%" + q + "%" });
+
+                   if (query.Count() > 0)
                     {
-                        var resp = users.Select(x => new UserAutoCompleteResponse
+                        var resp = query.Select(x => new UserAutoCompleteResponse
                         {
                             value = x.FirstName + " " + x.LastName,
                             data = new UserAutoCompleteResponse.UserData

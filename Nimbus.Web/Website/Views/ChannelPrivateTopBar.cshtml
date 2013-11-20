@@ -2,7 +2,7 @@
 
 <script type="text/javascript">
     //global
-    currentDiv = 'divPopularTopics';
+    currentDiv = 'divNotifications';
     divTipoTopic = '';
     CurrentQuestion = '1';
 </script>
@@ -12,9 +12,9 @@
 <div class="wrapperChannel">
     <nav class="chanTopBar">
         <ul class="sbs">
+            <li class="press"><a name="divNotifications" onclick="EnableDiv(this.name, 'currentDiv');" class="linkTopChanBar"><p>Atualizações</p></a></li>
             <li class="press"><a name="divPopularTopics" onclick="EnableDiv(this.name, 'currentDiv');" class="linkTopChanBar"><p>Mais vistos</p></a></li>
             <li class="press"><a name="divAllTopics" onclick="EnableDiv(this.name, 'currentDiv');" class="linkTopChanBar"><p>Todos</p></a></li>
-            <li class="press"><a name="divNotifications" onclick="EnableDiv(this.name, 'currentDiv');" class="linkTopChanBar"><p>Atualizações</p></a></li>
             <li class="press"><a name="divNewTopic" onclick="EnableDiv(this.name, 'currentDiv');" class="linkTopChanBar"><p>Novo tópico</p></a></li>
             <li class="press"><a name="divMessages" onclick="EnableDiv(this.name, 'currentDiv');" class="linkTopChanBar"><p>Mensagens</p></a></li>
         </ul>
@@ -211,7 +211,9 @@
                     {
                             <div class="post_m">
                                 <div class="postHeImg_m">
-                                    <a href="userprofile/@item.SenderId"></a><img src=@item.AvatarUrl alt="blabla" title="blabla">
+                                    <a href="userprofile/@item.SenderId">
+                                        <img src=@item.AvatarUrl  style="height:60px; width:60px;" alt="Avatar" title="@item.UserName">
+                                    </a>
                                 </div>
                                 <div class="post_Right_m">
                                     <nav class="postHeaderLeft_m">

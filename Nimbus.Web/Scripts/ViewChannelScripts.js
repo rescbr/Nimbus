@@ -391,7 +391,7 @@ function ajaxLoadModeratorEdit(id)
                     for (var i = 0; i < newData.length; i++) {
                         listModerador += "<div id=\"divModerator_" + newData[i].Id + "\">" +
                                          "<p>" +
-                                         "<img src=\"" + newData[i].AvatarUrl + "\" title=\"" + newData[i].FirstName + "\" />" +
+                                         "<img src=\"" + newData[i].AvatarUrl + "\" title=\"" + newData[i].FirstName + "\" style=\"height:40px; width:40px;\" />" +
                                          "<label>" + newData[i].FirstName + " " + newData[i].LastName + "</label>" +
                                          "<input id=\"inputUser_" + newData[i].Id + "\" type=\"text\" disabled value=\"" + newData[i].RoleInChannel + "\" />" +
                                          "<div id=\"divUser_" + newData[i].Id + "\"></div>" +
@@ -522,7 +522,7 @@ function ajaxNewModerator()
 
                         var newDivModerator = "<div id=\"divModerator_" + newData.Id + "\">" +
                                              "<p>" +
-                                             "<img src=\"" + newData.AvatarUrl + "\" title=\"" + newData.FirstName + "\" />" +
+                                             "<img src=\"" + newData.AvatarUrl + "\" title=\"" + newData.FirstName + "\" style=\"height:40px; width:40px;\" />" +
                                              "<label>" + newData.FirstName + " " + newData.LastName + "</label>" +
                                              "<input id=\"inputUser_" + newData.Id + "\" type=\"text\" disabled value=\"" + newData.RoleInChannel + "\" />" +
                                              "<div id=\"divUser_" + newData.Id + "\"></div>" +
