@@ -5,9 +5,11 @@
 </div>
 
 <div id="divEditVideo" style="display:none;">
-    <input type="text" id="iptTitlevideo" name="iptTitlevideo" value="URL do vídeo" onfocus="javascript: this.value = ''" onchange="getUrlVideo(this.name, 'iframeNewVideo');" />
+    <input type="text" id="iptTitlevideo" name="iptTitlevideo" value="URL do vídeo" onfocus="javascript: this.value = ''" 
+           onchange="getUrlVideo(this.name, 'divFrameNewVideo', 'iframeNewVideo');" />
     <label>Somente url do youtube</label><br />
-    <div id="divFrameVideo" style="display:none">
-        <iframe id="iframeNewVideo" width="420" height="345" name="iframeVideo"></iframe>
+    <div id="divFrameNewVideo" style="display:none;">
+        <iframe name="iframeNewVideo" width="420" height="345" id="iframeNewVideo" src=""></iframe>
     </div>
 </div>
+

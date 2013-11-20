@@ -11,7 +11,7 @@ function clickEditTopic(id, topicType)
     }
     else
         if (topicType == "text" || topicType == "discussion")
-    {
+    { 
         document.getElementById('divCurrentText').style.display = 'none';
         document.getElementById('divNewText').style.display = 'block';
         divNone = "divCurrentText"; divBlock = "divNewText";

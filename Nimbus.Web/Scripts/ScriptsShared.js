@@ -45,10 +45,10 @@ function DisabledBtn(nameButton)
 }
 
 //método que coloca url para visualização do video antes de salvar
-//param: nome do campo que vai ter a string do video, nome do frame que vai receber a string como src
-function getUrlVideo(nomecampo, nomeframe)
+//param: nome do campo que vai ter a string do video, nome da div do frame que vai receber a string como src
+function getUrlVideo(nomeCampo, nomeDiv, nomeFrame)
 {
-    var text = document.getElementById(nomecampo).value;
+    var text = document.getElementById(nomeCampo).value;
     var queryurl;
     if (text.length >= 11)
     {
@@ -65,7 +65,8 @@ function getUrlVideo(nomecampo, nomeframe)
             queryurl = "//www.youtube.com/embed/" + params;            
         }
         if (queryurl.length > 34) {
-            document.getElementsByTagName("IFRAME")[0].setAttribute('src', queryurl);            
+            document.getElementById(nomeFrame).src = queryurl;
+            document.getElementById(nomeDiv).style.display = 'block';
         }
        
     }
