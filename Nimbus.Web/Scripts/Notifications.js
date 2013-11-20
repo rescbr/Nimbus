@@ -51,11 +51,6 @@ function newTopicCommentNotification(notif) {
     }
 }
 
-function registerTopicNotifications(topicId) {
-    var nimbusHub = $.connection.nimbusHub;
-    nimbusHub.server.registerTopicCommentNotifications(topicId);
-}
-
 $(function () {
     //habilita log
     $.connection.hub.logging = true;
@@ -68,8 +63,14 @@ $(function () {
         //requisicoes de registro
         try {
             if (nimbusRegisterTopic !== null) {
-                registerTopicNotifications(nimbusRegisterTopic);
+                nimbusHub.server.registerTopicCommentNotifications(nimbusRegisterTopic);
             }
-        } catch(e) {}
+        } catch (e) { }
+
+        try {
+            if (nimbusRegisterMessageNotifications === true) {
+                nimbusHub.server.registerMessageNotifications();
+            }
+        } catch (e) { }
     });
 });

@@ -16,9 +16,14 @@ namespace Nimbus.Web.Notifications
             Groups.Add(Context.ConnectionId, GetTopicGroupName(topicId));
         }
 
+        public void RegisterMessageNotifications()
+        {
+            Groups.Add(Context.ConnectionId, GetMessageGroupName(UserId));
+        }
+
         public override Task OnConnected()
         {
-            Groups.Add(Context.ConnectionId, GetGroupName());
+            Groups.Add(Context.ConnectionId, GetUserGroupName(UserId));
             return base.OnConnected();
         }
 
@@ -26,14 +31,17 @@ namespace Nimbus.Web.Notifications
         /// Obtém a key do grupo SignalR do usuário logado.
         /// </summary>
         /// <returns>groupName</returns>
-        public string GetGroupName()
+        public int UserId
         {
-            if (Context.User.Identity.AuthenticationType == "NimbusUser")
+            get
             {
-                var u = (Context.User.Identity as NimbusUser);
-                return GetGroupName(u.UserId);
+                if (Context.User.Identity.AuthenticationType == "NimbusUser")
+                {
+                    var u = (Context.User.Identity as NimbusUser);
+                    return u.UserId;
+                }
+                else throw new Exception("Wrong user authentication type. Shouldn't happen.");
             }
-            else throw new Exception("Wrong user authentication type. Shouldn't happen.");
         }
 
         /// <summary>
@@ -41,7 +49,7 @@ namespace Nimbus.Web.Notifications
         /// </summary>
         /// <param name="userId">O UserId do usuário</param>
         /// <returns>groupName</returns>
-        public static string GetGroupName(int userId)
+        public static string GetUserGroupName(int userId)
         {
             return "user" + userId.ToString();
         }
@@ -51,6 +59,10 @@ namespace Nimbus.Web.Notifications
             return "topic" + topicId.ToString();
         }
 
+        public static string GetMessageGroupName(int userId)
+        {
+            return "message" + userId.ToString();
+        }
     }
 
     

@@ -34,6 +34,7 @@ namespace Nimbus.Web.API.Controllers
                                                                    .Select(c => c.IsOwner).FirstOrDefault();
                         sender.UserId = NimbusUser.UserId;
                         sender.Name = NimbusUser.FirstName + " " + NimbusUser.LastName;
+                        sender.AvatarUrl = NimbusUser.AvatarUrl;
                         listReceiver.Add(sender);
 
                         //add a  msg                                                 
@@ -81,7 +82,7 @@ namespace Nimbus.Web.API.Controllers
 
                         //Notificação
                         var notification = new Notifications.MessageNotification();
-                        notification.NewMessage(dadosMsg, NimbusUser.UserId);
+                        notification.NewMessage(dadosMsg);
 
                     }
                     catch (Exception ex)
@@ -112,9 +113,12 @@ namespace Nimbus.Web.API.Controllers
                 foreach (var item in roles)
                 {
                     Nimbus.Model.Receiver receiver = new Model.Receiver();
+                    var user = db.SelectParam<User>(u => u.Id == item.UserId).FirstOrDefault();
                     receiver.IsOwner = item.IsOwner;
                     receiver.UserId = item.UserId;
-                    receiver.Name = db.SelectParam<User>(u => u.Id == item.UserId).Select(s => s.FirstName + " " + s.LastName).FirstOrDefault();
+                    receiver.Name = user.FirstName + " " + user.LastName;
+                    receiver.AvatarUrl = user.AvatarUrl;
+
                     listReceiver.Add(receiver);
                 }
             }
@@ -134,9 +138,12 @@ namespace Nimbus.Web.API.Controllers
             using (var db = DatabaseFactory.OpenDbConnection())
             {
                 Nimbus.Model.Receiver receiver = new Model.Receiver();
+                var user = db.SelectParam<User>(u => u.Id == id).FirstOrDefault();
                 receiver.IsOwner = true; //a msg é enviada para o perfil, logo não importa esse item
                 receiver.UserId = id;
-                receiver.Name = db.SelectParam<User>(u => u.Id == id).Select(s => s.FirstName + " " + s.LastName).FirstOrDefault();
+                receiver.Name = user.FirstName + " " + user.LastName;
+                receiver.AvatarUrl = user.AvatarUrl;
+
                 listReceiver.Add(receiver);
             }
 

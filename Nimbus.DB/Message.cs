@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime.Serialization;
 
 namespace Nimbus.Model
 {
@@ -24,6 +25,7 @@ namespace Nimbus.Model
         public bool Visible { get; set; }
     }
 
+    [DataContract]
     public class Receiver
     {
         public virtual int UserId { get; set; }
@@ -31,5 +33,11 @@ namespace Nimbus.Model
         public string Name { get; set; }
 
         public bool IsOwner { get; set; }
+
+        /// <summary>
+        /// Atenção! O AvatarUrl não vai pro banco!
+        /// </summary>
+        [IgnoreDataMember]
+        public string AvatarUrl { get; set; }
     }
 }
