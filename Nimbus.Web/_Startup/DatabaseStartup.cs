@@ -17,14 +17,12 @@ namespace Nimbus.Web
                     SqlServerDialect.Provider);
             using (var db = dbFactory.OpenDbConnection())
             {
-                db.CreateTable(false, typeof(Comment));
                 if (!db.TableExists("Organization"))
                 {
 
                     using (var trans = db.OpenTransaction())
                     {
                         //criar tabelas
-
                         db.CreateTable(false, typeof(Category));
                         db.CreateTable(false, typeof(ImgTopChannel));
                         db.CreateTable(false, typeof(Ad)); 
@@ -57,6 +55,7 @@ namespace Nimbus.Web
                         db.CreateTable(false, typeof(ReceiverMessage));
                         db.CreateTable(false, typeof(UserInfoPayment));
                         db.CreateTable(false, typeof(UserTopicFavorite));
+                        db.CreateTable(false, typeof(UserLikeTopic));
                         db.CreateTable(false, typeof(ViewByTopic));
                         db.CreateTable(false, typeof(VoteChannel));
 

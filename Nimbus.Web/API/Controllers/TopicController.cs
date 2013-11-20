@@ -254,8 +254,7 @@ namespace Nimbus.Web.API.Controllers
                     {
                         topic = db.SelectParam<Topic>(tp => tp.Id == id).FirstOrDefault();
 
-                        topic.Title = HttpUtility.HtmlDecode(topic.Title);
-                        //topic.Description = RemoveHTMLString.StripTagsCharArray(topic.Description); 
+                        topic.Title = HttpUtility.HtmlDecode(topic.Title);                       
                         topic.Description = HttpUtility.HtmlDecode(topic.Description);
                         topic.Text = HttpUtility.HtmlDecode(topic.Text);
 
@@ -279,6 +278,27 @@ namespace Nimbus.Web.API.Controllers
                                 }
                             }
                             #endregion
+                        }
+                        if (topic.TopicType == Nimbus.Model.Enums.TopicType.video)
+                        {                           
+                            string url = topic.UrlVideo;
+                            if (url.Length >= 11)
+                            {
+                                string param = "";
+                                if (url.IndexOf("youtube.be/") > 0)
+                                {
+                                     int posicao = url.IndexOf(".be/") + 4;
+                                     param = url.Substring(posicao);                                   
+                                }
+                                else if (url.IndexOf("youtube.com") > 0)
+                                {
+                                    string querystring = new Uri(topic.UrlVideo).Query;
+                                    var q = HttpUtility.ParseQueryString(querystring);
+                                    param = q["v"];
+                                }
+                                topic.UrlVideo = "//www.youtube.com/embed/" + param;
+                            }
+
                         }
                     }
                 }
@@ -667,6 +687,29 @@ namespace Nimbus.Web.API.Controllers
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
                     count = db.SelectParam<UserTopicFavorite>(fv => fv.TopicId == id && fv.Visible == true).Count();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+            }
+            return count;
+        }
+        
+        /// <summary>
+        /// Retorna o número de likes que o tópico possui
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public int CountLikes(int id)
+        {
+            int count = 0;
+            try
+            {
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {
+                    count = db.SelectParam<UserLikeTopic>(fl => fl.TopicId == id && fl.Visible == true).Count();
                 }
             }
             catch (Exception ex)

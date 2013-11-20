@@ -72,6 +72,7 @@
     <Compile Include="UserChannelReadLater.cs" />
     <Compile Include="UserExam.cs" />
     <Compile Include="UserInfoPayment.cs" />
+    <Compile Include="UserLikeTopic.cs" />
     <Compile Include="UserReported.cs" />
     <Compile Include="UserBadge.cs" />
     <Compile Include="Comment.cs" />
