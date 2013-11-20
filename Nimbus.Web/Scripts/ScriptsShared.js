@@ -46,21 +46,22 @@ function DisabledBtn(nameButton)
 
 //método que coloca url para visualização do video antes de salvar
 //param: nome do campo que vai ter a string do video, nome do frame que vai receber a string como src
-function getUrlVideo(urlVideo, nomeframe)
-{ 
+function getUrlVideo(nomecampo, nomeframe)
+{
+    var text = document.getElementById(nomecampo).value;
     var queryurl;
-    if (urlVideo.length >= 11)
+    if (text.length >= 11)
     {
-        if (urlVideo.indexOf("youtube.be/") > 0)
+        if (text.indexOf("youtube.be/") > 0)
         {
-            var params = urlVideo.search.substr(urlVideo.search.indexof("be/") + 3);
+            var params = text.search.substr(text.search.indexof("be/")+3);
             queryurl = "//www.youtube.com/embed/" + params;           
         }
          else     
-            if (urlVideo.indexOf("youtube.com"))
+        if (text.indexOf("youtube.com"))
         {
-                var params = urlVideo.search("v=");
-                params = urlVideo.slice(params + 2);
+            var params = text.search("v=");
+            params = text.slice(params + 2);
             queryurl = "//www.youtube.com/embed/" + params;            
         }
         if (queryurl.length > 34) {

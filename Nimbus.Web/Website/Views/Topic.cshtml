@@ -31,9 +31,11 @@
         s2 @Model.NumFavorites
     </h1>
 
-    <div id="btnEditTopic" onclick="EditTopic();">
-        <p>Editar</p>
-    </div>
+    <a href="#" onclick="clickEditTopic(@Model.CurrentTopic.Id, '@Model.CurrentTopic.TopicType');">
+        <div id="btnEditTopic" >
+            <p>Editar</p>
+        </div>
+    </a>
 
     <div class="infoTitleChannel">
         <h2>Categoria</h2>

@@ -1,5 +1,13 @@
 ﻿@model Nimbus.Web.Website.Models.TopicModel
 
-<div>
+<div id="divCurrentVideo">
     <iframe id="iFrameVideo" src="@Model.CurrentTopic.UrlVideo" width="560" height="315" frameborder="0" allowfullscreen></iframe>
+</div>
+
+<div id="divEditVideo" style="display:none;">
+    <input type="text" id="iptTitlevideo" name="iptTitlevideo" value="URL do vídeo" onfocus="javascript: this.value = ''" onchange="getUrlVideo(this.name, 'iframeNewVideo');" />
+    <label>Somente url do youtube</label><br />
+    <div id="divFrameVideo" style="display:none">
+        <iframe id="iframeNewVideo" width="420" height="345" name="iframeVideo"></iframe>
+    </div>
 </div>
