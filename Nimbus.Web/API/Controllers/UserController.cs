@@ -179,7 +179,7 @@ WHERE ([tUser].[test] IS NOT NULL) AND
 	([ChannelUser].[ChannelId] = @chnIdParam)
 ",
                    #endregion
- new { chnIdParam = id, strQuery = "%" + q + "%" });
+                   new { chnIdParam = id, strQuery = "%" + q + "%" });
 
                    if (query.Count() > 0)
                     {
