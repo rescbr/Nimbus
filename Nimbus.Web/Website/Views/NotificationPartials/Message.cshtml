@@ -1,0 +1,13 @@
+﻿@model Nimbus.Web.Notifications.MessageNotificationModel
+<div id="divNotification" style="display:block;">
+    <div>
+        <img id="imgNotification" src="@Model.SenderAvatarUrl" />
+    </div>
+    <p id="timeNotification">
+        @*hora x     data x*@
+        @Model.Time - @Model.Date
+    </p>
+    <p id="txtNotification">
+        <strong>@Model.SenderName</strong> enviou uma mensagem a você: <a href="@Model.MessageId"><strong>@Model.Subject</strong></a>
+    </p>
+</div>

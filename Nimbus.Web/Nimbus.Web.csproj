@@ -716,6 +716,10 @@
     <Content Include="Website\Views\TopicVideo.cshtml" />
     <Content Include="Website\Views\TopicAvalicao.cshtml" />
     <Content Include="Website\Views\CommentPartials\PartialTopicComment.cshtml" />
+    <Content Include="Website\Views\NotificationPartials\Accept.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Website\Views\NotificationPartials\Message.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\Controllers\DatabaseController.cs" />
