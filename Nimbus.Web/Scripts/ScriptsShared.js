@@ -46,31 +46,36 @@ function DisabledBtn(nameButton)
 
 //método que coloca url para visualização do video antes de salvar
 //param: nome do campo que vai ter a string do video, nome da div do frame que vai receber a string como src
-function getUrlVideo(nomeCampo, nomeDiv, nomeFrame)
-{
+function getUrlVideo(nomeCampo, nomeDiv, nomeFrame) {
     var text = document.getElementById(nomeCampo).value;
     var queryurl;
-    if (text.length >= 11)
-    {
-        if (text.indexOf("youtube.be/") > 0)
-        {
-            var params = text.search.substr(text.search.indexof("be/")+3);
-            queryurl = "//www.youtube.com/embed/" + params;           
+    if (text.indexof("/embed") <= 0) {
+        if (text.length >= 11) {
+            if (text.indexOf("youtube.be/") > 0) {
+                var params = text.search.substr(text.search.indexof("be/") + 3);
+                queryurl = "//www.youtube.com/embed/" + params;
+            }
+            else
+                if (text.indexOf("youtube.com")) {
+                    var params = text.search("v=");
+                    params = text.slice(params + 2);
+                    queryurl = "//www.youtube.com/embed/" + params;
+                }
+
         }
-         else     
-        if (text.indexOf("youtube.com"))
-        {
-            var params = text.search("v=");
-            params = text.slice(params + 2);
-            queryurl = "//www.youtube.com/embed/" + params;            
-        }
-        if (queryurl.length > 34) {
-            document.getElementById(nomeFrame).src = queryurl;
-            document.getElementById(nomeDiv).style.display = 'block';
-        }
-       
     }
-    
+    else {
+        if (text.indexOf("http:") > 0) {
+            params = text.slice(params + 5);
+            queryurl = params;
+        }
+    }
+
+    if (queryurl.length > 34) {
+        document.getElementById(nomeFrame).src = queryurl;
+        document.getElementById(nomeDiv).style.display = 'block';
+    }
+
 }
 
 //Mudar de Lista pra Grade e Grade pra lista

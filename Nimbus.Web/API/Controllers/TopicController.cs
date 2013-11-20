@@ -142,7 +142,6 @@ namespace Nimbus.Web.API.Controllers
                                     }
                                 }
 
-                                db.Insert(topic);
                                 db.Save(topic);
                                 topic.Id = (int)db.GetLastInsertId();
                                 trans.Commit();
@@ -185,6 +184,7 @@ namespace Nimbus.Web.API.Controllers
                         {
                             bool isOwner = IsOwner(topic.ChannelId, "channel");
                             bool isManager = IsManager(topic.ChannelId, "channel");
+                            
                             if (isOwner == true || isManager == true)
                             {
                                 Topic tpc = db.SelectParam<Topic>(tp => tp.Id == topic.Id).FirstOrDefault();
@@ -211,8 +211,7 @@ namespace Nimbus.Web.API.Controllers
                                     tpc.Price = topic.Price;
                                 }
 
-                                db.Insert(tpc);
-                                db.Save(tpc);
+                                db.Update<Topic>(tpc);
                                 trans.Commit();
                                 return topic;
                             }
@@ -282,22 +281,34 @@ namespace Nimbus.Web.API.Controllers
                         if (topic.TopicType == Nimbus.Model.Enums.TopicType.video)
                         {                           
                             string url = topic.UrlVideo;
+                            //garantir que mesmo que o vídeo tenha sido salvo com string padrao diferente, irá retornar o param certo
                             if (url.Length >= 11)
                             {
                                 string param = "";
-                                if (url.IndexOf("youtube.be/") > 0)
+                                if (url.IndexOf("/embed") <= 0)
                                 {
-                                     int posicao = url.IndexOf(".be/") + 4;
-                                     param = url.Substring(posicao);                                   
+                                    if (url.IndexOf("youtube.be/") > 0)
+                                    {
+                                        int posicao = url.IndexOf(".be/") + 4;
+                                        param = url.Substring(posicao);
+                                    }
+                                    else if (url.IndexOf("youtube.com") > 0)
+                                    {
+                                        string querystring = new Uri(topic.UrlVideo).Query;
+                                        var q = HttpUtility.ParseQueryString(querystring);
+                                        param = q["v"];
+                                    }
+                                    topic.UrlVideo = "//www.youtube.com/embed/" + param;
                                 }
-                                else if (url.IndexOf("youtube.com") > 0)
+                                else
                                 {
-                                    string querystring = new Uri(topic.UrlVideo).Query;
-                                    var q = HttpUtility.ParseQueryString(querystring);
-                                    param = q["v"];
+                                    //já foi salvo da forma correta
+                                    int posicao = url.IndexOf("http:") + 5;
+                                    param = url.Substring(posicao);
+                                    topic.UrlVideo = param;
                                 }
-                                topic.UrlVideo = "//www.youtube.com/embed/" + param;
                             }
+                           
 
                         }
                     }

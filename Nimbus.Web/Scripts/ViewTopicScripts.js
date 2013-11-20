@@ -7,29 +7,24 @@ function clickEditTopic(id, topicType)
     {
         document.getElementById('divCurrentVideo').style.display = 'none';
         document.getElementById('divEditVideo').style.display = 'block';
-        divNone = "divCurrentVideo"; divBlock = "divEditVideo";
     }
     else
         if (topicType == "text" || topicType == "discussion")
     { 
         document.getElementById('divCurrentText').style.display = 'none';
         document.getElementById('divNewText').style.display = 'block';
-        divNone = "divCurrentText"; divBlock = "divNewText";
     }
     else
     if (topicType == "exam") {
         document.getElementById('divCurrentExam').style.display = 'none';
         document.getElementById('divNewExam').style.display = 'block';
-        divNone = "divCurrentExam"; divBlock = "divNewExam";
-    }
-
-    ajaxEditTopic(id, topicType, divNone, divBlock);
+    }   
 }
 
-
-function ajaxEditTopic(id, topicType, divNone, divBlock) {
+function ajaxEditTopic(id, topicType, divOld, divNew) {
     var video;
     var text; var exam;
+    var title = "teste";
     var ajaxData = {}
 
    // var title = document.getElementById("").value;
@@ -52,9 +47,10 @@ function ajaxEditTopic(id, topicType, divNone, divBlock) {
     if (/*title != "" &&*/ id > 0 && (text != "" || video != "" || exam != "")) {
 
         ajaxData["Title"] = title;
-        ajaxData["ImgUrl"] = ImgUrl;
-        ajaxData["Description"] = shortDescription;
+        ajaxData["Id"] = id;
         ajaxData["ChannelId"] = channelID;
+        //ajaxData["ImgUrl"] = ImgUrl;
+        ajaxData["Description"] = "TESTANDO AO SOM DE MANANANAMANAAAAAA";// shortDescription;
         ajaxData["TopicType"] = topicType;
         ajaxData["Text"] = text;
         ajaxData["UrlVideo"] = video;
@@ -68,9 +64,13 @@ function ajaxEditTopic(id, topicType, divNone, divBlock) {
             statusCode: {
                 200: function (newData) {
                     if (newData != null)
-                    {
-                        document.getElementById(divBlock).style.display = 'none';
-                        document.getElementById(divNone).style.display = 'block';
+                    {                      
+                        if (newData.TopicType == 1)
+                        {
+                            document.getElementById('iFrameVideo').src = newData.UrlVideo;
+                        }
+                        document.getElementById(divNew).style.display = 'none';
+                        document.getElementById(divOld).style.display = 'block';
                     }
                 },
 
