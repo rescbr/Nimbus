@@ -720,6 +720,7 @@
       <SubType>Code</SubType>
     </Content>
     <Content Include="Website\Views\NotificationPartials\Message.cshtml" />
+    <Content Include="Website\Views\InfoToEditTopic.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\Controllers\DatabaseController.cs" />

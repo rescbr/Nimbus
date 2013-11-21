@@ -1,0 +1,41 @@
+﻿@model Nimbus.Web.Website.Models.TopicModel
+
+@Scripts.Render("~/Scripts/jquery.form.js")
+
+<div id="divInfos">
+    <p>Nome: <input id="iptNewTitle" value="@Model.CurrentTopic.Title" /></p>
+    <p>Descrição:<input id="iptNewDescription" value="@Model.CurrentTopic.Description" /></p>
+    <p>
+        Imagem ilustrativa:
+        <div id="divImgTopico">
+            <img id="imgNewPrevia" src="@Model.CurrentTopic.ImgUrl" height="100" width="150" />
+        </div>
+    </p>
+    <form action='/channel/upload' method="post" enctype="multipart/form-data" name="imagem_original">
+        <input type="file" name="iptNewImgTopic" id="iptNewImgTopic" />
+        <input type="submit" value="Carregar" class="hidden" style="display:none" id="upload" /><br />
+        <label>Imagem de no máx. 5MB</label>
+        <input type="hidden" id="url" name="url" />
+    </form>
+
+    
+</div>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $(document).on('change', 'input[name=iptNewImgTopic]', function () {
+            $("#upload").click();
+        });
+
+        $('form[name=imagem_original]').ajaxForm({
+            dataType: 'json',
+            success: function (data) {
+                $('input[name=url]').val(data.url);
+                $("#imgNewPrevia").attr("src", data.url);
+            }
+        });
+    });
+
+</script>

@@ -5,6 +5,10 @@
 </div>
 
 <div id="divEditVideo" style="display:none;">
+    <div>
+        @RenderPage("~/Website/Views/InfoToEditTopic.cshtml")
+    </div>
+
     <input type="text" id="iptTitlevideo" name="iptTitlevideo" value="URL do vídeo" onfocus="javascript: this.value = ''" 
            onchange="getUrlVideo(this.name, 'divFrameNewVideo', 'iframeNewVideo');" />
     <label>Somente url do youtube</label><br />
