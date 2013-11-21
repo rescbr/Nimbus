@@ -1,6 +1,8 @@
 ﻿@model Nimbus.Web.Website.Models.TopicModel
 
 @Scripts.Render("~/Scripts/jquery.form.js")
+@Styles.Render("~/Styles/jHtmlArea.css")
+@Scripts.Render("~/Scripts/jHtmlArea-0.8.js")
 
 <div id="divInfos">
     <p>Nome: <input id="iptNewTitle" value="@Model.CurrentTopic.Title" /></p>
@@ -34,7 +36,7 @@
                  Model.CurrentTopic.TopicType == Nimbus.Model.Enums.TopicType.discussion)
         {
             <div id="divNewText">
-                <textarea id="txtaArticle" required class="ckeditor">@Model.CurrentTopic.Text</textarea>
+                <textarea id="txtaArticle" required>@Model.CurrentTopic.Text</textarea>
             </div>
         }
         else if (Model.CurrentTopic.TopicType == Nimbus.Model.Enums.TopicType.exam)
@@ -83,4 +85,12 @@
         });
     });
 
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        $('#txtaArticle').width(500);
+        $('#txtaArticle').height(500);
+        $('#txtaArticle').htmlarea();
+    });
 </script>
