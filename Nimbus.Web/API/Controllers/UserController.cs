@@ -153,12 +153,12 @@ namespace Nimbus.Web.API.Controllers
                    var query = db.Query<Model.ORM.User>(
                    #region Queryzinha
 @"
-SELECT [tUser].[Id], [tUser].[Email], [tUser].[Password], [tUser].[TOTPKey], [tUser].[BirthDate], [tUser].[Occupation], [tUser].[Interest], [tUser].[Experience], [tUser].[FirstName], [tUser].[LastName], [tUser].[AvatarUrl], [tUser].[About], [tUser].[City], [tUser].[State], [tUser].[Country]
+SELECT [tUser].[Id], [tUser].[FirstName], [tUser].[LastName], [tUser].[AvatarUrl]
 FROM [ChannelUser]
 INNER JOIN [Role] ON [ChannelUser].[ChannelId] = [Role].[ChannelId]
 OUTER APPLY (
 
-    SELECT TOP (1) 1 AS [test], [User].[Id], [User].[Email], [User].[Password], [User].[TOTPKey], [User].[BirthDate], [User].[Occupation], [User].[Interest], [User].[Experience], [User].[FirstName], [User].[LastName], [User].[AvatarUrl], [User].[About], [User].[City], [User].[State], [User].[Country]
+    SELECT TOP (1) 1 AS [test], [User].[Id], [User].[Occupation], [User].[Interest], [User].[FirstName], [User].[LastName], [User].[AvatarUrl]
     FROM [User]
     WHERE ([User].[Id] = [ChannelUser].[UserId]) AND 
 			(([User].[FirstName] LIKE @strQuery) OR 
