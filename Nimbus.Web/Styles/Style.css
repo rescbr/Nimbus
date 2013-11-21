@@ -1053,7 +1053,7 @@ nav.chanTopBar {
     margin-right:       10px;
 }
 
-div#divNotifications, div#divComments, div#divPopularTopics, div#divAllTopics {
+div.divNotifications, div#divComments, div#divPopularTopics, div#divAllTopics {
     margin:             0 auto;
     height:             100%;
 }
@@ -1338,7 +1338,7 @@ div.delComment {
 
 /**/
 
-#divNotification {
+.divNotification {
     background:         #d1d3d4;
     margin-bottom:      20px;
     margin-top:         20px;
@@ -1418,7 +1418,7 @@ nav.chanTopBar {
     margin-right:       10px;
 }
 
-div#divNotifications, div#divComments, div#divPopularTopics, div#divAllTopics {
+div.divNotifications, div#divComments, div#divPopularTopics, div#divAllTopics {
     margin:             0 auto;
     height:             100%;
 }

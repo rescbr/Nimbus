@@ -6,11 +6,12 @@
 
 function newMessageNotification(msg) {
     try {
-        var wrapperUser = document.getElementById("wrapperUser");
-        var divMyChannels = document.getElementById("divMyChannels");
-        var msgElement = makeElementFromHtml(msg);
-
-        wrapperUser.insertBefore(msgElement, divMyChannels);
+        var divNotif = document.getElementById("divNotification");
+        if (divNotif.children.length == 0) {
+            divNotif.innerHTML = msg;
+        } else {
+            divNotif.insertBefore(makeElementFromHtml(msg), divNotif.children[0]);
+        }
         
     } catch (e) { }
     
