@@ -1,6 +1,8 @@
 ﻿@model Nimbus.Web.Website.Models.TopicModel
 
 @Scripts.Render("~/Scripts/jquery.form.js")
+@Scripts.Render("~/Scripts/ViewChannelScripts.js")
+
 
 <div id="divInfos">
     <p>Nome: <input id="iptNewTitle" value="@Model.CurrentTopic.Title" /></p>
@@ -48,19 +50,33 @@
 
                     <section>
                         <p>Pergunta:</p>
-                        <p><strong>@(i + 1)</strong> -<input type="text" value="@question.TextQuestion" /></p>
+                        <p><strong>@(i + 1)</strong> -<input id="QuestionPerg@(i + 1)" name="enunciadoOld" type="text" value="@question.TextQuestion" /></p>
 
                         <p>Respostas:</p>
-                        @foreach (var answer in answers)
-                        {
-                            //imprime as questoes
-                            <input type="radio" name="@i" value="@answer.Key" /><input type="text" value="@answer.Value" /><br />
-                        }
+                        <ul>
+                            @{
+                                int j = 0;                               
+                                foreach (var answer in answers)
+                                {
+                                                               
+                                    //imprime as questoes
+                                    <li id="liPerg_@i">
+                                        <input id="rdbPerg@(i+1)_opt@(j+1)" type="radio" name="@i" value="@answer.Key" />
+                                        <input id="txtPerg@(i+1)_opt@(j+1)" type="text" value="@answer.Value" />
+                                    </li>
+                                    j++;
+                                }
+                            }
+                       </ul>
                     </section>
                 }    
             </div>
             
-                <div>
+            <div>
+                <script>
+                    CurrentQuestion = '1';
+                </script>
+                <p><h1>Criar novas questões:</h1></p>
             <div id="divExam">
                 <div id="divPergunta1">
                     <p>
@@ -72,12 +88,12 @@
                         <ul id="ulPerg1">
                             <li id="liPerg1_opt1">
                                 @*pergunta 1 _ opçao 1*@
-                                <input type="radio" name="radio" id="rdbPerg1_opt1" />
+                                <input type="radio" name="radio_perg1" id="rdbPerg1_opt1" />
                                 <input id="txtPerg1_opt1" name="resposta" type="text" onfocus="javascript: this.value = ''" value="Opção 1" />
                             </li>
-                            <li id="liPerg1_opt2" onclick="DisableOption('2', 'divPergunta1');">
-                                <input type="radio" name="radio" id="rdbPerg1_opt2" disabled="disabled" />
-                                <input id="txtPerg1_opt2" name="resposta" type="text" disabled="disabled" onfocus="javascript: this.value = ''" value="Opção 2" />
+                            <li id="liPerg1_opt2">
+                                <input type="radio" class="fakeDisable" name="radio_perg1" id="rdbPerg1_opt2" />
+                                <input id="txtPerg1_opt2" class="fakeDisable" onclick="DisableOption('2', 'divPergunta1');" name="resposta" type="text" value="Opção 2" />
                             </li>
                         </ul>
                     </div>

@@ -96,19 +96,22 @@ function examEdit()
 {  
         var questionData = {}
         var listQuestion = []
-        var listPerg = document.getElementsByName('enunciado');
+        var listNewPerg = document.getElementsByName('enunciado');
+        var listOldPerg = document.getElementsByName('enunciadoOld');
         var isChecked = false;
-        for (perg = 0; perg < listPerg.length; perg++) //para cada pergunta
+        var isCheckedOld = false;
+
+        //para novas perguntas
+        for (perg = 0; perg < listNewPerg.length; perg++) //para cada pergunta
         {
-            var item = listPerg[perg];
+            var item = listNewPerg[perg];
             questionData["TextQuestion"] = item.value; //pego o conteudo = enunciado   
 
             var currentPerg = item.id.replace("QuestionPerg", ""); //pega o indice da pergunta atual
-
             var listOpt = [];
             var dictionary = new Object();
 
-            $("#divExam li").each(function () {//pego todas as opções
+            $("#divExam li").each(function () {//pego todas as opções novas
                 var id = this.id;
                 if (id.indexOf("liPerg") > -1) {
                     listOpt.push(id);
@@ -133,5 +136,48 @@ function examEdit()
                 listQuestion.push(questionData);
             }
         }
+
+            //para velhas perguntas
+            for (perg = 0; perg < listOldPerg.length; perg++) //para cada pergunta
+            {
+                var item = listOldPerg[perg];
+                questionData["TextQuestion"] = item.value; //pego o conteudo = enunciado   
+
+                 if (item.style.display != "none") { 
+                    var currentPerg = item.id.replace("QuestionPerg", ""); //pega o indice da pergunta atual
+
+                    var listOldOpt = [];
+                    var dictionary = new Object();
+
+                    $("#divNewExam li").each(function () {//pego todas as opções que existiam
+                        var id = this.id;
+                        if (id.indexOf("liPerg_") > -1) {
+                            listOldOpt.push(id);
+                        }
+                    });
+
+                    for (option = 0; option < listOldOpt.length; option++) {
+
+                        var rdbOption = document.getElementById('rdbPerg' + currentPerg + '_opt' + (option + 1));
+                        var txtOption = document.getElementById('txtPerg' + currentPerg + '_opt' + (option + 1));
+
+                        if (rdbOption.style.display != "none" && txtOption.style.display != "none") {
+                            if (txtOption.value != "Opção " + (option + 1) && txtOption.value != "") {
+                                if (rdbOption.checked == true) {
+                                    questionData["CorrectAnswer"] = option + 1; //passa o indice da resposta certa + 1 .'. o for começa do zero                    
+                                    isCheckedOld = true;
+                                }
+                                dictionary[option + 1] = txtOption.value; //dictionary<int, string>
+
+                                questionData["ChoicesAnswer"] = dictionary;
+                            }
+                        }
+                    }
+                    if (isCheckedOld == true) {
+                        listQuestion.push(questionData);
+                    }
+                }
+            }
+
         return listQuestion;
 }

@@ -76,6 +76,7 @@ function DisableOption(currentOpt, nameDiv)
     rdb.removeAttribute('class');
     var txt = document.getElementById("txtPerg" + indexActive + "_opt" + currentOpt);
     txt.removeAttribute('class');
+    txt.setAttribute('onclick','');
     txt.value = "";
     document.getElementById("liPerg" + indexActive + "_opt" + currentOpt).removeAttribute("onClick");
 
