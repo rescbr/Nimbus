@@ -19,8 +19,8 @@ function clickEditTopic(id, topicType)
 }
 
 function ajaxEditTopic(id, topicType, divOld) {
-    var video;
-    var text; var exam;
+    var video; 
+    var text; var exam = [];
     var ajaxData = {}  
 
     if (topicType == 'video') {
@@ -33,12 +33,12 @@ function ajaxEditTopic(id, topicType, divOld) {
         text = CKEDITOR.instances.txtaTextMsg.getData();
     }
     if (topicType == 'exam') {
-        //TODO editar exam
+        exam = examEdit();
     }
 
     title = document.getElementById('iptNewTitle').value;
 
-    if (title != "" && id > 0 && (text != "" || video != "" || exam != "")) {
+    if (title != "" && id > 0 && (text != "" || video != "" || exam.length > 0)) {
 
         ajaxData["Title"] = title
         ajaxData["Id"] = id;
@@ -64,20 +64,20 @@ function ajaxEditTopic(id, topicType, divOld) {
                         {
                             document.getElementById('iFrameVideo').src = newData.UrlVideo;
                         }
-                        else if (newData.topicType == 0 || newData.topicType == 2)
+                        else if (newData.TopicType == 0 || newData.TopicType == 2)
                         {
                             document.getElementById('pTopicText').innerHTML = newData.Text;
                         }
-                        else if (newData.topicType == 3) {
+                        else if (newData.TopicType == 3) {
                             //TODO
-                        }
+                        }                                             
+
+                        document.getElementById('divRenderEdit').style.display = 'none';
+                        document.getElementById(divOld).style.display = 'block';
 
                         document.getElementById('iptNewTitle').value = newData.Title;
                         document.getElementById('imgNewPrevia').src = newData.ImgUrl;
                         document.getElementById('iptNewDescription').value = newData.Description;
-
-                        document.getElementById('divRenderEdit').style.display = 'none';
-                        document.getElementById(divOld).style.display = 'block';
                     }
                 },
 
@@ -90,4 +90,48 @@ function ajaxEditTopic(id, topicType, divOld) {
 
     }
 
+}
+
+function examEdit()
+{  
+        var questionData = {}
+        var listQuestion = []
+        var listPerg = document.getElementsByName('enunciado');
+        var isChecked = false;
+        for (perg = 0; perg < listPerg.length; perg++) //para cada pergunta
+        {
+            var item = listPerg[perg];
+            questionData["TextQuestion"] = item.value; //pego o conteudo = enunciado   
+
+            var currentPerg = item.id.replace("QuestionPerg", ""); //pega o indice da pergunta atual
+
+            var listOpt = [];
+            var dictionary = new Object();
+
+            $("#divExam li").each(function () {//pego todas as opções
+                var id = this.id;
+                if (id.indexOf("liPerg") > -1) {
+                    listOpt.push(id);
+                }
+            });
+
+            for (option = 0; option < listOpt.length; option++) {
+                var rdbOption = document.getElementById('rdbPerg' + currentPerg + '_opt' + (option + 1));
+                var txtOption = document.getElementById('txtPerg' + currentPerg + '_opt' + (option + 1));
+
+                if (txtOption.value != "Opção " + (option + 1) && txtOption.value != "") {
+                    if (rdbOption.checked == true) {
+                        questionData["CorrectAnswer"] = option + 1; //passa o indice da resposta certa + 1 .'. o for começa do zero                    
+                        isChecked = true;
+                    }
+                    dictionary[option + 1] = txtOption.value; //dictionary<int, string>
+
+                    questionData["ChoicesAnswer"] = dictionary;
+                }
+            }
+            if (isChecked == true) {
+                listQuestion.push(questionData);
+            }
+        }
+        return listQuestion;
 }
