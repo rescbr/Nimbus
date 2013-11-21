@@ -183,12 +183,12 @@
                                 <ul id="ulPerg1">
                                     <li id="liPerg1_opt1">
                                         @*pergunta 1 _ opçao 1*@
-                                        <input type="radio" name="radio" id="rdbPerg1_opt1" />
+                                        <input type="radio" name="radio_perg1" id="rdbPerg1_opt1" />
                                         <input id="txtPerg1_opt1" name="resposta" type="text" onfocus="javascript: this.value = ''" value="Opção 1" />
                                     </li>
-                                    <li id="liPerg1_opt2" onclick="DisableOption('2', 'divPergunta1');">
-                                        <input type="radio" name="radio" id="rdbPerg1_opt2" disabled="disabled" />
-                                        <input id="txtPerg1_opt2" name="resposta" type="text" disabled="disabled" onfocus="javascript: this.value = ''" value="Opção 2" />
+                                    <li id="liPerg1_opt2">
+                                        <input type="radio" class="fakeDisable" name="radio_perg1" id="rdbPerg1_opt2"  />
+                                        <input id="txtPerg1_opt2" class="fakeDisable" onclick="DisableOption('2', 'divPergunta1');" name="resposta" type="text" value="Opção 2" />
                                     </li>
                                 </ul>
                             </div>
@@ -197,7 +197,7 @@
                     <button id="bntAddItem" onclick="CreatedDivQuestion();">Add item</button>
                 </div>
                 <br />
-
+             
                 <button id="btnSalvar" onclick="SaveNewTopic(@Model.CurrentChannel.Id, false);">Salvar tópico</button>
             </div>
         </div>

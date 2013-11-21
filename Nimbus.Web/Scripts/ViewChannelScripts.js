@@ -47,12 +47,12 @@ function CreatedDivQuestion()
      "<div>"+
          "<ul id=\"ulPerg" + nextPerg + "\">" +
            "<li id=\"liPerg" + nextPerg + "_opt1\">" + //ex: pergunta 1 _ opçao 1
-                "<input type=\"radio\" name=\"radio\" id=\"rdbPerg" + nextPerg + "_opt1\" />" +
+                "<input type=\"radio\" name=\"radio_perg"+nextPerg+"\" id=\"rdbPerg" + nextPerg + "_opt1\" />" +
                 "<input id=\"txtPerg" + nextPerg + "_opt1\" name=\"resposta\" type=\"text\" onfocus=\"javascript: this.value = ''\" value=\"Opção 1\" />" +
             "</li>"+
-            "<li id=\"liPerg" + nextPerg + "_opt2\" onclick=\"DisableOption('2', 'divPergunta" + nextPerg + "');\">" +
-                 "<input type=\"radio\" name=\"radio\" id=\"rdbPerg" + nextPerg + "_opt2\" disabled=\"disabled\" />" +
-                 "<input id=\"txtPerg" + nextPerg + "_opt2\" name=\"resposta\" type=\"text\" disabled=\"disabled\" onfocus=\"javascript: this.value = ''\" value=\"Opção 2\" />" +
+            "<li id=\"liPerg" + nextPerg + "_opt2\" >" +
+                 "<input type=\"radio\" name=\"radio_perg" + nextPerg + "\" id=\"rdbPerg" + nextPerg + "_opt2\" class=\"fakeDisable\" />" +
+                 "<input id=\"txtPerg" + nextPerg + "_opt2\" name=\"resposta\" type=\"text\" class=\"fakeDisable\" onclick=\"DisableOption('2', 'divPergunta" + nextPerg + "');\" value=\"Opção 2\" />" +
              "</li>"+
          "</ul>"+ 
     "</div>"+
@@ -73,9 +73,10 @@ function DisableOption(currentOpt, nameDiv)
         indexActive = CurrentQuestion
 
     var rdb = document.getElementById("rdbPerg" + indexActive + "_opt" + currentOpt);//ex: rdbPerg1_opt2
-    rdb.removeAttribute('disabled');
+    rdb.removeAttribute('class');
     var txt = document.getElementById("txtPerg" + indexActive + "_opt" + currentOpt);
-    txt.removeAttribute('disabled');
+    txt.removeAttribute('class');
+    txt.value = "";
     document.getElementById("liPerg" + indexActive + "_opt" + currentOpt).removeAttribute("onClick");
 
     
@@ -84,9 +85,9 @@ function DisableOption(currentOpt, nameDiv)
 
     var index = parseInt(name) + 1; //index da prox opção a ser inserida
     
-    var campo = "<li id=\"liPerg" + indexActive + "_opt" + index + "\" onclick=\"DisableOption('" + index + "', 'divPergunta" + indexActive + "');\">" +
-                      "<input type=\"radio\" name=\"radio\" id=\"rdbPerg" + indexActive + "_opt" + index + "\" disabled=\"disabled\" />" +
-                      "<input id=\"txtPerg" + indexActive + "_opt" + index + "\" name=\"resposta\" type=\"text\" disabled=\"disabled\" onfocus=\"javascript: this.value = ''\" value=\"Opção " + index + "\" />" +
+    var campo = "<li id=\"liPerg" + indexActive + "_opt" + index + "\" >" +
+                      "<input type=\"radio\" name=\"radio\" id=\"rdbPerg" + indexActive + "_opt" + index + "\" class=\"fakeDisable\" />" +
+                      "<input id=\"txtPerg" + indexActive + "_opt" + index + "\" onclick=\"DisableOption('" + index + "', 'divPergunta" + indexActive + "');\" name=\"resposta\" type=\"text\" class=\"fakeDisable\" value=\"Opção " + index + "\" />" +
                 "</li>";
     
     $("#"+ nameDiv + " ul").append(campo);

@@ -188,19 +188,28 @@ namespace Nimbus.Web.API.Controllers
                             if (isOwner == true || isManager == true)
                             {
                                 Topic tpc = db.SelectParam<Topic>(tp => tp.Id == topic.Id).FirstOrDefault();
-                                tpc.Description = topic.Description;
+                                tpc.Description = HttpUtility.HtmlEncode(topic.Description);
 
                                 if (string.IsNullOrEmpty(topic.ImgUrl))
                                 {
                                     int idCtg = db.SelectParam<Channel>(ch => ch.Id == tpc.ChannelId).Select(ch => ch.CategoryId).FirstOrDefault();
-                                    tpc.ImgUrl = "/" + db.SelectParam<Category>(ct => ct.Id == 1).Select(ct => ct.ImageUrl).FirstOrDefault();
+                                    tpc.ImgUrl =db.SelectParam<Category>(ct => ct.Id == 1).Select(ct => ct.ImageUrl).FirstOrDefault();
                                 }
-                                tpc.LastModified = DateTime.Now;
-                                //tpc.Question = topic.Question;
-                                tpc.Text = topic.Text;
-                                tpc.Title = topic.Title;
-                                tpc.UrlCapa = topic.UrlCapa != null ? topic.UrlCapa : tpc.UrlCapa;
-                                tpc.UrlVideo = topic.UrlVideo;
+                                tpc.LastModified = DateTime.Now;                                
+                                tpc.Text =  HttpUtility.HtmlEncode(topic.Text);
+                                if (topic.TopicType == Model.Enums.TopicType.exam)
+                                {
+                                    foreach (var item in topic.Question)
+                                    {
+                                        item.TextQuestion = HttpUtility.HtmlEncode(item.TextQuestion);
+                                        //colocar encode nas opçoes
+                                    }
+                                    tpc.Question = topic.Question;
+                                }
+
+                                tpc.Title = HttpUtility.HtmlEncode(topic.Title);
+                                tpc.UrlCapa = topic.UrlCapa != null ?  HttpUtility.HtmlEncode(topic.UrlCapa) : tpc.UrlCapa;
+                                tpc.UrlVideo =  HttpUtility.HtmlEncode(topic.UrlVideo);
                                 tpc.Visibility = true;
                                 if (string.IsNullOrEmpty(topic.Price.ToString()))
                                 {
@@ -210,9 +219,17 @@ namespace Nimbus.Web.API.Controllers
                                 {
                                     tpc.Price = topic.Price;
                                 }
+                                
 
                                 db.Update<Topic>(tpc);
                                 trans.Commit();
+
+                                topic.Title = HttpUtility.HtmlDecode(topic.Title);
+                                topic.Description = HttpUtility.HtmlDecode(topic.Description);
+                                topic.ImgUrl = HttpUtility.HtmlDecode(topic.ImgUrl);
+                                topic.Text = HttpUtility.HtmlDecode(topic.Text);
+                                topic.Title = HttpUtility.HtmlDecode(topic.Title);
+
                                 return topic;
                             }
                             else
