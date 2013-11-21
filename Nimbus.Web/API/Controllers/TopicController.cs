@@ -199,7 +199,7 @@ namespace Nimbus.Web.API.Controllers
                                 //tpc.Question = topic.Question;
                                 tpc.Text = topic.Text;
                                 tpc.Title = topic.Title;
-                                tpc.UrlCapa = topic.UrlCapa;
+                                tpc.UrlCapa = topic.UrlCapa != null ? topic.UrlCapa : tpc.UrlCapa;
                                 tpc.UrlVideo = topic.UrlVideo;
                                 tpc.Visibility = true;
                                 if (string.IsNullOrEmpty(topic.Price.ToString()))

@@ -1,17 +1,14 @@
 ﻿@model Nimbus.Web.Website.Models.TopicModel
 
-<div id="divCurrentText">
+<div id="divCurrent_@Model.CurrentTopic.TopicType">
 
-    <p>
-         @(new HtmlString(Model.CurrentTopic.Text))
+    <p id="pTopicText">
+        @(new HtmlString(Model.CurrentTopic.Text))
     </p>
 
 </div>
 
-<div id="divNewText" style="display:none;">
-    <textarea id="txtaArticle" required class="ckeditor">@Model.CurrentTopic.Text</textarea>
 
-    <div>
-        <button value="Salvar" onclick="ajaxEditTopic(@Model.CurrentTopic.Id, '@Model.CurrentTopic.TopicType', 'divCurrentText','divNewText')"></button>
-    </div>
+<div id="divRenderEdit" style="display:none;">
+    @RenderPage("~/Website/Views/InfoToEditTopic.cshtml")
 </div>

@@ -18,7 +18,52 @@
         <input type="hidden" id="url" name="url" />
     </form>
 
-    
+        @if(Model.CurrentTopic.TopicType == Nimbus.Model.Enums.TopicType.video)
+        {            
+            <div id="divEditVideo">               
+                <input type="text" id="iptTitlevideo" name="iptTitlevideo" value="URL do vídeo" onfocus="javascript: this.value = ''" 
+                       onchange="getUrlVideo(this.name, 'divFrameNewVideo', 'iframeNewVideo');" />
+                <label>Somente url do youtube</label><br />
+                <div id="divFrameNewVideo" style="display:none;">
+                    <iframe name="iframeNewVideo" width="420" height="345" id="iframeNewVideo" src=""></iframe>
+                </div>                
+            </div>
+
+        }
+        else if (Model.CurrentTopic.TopicType == Nimbus.Model.Enums.TopicType.text ||
+                 Model.CurrentTopic.TopicType == Nimbus.Model.Enums.TopicType.discussion)
+        {
+            <div id="divNewText">
+                <textarea id="txtaArticle" required class="ckeditor">@Model.CurrentTopic.Text</textarea>
+            </div>
+        }
+        else if (Model.CurrentTopic.TopicType == Nimbus.Model.Enums.TopicType.exam)
+        {
+            <div id="divNewExam">
+                @for (int i = 0; i < Model.CurrentTopic.Question.Count; i++)
+                {
+                    var question = Model.CurrentTopic.Question[i];
+                    var answers = question.ChoicesAnswer.ToList();
+
+                    <section>
+                        <p>Pergunta:</p>
+                        <p><strong>@(i + 1)</strong> -<input type="text" value="@question.TextQuestion" /></p>
+
+                        <p>Respostas:</p>
+                        @foreach (var answer in answers)
+                        {
+                            //imprime as questoes
+                            <input type="radio" name="@i" value="@answer.Key" /><input type="text" value="@answer.Value" /><br />
+                        }
+                    </section>
+        
+                    <p>Colocar p salvar</p>
+                }    
+            </div>
+        }
+    <div>
+        <button value="Salvar" onclick="ajaxEditTopic(@Model.CurrentTopic.Id, '@Model.CurrentTopic.TopicType', 'divCurrent_@Model.CurrentTopic.TopicType')"> Salvar</button>
+    </div>
 </div>
 
 

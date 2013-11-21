@@ -1,23 +1,10 @@
 ﻿@model Nimbus.Web.Website.Models.TopicModel
 
-<div id="divCurrentVideo">
+<div id="divCurrent_@Model.CurrentTopic.TopicType">
     <iframe id="iFrameVideo" src="@Model.CurrentTopic.UrlVideo" width="560" height="315" frameborder="0" allowfullscreen></iframe>
 </div>
 
-<div id="divEditVideo" style="display:none;">
-    <div>
-        @RenderPage("~/Website/Views/InfoToEditTopic.cshtml")
-    </div>
-
-    <input type="text" id="iptTitlevideo" name="iptTitlevideo" value="URL do vídeo" onfocus="javascript: this.value = ''" 
-           onchange="getUrlVideo(this.name, 'divFrameNewVideo', 'iframeNewVideo');" />
-    <label>Somente url do youtube</label><br />
-    <div id="divFrameNewVideo" style="display:none;">
-        <iframe name="iframeNewVideo" width="420" height="345" id="iframeNewVideo" src=""></iframe>
-    </div>
-
-    <div>
-        <button value="Salvar" onclick="ajaxEditTopic(@Model.CurrentTopic.Id, '@Model.CurrentTopic.TopicType', 'divCurrentVideo','divEditVideo')"> Salvar</button>
-    </div>
+<div id="divRenderEdit" style="display:none;">
+    @RenderPage("~/Website/Views/InfoToEditTopic.cshtml")
 </div>
 

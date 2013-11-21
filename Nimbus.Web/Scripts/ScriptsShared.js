@@ -49,10 +49,10 @@ function DisabledBtn(nameButton)
 function getUrlVideo(nomeCampo, nomeDiv, nomeFrame) {
     var text = document.getElementById(nomeCampo).value;
     var queryurl;
-    if (text.indexof("/embed") <= 0) {
+    if (text.indexOf("/embed") <= 0) {
         if (text.length >= 11) {
             if (text.indexOf("youtube.be/") > 0) {
-                var params = text.search.substr(text.search.indexof("be/") + 3);
+                var params = text.search.substr(text.search.indexOf("be/") + 3);
                 queryurl = "//www.youtube.com/embed/" + params;
             }
             else
@@ -74,7 +74,7 @@ function getUrlVideo(nomeCampo, nomeDiv, nomeFrame) {
     if (queryurl.length > 34) {
         document.getElementById(nomeFrame).src = queryurl;
         document.getElementById(nomeDiv).style.display = 'block';
-    }
+    }  
 
 }
 

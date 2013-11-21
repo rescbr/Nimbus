@@ -2,34 +2,26 @@
 
 function clickEditTopic(id, topicType)
 {
-    var divNone; var divBlock;
     if (topicType == "video")
     {
-        document.getElementById('divCurrentVideo').style.display = 'none';
-        document.getElementById('divEditVideo').style.display = 'block';
+        document.getElementById('divCurrent_'+topicType).style.display = 'none';
     }
     else
         if (topicType == "text" || topicType == "discussion")
     { 
-        document.getElementById('divCurrentText').style.display = 'none';
-        document.getElementById('divNewText').style.display = 'block';
+            document.getElementById('divCurrent_'+topicType).style.display = 'none';
     }
     else
     if (topicType == "exam") {
-        document.getElementById('divCurrentExam').style.display = 'none';
-        document.getElementById('divNewExam').style.display = 'block';
-    }   
+        document.getElementById('divCurrent_'+topicType).style.display = 'none';
+    }
+    document.getElementById('divRenderEdit').style.display = 'block';
 }
 
-function ajaxEditTopic(id, topicType, divOld, divNew) {
+function ajaxEditTopic(id, topicType, divOld) {
     var video;
     var text; var exam;
-    var title = "teste";
-    var ajaxData = {}
-
-   // var title = document.getElementById("").value;
-   // var ImgUrl = document.getElementById("").value;
-   // var shortDescription = document.getElementById("").value;
+    var ajaxData = {}  
 
     if (topicType == 'video') {
         video = document.getElementById('iframeNewVideo').src;
@@ -44,13 +36,15 @@ function ajaxEditTopic(id, topicType, divOld, divNew) {
         //TODO editar exam
     }
 
-    if (/*title != "" &&*/ id > 0 && (text != "" || video != "" || exam != "")) {
+    title = document.getElementById('iptNewTitle').value;
 
-        ajaxData["Title"] = title;
+    if (title != "" && id > 0 && (text != "" || video != "" || exam != "")) {
+
+        ajaxData["Title"] = title
         ajaxData["Id"] = id;
         ajaxData["ChannelId"] = channelID;
-        //ajaxData["ImgUrl"] = ImgUrl;
-        ajaxData["Description"] = "TESTANDO AO SOM DE MANANANAMANAAAAAA";// shortDescription;
+        ajaxData["ImgUrl"] = document.getElementById('imgNewPrevia').src;
+        ajaxData["Description"] = document.getElementById('iptNewDescription').value;
         ajaxData["TopicType"] = topicType;
         ajaxData["Text"] = text;
         ajaxData["UrlVideo"] = video;
@@ -63,20 +57,33 @@ function ajaxEditTopic(id, topicType, divOld, divNew) {
             contentType: "application/json;charset=utf-8",
             statusCode: {
                 200: function (newData) {
+                    /* 0 = text, 1= video, 2=discussion, 3=exam*/
                     if (newData != null)
                     {                      
                         if (newData.TopicType == 1)
                         {
                             document.getElementById('iFrameVideo').src = newData.UrlVideo;
                         }
-                        document.getElementById(divNew).style.display = 'none';
+                        else if (newData.topicType == 0 || newData.topicType == 2)
+                        {
+                            document.getElementById('pTopicText').innerHTML = newData.Text;
+                        }
+                        else if (newData.topicType == 3) {
+                            //TODO
+                        }
+
+                        document.getElementById('iptNewTitle').value = newData.Title;
+                        document.getElementById('imgNewPrevia').src = newData.ImgUrl;
+                        document.getElementById('iptNewDescription').value = newData.Description;
+
+                        document.getElementById('divRenderEdit').style.display = 'none';
                         document.getElementById(divOld).style.display = 'block';
                     }
                 },
 
                 400: function () {
                     //erro
-                    ajaxTopicCallback(newData);
+                    window.alert("Não foi possível enviar seu comentário. Tente novamente mais tarde.");
                 }
             }
         });

@@ -1,7 +1,7 @@
 ﻿@using Nimbus.Extensions @* para utilizar o IList<>.Shuffle() *@
 @model Nimbus.Web.Website.Models.TopicModel
 
-<div id="divCurrentExam">
+<div id="divCurrent_@Model.CurrentTopic.TopicType">
     @for (int i = 0; i < Model.CurrentTopic.Question.Count; i++)
     {
         var question = Model.CurrentTopic.Question[i];
@@ -9,10 +9,10 @@
         answers.Shuffle();
 
         <section>
-            <p><strong>@(i+1)</strong> - @question.TextQuestion</p>
-            
-            @foreach(var answer in answers)
-            { 
+            <p><strong>@(i + 1)</strong> - @question.TextQuestion</p>
+
+            @foreach (var answer in answers)
+            {
                 //imprime as questoes
                 <input type="radio" name="@i" value="@answer.Key" />@answer.Value<br />
             }
@@ -29,25 +29,6 @@
     *@
 </div>
 
-<div id="divNewExam" style="display:none;">
-    @for (int i = 0; i < Model.CurrentTopic.Question.Count; i++)
-    {
-        var question = Model.CurrentTopic.Question[i];
-        var answers = question.ChoicesAnswer.ToList();
-
-        <section>
-            <p>Pergunta:</p>
-            <p><strong>@(i + 1)</strong> -<input type="text" value="@question.TextQuestion" /></p>
-
-            <p>Respostas:</p>
-            @foreach (var answer in answers)
-            {
-                //imprime as questoes
-                <input type="radio" name="@i" value="@answer.Key" /><input type="text" value="@answer.Value" /><br />
-            }
-        </section>
-        
-        <p>Colocar p salvar</p>
-    }
-    
+<div id="divRenderEdit" style="display:none;">
+    @RenderPage("~/Website/Views/InfoToEditTopic.cshtml")
 </div>
