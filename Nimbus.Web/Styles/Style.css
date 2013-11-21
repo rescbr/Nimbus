@@ -717,7 +717,7 @@ div.postContent_m {
 
 /*------------------ Private Profile - Att --------------------*/
 
-#divNotification {
+.divNotification {
     background:         #d1d3d4;
     margin-bottom:      20px;
     margin-top:         20px;
@@ -727,7 +727,7 @@ div.postContent_m {
     border-bottom:      2px solid #87c240;
 }
 
-#imgNotification {
+.imgNotification {
     background:         #bcbec0;
     width:              60px;
     height:             60px;
@@ -735,25 +735,25 @@ div.postContent_m {
     margin:             5px;
 }
 
-p#timeNotification {
+p.timeNotification {
     margin-right:       5px;
     float:              right;
     font-size:          xx-small;
 }
 
-p#txtNotification {
+p.txtNotification {
     padding-top:          24px;
     font-size:           medium;
 }
 
-div#attChoice {
+div.attChoice {
     margin-top:         38px;
     margin-left:        408px;
     position:           absolute;
     display:            inline-block;
 }
 
-div#btnAccept{
+div.btnAccept{
     margin-left:        5px;
     float:              left;
     width:              48px;
@@ -762,12 +762,12 @@ div#btnAccept{
     background:         #2b2d2e;
 }
 
-div#btnAccept p{
+div.btnAccept p{
     color:              #FFFFFF;
     text-align:         center;
 }
 
-div#btnAccept:hover, div#btnAccept:hover p {
+div.btnAccept:hover, div.btnAccept:hover p {
     color:              #87c240;
     cursor:             pointer;
 }
@@ -1053,7 +1053,7 @@ nav.chanTopBar {
     margin-right:       10px;
 }
 
-div#divNotifications, div#divComments, div#divPopularTopics, div#divAllTopics {
+div.divNotifications, div#divComments, div#divPopularTopics, div#divAllTopics {
     margin:             0 auto;
     height:             100%;
 }
@@ -1338,7 +1338,7 @@ div.delComment {
 
 /**/
 
-#divNotification {
+.divNotification {
     background:         #d1d3d4;
     margin-bottom:      20px;
     margin-top:         20px;
@@ -1418,7 +1418,7 @@ nav.chanTopBar {
     margin-right:       10px;
 }
 
-div#divNotifications, div#divComments, div#divPopularTopics, div#divAllTopics {
+div.divNotifications, div#divComments, div#divPopularTopics, div#divAllTopics {
     margin:             0 auto;
     height:             100%;
 }

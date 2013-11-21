@@ -9,7 +9,7 @@
     nimbusRegisterMessageNotifications = true;
 </script>
 
-<div class="wrapperUser">
+<div class="wrapperUser" id="wrapperUser">
     <nav class="profTopBar">
         <ul class="sbs">
             <li class="press"><a name="divNotification" onclick="EnableDiv(this.name,'currentDiv');"><p>Atualizações</p></a></li>
@@ -17,11 +17,11 @@
             <li class="press"><a name="divChannelFollows" onclick="EnableDiv(this.name, 'currentDiv');"><p>Favoritos</p></a></li>
             <li class="press"><a name="divReadLater" onclick="EnableDiv(this.name, 'currentDiv');"><p>Marcados</p></a></li>
             <li class="press"><a name="divMessages" onclick="EnableDiv(this.name, 'currentDiv');"><p>Mensagens</p></a></li>	
-            <li class="=press"><a name="divNewChannel" onclick="EnableDiv(this.name, 'currentDiv');"><p>Novo Canal</p></a></li>	
+            <li class="press"><a name="divNewChannel" onclick="EnableDiv(this.name, 'currentDiv');"><p>Novo Canal</p></a></li>
 	    </ul>
     </nav>
     @* NOTIFICAÇÕES *@
-
+    <div id="divNotification"></div>
 
     <div id="divMyChannels" style="display:none;">
         @if (Model.CurrentUser.UserId == Model.User.Id)
