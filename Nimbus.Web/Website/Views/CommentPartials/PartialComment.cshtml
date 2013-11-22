@@ -8,9 +8,7 @@
         <div class="delComment">
             @if (Model.IsDeletable)
             {
-                <a href="#" id="btnDelete_@Model.Id" title="Deletar" onclick="ajaxDeleteComment(@Model.Id,'divComment_@Model.Id' );">
-                    <img src="../../../images/utils/delete.png" />
-                </a>
+               <img id="btnDelete_@Model.Id" src="/images/utils/delete.png" onclick="ajaxDeleteComment(@Model.Id,'divComment_@Model.Id' );"  />                
             }
         </div>
         <p class="titleCommentContent">

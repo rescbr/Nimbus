@@ -69,7 +69,7 @@ function ajaxEditTopic(id, topicType, divOld) {
                             document.getElementById('pTopicText').innerHTML = newData.Text;
                         }
                         else if (newData.TopicType == 3) {
-                            //TODO
+                            updateFieldsEcam(newData);
                         }                                             
 
                         document.getElementById('divRenderEdit').style.display = 'none';
@@ -135,4 +135,29 @@ function examEdit() {
         }
     }
     return listQuestion;
+}
+
+function updateFieldsEcam(data)
+{
+    var divContent = document.getElementById('divAllQuestions');
+    var stringQuestion = "";
+
+    for(i = 0; i < data.Question.length; i++)
+    {
+        var question = data.Question[i];
+        var answers = question.ChoicesAnswer;       
+
+        var stringAswer = ""; 
+        for (var a in answers)
+        {
+            stringAswer += "<input type=\"radio\" name=\"" + i + "\" value=\"" + a.Key + "\" />" + a.Value + "<br />";
+        }
+
+        stringQuestion += "<section>" +
+                            "<p><strong>" + (i + 1) + "</strong> - " + question.TextQuestion + "</p>" +
+                            stringAswer +
+                          "</section>";
+
+        divContent.innerHTML = stringQuestion;
+    }
 }
