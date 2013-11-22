@@ -478,86 +478,101 @@ namespace Nimbus.Web.API.Controllers
 
         #endregion
 
+        public class TopicHtmlWrapper
+        {
+            public int Count {get;set;}
+            public string Html{get;set;}
+        }
+        [HttpGet]
+        public TopicHtmlWrapper AbstTopicHtml(int channelID = 0, string viewBy = null, int categoryID = 0, int skip = 0)
+        {
+            var topics = AbstTopic(channelID, viewBy, categoryID, skip);
+            var rz = new RazorTemplate();
+            string html = "";
+
+            foreach (var topic in topics)
+            {
+                html += rz.ParseRazorTemplate<TopicBag>
+                    ("~/Website/Views/ChannelPartials/ChannelPartial.cshtml", topic);
+            }
+
+            return new TopicHtmlWrapper { Html = html, Count = topics.Count };
+        }
+
         /// <summary>
         /// método de exibir tópicos em resumo, filtra por categoriam modificação e popularidade
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public List<TopicBag> AbstTopic(string viewBy = null, int channelID = 0, int categoryID = 0)
+        public List<TopicBag> AbstTopic(int channelID = 0, string viewBy = null, int categoryID = 0, int skip = 0)
         {
             List<TopicBag> tpcList = new List<TopicBag>();
-            try
+            IEnumerable<int> idChannel;
+            using (var db = DatabaseFactory.OpenDbConnection())
             {
-                List<int> idChannel = new List<int>();
-                using (var db = DatabaseFactory.OpenDbConnection())
+                int idOrg = NimbusOrganization.Id;
+
+                //verifica se o canal que esta tentando acessar é válido e existe
+                if (channelID > 0)
                 {
-                    int idOrg = NimbusOrganization.Id;
-
-                    //verifica se o canal que esta tentando acessar é válido e existe
-                    if (channelID > 0)
+                    bool isValid = db.SelectParam<Channel>(ch => ch.Id == channelID && ch.Visible == true && ch.OrganizationId == idOrg)
+                                                                .Exists(ch => ch.Id == channelID);
+                    if (isValid)
                     {
-                        bool isValid = db.SelectParam<Channel>(ch => ch.Id == channelID && ch.Visible == true && ch.OrganizationId == idOrg)
-                                                                    .Exists(ch => ch.Id == channelID);
-                        if (isValid)
-                        {
-                            idChannel.Add(channelID);
-                        }
-                        else
-                        {
-                            idChannel = null;
-                        }
+                        idChannel = new List<int>();
+                        (idChannel as List<int>).Add(channelID);
                     }
-                    //busca todos os canais da categoria da organizacao
-                    else if (categoryID > 0)
-                    {
-
-                        idChannel = db.SelectParam<Channel>(ch => ch.OrganizationId == idOrg && ch.Visible == true && ch.CategoryId == categoryID)
-                                                                            .Select(ch => ch.Id).ToList();
-                    }
-                    //busca todos os canais em geral da organizacao                      
                     else
                     {
-                        idChannel = db.SelectParam<Channel>(ch => ch.OrganizationId == idOrg && ch.Visible == true)
-                                                                              .Select(ch => ch.Id).ToList();
+                        idChannel = null;
                     }
+                }
+                //busca todos os canais da categoria da organizacao
+                else if (categoryID > 0)
+                {
 
-                    if (idChannel.Count > 0)
+                    idChannel = db.SelectParam<Channel>(ch => ch.OrganizationId == idOrg && ch.Visible == true && ch.CategoryId == categoryID)
+                                                                        .Select(ch => ch.Id);
+                }
+                //busca todos os canais em geral da organizacao                      
+                else
+                {
+                    idChannel = db.SelectParam<Channel>(ch => ch.OrganizationId == idOrg && ch.Visible == true)
+                                                                          .Select(ch => ch.Id);
+                }
+
+                if (idChannel.Count() > 0)
+                {
+                    List<Topic> topic = db.Where<Topic>(tp => tp.Visibility == true && idChannel.Contains(tp.ChannelId)).Skip(15 * skip).Take(15).ToList();
+
+
+                    if (topic.Count > 0)
                     {
-
-                        List<Topic> topic = db.Where<Topic>(tp => tp.Visibility == true);
-                        topic = topic.Where(t => idChannel.Contains(t.ChannelId)).ToList();
-
-                        if (topic.Count > 0)
+                        foreach (var item in topic)
                         {
-                            foreach (var item in topic)
+                            int count = db.SelectParam<ViewByTopic>(vt => vt.TopicId == item.Id).Select(vt => vt.CountView).FirstOrDefault();
+                            TopicBag bag = new TopicBag()
                             {
-                                int count = db.SelectParam<ViewByTopic>(vt => vt.TopicId == item.Id).Select(vt => vt.CountView).FirstOrDefault();
-                                TopicBag bag = new TopicBag()
-                                {
-                                    Id = item.Id,
-                                    Description = item.Description,
-                                    Title = item.Title,
-                                    TopicType = item.TopicType,
-                                    ImgUrl = item.ImgUrl,
-                                    LastModified = item.LastModified,
-                                    Count = count
+                                Id = item.Id,
+                                Description = item.Description,
+                                Title = item.Title,
+                                TopicType = item.TopicType,
+                                ImgUrl = item.ImgUrl,
+                                LastModified = item.LastModified,
+                                Count = count
 
-                                };
-                                tpcList.Add(bag);
-                            }
+                            };
+                            tpcList.Add(bag);
                         }
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
-            }
 
-            if (viewBy.ToLower() == "bymodified")
-                return tpcList.OrderBy(tp => tp.LastModified).ToList();
-            else if (viewBy.ToLower() == "bypopularity")
-                return tpcList.OrderBy(tp => tp.Count).ToList();
+
+            if (viewBy.ToLower() == "bymodified" || viewBy.ToLower() == "alltpc")
+                return tpcList.OrderByDescending(tp => tp.LastModified).ToList();
+            else if (viewBy.ToLower() == "bypopularity" || viewBy.ToLower() == "popular")
+                return tpcList.OrderByDescending(tp => tp.Count).ToList();
             else
                 return tpcList;
         }

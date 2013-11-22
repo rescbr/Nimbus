@@ -94,3 +94,38 @@ function ChangeTo(tipoPost, tipoAtual)
     
 
 }
+
+//método que busca os tópicos de um canal
+function verMaisTopics(id, orderBy, category, global)
+{
+    if (global == 'skipPopular')
+        value = skipPopular;
+    else if (global == 'skipAll')
+        value = skipAll;
+
+    $.ajax({
+        url: "/api/topic/AbstTopicHtml/" + id +"?viewBy=" + orderBy + "&categoryID=" + category + "&skip=" +value ,
+        type: "GET",
+        contentType: "application/json;charset=utf-8",
+        statusCode: {
+            200: function (newData) {
+
+                if (global == 'skipPopular')
+                    skipPopular = skipPopular + 1;
+                else if (global == 'skipAll')
+                    skipAll = skipAll + 1;
+
+                document.getElementById(orderBy).innerHTML += newData.Html;
+
+                if (newData.Count < 15) {
+                    document.getElementById("btn_" + global).style.display = "none";
+                }
+            },
+
+            400: function () {
+                //erro
+                window.alert("Erro ao processar requisição. Tente novamente mais tarde.");
+            }
+        }
+    });
+}

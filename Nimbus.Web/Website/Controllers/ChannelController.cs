@@ -32,7 +32,7 @@ namespace Nimbus.Web.Website.Controllers
                 Tags = channelApi.ShowTagChannel(id),
                 Moderators = channelApi.ShowModerators(id),
                 CurrentChannel = channelApi.ShowChannel(id),
-                AllTopics = topicApi.AbstTopic(string.Empty, id, 0),
+                AllTopics = topicApi.AbstTopic( id,string.Empty, 0),
                 Messages = msgApi.ChannelReceivedMessages(id),
                 Comments = commentApi.ShowChannelComment(id),
                 CurrentUser = NimbusUser,
