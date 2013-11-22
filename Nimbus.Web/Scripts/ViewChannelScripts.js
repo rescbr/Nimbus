@@ -39,20 +39,20 @@ function CreatedDivQuestion()
 {
     var nextPerg= parseInt(CurrentQuestion) + 1; //variavel global
     var html = 
-    "<div id=\"divPergunta" + nextPerg + "\">" +
+    "<div id=\"divPergunta" + nextPerg + "\" class=\"divPergEditarNimbus\">" +
                    "<p>Enunciado da questão:"+
-    "<input id=\"QuestionPerg" + nextPerg + "\" name=\"enunciado\" type=\"text\" maxlength=\"600\" />" +
+    "<input id=\"QuestionPerg" + nextPerg + "\" class=\"enunciado\" type=\"text\" maxlength=\"600\" />" +
     "</p>"+
     "<p>Respostas:</p>"+
      "<div>"+
          "<ul id=\"ulPerg" + nextPerg + "\">" +
            "<li id=\"liPerg" + nextPerg + "_opt1\">" + //ex: pergunta 1 _ opçao 1
-                "<input type=\"radio\" name=\"radio_perg"+nextPerg+"\" id=\"rdbPerg" + nextPerg + "_opt1\" />" +
-                "<input id=\"txtPerg" + nextPerg + "_opt1\" name=\"resposta\" type=\"text\" onfocus=\"javascript: this.value = ''\" value=\"Opção 1\" />" +
+                "<input type=\"radio\" checked class=\"rdbPergEditNimbus\" name=\"radio_perg" + nextPerg + "\" id=\"rdbPerg" + nextPerg + "_opt1\" />" +
+                "<input id=\"txtPerg" + nextPerg + "_opt1\" class=\"resposta\"  type=\"text\" onfocus=\"javascript: this.value = ''\" value=\"Opção 1\" />" +
             "</li>"+
             "<li id=\"liPerg" + nextPerg + "_opt2\" >" +
-                 "<input type=\"radio\" name=\"radio_perg" + nextPerg + "\" id=\"rdbPerg" + nextPerg + "_opt2\" class=\"fakeDisable\" />" +
-                 "<input id=\"txtPerg" + nextPerg + "_opt2\" name=\"resposta\" type=\"text\" class=\"fakeDisable\" onclick=\"DisableOption('2', 'divPergunta" + nextPerg + "');\" value=\"Opção 2\" />" +
+                 "<input type=\"radio\" name=\"radio_perg" + nextPerg + "\" id=\"rdbPerg" + nextPerg + "_opt2\" class=\"fakeDisable rdbPergEditNimbus\" />" +
+                 "<input id=\"txtPerg" + nextPerg + "_opt2\"  type=\"text\" class=\"fakeDisable\" onclick=\"DisableOption('2', 'divPergunta" + nextPerg + "');\" value=\"Opção 2\" />" +
              "</li>"+
          "</ul>"+ 
     "</div>"+
@@ -63,8 +63,7 @@ function CreatedDivQuestion()
 }
 
 function DisableOption(currentOpt, nameDiv)
-{
-    
+{    
     var indexPerg = parseInt(nameDiv.replace("divPergunta", ""));
     var indexActive
     if (indexPerg != CurrentQuestion)
@@ -75,11 +74,9 @@ function DisableOption(currentOpt, nameDiv)
     var rdb = document.getElementById("rdbPerg" + indexActive + "_opt" + currentOpt);//ex: rdbPerg1_opt2
     rdb.setAttribute('class', 'rdbPergEditNimbus');
     var txt = document.getElementById("txtPerg" + indexActive + "_opt" + currentOpt);
-    txt.setAttribute('class', 'iptPergEditNimbus');
+    txt.setAttribute('class', 'resposta');
     txt.setAttribute('onclick','');
     txt.value = "";
-    document.getElementById("liPerg" + indexActive + "_opt" + currentOpt).removeAttribute("onClick");
-
     
     var name = $("ul#ulPerg" + indexActive + " li:last-child").attr("id");
     name = name.replace("liPerg" + indexActive + "_opt", ""); //retorna o index da opção, ou seja..quantas opçoes ja teve
@@ -87,8 +84,8 @@ function DisableOption(currentOpt, nameDiv)
     var index = parseInt(name) + 1; //index da prox opção a ser inserida
     
     var campo = "<li id=\"liPerg" + indexActive + "_opt" + index + "\" >" +
-                      "<input type=\"radio\" name=\"radio\" id=\"rdbPerg" + indexActive + "_opt" + index + "\" class=\"fakeDisable\" />" +
-                      "<input id=\"txtPerg" + indexActive + "_opt" + index + "\" onclick=\"DisableOption('" + index + "', 'divPergunta" + indexActive + "');\" name=\"resposta\" type=\"text\" class=\"fakeDisable\" value=\"Opção " + index + "\" />" +
+                      "<input type=\"radio\" name=\"radio\" id=\"rdbPerg" + indexActive + "_opt" + index + "\" class=\"fakeDisable rdbPergEditNimbus\" />" +
+                      "<input id=\"txtPerg" + indexActive + "_opt" + index + "\" onclick=\"DisableOption('" + index + "', 'divPergunta" + indexActive + "');\"  type=\"text\" class=\"fakeDisable\" value=\"Opção " + index + "\" />" +
                 "</li>";
     
     $("#"+ nameDiv + " ul").append(campo);
@@ -135,47 +132,7 @@ function ajaxSaveNewTopic(channelID)
     }
     if (divTipoTopic == "divExam") {
         enumTopicType = 3;
-
-        var questionData = {}
-        var listQuestion = []
-        var listPerg = document.getElementsByName('enunciado');
-        var isChecked = false;
-        for (perg = 0; perg < listPerg.length; perg++) //para cada pergunta
-        {
-            var item = listPerg[perg];
-            questionData["TextQuestion"] = item.value; //pego o conteudo = enunciado   
-
-            var currentPerg = item.id.replace("QuestionPerg",""); //pega o indice da pergunta atual
-
-            var listOpt =[]; 
-            var dictionary = new Object();
-
-            $("#divExam li").each(function() {//pego todas as opções
-                var id = this.id;                
-                if (id.indexOf("liPerg") > -1)
-                {
-                    listOpt.push(id);
-                }
-            });
-
-            for (option = 0; option < listOpt.length; option++)
-            {
-                var rdbOption = document.getElementById('rdbPerg'+currentPerg+'_opt'+ (option + 1));
-                var txtOption = document.getElementById('txtPerg' + currentPerg + '_opt' + (option + 1));
-
-                if (txtOption.value != "Opção " + (option + 1) && txtOption.value != "")
-                {
-                    if (rdbOption.checked == true) {
-                        questionData["CorrectAnswer"] = option + 1; //passa o indice da resposta certa + 1 .'. o for começa do zero                    
-                        isChecked = true;
-                    }
-                    dictionary[option + 1] = txtOption.value; //dictionary<int, string>
-
-                    questionData["ChoicesAnswer"] = dictionary;
-                }
-            }
-            listQuestion.push(questionData);
-        }
+        var listQuestion = examEdit();
     }
 
     if (title != "" && shortDescription != "" && channelID > 0 && (text != "" || video != "" || (listQuestion.length > 0 && isChecked == true)))

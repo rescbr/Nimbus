@@ -44,42 +44,40 @@
         {
             <div id="divNewExam">
                 @for (int i = 0; i < Model.CurrentTopic.Question.Count; i++)
-                {
-                    var question = Model.CurrentTopic.Question[i];
-                    var answers = question.ChoicesAnswer.ToList();
-                    /*lista as questões existentes*/
-                    <section>
-                        <p>Pergunta:</p>
-                        <p><strong>@(i + 1)</strong> -<input id="QuestionPerg@(i + 1)" name="enunciado" type="text" value="@question.TextQuestion" /></p>
+                    {
+                        var question = Model.CurrentTopic.Question[i];
+                        var answers = question.ChoicesAnswer.ToList();
+                        /*lista as questões existentes*/
+                        <section class="divPergEditarNimbus">
+                            <p>Pergunta:</p>
+                            <p><strong>@(i + 1)</strong> -<input id="QuestionPerg@(i + 1)" class="enunciado" type="text" value="@question.TextQuestion" /></p>
 
-                        <p>Respostas:</p>
-                        <ul class="ulEditPergNimbus">
-                            @{
-                            int j = 0;
-                            foreach (var answer in answers)
-                            {
+                            <p>Respostas:</p>
+                            <ul>
 
-                                //imprime as questoes
-                                <li id="liPerg_@i" class="liPergEditNimbus">
-                                    @if (answer.Key == question.CorrectAnswer)
-                                    {
-                                        <input id="rdbPerg@(i+1)_opt@(j+1)" class="rdbPergEditNimbus" type="radio" checked name="@i" value="@answer.Key" />
-                                    }
-                                    else
-                                    {
-                                        <input id="rdbPerg@(i+1)_opt@(j+1)" class="rdbPergEditNimbus" type="radio" name="@i" value="@answer.Key" />
-                                    }
+                                @foreach (var answer in answers)
+                                {
 
-                                    <input id="txtPerg@(i+1)_opt@(j+1)" class="iptPergEditNimbus" type="text" value="@answer.Value" />
-                                </li>
-                                    j++;
-                            }
-                                    }
-                         </ul>
+                                    //imprime as questoes
+                                    <li id="liPerg_@i">
+                                        @if (answer.Key == question.CorrectAnswer)
+                                        {
+                                            <input class="rdbPergEditNimbus" type="radio" checked name="@i" value="@answer.Key" />
+                                        }
+                                        else
+                                        {
+                                            <input class="rdbPergEditNimbus" type="radio" name="@i" value="@answer.Key" />
+                                        }
 
-                </section>
-                }
-            </div>
+                                        <input class="resposta" type="text" value="@answer.Value" />
+                                    </li>
+
+                                }
+                            </ul>
+
+                        </section>
+                    }
+                                </div>
             
             <div>
                 <script>
@@ -87,22 +85,22 @@
                 </script>
                 <p><h1>Criar novas questões:</h1></p>
             <div id="divExam">
-                <div id="divPergunta1">
+                <div id="divPergunta1" class="divPergEditarNimbus">
                     <p>
                         Enunciado da questão:
-                        <input id="QuestionPerg1" name="enunciado" type="text" maxlength="600" />
+                        <input id="QuestionPerg1" class="enunciado" type="text" maxlength="600" />
                     </p>
                     <p>Respostas:</p>
                     <div>
-                        <ul id="ulPerg1" class="ulEditPergNimbus">
-                            <li id="liPerg1_opt1" class="liPergEditNimbus">
+                        <ul id="ulPerg1">
+                            <li id="liPerg1_opt1">
                                 @*pergunta 1 _ opçao 1*@
                                 <input type="radio" class="rdbPergEditNimbus" name="radio_perg1" id="rdbPerg1_opt1" />
-                                <input id="txtPerg1_opt1" name="resposta" type="text" onfocus="javascript: this.value = ''" value="Opção 1" />
+                                <input id="txtPerg1_opt1" class="resposta" type="text" checked onfocus="javascript: this.value = ''" value="Opção 1" />
                             </li>
-                            <li id="liPerg1_opt2" class="liPergEditNimbus">
+                            <li id="liPerg1_opt2">
                                 <input type="radio" class="fakeDisable rdbPergEditNimbus" name="radio_perg1" id="rdbPerg1_opt2" />
-                                <input id="txtPerg1_opt2" class="fakeDisable" onclick="DisableOption('2', 'divPergunta1');" name="resposta" type="text" value="Opção 2" />
+                                <input id="txtPerg1_opt2" class="fakeDisable" onclick="DisableOption('2', 'divPergunta1');" type="text" value="Opção 2" />
                             </li>
                         </ul>
                     </div>
