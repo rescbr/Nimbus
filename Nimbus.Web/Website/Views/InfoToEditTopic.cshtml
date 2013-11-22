@@ -47,29 +47,38 @@
                 {
                     var question = Model.CurrentTopic.Question[i];
                     var answers = question.ChoicesAnswer.ToList();
-
+                    /*lista as questões existentes*/
                     <section>
                         <p>Pergunta:</p>
-                        <p><strong>@(i + 1)</strong> -<input id="QuestionPerg@(i + 1)" name="enunciadoOld" type="text" value="@question.TextQuestion" /></p>
+                        <p><strong>@(i + 1)</strong> -<input id="QuestionPerg@(i + 1)" name="enunciado" type="text" value="@question.TextQuestion" /></p>
 
                         <p>Respostas:</p>
-                        <ul>
+                        <ul class="ulEditPergNimbus">
                             @{
-                                int j = 0;                               
-                                foreach (var answer in answers)
-                                {
-                                                               
-                                    //imprime as questoes
-                                    <li id="liPerg_@i">
-                                        <input id="rdbPerg@(i+1)_opt@(j+1)" type="radio" name="@i" value="@answer.Key" />
-                                        <input id="txtPerg@(i+1)_opt@(j+1)" type="text" value="@answer.Value" />
-                                    </li>
+                            int j = 0;
+                            foreach (var answer in answers)
+                            {
+
+                                //imprime as questoes
+                                <li id="liPerg_@i" class="liPergEditNimbus">
+                                    @if (answer.Key == question.CorrectAnswer)
+                                    {
+                                        <input id="rdbPerg@(i+1)_opt@(j+1)" class="rdbPergEditNimbus" type="radio" checked name="@i" value="@answer.Key" />
+                                    }
+                                    else
+                                    {
+                                        <input id="rdbPerg@(i+1)_opt@(j+1)" class="rdbPergEditNimbus" type="radio" name="@i" value="@answer.Key" />
+                                    }
+
+                                    <input id="txtPerg@(i+1)_opt@(j+1)" class="iptPergEditNimbus" type="text" value="@answer.Value" />
+                                </li>
                                     j++;
-                                }
                             }
-                       </ul>
-                    </section>
-                }    
+                                    }
+                         </ul>
+
+                </section>
+                }
             </div>
             
             <div>
@@ -85,14 +94,14 @@
                     </p>
                     <p>Respostas:</p>
                     <div>
-                        <ul id="ulPerg1">
-                            <li id="liPerg1_opt1">
+                        <ul id="ulPerg1" class="ulEditPergNimbus">
+                            <li id="liPerg1_opt1" class="liPergEditNimbus">
                                 @*pergunta 1 _ opçao 1*@
-                                <input type="radio" name="radio_perg1" id="rdbPerg1_opt1" />
+                                <input type="radio" class="rdbPergEditNimbus" name="radio_perg1" id="rdbPerg1_opt1" />
                                 <input id="txtPerg1_opt1" name="resposta" type="text" onfocus="javascript: this.value = ''" value="Opção 1" />
                             </li>
-                            <li id="liPerg1_opt2">
-                                <input type="radio" class="fakeDisable" name="radio_perg1" id="rdbPerg1_opt2" />
+                            <li id="liPerg1_opt2" class="liPergEditNimbus">
+                                <input type="radio" class="fakeDisable rdbPergEditNimbus" name="radio_perg1" id="rdbPerg1_opt2" />
                                 <input id="txtPerg1_opt2" class="fakeDisable" onclick="DisableOption('2', 'divPergunta1');" name="resposta" type="text" value="Opção 2" />
                             </li>
                         </ul>

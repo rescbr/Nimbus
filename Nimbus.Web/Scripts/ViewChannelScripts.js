@@ -73,9 +73,9 @@ function DisableOption(currentOpt, nameDiv)
         indexActive = CurrentQuestion
 
     var rdb = document.getElementById("rdbPerg" + indexActive + "_opt" + currentOpt);//ex: rdbPerg1_opt2
-    rdb.removeAttribute('class');
+    rdb.setAttribute('class', 'rdbPergEditNimbus');
     var txt = document.getElementById("txtPerg" + indexActive + "_opt" + currentOpt);
-    txt.removeAttribute('class');
+    txt.setAttribute('class', 'iptPergEditNimbus');
     txt.setAttribute('onclick','');
     txt.value = "";
     document.getElementById("liPerg" + indexActive + "_opt" + currentOpt).removeAttribute("onClick");

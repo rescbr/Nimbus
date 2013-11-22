@@ -92,7 +92,7 @@ function ajaxEditTopic(id, topicType, divOld) {
 
 }
 
-function examEdit()
+function examEdit2()
 {  
         var questionData = {}
         var listQuestion = []
@@ -180,4 +180,52 @@ function examEdit()
             }
 
         return listQuestion;
+}
+
+function examEdit() {
+    var questionData = {}
+    var listQuestion = []
+    var listPerg = document.getElementsByName('enunciado');
+    var isChecked = false;
+    var dictionary = new Object();
+
+    //para novas perguntas
+    for (perg = 0; perg < listPerg.length; perg++) //para cada pergunta
+    {
+        var item = listPerg[perg];
+        questionData["TextQuestion"] = item.value; //pego o conteudo = enunciado   
+
+        //pega todas os conjuto de respostas
+        var conjRespostas = document.getElementsByClassName('ulEditPergNimbus');
+
+        //para cada conjunto pegas as resposta
+        for (conj = 0; conj < conjRespostas.length; conj++) {
+            //pegar as respostas
+            var respostas = document.getElementsByClassName('liPergEditNimbus');
+            //para cada resposta, pegar o rdb e o input
+            for (rpt = 0; rpt < respostas.length; rpt++) {
+
+                var rdb = document.getElementsByClassName('rdbPergEditNimbus')[rpt];                
+                var ipt = document.getElementsByName('resposta')[rpt];
+
+                var texto = ipt.value;
+                texto = texto.toLowerCase().replace("ç", "c");
+                texto = texto.toLowerCase().replace("ã", "a");
+
+                if (texto != "" && texto.lastIndexOf("opcao") != 0 && ipt.style.display != 'none') {
+                    if (rdb.checked == true) {
+                        questionData["CorrectAnswer"] = rpt + 1;
+                        isChecked = true;
+                    }
+                    dictionary[rpt + 1] = ipt.value; //valor digitado original //dictionary<int, string>
+
+                    questionData["ChoicesAnswer"] = dictionary;
+                }
+            }
+            if (isChecked == true) {
+                listQuestion.push(questionData);
+            }
+        }
+    }
+    //return listQuestion;
 }
