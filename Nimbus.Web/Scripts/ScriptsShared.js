@@ -194,3 +194,47 @@ function verMaisReadLater(id, category, global) {
         }
     });
 }
+
+//método que busca  as mensagens por paginaçao e/ou enviadas
+function viewMessages(global, viewBy, typeBtn) {
+    if (global == 'skipMessageSend')
+        value = skipMessageSend;
+    if (global == 'skipMessageReceived')
+        value = skipMessageReceived;
+
+    var btn = document.getElementById('btn_moreMessages');
+
+    if (typeBtn == 'send')
+        btn.setAttribute('onclick', 'viewMessages(\'skipMessageSend\', \'messageSend\', \'send\');');
+    else
+        btn.setAttribute('onclick', 'viewMessages(\'skipMessageReceived\', \'messageReceived\', \'\');');
+
+    $.ajax({
+        url: "/api/message/MessagesHtml/?viewBy=" + viewBy + "&skip=" + value,
+        type: "GET",
+        contentType: "application/json;charset=utf-8",
+        statusCode: {
+            200: function (newData) {
+
+                if (global == 'skipMessageSend')
+                    skipMessageSend = skipMessageSend + 1;
+                if (global == 'skipMessageReceived')
+                    skipMessageReceived = skipMessageReceived + 1;
+
+                document.getElementById('divSeeMessages').innerHTML += newData.Html;
+
+                if (newData.Count < 15) {
+                    btn.style.display = "none";
+                }
+                else {
+                    btn.style.display = "block";
+                }
+            },
+
+            400: function () {
+                //erro
+                window.alert("Erro ao processar requisição. Tente novamente mais tarde.");
+            }
+        }
+    });
+}

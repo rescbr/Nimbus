@@ -9,6 +9,7 @@ using ServiceStack.OrmLite;
 using Nimbus.Model.ORM;
 using Nimbus.Model.Bags;
 using System.Web;
+using Nimbus.Web.Utils;
 
 namespace Nimbus.Web.API.Controllers
 {
@@ -18,6 +19,36 @@ namespace Nimbus.Web.API.Controllers
     [NimbusAuthorize]
     public class MessageController : NimbusApiController
     {
+        public class MessageHtmlWrapper
+        {
+            public int Count { get; set; }
+            public string Html { get; set; }
+        }
+
+        [HttpGet]
+        public MessageHtmlWrapper MessagesHtml(string viewBy = null, int skip = 0)
+        {
+            List<MessageBag> message = new List<MessageBag>();
+                       
+            if (viewBy == "messageSend")
+                message = SentMessages(skip);
+            if (viewBy == "messageReceived")
+                message = ReceivedMessages(skip);
+          
+
+            var rz = new RazorTemplate();
+            string html = "";
+
+            foreach (var msg in message)
+            {
+                html += rz.ParseRazorTemplate<MessageBag>
+                    ("~/Website/Views/MessagePartials/MessagePartial.cshtml", msg);
+            }
+
+            return new MessageHtmlWrapper { Html = html, Count = message.Count };
+        }
+                           
+
 
         [NonAction]
         internal Message SendMessageToList(Message message, List<Model.Receiver> listReceiver)
@@ -100,6 +131,7 @@ namespace Nimbus.Web.API.Controllers
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
+        
         [HttpPost]
         public Message SendMessageChannel(Message message)
         {
@@ -156,7 +188,7 @@ namespace Nimbus.Web.API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public List<MessageBag> ReceivedMessages()
+        public List<MessageBag> ReceivedMessages(int skip)
         {
             List<MessageBag> listMessage = new List<MessageBag>();
             try
@@ -165,7 +197,7 @@ namespace Nimbus.Web.API.Controllers
                 {
                     List<int> listIdMsg = new List<int>();
 
-                    listIdMsg = db.SelectParam<ReceiverMessage>(r => r.UserId == NimbusUser.UserId)
+                    listIdMsg = db.SelectParam<ReceiverMessage>(r => r.UserId == NimbusUser.UserId).Skip(15*skip).Take(15)
                                                                                .Select(r => r.MessageId).ToList();
                     //TODO colocar restricao p/ mostrar somente type.received
                     foreach (int item in listIdMsg)
@@ -256,22 +288,22 @@ namespace Nimbus.Web.API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public List<Message> SentMessages()
+        public List<MessageBag> SentMessages(int skip)
         {
-            List<Message> listMessage = new List<Message>();
+            List<MessageBag> listMessage = new List<MessageBag>();
             try
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
                     List<int> msgSend = new List<int>();
                     msgSend = db.SelectParam<ReceiverMessage>(rm => rm.Status == Nimbus.Model.Enums.MessageType.send
-                                                                   && rm.UserId == NimbusUser.UserId)
+                                                                   && rm.UserId == NimbusUser.UserId).Skip(15 * skip).Take(15)
                                                                    .Select(rm => rm.MessageId).ToList();
 
                     ICollection<Message> messages = db.SelectParam<Message>(m => m.Visible == true && (msgSend.Contains(m.Id) || m.SenderId == NimbusUser.UserId));
                     foreach (var item in messages)
                     {
-                        Message msg = new Message()
+                        MessageBag msg = new MessageBag()
                         {
                             ChannelId = item.ChannelId,
                             Date = item.Date,

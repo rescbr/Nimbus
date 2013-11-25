@@ -10,6 +10,8 @@
     skipMyChannels = 1;
     skipChannelsFollow = 1;
     skipReadLater = 1;
+    skipMessageSend = 1;
+    skipMessageReceived = 1;
 </script>
 
 <div class="wrapperUser" id="wrapperUser">
@@ -104,44 +106,25 @@
     </div>
 
     <div id="divMessages" style="display:none;">
-       
-      @if (Model.CurrentUser.UserId == Model.User.Id) {
-        foreach (var item in Model.Messages)
+      
+        <div id="divChangeMessages">
+            <a onclick="viewMessages('skipMessageReceived','messageReceived', '');">Recebidas</a>
+            <a onclick="viewMessages('skipMessageSend', 'messageSend', 'send');">Enviadas</a>
+        </div>
+         
+      @if (Model.CurrentUser.UserId == Model.User.Id)
         {
-            string readStat;
-            
-            if (item.ReadStatus == true)
-            {
-                readStat = "background: #BE1E2D";
-            }
-            else
-            {
-                readStat = "background: #AAAAAA";
-            }
-            
-            <div class="post_m" style="@readStat">
-                <div class="postHeImg_m">
-                    <img src=@item.AvatarUrl  width="60px;" height="60px;">
-                </div>
-                <div class="post_Right_m">
-                    <nav class="postHeaderLeft_m">
-                        <ul class="sbs">
-                            <li>@item.UserName/li>
-                            <li>@item.Title</li>
-                        </ul>
-                    </nav>
-                    <nav class="postHeaderRight_m">
-                        <ul class="sbs">
-                            <li>@string.Format("{0:d/M/yyyy}", item.Date)</li>
-                            <li>@string.Format("{0:HH:mm}", item.Date)</li>
-                        </ul>
-                    </nav>
-                    <div class="postContent_m">
-                        <p>@item.Text </p>
-                    </div>
-                </div>
+            <div id="divSeeMessages">
+                @foreach (var item in Model.Messages)
+                {
+                    //partial
+                    Html.RenderPartial("~/Website/Views/MessagePartials/MessagePartial.cshtml", item);
+                }
             </div>
-        }
+            if (Model.Messages.Count() == 15)
+            {
+                <button id="btn_moreMessages" onclick="viewMessages('skipMessageReceived', 'messageReceived', '');">Ver mais</button>
+            }
         }
     </div>
 
