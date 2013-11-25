@@ -1,23 +1,13 @@
 ﻿
-@model Nimbus.Model.Bags.TopicBag
+@model Nimbus.Model.Channel
 
-        @*Imagem e texto*@
-        <div class="divTopic-grade">
-            <a href="/topic/index/@Model.Id">
-                <div class="headerTopic-grade">
-                    <h1>@Model.Title</h1>
-                    <img src="@Model.ImgUrl" alt="@Model.TopicType.ToString()" title="@Model.Title" width="180" height="100">
-                </div>
-            </a>
-            <p class="contentTopic-grade">
-                @Model.Description
-            </p>
-            <div class="footerTopic-grade">
-                <div class="btnLeftTopic-grade">
-                    <p onclick="unReadLater();">Ler mais tarde</p> @*chamar js passando item.id*@
-                </div>
-                <div class="btnRightTopic-grade">
-                    <p>s2</p> @*adicionar aos favoritos*@
-                </div>
-            </div>
+@*Imagem e texto*@
+@*Imagem*@
+<div id="divChannel">
+    <a href="/channel/index/@Model.Id">
+        <div id="headerChannel">
+            <h1>@Model.Name</h1>
+            <img src="@Model.ImgUrl" id="imgChannel" alt="Canal" title="@Model.Name">
         </div>
+    </a>
+</div>

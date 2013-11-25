@@ -483,6 +483,7 @@ namespace Nimbus.Web.API.Controllers
             public int Count {get;set;}
             public string Html{get;set;}
         }
+
         [HttpGet]
         public TopicHtmlWrapper AbstTopicHtml(int channelID = 0, string viewBy = null, int categoryID = 0, int skip = 0)
         {
@@ -493,7 +494,7 @@ namespace Nimbus.Web.API.Controllers
             foreach (var topic in topics)
             {
                 html += rz.ParseRazorTemplate<TopicBag>
-                    ("~/Website/Views/ChannelPartials/ChannelPartial.cshtml", topic);
+                    ("~/Website/Views/ChannelPartials/TopicPartial.cshtml", topic);
             }
 
             return new TopicHtmlWrapper { Html = html, Count = topics.Count };

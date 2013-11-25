@@ -33,7 +33,7 @@ namespace Nimbus.Web.Website.Controllers
                 ChannelPaid = channelApi.UserChannelPaid(NimbusUser.UserId),
                 User =  userApi.showProfile(id),
                 ChannelFollow = channelApi.FollowsChannel(NimbusOrganization.Id),
-                MyChannels = channelApi.MyChannel(id),
+                MyChannels = channelApi.MyChannel(id , 1),
                 ReadLater = channelApi.showReadLaterChannel(NimbusOrganization.Id),
                 Messages = msgApi.ReceivedMessages(),
                 Categories = categoryApi.showAllCategory(),

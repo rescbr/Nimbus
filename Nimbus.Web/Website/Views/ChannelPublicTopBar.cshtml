@@ -48,7 +48,7 @@
         <div id="popular">
             @foreach (var item in Model.AllTopics.OrderByDescending(m => m.Count))
             {
-                Html.RenderPartial("~/Website/Views/ChannelPartials/ChannelPartial.cshtml", item);
+                Html.RenderPartial("~/Website/Views/ChannelPartials/TopicPartial.cshtml", item);
             }
         </div>
         @if (Model.AllTopics.Count() == 15)
@@ -61,7 +61,7 @@
         <div id="alltpc">
             @foreach (var item in Model.AllTopics.OrderByDescending(m => m.LastModified))
             {
-                Html.RenderPartial("~/Website/Views/ChannelPartials/ChannelPartial.cshtml", item);
+                Html.RenderPartial("~/Website/Views/ChannelPartials/TopicPartial.cshtml", item);
             }
         </div>
         @if (Model.AllTopics.Count() == 15)

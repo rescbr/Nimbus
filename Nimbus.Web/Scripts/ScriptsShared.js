@@ -129,3 +129,37 @@ function verMaisTopics(id, orderBy, category, global)
         }
     });
 }
+
+//método que busca canais de 15 em 15
+function verMaisChannels(id, orderBy, category, global) {
+    if (global == 'skipMyChannels')
+        value = skipMyChannels;
+    if (global == 'skipChannelsFollow')
+        value = skipChannelsFollow;
+
+    $.ajax({
+        url: "/api/channel/AbstChannelHtml/" + id + "?viewBy=" + orderBy + "&categoryID=" + category + "&skip=" + value,
+        type: "GET",
+        contentType: "application/json;charset=utf-8",
+        statusCode: {
+            200: function (newData) {
+
+                if (global == 'skipMyChannels')
+                    skipMyChannels = skipMyChannels + 1;
+                if (global == 'skipChannelsFollow')
+                    skipChannelsFollow = skipChannelsFollow + 1;
+
+                document.getElementById(orderBy).innerHTML += newData.Html;
+
+                if (newData.Count < 15) {
+                    document.getElementById("btn_" + global).style.display = "none";
+                }
+            },
+
+            400: function () {
+                //erro
+                window.alert("Erro ao processar requisição. Tente novamente mais tarde.");
+            }
+        }
+    });
+}

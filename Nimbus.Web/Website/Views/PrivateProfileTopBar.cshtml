@@ -7,6 +7,8 @@
     currentDiv = 'divNotification';
     currentType = 'post_lista';
     nimbusRegisterMessageNotifications = true;
+    skipMyChannels = 1;
+    skipChannelsFollow = 1;
 </script>
 
 <div class="wrapperUser" id="wrapperUser">
@@ -25,38 +27,39 @@
 
     <div id="divMyChannels" style="display:none;">
         @if (Model.CurrentUser.UserId == Model.User.Id)
-        {
-            foreach (var item in Model.MyChannels)
-            {
-                @*Imagem*@
-            <div id="divChannel">
-                <a href="/channel/index/@item.Id">
-                    <div id="headerChannel">
-                        <h1>@item.Name</h1>
-                        <img src="@item.ImgUrl" id="imgChannel" alt="blabla" title="blabla">
-                    </div>
-                </a>
+        { 
+            <div id="myChannels">
+                @foreach (var item in Model.MyChannels)
+                {
+                    //partial
+                    Html.RenderPartial("~/Website/Views/ChannelPartials/ChannelPartial.cshtml", item);
+
+                }
             </div>
 
+            if (Model.MyChannels.Count() == 15)
+            {
+                <button id="btn_skipMyChannels" onclick="verMaisChannels(@Model.CurrentUser.UserId, 'myChannels', 0, 'skipMyChannels');">Ver mais</button>
             }
         }
     </div>
 
     <div id="divChannelFollows" style="display:none;">
 
-        @if (Model.CurrentUser.UserId == Model.User.Id)
-        {
-            foreach (var item in Model.ChannelFollow)
-            {               
-                @*Imagem*@
-                <div id="divChannel">
-                    <a href="/channel/index/@item.Id">
-                        <div id="headerChannel">
-                            <h1>@item.Name</h1>
-                            <img src="@item.ImgUrl" id="imgChannel" alt="blabla" title="blabla">
-                        </div>
-                    </a>
-                </div>
+          @if (Model.CurrentUser.UserId == Model.User.Id)
+        { 
+            <div id="channelsFollow">
+                @foreach (var item in Model.MyChannels)
+                {
+                    //partial
+                    Html.RenderPartial("~/Website/Views/ChannelPartials/ChannelPartial.cshtml", item);
+
+                }
+            </div>
+
+            if (Model.ChannelFollow.Count() == 15)
+            {
+                <button id="btn_skipChannelsFollow" onclick="verMaisChannels(@Model.CurrentUser.UserId, 'channelsFollow', 0, 'skipChannelsFollow');">Ver mais</button>
             }
         }
     </div>
