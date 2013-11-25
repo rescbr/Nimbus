@@ -34,7 +34,7 @@ namespace Nimbus.Web.Website.Controllers
                 User =  userApi.showProfile(id),
                 ChannelFollow = channelApi.FollowsChannel(NimbusOrganization.Id, 1),
                 MyChannels = channelApi.MyChannel(id , 1),
-                ReadLater = channelApi.showReadLaterChannel(NimbusOrganization.Id),
+                ReadLater = channelApi.showReadLaterChannel(NimbusOrganization.Id, 1),
                 Messages = msgApi.ReceivedMessages(),
                 Categories = categoryApi.showAllCategory(),
                 ChannelMannager = channelApi.ModeratorChannel(id)

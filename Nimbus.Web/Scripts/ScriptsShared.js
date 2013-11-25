@@ -171,7 +171,7 @@ function verMaisReadLater(id, category, global) {
  
 
     $.ajax({
-        url: "/api/topic/AbstTopicHtml/" + id + "?viewBy=" + orderBy + "&categoryID=" + category + "&skip=" + value,
+        url: "/api/channel/AbstChannelHtml/" + id + "?viewBy=readLater" + "&categoryID=" + category + "&skip=" + value,
         type: "GET",
         contentType: "application/json;charset=utf-8",
         statusCode: {

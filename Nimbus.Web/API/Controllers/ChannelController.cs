@@ -542,10 +542,14 @@ namespace Nimbus.Web.API.Controllers
         {
             List<Channel> channels = new List<Channel>();
 
+            int idUser = NimbusUser.UserId;
+
             if( viewBy == "myChannels")
                 channels = MyChannel(id, skip);
             if(viewBy == "channelsFollow")
-                channels = FollowChannel(id, skip);
+                channels = FollowsChannel(idUser, skip);
+            if (viewBy == "readLater")
+                channels = showReadLaterChannel(idUser, skip);
             
             var rz = new RazorTemplate();
             string html = "";
@@ -558,8 +562,7 @@ namespace Nimbus.Web.API.Controllers
 
             return new ChannelHtmlWrapper { Html = html, Count = channels.Count };
         }
-
-                   
+                           
 
         /// <summary>
         /// visualizar 'meus canais'
@@ -755,7 +758,7 @@ namespace Nimbus.Web.API.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet]
-        public List<Channel> showReadLaterChannel(int id)
+        public List<Channel> showReadLaterChannel(int id, int skip)
         {
             List<Channel> listChannel = new List<Channel>();
             try
@@ -763,6 +766,7 @@ namespace Nimbus.Web.API.Controllers
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
                     List<int> listUserChannel = db.SelectParam<UserChannelReadLater>(ch => ch.UserId == NimbusUser.UserId && ch.Visible == true)
+                                                                 .Skip(15*skip).Take(15)
                                                                  .Select(ch => ch.ChannelId).ToList();
                     if (listUserChannel.Count > 0)
                     {
