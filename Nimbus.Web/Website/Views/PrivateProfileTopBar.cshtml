@@ -9,6 +9,7 @@
     nimbusRegisterMessageNotifications = true;
     skipMyChannels = 1;
     skipChannelsFollow = 1;
+    skipReadLater = 1;
 </script>
 
 <div class="wrapperUser" id="wrapperUser">
@@ -88,28 +89,16 @@
 
         @if (Model.CurrentUser.UserId == Model.User.Id)
         {
-            foreach (var item in Model.ReadLater)
+            <div id="readLater">
+                @foreach (var item in Model.ReadLater)
+                {
+                    //partial
+                    Html.RenderPartial("~/Website/Views/ChannelPartials/TopicPartial.cshtml", item);
+                }
+            </div>
+            if (Model.ReadLater.Count() == 15)
             {
-                @*Imagem e texto*@
-                <div class="divTopic-grade">
-                    <a href="/topic/index/@item.Id">
-                        <div class="headerTopic-grade">
-                            <h1>@item.Name</h1>
-                            <img src="@item.ImgUrl" alt="@item.Name" title="@item.Name" width="180" height="100">
-                        </div>
-                    </a>
-                    <p class="contentTopic-grade">
-                        @item.Description
-                    </p>
-                    <div class="footerTopic-grade">
-                        <div class="btnLeftTopic-grade">
-                            <p onclick="unFollow(@item.Id);">Desfavoritar</p> @*chamar js passando item.id*@
-                        </div>
-                        <div class="btnRightTopic-grade">
-                            <p onclick="openChannel(@item.Id);">Ler</p> @*adicionar aos favoritos*@
-                        </div>
-                    </div>
-                </div>
+                <button id="btn_skipAll" onclick="verMaisReadLater(@Model.CurrentUser.UserId, 0, 'skipReadLater');">Ver mais</button>
             }
         }
     </div>

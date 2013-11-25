@@ -163,3 +163,34 @@ function verMaisChannels(id, orderBy, category, global) {
         }
     });
 }
+
+//método que busca os tópicos de read later
+function verMaisReadLater(id, category, global) {
+    if (global == 'skipReadLater')
+        value = skipReadLater;
+ 
+
+    $.ajax({
+        url: "/api/topic/AbstTopicHtml/" + id + "?viewBy=" + orderBy + "&categoryID=" + category + "&skip=" + value,
+        type: "GET",
+        contentType: "application/json;charset=utf-8",
+        statusCode: {
+            200: function (newData) {
+
+                if (global == 'skipReadLater')
+                    skipReadLater = skipReadLater + 1;
+
+                document.getElementById("readLater").innerHTML += newData.Html;
+
+                if (newData.Count < 15) {
+                    document.getElementById("btn_" + global).style.display = "none";
+                }
+            },
+
+            400: function () {
+                //erro
+                window.alert("Erro ao processar requisição. Tente novamente mais tarde.");
+            }
+        }
+    });
+}

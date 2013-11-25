@@ -32,7 +32,7 @@ namespace Nimbus.Web.Website.Controllers
                 CurrentUser = NimbusUser,
                 ChannelPaid = channelApi.UserChannelPaid(NimbusUser.UserId),
                 User =  userApi.showProfile(id),
-                ChannelFollow = channelApi.FollowsChannel(NimbusOrganization.Id),
+                ChannelFollow = channelApi.FollowsChannel(NimbusOrganization.Id, 1),
                 MyChannels = channelApi.MyChannel(id , 1),
                 ReadLater = channelApi.showReadLaterChannel(NimbusOrganization.Id),
                 Messages = msgApi.ReceivedMessages(),
