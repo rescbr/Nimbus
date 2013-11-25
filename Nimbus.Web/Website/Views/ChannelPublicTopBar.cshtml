@@ -3,6 +3,8 @@
 <script type="text/javascript">
     //global
     currentDiv = 'divNotification';
+    skipPopular = 1;
+    skipAll = 1;
 </script>
 
 <div class="wrapperChannel">
@@ -14,7 +16,7 @@
         </ul>
     </nav>
 
-    <div id="divNotifications">
+    <div id="divNotification">
         @*ultimos topicos + ultimos comentarios*@
         @*TODO:colocar script p 'ver mais' index de pagina*@
         @foreach (var item in Model.AllTopics.Take(15).OrderByDescending(m => m.LastModified))
@@ -43,54 +45,28 @@
     </div>
 
     <div id="divPopularTopics" style="display:none;">
-        @foreach (var item in Model.AllTopics.OrderByDescending(m => m.Count))
+        <div id="popular">
+            @foreach (var item in Model.AllTopics.OrderByDescending(m => m.Count))
+            {
+                Html.RenderPartial("~/Website/Views/ChannelPartials/ChannelPartial.cshtml", item);
+            }
+        </div>
+        @if (Model.AllTopics.Count() == 15)
         {
-            @*Imagem e texto*@
-            <div class="divTopic-grade">
-                <a href="/topic/index/@item.Id">
-                    <div class="headerTopic-grade">
-                        <h1>@item.Title</h1>
-                        <img src="@item.ImgUrl" alt="@item.TopicType.ToString()" title="@item.Title" width="180" height="100">
-                    </div>
-                </a>
-                <p class="contentTopic-grade">
-                    @item.Description
-                </p>
-                <div class="footerTopic-grade">
-                    <div class="btnLeftTopic-grade">
-                        <p onclick="unReadLater();">Ler mais tarde</p> @*chamar js passando item.id*@
-                    </div>
-                    <div class="btnRightTopic-grade">
-                        <p>s2</p> @*adicionar aos favoritos*@
-                    </div>
-                </div>
-            </div>
+            <button id="btn_skipPopular" onclick="verMaisTopics(@Model.CurrentChannel.Id, 'popular', 0, 'skipPopular');">Ver mais</button>
         }
     </div>
 
     <div id="divAllTopics" style="display:none;">
-        @foreach (var item in Model.AllTopics.OrderByDescending(m => m.LastModified))
+        <div id="alltpc">
+            @foreach (var item in Model.AllTopics.OrderByDescending(m => m.LastModified))
+            {
+                Html.RenderPartial("~/Website/Views/ChannelPartials/ChannelPartial.cshtml", item);
+            }
+        </div>
+        @if (Model.AllTopics.Count() == 15)
         {
-            @*Imagem e texto*@
-            <div class="divTopic-grade">
-                <a href="/topic/index/@item.Id">
-                    <div class="headerTopic-grade">
-                        <h1>@item.Title</h1> 
-                        <img src="@item.ImgUrl" alt="@item.TopicType.ToString()" title="@item.Title" width="180" height="100">
-                    </div>
-                </a>
-                <p class="contentTopic-grade">
-                    @item.Description
-                </p>
-                <div class="footerTopic-grade">
-                    <div class="btnLeftTopic-grade">
-                        <p onclick="unReadLater();">Ler mais tarde</p> @*chamar js passando item.id*@
-                    </div>
-                    <div class="btnRightTopic-grade">
-                        <p>s2</p> @*adicionar aos favoritos*@
-                    </div>
-                </div>
-            </div>
+            <button id="btn_skipAll" onclick="verMaisTopics(@Model.CurrentChannel.Id, 'alltpc', 0, 'skipAll');">Ver mais</button>
         }
     </div>
 
