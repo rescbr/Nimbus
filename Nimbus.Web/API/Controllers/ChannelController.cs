@@ -492,15 +492,10 @@ namespace Nimbus.Web.API.Controllers
                             }
                             int tagID = db.SelectParam<Tag>(tag => tag.TagName.ToLower() == q.ToLower()).Select(tag => tag.Id).FirstOrDefault();
 
-                            List<int> idChannels = db.SelectParam<TagChannel>(tgc => tgc.TagId == tagID).Select(tgc => tgc.ChannelId).ToList();
+                            var idChannels = db.Where<TagChannel>(tgc => tgc.TagId == tagID).Select(tgc => tgc.ChannelId);
 
-                            foreach (int item in idChannels)
-                            {
-                                Channel chn = db.SelectParam<Channel>(ch => ch.Id == item && ch.Visible == true && ch.OrganizationId == idOrg).FirstOrDefault();
-                                if (chn != null)
-                                    channels.Add(chn);
-                            }
-
+                            channels = idChannels.Select(ch => db.Where<Channel>(c => c.Visible == true && c.OrganizationId == idOrg && c.Id == ch)
+                                                                 .FirstOrDefault()).Where(ch => ch != null).ToList();
                         }
                         else
                         {
@@ -571,37 +566,27 @@ namespace Nimbus.Web.API.Controllers
         [HttpGet]
         public List<Channel> MyChannel(int? id = 0 , int skip = 0)
         {
-            List<Channel> listChannel = new List<Channel>();
-            try
+            List<Channel> listChannel;
+            using (var db = DatabaseFactory.OpenDbConnection())
             {
-                using(var db = DatabaseFactory.OpenDbConnection())
+                if (id == null)
                 {
-                    if (id == null)
-                    {
-                        id = NimbusUser.UserId;
-                    }
-                   List<int> idsChannel = db.Where<Role>(rl => rl.IsOwner == true && rl.UserId == id).Skip(15 * skip).Take(15).Select(rl => rl.ChannelId).ToList();
-                   List<Category> listCategory = db.Select<Category>();
-
-                    foreach (int item in idsChannel)
-                    {
-                        Channel channel = (from chn in db.SelectParam<Channel>(chn => chn.Visible == true && chn.Id == item) 
-                                           select new Channel()
-                                            {
-                                                Id = chn.Id,
-                                                Name = chn.Name,
-                                                OrganizationId = chn.OrganizationId,
-                                                ImgUrl = listCategory.Where(c=> c.Id == chn.CategoryId).Select(c => c.ImageUrl).FirstOrDefault()
-                                                
-                                            }).FirstOrDefault();
-                        listChannel.Add(channel);
-                    }                       
+                    id = NimbusUser.UserId;
                 }
-            }
-            catch (Exception ex)
-            {
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
-            }
+                var idsRole = db.Where<Role>(rl => rl.IsOwner == true && rl.UserId == id).Skip(15 * skip).Take(15).Select(rl => rl.ChannelId);
+
+                listChannel = idsRole.Select(rl => db.Where<Channel>(ch => ch.Visible == true && ch.Id == rl)
+                                        .FirstOrDefault()).Where(ch => ch != null).ToList();
+
+                foreach (var item in listChannel)
+                {
+                    if (item.OrganizationId == 1) // quando o cara não é org pagante, nao pode mudar a capa do channel, logo no abstract iria ficar uma 'cor solida feia'
+                    {
+                        item.ImgUrl = item.ImgUrl.Replace("/CapaChannel/", "/category/");
+                    }
+                }
+            } 
+           
             return listChannel;
         }
 
@@ -613,31 +598,15 @@ namespace Nimbus.Web.API.Controllers
         [HttpGet]
         public List<Channel> UserChannelPaid(int id)
         {
-            List<Channel> listChannel = new List<Channel>();
-            try
-            {
+            List<Channel> listChannel = new List<Channel> ();            
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    List<int> idsChannel = db.SelectParam<Role>(rl => rl.Paid == true && rl.Accepted == true &&  rl.UserId == id).Select(rl => rl.ChannelId).ToList();
-
-                    foreach (int item in idsChannel)
-                    {
-                        Channel channel = (from chn in db.SelectParam<Channel>(chn => chn.Visible == true && chn.Id == item)
-                                           select new Channel()
-                                           {
-                                               Id = chn.Id,
-                                               Name = chn.Name,
-                                               OrganizationId = chn.OrganizationId,
-                                               ImgUrl = chn.ImgUrl
-                                           }).FirstOrDefault();
-                        listChannel.Add(channel);
-                    }
+                    listChannel = db.Where<Role>(rl => rl.Paid == true && rl.Accepted == true && rl.UserId == id)
+                                    .Select(role => db.Where<Channel>(chn => chn.Visible == true && chn.Id == role.ChannelId).FirstOrDefault())
+                                    .Where(ch => ch != null).ToList();
+                  
                 }
-            }
-            catch (Exception ex)
-            {
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
-            }
+           
             return listChannel;
         }
 
@@ -723,32 +692,25 @@ namespace Nimbus.Web.API.Controllers
         [HttpGet]
         public List<Channel> FollowsChannel(int id, int skip)
         {
-            List<Channel> listChannel = new List<Channel>();
-            List<int> listUserChannel = new List<int>();
-            try
-            {
+            List<Channel> listChannel = new List<Channel>();                      
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {                    
-                    listUserChannel = db.SelectParam<ChannelUser>(ch => ch.UserId == NimbusUser.UserId && ch.Visible == true && ch.Follow == true)
+                   var listUserChannel = db.SelectParam<ChannelUser>(ch => ch.UserId == NimbusUser.UserId && ch.Visible == true && ch.Follow == true)
                                                                  .Skip(15 * skip).Take(15)
-                                                                 .Select(ch => ch.ChannelId).ToList();
-                    ICollection<Category> listCategry = db.Select<Category>();
-                    if (listUserChannel.Count > 0)
-                    {
-                        foreach (int item in listUserChannel)
-                        {
-                            Channel channel = new Channel();
-                            channel = db.SelectParam<Channel>(ch => ch.Visible == true && ch.OrganizationId == id && ch.Id == item).First();
-                            channel.ImgUrl = listCategry.Where(c => c.Id == channel.CategoryId).Select(c => c.ImageUrl).FirstOrDefault();
-                            listChannel.Add(channel);
-                        }
-                    }                    
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
-            }
+                                                                 .Select(ch => ch.ChannelId);
+
+                   listChannel = listUserChannel.Select(rl => db.Where<Channel>(ch => ch.Visible == true && ch.Id == rl)
+                                                .FirstOrDefault()).Where(ch => ch != null).ToList();
+
+                   foreach (var item in listChannel)
+                   {
+                       if (item.OrganizationId == 1) // quando o cara não é org pagante, nao pode mudar a capa do channel, logo no abstract iria ficar uma 'cor solida feia'
+                       {
+                           item.ImgUrl = item.ImgUrl.Replace("/CapaChannel/", "/category/");
+                       }
+                   }
+                }                
+           
             return listChannel;
         }
 
@@ -761,28 +723,25 @@ namespace Nimbus.Web.API.Controllers
         public List<Channel> showReadLaterChannel(int id, int skip)
         {
             List<Channel> listChannel = new List<Channel>();
-            try
-            {
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    List<int> listUserChannel = db.SelectParam<UserChannelReadLater>(ch => ch.UserId == NimbusUser.UserId && ch.Visible == true)
-                                                                 .Skip(15*skip).Take(15)
-                                                                 .Select(ch => ch.ChannelId).ToList();
-                    if (listUserChannel.Count > 0)
+
+                    var listUserChannel = db.SelectParam<UserChannelReadLater>(ch => ch.UserId == NimbusUser.UserId && ch.Visible == true)
+                                                                 .Skip(15 * skip).Take(15)
+                                                                 .Select(ch => ch.ChannelId);
+
+                    listChannel = listUserChannel.Select(rl => db.Where<Channel>(ch => ch.Visible == true && ch.Id == rl)
+                                                .FirstOrDefault()).Where(ch => ch != null).ToList();
+
+                    foreach (var item in listChannel)
                     {
-                        foreach (int item in listUserChannel)
+                        if (item.OrganizationId == 1) // quando o cara não é org pagante, nao pode mudar a capa do channel, logo no abstract iria ficar uma 'cor solida feia'
                         {
-                            Channel channel = new Channel();
-                            channel = db.SelectParam<Channel>(ch => ch.Visible == true && ch.OrganizationId == id && ch.Id == item).First();
-                            listChannel.Add(channel);
+                            item.ImgUrl = item.ImgUrl.Replace("/CapaChannel/", "/category/");
                         }
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
-            }
+           
             return listChannel;
         }
 
@@ -1418,7 +1377,7 @@ namespace Nimbus.Web.API.Controllers
                         channel.LastModification = DateTime.Now;
                         channel.OpenToComments = editChannel.OpenToComments;
                         channel.Price = editChannel.Price != -1? editChannel.Price : 0;
-                        channel.Visible = editChannel.Visible;
+                        channel.Visible = channel.Visible;
                         
                         db.Update<Channel>(channel);
                         //TODO: Notificação

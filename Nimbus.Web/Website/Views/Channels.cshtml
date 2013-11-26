@@ -59,7 +59,7 @@
 
 @** começo da parte só do channel*@
 <div id="nameChannelPage">
-    <h1>@Model.CurrentChannel.Name</h1>
+    <h1 id="hChannelName">@Model.CurrentChannel.Name</h1>
 </div>
 
 <div id="divInfCanal">
@@ -241,13 +241,13 @@
                     Aberto para comentários:
                     @if(Model.CurrentChannel.OpenToComments == true)
                     { 
-                        <input type="radio" name="openComment" value="Sim" checked required />                         
-                        <input type="radio" name="openComment" value="Não" required />                                                                                            
+                        <input type="radio" name="openComment" checked required /><text>Sim</text>
+                        <input type="radio" name="openComment" required /><text>Não</text>                                                                                      
                     }
                     else
                     { 
-                        <input type="radio" name="openComment" value="Sim"  required /> 
-                        <input type="radio" name="openComment" value="Não" checked required />
+                        <input type="radio" name="openComment" required /><text>Sim</text>
+                        <input type="radio" name="openComment" checked required /><text>Não</text>
                     }                                                                                      
                 </p>
                 
@@ -273,7 +273,7 @@
                         <div id="divTags" class="modal-content">
                             <!--Incluido por pelo js ajaxLoadTags-->
                         </div>
-                        <button id="btnSaveTag" onclick="ajaxEditTag(@Model.CurrentChannel.Id);">Salvar</button>
+                        <button id="btnSaveTag" onclick="ajaxEditTag(@Model.CurrentChannel.Id);">Salvar tags</button>
                     </div>
 
                     <footer>

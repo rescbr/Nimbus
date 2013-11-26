@@ -664,49 +664,16 @@ function ajaxSaveAllEdit(id)
     //alterou somente a permissao
     var obj = $("select[id*='newPermissionSelect_']");
 
-    for (var i = 0; i < obj.length; i++) {
-        idUser = obj[i].id.replace("newPermissionSelect_", "");
+    if (obj.length > 0) {
+        for (var i = 0; i < obj.length; i++) {
+            idUser = obj[i].id.replace("newPermissionSelect_", "");
 
-        var select = obj[i].selectedIndex;
-        var option = obj[i].options;
-        var permission = option[select].value;
-        $.ajax({
-            url: "/api/Channel/EditPermissionModerator/" + id + "?userId=" + idUser + "&permission=" + permission,
-            type: "POST",
-            contentType: "application/json;charset=utf-8",
-            statusCode: {
-                200: function (newData) {
-                    success = true;
-                },
-
-                400: function () {
-                    //erro
-                    window.alert("Não foi possível realizar esta operação. Tente novamente mais tarde.");
-                    success = false;
-                }
-            }
-        });
-    }
-    //salvar nome
-    if (success == true) {
-        title = document.getElementById('txtEditTitle').value;
-        ajaxData = {};
-        ajaxData['Name'] = title;
-        if(document.getElementsByName('openComment')[0].isChecked)
-            ajaxData['OpenToComments'] = true;
-        if (document.getElementsByName('openComment')[1].isChecked)
-            ajaxData['OpenToComments'] = false;
-
-        var category = document.getElementById('slcCategory');
-        var select = category.selectedIndex;
-        var option = obcategory.options;
-        var categoryId = option[select].value;
-        ajaxData['CategoryId'] = categoryId;
-        if (title != null && title != "") {
+            var select = obj[i].selectedIndex;
+            var option = obj[i].options;
+            var permission = option[select].value;
             $.ajax({
-                url: "/api/Channel/EditChannel",
+                url: "/api/Channel/EditPermissionModerator/" + id + "?userId=" + idUser + "&permission=" + permission,
                 type: "POST",
-                data: JSON.stringify(ajaxData),
                 contentType: "application/json;charset=utf-8",
                 statusCode: {
                     200: function (newData) {
@@ -722,7 +689,46 @@ function ajaxSaveAllEdit(id)
             });
         }
     }
-    if (success == true)
-        //fechar modal
-        document.getElementById('closeModalEdit').click();
+    else {
+        success = true;
+    }
+    //salvar nome
+    if (success == true) {
+        title = document.getElementById('txtEditTitle').value;
+        ajaxData = {};
+        ajaxData['Name'] = title;
+        ajaxData['Id'] = id;
+        if(document.getElementsByName('openComment')[0].isChecked)
+            ajaxData['OpenToComments'] = true;
+        if (document.getElementsByName('openComment')[1].isChecked)
+            ajaxData['OpenToComments'] = false;
+        
+        var category = document.getElementById('slcCategory');
+        var select = category.selectedIndex;
+        var option = category.options;
+        var categoryId = option[select].value;
+
+        ajaxData['CategoryId'] = categoryId;
+        if (title != null && title != "") {
+            $.ajax({
+                url: "/api/Channel/EditChannel",
+                type: "POST",
+                data: JSON.stringify(ajaxData),
+                contentType: "application/json;charset=utf-8",
+                statusCode: {
+                    200: function (newData) {
+                        document.getElementById('closeModalEdit').click();
+                        document.getElementById('hChannelName').innerHTML = newData.Title;
+                        document.getElementById('imgCapa').src = newData.ImgUrl;
+                    },
+
+                    400: function () {
+                        //erro
+                        window.alert("Não foi possível realizar esta operação. Tente novamente mais tarde.");
+                        success = false;
+                    }
+                }
+            });
+        }
+    }
 }
