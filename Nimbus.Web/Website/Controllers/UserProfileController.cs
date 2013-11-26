@@ -19,25 +19,35 @@ namespace Nimbus.Web.Website.Controllers
     public class UserProfileController : NimbusWebController
     {
         [Authorize]
-        public ActionResult Index(int? id)
+        public async Task<ActionResult> Index(int? id)
         {
             var channelApi = ClonedContextInstance<API.Controllers.ChannelController>();
             var userApi = ClonedContextInstance<API.Controllers.UserController>();
             var msgApi = ClonedContextInstance<API.Controllers.MessageController>();
             var categoryApi = ClonedContextInstance<API.Controllers.CategoryController>();
-            
+
+            var taskChannelPaid = Task.Run(() => channelApi.UserChannelPaid(NimbusUser.UserId));
+            var taskUser = Task.Run(() => userApi.showProfile(id));
+            var taskChannelFollow = Task.Run(() => channelApi.FollowsChannel(NimbusOrganization.Id, 0));
+            var taskMyChannels = Task.Run(() => channelApi.MyChannel(id , 0));
+            var taskReadLater = Task.Run(() => channelApi.showReadLaterChannel(NimbusOrganization.Id, 0));
+            var taskMessages = Task.Run(() => msgApi.ReceivedMessages(0));
+            var taskCategories = Task.Run(() => categoryApi.showAllCategory());
+            var taskChannelManager = Task.Run(()=>channelApi.ModeratorChannel(id));
+
+            await Task.WhenAll(taskChannelPaid, taskUser, taskChannelFollow, taskMyChannels, taskReadLater, taskMessages, taskCategories, taskChannelManager);
 
             var userprofile = new UserProfileModel()
             {
                 CurrentUser = NimbusUser,
-                ChannelPaid = channelApi.UserChannelPaid(NimbusUser.UserId),
-                User =  userApi.showProfile(id),
-                ChannelFollow = channelApi.FollowsChannel(NimbusOrganization.Id, 0),
-                MyChannels = channelApi.MyChannel(id , 0),
-                ReadLater = channelApi.showReadLaterChannel(NimbusOrganization.Id, 0),
-                Messages = msgApi.ReceivedMessages(0),
-                Categories = categoryApi.showAllCategory(),
-                ChannelMannager = channelApi.ModeratorChannel(id)
+                ChannelPaid = taskChannelPaid.Result,
+                User =  taskUser.Result,
+                ChannelFollow = taskChannelFollow.Result,
+                MyChannels =  taskMyChannels.Result,
+                ReadLater = taskReadLater.Result,
+                Messages = taskMessages.Result,
+                Categories = taskCategories.Result,
+                ChannelMannager = taskChannelManager.Result
             };
             return View("UserProfile", userprofile);
         }

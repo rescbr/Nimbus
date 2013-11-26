@@ -17,6 +17,10 @@ namespace Nimbus.Web
                     SqlServerDialect.Provider);
             using (var db = dbFactory.OpenDbConnection())
             {
+
+                db.CreateTable(false, typeof(Message));
+                db.CreateTable(false, typeof(ReceiverMessage));
+
                 if (!db.TableExists("Organization"))
                 {
 

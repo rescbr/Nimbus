@@ -9,11 +9,12 @@ namespace Nimbus.Model.ORM
 {
     public class ReceiverMessage : Nimbus.Model.ReceiverMessage
     {
-        [PrimaryKey]
+        //GAMBIARRA POR CAUSA DO SERVICESTACK NOJENTO https://groups.google.com/forum/#!msg/servicestack/u81hFKRyFLw/htYx6BDW9ZgJ
+        public string Id { get { return this.UserId + ":" + this.MessageId; } }
+
         [References(typeof(User))]
         public override int UserId { get; set; }
         
-        [PrimaryKey]
         [References(typeof(Message))]
         public override int MessageId { get; set; }
     }
