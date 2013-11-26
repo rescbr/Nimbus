@@ -44,8 +44,8 @@ namespace Nimbus.Web.API.Controllers
                             ChannelId = message.ChannelId,
                             Date = DateTime.Now,
                             ReadStatus = false,
-                            Text = HttpUtility.HtmlEncode(message.Text),
-                            Title = HttpUtility.HtmlEncode(message.Title),
+                            Text = message.Text,
+                            Title = message.Title,
                             Visible = true,
                             Receivers = listReceiver
                         };
@@ -53,6 +53,7 @@ namespace Nimbus.Web.API.Controllers
 
                         int idMesg = (int)db.GetLastInsertId();
                         message.Id = idMesg;
+                        dadosMsg.Id = idMesg;
                         foreach (var item in listReceiver)
                         {
                             if (item.UserId == NimbusUser.UserId)

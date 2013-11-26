@@ -5,14 +5,23 @@ using System.Web;
 using Microsoft.AspNet.SignalR;
 using Nimbus.Web.Utils;
 
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Auth;
+using Microsoft.WindowsAzure.Storage.Table;
+using System.Threading.Tasks;
+
 namespace Nimbus.Web.Notifications
 {
     public class MessageNotification : NimbusNotificationBase
     {
         public void NewMessage(Model.ORM.Message msg)
         {
+            Task.Run(() => NewMessageTask(msg));
+        }
+        public void NewMessageTask(Model.ORM.Message msg)
+        {
             var sender = msg.Receivers.Where(r => r.UserId == msg.SenderId).FirstOrDefault();
-            var receivers = msg.Receivers.Where(r => r.UserId != msg.SenderId);
+            var receivers = msg.Receivers.Where(r => r.UserId != msg.SenderId).Select(s => s.UserId);
 
             var messageNotification = new MessageNotificationModel
             {
@@ -28,10 +37,31 @@ namespace Nimbus.Web.Notifications
             string htmlNotif = rz.ParseRazorTemplate<MessageNotificationModel>
                 ("~/Website/Views/NotificationPartials/Message.cshtml", messageNotification);
 
-            foreach (var receiver in receivers)
+            Task.Run(() =>
             {
-                NimbusHubContext.Clients.Group(NimbusHub.GetMessageGroupName(receiver.UserId)).newMessageNotification(htmlNotif);
+                StoreNotifications(messageNotification, receivers.ToArray());
+            });
+
+            Parallel.ForEach(receivers, (receiver) =>
+            {
+                NimbusHubContext.Clients.Group(NimbusHub.GetMessageGroupName(receiver)).newMessageNotification(htmlNotif);
+            });
+        }
+
+        public void StoreNotifications(MessageNotificationModel msg, int[] userids)
+        {
+            CloudStorageAccount _storageAccount = CloudStorageAccount.Parse(NimbusConfig.StorageAccount);
+            CloudTableClient tableClient = _storageAccount.CreateCloudTableClient();
+            CloudTable table = tableClient.GetTableReference(Const.Azure.MessageNotificationsTable);
+
+            TableBatchOperation tbo = new TableBatchOperation();
+            foreach (var userid in userids)
+            {
+                var entity = new NotificationTableEntity<MessageNotificationModel>(msg, userid);
+                tbo.Insert(entity);    
             }
+
+            table.ExecuteBatch(tbo);
         }
     }
 
