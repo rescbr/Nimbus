@@ -13,7 +13,8 @@ namespace Nimbus.Web
         {
             public const string AvatarContainer = "avatarupload";
             public const string TopicContainer = "topicupload";
-            
+
+            public const string MessageNotificationsTable = "messagenotifications";
         }
 
         public static class Auth

@@ -83,6 +83,7 @@ namespace Nimbus.Web.API.Controllers
 
                         int idMesg = (int)db.GetLastInsertId();
                         message.Id = idMesg;
+                        dadosMsg.Id = idMesg;
                         foreach (var item in listReceiver)
                         {
                             if (item.UserId == NimbusUser.UserId) //qm está enviando
