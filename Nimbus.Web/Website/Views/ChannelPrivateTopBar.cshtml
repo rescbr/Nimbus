@@ -5,6 +5,8 @@
     currentDiv = 'divNotifications';
     divTipoTopic = '';
     CurrentQuestion = '1';
+    skipPopular = 1;
+    skipAll = 1;
 </script>
 
 @Scripts.Render("~/Scripts/jquery.form.js")
@@ -23,55 +25,28 @@
 <div>
 
         <div id="divPopularTopics" style="display:none;">
-            @foreach (var item in Model.AllTopics.OrderByDescending(m => m.Count))
-            {
-                @*Imagem e texto*@
-                <div class="divTopic-grade">
-                    <a href="/topic/index/@item.Id">
-                        <div class="headerTopic-grade">
-                            <h1>@item.Title</h1>
-                            <img src="@item.ImgUrl" alt="@item.TopicType.ToString()" title="@item.Title" width="180" height="100">
-                        </div>
-                    </a>
-                    <p class="contentTopic-grade">
-                        @item.Description
-                    </p>
-                    <div class="footerTopic-grade">
-                        <div class="btnLeftTopic-grade">
-                            <p onclick="unReadLater();">Ler mais tarde</p> @*chamar js passando item.id*@
-                        </div>
-                        <div class="btnRightTopic-grade">
-                            <p>s2</p> @*adicionar aos favoritos*@
-                        </div>
-                    </div>
-                </div>
+            <div id="popular">
+                @foreach (var item in Model.AllTopics.OrderByDescending(m => m.Count))
+                {
+                    Html.RenderPartial("~/Website/Views/ChannelPartials/TopicPartial.cshtml", item);
+                }
+            </div>
+            @if(Model.AllTopics.Count() == 15)
+            { 
+                <button id="btn_skipPopular" onclick="verMaisTopics(@Model.CurrentChannel.Id, 'popular', 0, 'skipPopular');">Ver mais</button>
             }
-
         </div>
 
         <div id="divAllTopics" style="display:none;">
-            @foreach (var item in Model.AllTopics.OrderByDescending(m => m.LastModified))
+            <div id="alltpc">
+                @foreach (var item in Model.AllTopics.OrderByDescending(m => m.LastModified))
+                {
+                    Html.RenderPartial("~/Website/Views/ChannelPartials/TopicPartial.cshtml", item);
+                }
+            </div>
+            @if(Model.AllTopics.Count() == 15)
             {
-                @*Imagem e texto*@
-                <div class="divTopic-grade">
-                    <a href="/topic/index/@item.Id">
-                        <div class="headerTopic-grade">
-                            <h1>@item.Title</h1>
-                            <img src="@item.ImgUrl" alt="@item.TopicType.ToString()" title="@item.Title" width="180" height="100">
-                        </div>
-                    </a>
-                    <p class="contentTopic-grade">
-                        @item.Description
-                    </p>
-                    <div class="footerTopic-grade">
-                        <div class="btnLeftTopic-grade">
-                            <p onclick="unReadLater();">Ler mais tarde</p> @*chamar js passando item.id*@
-                        </div>
-                        <div class="btnRightTopic-grade">
-                            <p>s2</p> @*adicionar aos favoritos*@
-                        </div>
-                    </div>
-                </div>
+                 <button id="btn_skipAll" onclick="verMaisTopics(@Model.CurrentChannel.Id, 'alltpc', 0, 'skipAll');">Ver mais</button>
             }
         </div>
 
@@ -173,22 +148,22 @@
 
                 <div>
                     <div id="divExam" style="display:none;">
-                        <div id="divPergunta1">
+                        <div id="divPergunta1" class="divPergEditarNimbus">
                             <p>
                                 Enunciado da questão:
-                                <input id="QuestionPerg1" name="enunciado" type="text" maxlength="600" />
+                                <input id="QuestionPerg1" class="enunciado" type="text" maxlength="600" />
                             </p>
                             <p>Respostas:</p>
                             <div>
                                 <ul id="ulPerg1">
                                     <li id="liPerg1_opt1">
                                         @*pergunta 1 _ opçao 1*@
-                                        <input type="radio" name="radio_perg1" id="rdbPerg1_opt1" />
-                                        <input id="txtPerg1_opt1" name="resposta" type="text" onfocus="javascript: this.value = ''" value="Opção 1" />
+                                        <input type="radio" class="rdbPergEditNimbus" name="radio_perg1" id="rdbPerg1_opt1" />
+                                        <input id="txtPerg1_opt1" class="resposta" type="text" onfocus="javascript: this.value = ''" value="Opção 1" />
                                     </li>
                                     <li id="liPerg1_opt2">
-                                        <input type="radio" class="fakeDisable" name="radio_perg1" id="rdbPerg1_opt2"  />
-                                        <input id="txtPerg1_opt2" class="fakeDisable" onclick="DisableOption('2', 'divPergunta1');" name="resposta" type="text" value="Opção 2" />
+                                        <input type="radio" class="fakeDisable rdbPergEditNimbus" name="radio_perg1" id="rdbPerg1_opt2" />
+                                        <input id="txtPerg1_opt2" class="fakeDisable" onclick="DisableOption('2', 'divPergunta1');" type="text" value="Opção 2" />
                                     </li>
                                 </ul>
                             </div>

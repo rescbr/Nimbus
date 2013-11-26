@@ -1,0 +1,13 @@
+﻿
+@model Nimbus.Model.Channel
+
+@*Imagem e texto*@
+@*Imagem*@
+<div id="divChannel">
+    <a href="/channel/index/@Model.Id">
+        <div id="headerChannel">
+            <h1>@Model.Name</h1>
+            <img src="@Model.ImgUrl" id="imgChannel" alt="Canal" title="@Model.Name">
+        </div>
+    </a>
+</div>

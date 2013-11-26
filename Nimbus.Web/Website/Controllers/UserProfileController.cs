@@ -32,10 +32,10 @@ namespace Nimbus.Web.Website.Controllers
                 CurrentUser = NimbusUser,
                 ChannelPaid = channelApi.UserChannelPaid(NimbusUser.UserId),
                 User =  userApi.showProfile(id),
-                ChannelFollow = channelApi.FollowsChannel(NimbusOrganization.Id),
-                MyChannels = channelApi.MyChannel(id),
-                ReadLater = channelApi.showReadLaterChannel(NimbusOrganization.Id),
-                Messages = msgApi.ReceivedMessages(),
+                ChannelFollow = channelApi.FollowsChannel(NimbusOrganization.Id, 0),
+                MyChannels = channelApi.MyChannel(id , 0),
+                ReadLater = channelApi.showReadLaterChannel(NimbusOrganization.Id, 0),
+                Messages = msgApi.ReceivedMessages(0),
                 Categories = categoryApi.showAllCategory(),
                 ChannelMannager = channelApi.ModeratorChannel(id)
             };

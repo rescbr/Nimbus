@@ -69,7 +69,7 @@ function ajaxEditTopic(id, topicType, divOld) {
                             document.getElementById('pTopicText').innerHTML = newData.Text;
                         }
                         else if (newData.TopicType == 3) {
-                            //TODO
+                            updateFieldsEcam(newData);
                         }                                             
 
                         document.getElementById('divRenderEdit').style.display = 'none';
@@ -92,42 +92,39 @@ function ajaxEditTopic(id, topicType, divOld) {
 
 }
 
-function examEdit()
-{  
-        var questionData = {}
-        var listQuestion = []
-        var listNewPerg = document.getElementsByName('enunciado');
-        var listOldPerg = document.getElementsByName('enunciadoOld');
-        var isChecked = false;
-        var isCheckedOld = false;
+function examEdit() {
+    var listQuestion = [];
+    var listPerg = document.getElementsByClassName('divPergEditarNimbus');
+    var isChecked = false;
+  
+    //para novas perguntas
+    for (perg = 0; perg < listPerg.length; perg++) //para cada pergunta
+    {
+        var dictionary = new Object();
+        var questionData = {};
+        var item = listPerg[perg];
+        var enunciado = item.getElementsByClassName('enunciado')[0].value; //pego o conteudo = enunciado 
 
-        //para novas perguntas
-        for (perg = 0; perg < listNewPerg.length; perg++) //para cada pergunta
-        {
-            var item = listNewPerg[perg];
-            questionData["TextQuestion"] = item.value; //pego o conteudo = enunciado   
+        if (enunciado != "") {
+            questionData["TextQuestion"] = enunciado;
 
-            var currentPerg = item.id.replace("QuestionPerg", ""); //pega o indice da pergunta atual
-            var listOpt = [];
-            var dictionary = new Object();
+            //pega todas os conjuto de respostas
+            var conjRespostas = item.getElementsByClassName('resposta');
 
-            $("#divExam li").each(function () {//pego todas as opções novas
-                var id = this.id;
-                if (id.indexOf("liPerg") > -1) {
-                    listOpt.push(id);
-                }
-            });
+            //para cada conjunto pegas as resposta
+            for (conj = 0; conj < conjRespostas.length; conj++) {
 
-            for (option = 0; option < listOpt.length; option++) {
-                var rdbOption = document.getElementById('rdbPerg' + currentPerg + '_opt' + (option + 1));
-                var txtOption = document.getElementById('txtPerg' + currentPerg + '_opt' + (option + 1));
+                var rdb = item.getElementsByClassName('rdbPergEditNimbus')[conj];
+                var ipt = item.getElementsByClassName('resposta')[conj];
 
-                if (txtOption.value != "Opção " + (option + 1) && txtOption.value != "") {
-                    if (rdbOption.checked == true) {
-                        questionData["CorrectAnswer"] = option + 1; //passa o indice da resposta certa + 1 .'. o for começa do zero                    
+                var texto = ipt.value;
+
+                if (texto != "" && ipt.className.indexOf('fakeDisable') == -1 && ipt.style.display != 'none') {
+                    if (rdb.checked == true) {
+                        questionData["CorrectAnswer"] = conj + 1;
                         isChecked = true;
                     }
-                    dictionary[option + 1] = txtOption.value; //dictionary<int, string>
+                    dictionary[conj + 1] = ipt.value; //valor digitado original //dictionary<int, string>
 
                     questionData["ChoicesAnswer"] = dictionary;
                 }
@@ -136,48 +133,31 @@ function examEdit()
                 listQuestion.push(questionData);
             }
         }
+    }
+    return listQuestion;
+}
 
-            //para velhas perguntas
-            for (perg = 0; perg < listOldPerg.length; perg++) //para cada pergunta
-            {
-                var item = listOldPerg[perg];
-                questionData["TextQuestion"] = item.value; //pego o conteudo = enunciado   
+function updateFieldsEcam(data)
+{
+    var divContent = document.getElementById('divAllQuestions');
+    var stringQuestion = "";
 
-                 if (item.style.display != "none") { 
-                    var currentPerg = item.id.replace("QuestionPerg", ""); //pega o indice da pergunta atual
+    for(i = 0; i < data.Question.length; i++)
+    {
+        var question = data.Question[i];
+        var answers = question.ChoicesAnswer;       
 
-                    var listOldOpt = [];
-                    var dictionary = new Object();
+        var stringAswer = ""; 
+        for (var a in answers)
+        {
+            stringAswer += "<input type=\"radio\" name=\"" + i + "\" value=\"" + a.Key + "\" />" + a.Value + "<br />";
+        }
 
-                    $("#divNewExam li").each(function () {//pego todas as opções que existiam
-                        var id = this.id;
-                        if (id.indexOf("liPerg_") > -1) {
-                            listOldOpt.push(id);
-                        }
-                    });
+        stringQuestion += "<section>" +
+                            "<p><strong>" + (i + 1) + "</strong> - " + question.TextQuestion + "</p>" +
+                            stringAswer +
+                          "</section>";
 
-                    for (option = 0; option < listOldOpt.length; option++) {
-
-                        var rdbOption = document.getElementById('rdbPerg' + currentPerg + '_opt' + (option + 1));
-                        var txtOption = document.getElementById('txtPerg' + currentPerg + '_opt' + (option + 1));
-
-                        if (rdbOption.style.display != "none" && txtOption.style.display != "none") {
-                            if (txtOption.value != "Opção " + (option + 1) && txtOption.value != "") {
-                                if (rdbOption.checked == true) {
-                                    questionData["CorrectAnswer"] = option + 1; //passa o indice da resposta certa + 1 .'. o for começa do zero                    
-                                    isCheckedOld = true;
-                                }
-                                dictionary[option + 1] = txtOption.value; //dictionary<int, string>
-
-                                questionData["ChoicesAnswer"] = dictionary;
-                            }
-                        }
-                    }
-                    if (isCheckedOld == true) {
-                        listQuestion.push(questionData);
-                    }
-                }
-            }
-
-        return listQuestion;
+        divContent.innerHTML = stringQuestion;
+    }
 }

@@ -12,5 +12,7 @@ namespace Nimbus.Model.Bags
 
         public string UserName { get; set; }
 
+        public bool UserReadStatus { get; set; }
+
     }
 }

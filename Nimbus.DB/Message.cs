@@ -20,7 +20,6 @@ namespace Nimbus.Model
 
         public string Title { get; set; }
         public string Text { get; set; }
-        public bool ReadStatus { get; set; }
         public DateTime Date { get; set; }
         public bool Visible { get; set; }
     }
@@ -39,5 +38,6 @@ namespace Nimbus.Model
         /// </summary>
         [IgnoreDataMember]
         public string AvatarUrl { get; set; }
+
     }
 }

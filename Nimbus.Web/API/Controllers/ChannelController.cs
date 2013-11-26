@@ -8,6 +8,7 @@ using ServiceStack.OrmLite;
 using Nimbus.Web.API.Models;
 using Nimbus.Model.ORM;
 using Nimbus.Model.Bags;
+using Nimbus.Web.Utils;
 
 namespace Nimbus.Web.API.Controllers
 {
@@ -528,15 +529,47 @@ namespace Nimbus.Web.API.Controllers
             }
             return channels;
         }
-        
-       
-                   
+
+
+        public class ChannelHtmlWrapper
+        {
+            public int Count { get; set; }
+            public string Html { get; set; }
+        }
+
+        [HttpGet]
+        public ChannelHtmlWrapper AbstChannelHtml(int? id = 0, string viewBy = null, int categoryID = 0, int skip = 0)
+        {
+            List<Channel> channels = new List<Channel>();
+
+            int idUser = NimbusUser.UserId;
+
+            if( viewBy == "myChannels")
+                channels = MyChannel(id, skip);
+            if(viewBy == "channelsFollow")
+                channels = FollowsChannel(idUser, skip);
+            if (viewBy == "readLater")
+                channels = showReadLaterChannel(idUser, skip);
+            
+            var rz = new RazorTemplate();
+            string html = "";
+
+            foreach (var channel in channels)
+            {
+                html += rz.ParseRazorTemplate<Channel>
+                    ("~/Website/Views/ChannelPartials/ChannelPartial.cshtml", channel);
+            }
+
+            return new ChannelHtmlWrapper { Html = html, Count = channels.Count };
+        }
+                           
+
         /// <summary>
         /// visualizar 'meus canais'
         /// </summary>
         /// <returns></returns>        
         [HttpGet]
-        public List<Channel> MyChannel(int? id = 0)
+        public List<Channel> MyChannel(int? id = 0 , int skip = 0)
         {
             List<Channel> listChannel = new List<Channel>();
             try
@@ -547,7 +580,7 @@ namespace Nimbus.Web.API.Controllers
                     {
                         id = NimbusUser.UserId;
                     }
-                   List<int> idsChannel = db.SelectParam<Role>(rl => rl.IsOwner == true && rl.UserId == id).Select(rl => rl.ChannelId).ToList();
+                   List<int> idsChannel = db.Where<Role>(rl => rl.IsOwner == true && rl.UserId == id).Skip(15 * skip).Take(15).Select(rl => rl.ChannelId).ToList();
                    List<Category> listCategory = db.Select<Category>();
 
                     foreach (int item in idsChannel)
@@ -688,7 +721,7 @@ namespace Nimbus.Web.API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public List<Channel> FollowsChannel(int id)
+        public List<Channel> FollowsChannel(int id, int skip)
         {
             List<Channel> listChannel = new List<Channel>();
             List<int> listUserChannel = new List<int>();
@@ -697,6 +730,7 @@ namespace Nimbus.Web.API.Controllers
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {                    
                     listUserChannel = db.SelectParam<ChannelUser>(ch => ch.UserId == NimbusUser.UserId && ch.Visible == true && ch.Follow == true)
+                                                                 .Skip(15 * skip).Take(15)
                                                                  .Select(ch => ch.ChannelId).ToList();
                     ICollection<Category> listCategry = db.Select<Category>();
                     if (listUserChannel.Count > 0)
@@ -724,7 +758,7 @@ namespace Nimbus.Web.API.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet]
-        public List<Channel> showReadLaterChannel(int id)
+        public List<Channel> showReadLaterChannel(int id, int skip)
         {
             List<Channel> listChannel = new List<Channel>();
             try
@@ -732,6 +766,7 @@ namespace Nimbus.Web.API.Controllers
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
                     List<int> listUserChannel = db.SelectParam<UserChannelReadLater>(ch => ch.UserId == NimbusUser.UserId && ch.Visible == true)
+                                                                 .Skip(15*skip).Take(15)
                                                                  .Select(ch => ch.ChannelId).ToList();
                     if (listUserChannel.Count > 0)
                     {

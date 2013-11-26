@@ -694,6 +694,8 @@
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Website\Views\ChannelPartials\TopicPartial.cshtml" />
+    <Content Include="Website\Views\ChannelPartials\ChannelPartial.cshtml" />
     <None Include="Website\Views\CommentPartials\PartialComment.cshtml" />
     <Content Include="Website\Views\Home.cshtml" />
     <Content Include="Website\Views\TrendingTopics.cshtml" />
@@ -724,6 +726,7 @@
     </Content>
     <Content Include="Website\Views\NotificationPartials\Message.cshtml" />
     <Content Include="Website\Views\InfoToEditTopic.cshtml" />
+    <Content Include="Website\Views\MessagePartials\MessagePartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\Controllers\DatabaseController.cs" />

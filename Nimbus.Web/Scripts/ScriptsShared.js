@@ -94,3 +94,147 @@ function ChangeTo(tipoPost, tipoAtual)
     
 
 }
+
+//método que busca os tópicos de um canal
+function verMaisTopics(id, orderBy, category, global)
+{
+    if (global == 'skipPopular')
+        value = skipPopular;
+    else if (global == 'skipAll')
+        value = skipAll;
+
+    $.ajax({
+        url: "/api/topic/AbstTopicHtml/" + id +"?viewBy=" + orderBy + "&categoryID=" + category + "&skip=" +value ,
+        type: "GET",
+        contentType: "application/json;charset=utf-8",
+        statusCode: {
+            200: function (newData) {
+
+                if (global == 'skipPopular')
+                    skipPopular = skipPopular + 1;
+                else if (global == 'skipAll')
+                    skipAll = skipAll + 1;
+
+                document.getElementById(orderBy).innerHTML += newData.Html;
+
+                if (newData.Count < 15) {
+                    document.getElementById("btn_" + global).style.display = "none";
+                }
+            },
+
+            400: function () {
+                //erro
+                window.alert("Erro ao processar requisição. Tente novamente mais tarde.");
+            }
+        }
+    });
+}
+
+//método que busca canais de 15 em 15
+function verMaisChannels(id, orderBy, category, global) {
+    if (global == 'skipMyChannels')
+        value = skipMyChannels;
+    if (global == 'skipChannelsFollow')
+        value = skipChannelsFollow;
+
+    $.ajax({
+        url: "/api/channel/AbstChannelHtml/" + id + "?viewBy=" + orderBy + "&categoryID=" + category + "&skip=" + value,
+        type: "GET",
+        contentType: "application/json;charset=utf-8",
+        statusCode: {
+            200: function (newData) {
+
+                if (global == 'skipMyChannels')
+                    skipMyChannels = skipMyChannels + 1;
+                if (global == 'skipChannelsFollow')
+                    skipChannelsFollow = skipChannelsFollow + 1;
+
+                document.getElementById(orderBy).innerHTML += newData.Html;
+
+                if (newData.Count < 15) {
+                    document.getElementById("btn_" + global).style.display = "none";
+                }
+            },
+
+            400: function () {
+                //erro
+                window.alert("Erro ao processar requisição. Tente novamente mais tarde.");
+            }
+        }
+    });
+}
+
+//método que busca os tópicos de read later
+function verMaisReadLater(id, category, global) {
+    if (global == 'skipReadLater')
+        value = skipReadLater;
+ 
+
+    $.ajax({
+        url: "/api/channel/AbstChannelHtml/" + id + "?viewBy=readLater" + "&categoryID=" + category + "&skip=" + value,
+        type: "GET",
+        contentType: "application/json;charset=utf-8",
+        statusCode: {
+            200: function (newData) {
+
+                if (global == 'skipReadLater')
+                    skipReadLater = skipReadLater + 1;
+
+                document.getElementById("readLater").innerHTML += newData.Html;
+
+                if (newData.Count < 15) {
+                    document.getElementById("btn_" + global).style.display = "none";
+                }
+            },
+
+            400: function () {
+                //erro
+                window.alert("Erro ao processar requisição. Tente novamente mais tarde.");
+            }
+        }
+    });
+}
+
+//método que busca  as mensagens por paginaçao e/ou enviadas
+function viewMessages(global, viewBy, typeBtn) {
+    if (global == 'skipMessageSend')
+        value = skipMessageSend;
+    if (global == 'skipMessageReceived')
+        value = skipMessageReceived;
+
+    var btn = document.getElementById('btn_moreMessages');
+
+    if (typeBtn == 'send')
+        btn.setAttribute('onclick', 'viewMessages(\'skipMessageSend\', \'messageSend\', \'send\');');
+    else
+        btn.setAttribute('onclick', 'viewMessages(\'skipMessageReceived\', \'messageReceived\', \'\');');
+
+    $.ajax({
+        url: "/api/message/MessagesHtml/?viewBy=" + viewBy + "&skip=" + value,
+        type: "GET",
+        contentType: "application/json;charset=utf-8",
+        statusCode: {
+            200: function (newData) {
+
+                if (global == 'skipMessageSend')
+                    skipMessageSend = skipMessageSend + 1;
+                if (global == 'skipMessageReceived')
+                    skipMessageReceived = skipMessageReceived + 1;
+
+                document.getElementById('divSeeMessages').innerHTML += newData.Html;
+
+                if (newData.Count < 15) {
+                    btn.style.display = "none";
+                }
+                else {
+                    btn.style.display = "block";
+                }
+            },
+
+            400: function () {
+                //erro
+                window.alert("Erro ao processar requisição. Tente novamente mais tarde.");
+            }
+        }
+    });
+}
