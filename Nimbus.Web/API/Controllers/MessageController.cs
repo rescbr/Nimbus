@@ -74,9 +74,8 @@ namespace Nimbus.Web.API.Controllers
                             SenderId = NimbusUser.UserId,
                             ChannelId = message.ChannelId,
                             Date = DateTime.Now,
-                            ReadStatus = false,
-                            Text = HttpUtility.HtmlEncode(message.Text),
-                            Title = HttpUtility.HtmlEncode(message.Title),
+                            Text = message.Text,
+                            Title = message.Title,
                             Visible = true,
                             Receivers = listReceiver
                         };
@@ -86,7 +85,7 @@ namespace Nimbus.Web.API.Controllers
                         message.Id = idMesg;
                         foreach (var item in listReceiver)
                         {
-                            if (item.UserId == NimbusUser.UserId)
+                            if (item.UserId == NimbusUser.UserId) //qm está enviando
                             {
                                 db.Insert(new ReceiverMessage
                                 {
@@ -94,17 +93,19 @@ namespace Nimbus.Web.API.Controllers
                                     MessageId = idMesg,
                                     UserId = item.UserId,
                                     NameUser = item.Name,
+                                    UserReadStatus = true,
                                     Status = Nimbus.Model.Enums.MessageType.send
                                 });
                             }
                             else
-                            {
+                            { //qm vai receber
                                 db.Insert(new ReceiverMessage
                                 {
                                     IsOwner = item.IsOwner,
                                     MessageId = idMesg,
                                     UserId = item.UserId,
                                     NameUser = item.Name,
+                                    UserReadStatus = false,
                                     Status = Nimbus.Model.Enums.MessageType.received
                                 });
                             }
@@ -187,7 +188,7 @@ namespace Nimbus.Web.API.Controllers
         /// mostra todas as mensagens que o usuário recebeu, mostra no perfil do usuário
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
+        [HttpGet] 
         public List<MessageBag> ReceivedMessages(int skip)
         {
             List<MessageBag> listMessage = new List<MessageBag>();
@@ -196,30 +197,28 @@ namespace Nimbus.Web.API.Controllers
                 {
                     try
                     {
-                        List<int> listIdMsg = new List<int>();
-
-                        listIdMsg = db.SelectParam<ReceiverMessage>(r => r.UserId == NimbusUser.UserId && r.Status == Model.Enums.MessageType.received)
-                                                                                   .Skip(15 * skip).Take(15)
-                                                                                   .Select(r => r.MessageId).ToList();
+                        var listIdMsg = db.Where<ReceiverMessage>(r => r.UserId == NimbusUser.UserId && r.Status == Model.Enums.MessageType.received)
+                                                            .Skip(15 * skip).Take(15)
+                                                            .Select(r => db.Where<Message>(m => m.Id == r.MessageId && m.Visible == true).FirstOrDefault());
 
                         if (listIdMsg.Count() > 0)
                         {
-                            foreach (int item in listIdMsg)
+                            foreach (var msg in listIdMsg)
                             {
                                 MessageBag bag = new MessageBag();
-                                Message msg = db.SelectParam<Message>(m => m.Visible == true && m.Id == item).First();
+                                User user = db.SelectParam<User>(u => u.Id == msg.SenderId).FirstOrDefault();
                                 bag.ChannelId = msg.ChannelId;
                                 bag.Date = msg.Date;
                                 bag.Id = msg.Id;
-                                bag.ReadStatus = msg.ReadStatus;
                                 bag.Receivers = msg.Receivers;
                                 bag.SenderId = msg.SenderId;
                                 bag.Text = msg.Text;
                                 bag.Title = msg.Title;
                                 bag.Visible = msg.Visible;
-                                bag.UserName = db.SelectParam<User>(u => u.Id == msg.SenderId).Select(u => u.FirstName).FirstOrDefault()
-                                               + " " + db.SelectParam<User>(u => u.Id == msg.SenderId).Select(u => u.LastName).FirstOrDefault();
-                                bag.AvatarUrl = db.SelectParam<User>(u => u.Id == msg.SenderId).Select(u => u.AvatarUrl).FirstOrDefault();
+                                bag.UserName = user.FirstName + " " + user.LastName;
+                                bag.AvatarUrl = user.AvatarUrl;
+                                bag.UserReadStatus = db.Where<ReceiverMessage>(r => r.UserId == NimbusUser.UserId && r.MessageId == msg.Id)
+                                                       .Select(r => r.UserReadStatus).FirstOrDefault();
 
                                 listMessage.Add(bag);
                             }
@@ -230,8 +229,8 @@ namespace Nimbus.Web.API.Controllers
                         throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
                     }
                 }
-            
-            return listMessage.OrderBy(d => d.Date).ToList();
+
+                return listMessage.OrderBy(d => d.Date).ToList();
         }
 
         /// <summary>
@@ -239,8 +238,8 @@ namespace Nimbus.Web.API.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet]
-        public List<MessageBag> ChannelReceivedMessages(int id = 0)
+        [HttpGet] 
+        public List<MessageBag> ChannelReceivedMessages(int id = 0, int skip = 0)
         {
 
             List<MessageBag> listMessage = new List<MessageBag>();
@@ -254,25 +253,26 @@ namespace Nimbus.Web.API.Controllers
 
                     if (idsAllow == true)
                     {
-                        ICollection<int> listIdMsg = db.SelectParam<ReceiverMessage>(rv => rv.UserId == NimbusUser.UserId).Select(rv => rv.MessageId).ToList();
-                        //TODO colocar restricao p/ mostrar só type.received
+                       var listIdMsg = db.Where<ReceiverMessage>(r => r.Status == Model.Enums.MessageType.received)
+                                                             .Skip(15 * skip).Take(15)
+                                                             .Select(r => db.Where<Message>(m => m.Id == r.MessageId && m.Visible == true && m.ChannelId == id).FirstOrDefault());
 
-                        foreach (int item in listIdMsg)
+                        foreach (var msg in listIdMsg)
                         {
                             MessageBag bag = new MessageBag();
-                            Message msg = db.Where<Message>(m => m.Visible == true && m.Id == item).First();
+                            User user = db.SelectParam<User>(u => u.Id == msg.SenderId).FirstOrDefault();
                             bag.ChannelId = msg.ChannelId;
                             bag.Date = msg.Date;
                             bag.Id = msg.Id;
-                            bag.ReadStatus = msg.ReadStatus;
-                            bag.Receivers = msg.Receivers; //TODO colocar htmlencode
+                            bag.Receivers = msg.Receivers;
                             bag.SenderId = msg.SenderId;
-                            bag.Text = HttpUtility.HtmlDecode(msg.Text);
-                            bag.Title = HttpUtility.HtmlDecode(msg.Title);
+                            bag.Text = msg.Text;
+                            bag.Title = msg.Title;
                             bag.Visible = msg.Visible;
-                            bag.UserName = db.SelectParam<User>(u => u.Id == msg.SenderId).Select(u => u.FirstName).FirstOrDefault()
-                                           + " " + db.SelectParam<User>(u => u.Id == msg.SenderId).Select(u => u.LastName).FirstOrDefault();
-                            bag.AvatarUrl = db.SelectParam<User>(u => u.Id == msg.SenderId).Select(u => u.AvatarUrl).FirstOrDefault();
+                            bag.UserName = user.FirstName + " " + user.LastName;
+                            bag.AvatarUrl = user.AvatarUrl;
+                            bag.UserReadStatus = db.Where<ReceiverMessage>(r => r.MessageId == msg.Id)
+                                                       .Select(r => r.UserReadStatus).FirstOrDefault();
 
                             listMessage.Add(bag);
                         }
@@ -293,7 +293,7 @@ namespace Nimbus.Web.API.Controllers
         /// lista as mensagens enviadas pelo usuário
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
+        [HttpGet] 
         public List<MessageBag> SentMessages(int skip)
         {
             List<MessageBag> listMessage = new List<MessageBag>();
@@ -301,15 +301,13 @@ namespace Nimbus.Web.API.Controllers
                 {
                     try
                     {
-                        List<int> msgSend = new List<int>();
-                        msgSend = db.SelectParam<ReceiverMessage>(rm => rm.Status == Nimbus.Model.Enums.MessageType.send
-                                                                       && rm.UserId == NimbusUser.UserId).Skip(15 * skip).Take(15)
-                                                                       .Select(rm => rm.MessageId).ToList();
+                        var msgSend = db.Where<ReceiverMessage>(r => r.UserId == NimbusUser.UserId && r.Status == Model.Enums.MessageType.send)
+                                                             .Skip(15 * skip).Take(15)
+                                                             .Select(r => db.Where<Message>(m => m.Id == r.MessageId && m.Visible == true).FirstOrDefault());
 
                         if (msgSend.Count() > 0)
                         {
-                            ICollection<Message> messages = db.SelectParam<Message>(m => m.Visible == true && (msgSend.Contains(m.Id) || m.SenderId == NimbusUser.UserId));
-                            foreach (var item in messages)
+                            foreach (var item in msgSend)
                             {
                                 var user = db.SelectParam<User>(u => u.Id == item.SenderId).FirstOrDefault();
                                 MessageBag msg = new MessageBag()
@@ -317,7 +315,6 @@ namespace Nimbus.Web.API.Controllers
                                     ChannelId = item.ChannelId,
                                     Date = item.Date,
                                     Id = item.Id,
-                                    ReadStatus = item.ReadStatus,
                                     Receivers = item.Receivers,
                                     SenderId = item.SenderId,
                                     Text = item.Text,

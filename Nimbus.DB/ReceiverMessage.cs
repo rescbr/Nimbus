@@ -17,6 +17,8 @@ namespace Nimbus.Model
 
         public string NameUser { get; set; }
 
+        public bool UserReadStatus { get; set; }
+
         public Enums.MessageType Status { get; set; }
     }
 }
