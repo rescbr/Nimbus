@@ -191,40 +191,46 @@ namespace Nimbus.Web.API.Controllers
         public List<MessageBag> ReceivedMessages(int skip)
         {
             List<MessageBag> listMessage = new List<MessageBag>();
-            try
-            {
+            
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    List<int> listIdMsg = new List<int>();
-
-                    listIdMsg = db.SelectParam<ReceiverMessage>(r => r.UserId == NimbusUser.UserId).Skip(15*skip).Take(15)
-                                                                               .Select(r => r.MessageId).ToList();
-                    //TODO colocar restricao p/ mostrar somente type.received
-                    foreach (int item in listIdMsg)
+                    try
                     {
-                        MessageBag bag = new MessageBag();
-                        Message msg = db.SelectParam<Message>(m => m.Visible == true && m.Id == item).First();
-                        bag.ChannelId = msg.ChannelId;
-                        bag.Date = msg.Date;
-                        bag.Id = msg.Id;
-                        bag.ReadStatus = msg.ReadStatus;
-                        bag.Receivers = msg.Receivers;
-                        bag.SenderId = msg.SenderId;
-                        bag.Text = msg.Text;
-                        bag.Title = msg.Title;
-                        bag.Visible = msg.Visible;
-                        bag.UserName = db.SelectParam<User>(u => u.Id == msg.SenderId).Select(u => u.FirstName).FirstOrDefault()
-                                       + " " + db.SelectParam<User>(u => u.Id == msg.SenderId).Select(u => u.LastName).FirstOrDefault();
-                        bag.AvatarUrl = db.SelectParam<User>(u => u.Id == msg.SenderId).Select(u => u.AvatarUrl).FirstOrDefault();
+                        List<int> listIdMsg = new List<int>();
 
-                        listMessage.Add(bag);
+                        listIdMsg = db.SelectParam<ReceiverMessage>(r => r.UserId == NimbusUser.UserId && r.Status == Model.Enums.MessageType.received)
+                                                                                   .Skip(15 * skip).Take(15)
+                                                                                   .Select(r => r.MessageId).ToList();
+
+                        if (listIdMsg.Count() > 0)
+                        {
+                            foreach (int item in listIdMsg)
+                            {
+                                MessageBag bag = new MessageBag();
+                                Message msg = db.SelectParam<Message>(m => m.Visible == true && m.Id == item).First();
+                                bag.ChannelId = msg.ChannelId;
+                                bag.Date = msg.Date;
+                                bag.Id = msg.Id;
+                                bag.ReadStatus = msg.ReadStatus;
+                                bag.Receivers = msg.Receivers;
+                                bag.SenderId = msg.SenderId;
+                                bag.Text = msg.Text;
+                                bag.Title = msg.Title;
+                                bag.Visible = msg.Visible;
+                                bag.UserName = db.SelectParam<User>(u => u.Id == msg.SenderId).Select(u => u.FirstName).FirstOrDefault()
+                                               + " " + db.SelectParam<User>(u => u.Id == msg.SenderId).Select(u => u.LastName).FirstOrDefault();
+                                bag.AvatarUrl = db.SelectParam<User>(u => u.Id == msg.SenderId).Select(u => u.AvatarUrl).FirstOrDefault();
+
+                                listMessage.Add(bag);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
-            }
+            
             return listMessage.OrderBy(d => d.Date).ToList();
         }
 
@@ -291,37 +297,43 @@ namespace Nimbus.Web.API.Controllers
         public List<MessageBag> SentMessages(int skip)
         {
             List<MessageBag> listMessage = new List<MessageBag>();
-            try
-            {
-                using (var db = DatabaseFactory.OpenDbConnection())
+            using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    List<int> msgSend = new List<int>();
-                    msgSend = db.SelectParam<ReceiverMessage>(rm => rm.Status == Nimbus.Model.Enums.MessageType.send
-                                                                   && rm.UserId == NimbusUser.UserId).Skip(15 * skip).Take(15)
-                                                                   .Select(rm => rm.MessageId).ToList();
-
-                    ICollection<Message> messages = db.SelectParam<Message>(m => m.Visible == true && (msgSend.Contains(m.Id) || m.SenderId == NimbusUser.UserId));
-                    foreach (var item in messages)
+                    try
                     {
-                        MessageBag msg = new MessageBag()
+                        List<int> msgSend = new List<int>();
+                        msgSend = db.SelectParam<ReceiverMessage>(rm => rm.Status == Nimbus.Model.Enums.MessageType.send
+                                                                       && rm.UserId == NimbusUser.UserId).Skip(15 * skip).Take(15)
+                                                                       .Select(rm => rm.MessageId).ToList();
+
+                        if (msgSend.Count() > 0)
                         {
-                            ChannelId = item.ChannelId,
-                            Date = item.Date,
-                            Id = item.Id,
-                            ReadStatus = item.ReadStatus,
-                            Receivers = item.Receivers,
-                            SenderId = item.SenderId,
-                            Text = HttpUtility.HtmlDecode(item.Text),
-                            Title = HttpUtility.HtmlDecode(item.Title),
-                            Visible = item.Visible
-                        };
-                        listMessage.Add(msg);
+                            ICollection<Message> messages = db.SelectParam<Message>(m => m.Visible == true && (msgSend.Contains(m.Id) || m.SenderId == NimbusUser.UserId));
+                            foreach (var item in messages)
+                            {
+                                var user = db.SelectParam<User>(u => u.Id == item.SenderId).FirstOrDefault();
+                                MessageBag msg = new MessageBag()
+                                {
+                                    ChannelId = item.ChannelId,
+                                    Date = item.Date,
+                                    Id = item.Id,
+                                    ReadStatus = item.ReadStatus,
+                                    Receivers = item.Receivers,
+                                    SenderId = item.SenderId,
+                                    Text = item.Text,
+                                    Title = item.Title,
+                                    Visible = item.Visible,
+                                    UserName =  user.FirstName + " " + user.LastName,
+                                    AvatarUrl = user.AvatarUrl
+                                };
+                                listMessage.Add(msg);
+                            }
+                        }
                     }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+                    catch (Exception ex)
+                    {
+                        throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+                    }
             }
             return listMessage.OrderBy(d => d.Date).ToList();
         }
