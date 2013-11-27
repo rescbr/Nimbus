@@ -16,7 +16,7 @@ namespace Nimbus.Model.ORM
         public override int SenderId { get; set; }
         
         [References(typeof(Channel))]
-        public override int ChannelId { get; set; }
+        public override int? ChannelId { get; set; }
 
     }
 }

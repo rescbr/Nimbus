@@ -13,7 +13,7 @@ namespace Nimbus.Model
 
         public virtual int SenderId { get; set; }
 
-        public virtual int ChannelId { get; set; }
+        public virtual int? ChannelId { get; set; }
         
 
         public List<Receiver> Receivers { get; set; }
