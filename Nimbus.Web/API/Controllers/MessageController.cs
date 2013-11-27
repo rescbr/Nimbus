@@ -256,8 +256,9 @@ namespace Nimbus.Web.API.Controllers
                     {
                        var listIdMsg = db.Where<ReceiverMessage>(r => r.Status == Model.Enums.MessageType.received)
                                                              .Skip(15 * skip).Take(15)
-                                                             .Select(r => db.Where<Message>(m => m.Id == r.MessageId && m.Visible == true && m.ChannelId == id).FirstOrDefault());
-
+                                                             .Select(r => db.Where<Message>(m => m.Id == r.MessageId && m.Visible == true && m.ChannelId == id)
+                                                                            .FirstOrDefault()).Where(m => m != null);
+                     
                         foreach (var msg in listIdMsg)
                         {
                             MessageBag bag = new MessageBag();
