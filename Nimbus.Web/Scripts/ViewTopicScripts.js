@@ -161,3 +161,60 @@ function updateFieldsEcam(data)
         divContent.innerHTML = stringQuestion;
     }
 }
+
+function ajaxFinishExam(id)
+{
+    var ajaxData = {};
+    var listQuestion = [];
+    var listChoice = [];
+    var listPerg = document.getElementsByClassName('divPergExam');
+    
+    //para novas perguntas
+    for (perg = 0; perg < listPerg.length; perg++) //para cada pergunta
+    {
+        var dictionary = new Object();
+        var questionData = {};
+        var item = listPerg[perg];
+
+        questionData["TopicId"] = id;
+
+        //pega todas os conjuto de respostas
+        var conjRespostas = item.getElementsByClassName('resposta');
+
+        //para cada conjunto pegas as resposta
+        for (conj = 0; conj < conjRespostas.length; conj++) {
+
+            var rdb = item.getElementsByClassName('rdbPergExam')[conj];
+
+            if (rdb.checked == true)
+            {
+                listChoice.push(rdb.value);
+            }
+        }
+        if (listChoice.length > 0) {
+            questionData["Choice"] = listChoice;
+            listQuestion.push(questionData);
+        }
+    }
+
+    if (listQuestion.length > 0)
+    {
+        $.ajax({
+            url: "/api/topic/FinishExam",
+            data: JSON.stringify(questionData),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            statusCode: {
+                200: function (newData) {                  
+                    var porcentagem = (newData/listQuestion.length)*100;
+                        alert("Sua nota foi de " + newData + " com " + porcentagem + "% de acerto.");
+                    }
+                },
+
+                400: function () {
+                    //erro
+                    window.alert("Não foi possível enviar seu comentário. Tente novamente mais tarde.");
+                }
+        });
+    }
+}

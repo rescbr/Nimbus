@@ -772,16 +772,14 @@ namespace Nimbus.Web.API.Controllers
         public CategoryBag CategoryTopic(int id)
         {
             CategoryBag category = new CategoryBag();
-            try
-            {
+
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
                     int channlId = db.SelectParam<Topic>(t => t.Id == id).Select(t => t.ChannelId).FirstOrDefault();
                     if (channlId > 0)
                     {
                         int catID = db.SelectParam<Channel>(ch => ch.Id == channlId && ch.Visible == true).Select(ch => ch.CategoryId).FirstOrDefault();
-                        Category ctg = new Category();
-                        ctg = db.SelectParam<Category>(ct => ct.Id == catID).FirstOrDefault();
+                        Category ctg = db.SelectParam<Category>(ct => ct.Id == catID).FirstOrDefault();
                         //category.ColorCode = ctg.ColorCode;
                         category.Id = ctg.Id;
                         category.ImageUrl = ctg.ImageUrl;
@@ -790,11 +788,8 @@ namespace Nimbus.Web.API.Controllers
                         category.Name = ctg.Name;
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
-            }
+            
+            
             return category;
         }
 
@@ -1000,6 +995,40 @@ namespace Nimbus.Web.API.Controllers
             return returntags;
         }
 
+        /// <summary>
+        /// Classe criada para facilitar enviar as respostas do usuário
+        /// </summary>
+        public class UserAnswerExam 
+        {
+            public List<int> Choice { get; set; }
+            public int TopicId { get; set; }
+        }
 
+        /// <summary>
+        /// Método que calcula a nota do usuário
+        /// </summary>
+        /// <param name="exam"></param>
+        /// <returns></returns>
+        public int FinishExam(UserAnswerExam exam)
+        {
+            int userGrade = 0;
+            using(var db = DatabaseFactory.OpenDbConnection())
+            {
+                var questions = db.Where<Topic>(t => t.Id == exam.TopicId && t.Visibility == true).Select(t => t.Question).FirstOrDefault();
+                var choiceUser = exam.Choice.ToList();
+
+                for (int i = 0; i < questions.Count(); i++)
+                {
+                    var correct = questions[i].CorrectAnswer;
+                   
+                    if (correct == choiceUser[i])
+                    {
+                        userGrade++;
+                    }
+                 }
+            }
+            //CHAMAR O ENVIAR MSG
+            return userGrade;
+        }
     }
 }

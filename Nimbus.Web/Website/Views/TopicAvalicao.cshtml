@@ -9,24 +9,29 @@
             var answers = question.ChoicesAnswer.ToList();
             answers.Shuffle();
 
-            <section>
-                <p><strong>@(i + 1)</strong> - @question.TextQuestion</p>
+            <section class="divPergExam"  >
+                <p><strong>@(i + 1)</strong> - <label class="enunciado">@question.TextQuestion</label></p>
 
                 @foreach (var answer in answers)
                 {
                     //imprime as questoes
-                    <input type="radio" name="@i" value="@answer.Key" />@answer.Value<br />
+                    <input type="radio" class="rdbPergExam" name="@i" value="@answer.Key" />
+                    <label class="resposta">@answer.Value</label><br />
                 }
             </section>
         }
     </div>
-    @*Div com botao para "Terminar"
-        <div class="finishedTopAv">
-        <p>Terminar</p>
+
+    @*@if(Model.CurrentChannel.OwnerId != Model.CurrentUser.UserId ||
+        !Model.RolesCurrentUser.Contains("topicmanager") ||
+        !Model.RolesCurrentUser.Contains("channelmanager")) 
+    {*@
+        <div id="divBtnFinishExam">
+            <div onclick="ajaxFinishExam(@Model.CurrentTopic.Id);">
+                <p>Terminar</p>
+            </div>
         </div>
-
-
-    *@
+    @*}*@
 </div>
 
 <div id="divRenderEdit" style="display:none;">
