@@ -71,7 +71,7 @@ namespace Nimbus.Web.API.Controllers
                         //add a  msg                                                 
                         Message dadosMsg = new Message
                         {
-                            SenderId = NimbusUser.UserId,
+                            SenderId = message.SenderId > 0 ? message.SenderId : NimbusUser.UserId,
                             ChannelId = message.ChannelId,
                             Date = DateTime.Now,
                             Text = message.Text,
@@ -84,7 +84,8 @@ namespace Nimbus.Web.API.Controllers
                         int idMesg = (int)db.GetLastInsertId();
                         message.Id = idMesg;
                         dadosMsg.Id = idMesg;
-                        foreach (var item in listReceiver)
+
+                        foreach (var item in listReceiver.Distinct())
                         {
                             if (item.UserId == NimbusUser.UserId) //qm está enviando
                             {
@@ -121,7 +122,7 @@ namespace Nimbus.Web.API.Controllers
                     catch (Exception ex)
                     {
                         trans.Rollback();
-                        throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+                        throw;
                     }
                 }
             }
@@ -169,19 +170,20 @@ namespace Nimbus.Web.API.Controllers
         public Message SendMessageUser(Message message, int id)
         {
             List<Nimbus.Model.Receiver> listReceiver = new List<Nimbus.Model.Receiver>();
-            using (var db = DatabaseFactory.OpenDbConnection())
+            if (id != 0)
             {
-                Nimbus.Model.Receiver receiver = new Model.Receiver();
-                var user = db.SelectParam<User>(u => u.Id == id).FirstOrDefault();
-                receiver.IsOwner = true; //a msg é enviada para o perfil, logo não importa esse item
-                receiver.UserId = id;
-                receiver.Name = user.FirstName + " " + user.LastName;
-                receiver.AvatarUrl = user.AvatarUrl;
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {
+                    Nimbus.Model.Receiver receiver = new Model.Receiver();
+                    var user = db.SelectParam<User>(u => u.Id == id).FirstOrDefault();
+                    receiver.IsOwner = true; //a msg é enviada para o perfil, logo não importa esse item
+                    receiver.UserId = id;
+                    receiver.Name = user.FirstName + " " + user.LastName;
+                    receiver.AvatarUrl = user.AvatarUrl;
 
-                listReceiver.Add(receiver);
+                    listReceiver.Add(receiver);
+                }
             }
-
-
             return SendMessageToList(message, listReceiver);
         }
 

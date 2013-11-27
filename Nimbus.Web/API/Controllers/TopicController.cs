@@ -1014,7 +1014,10 @@ namespace Nimbus.Web.API.Controllers
             int userGrade = 0;
             using(var db = DatabaseFactory.OpenDbConnection())
             {
-                var questions = db.Where<Topic>(t => t.Id == exam.TopicId && t.Visibility == true).Select(t => t.Question).FirstOrDefault();
+                var topic = db.Where<Topic>(t => t.Id == exam.TopicId && t.Visibility == true).Where(t => t != null).FirstOrDefault();
+
+                var questions = topic.Question;
+
                 var choiceUser = exam.Choice.ToList();
 
                 for (int i = 0; i < questions.Count(); i++)
@@ -1026,8 +1029,24 @@ namespace Nimbus.Web.API.Controllers
                         userGrade++;
                     }
                  }
+            
+            //CHAMAR O ENVIAR MSG para o perfil do usuário
+            var message = ClonedContextInstance<MessageController>();
+            var channel = db.Where<Channel>(c => c.Id == topic.ChannelId && c.Visible == true).Where(c => c != null).FirstOrDefault();
+            
+            message.SendMessageUser(new Message() 
+                                        {
+                                           ChannelId = channel.Id,
+                                           Text =
+                                           "Você realizou a avaliação " + topic.Title + " em " +
+                                           DateTime.Now.ToShortDateString() + " às " + DateTime.Now.ToShortTimeString() + " horas, " + 
+                                           "disponível no canal " + channel.Name + ".<br/>"+
+                                           "Sua nota foi " + userGrade + " com" + (userGrade/questions.Count())*100 + "% de acerto.",                                           
+                                           SenderId = 1, //enviado pelo sistema
+                                           Title = "Sua nota na avaliação " + topic.Title + " do canal " + channel.Name 
+                                        }, 0);
             }
-            //CHAMAR O ENVIAR MSG
+
             return userGrade;
         }
     }
