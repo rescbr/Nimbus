@@ -120,7 +120,7 @@
 
     <div class="infoTitleChannel">
         <h2>Tags</h2>
-        <p class="tagChannel">
+        <p id="tagChannel" class="tagChannel">
             @foreach (var item in Model.Tags)
             {
                 <label id="lblTag_@item.Id">#@item.TagName</label>
@@ -273,7 +273,6 @@
                         <div id="divTags" class="modal-content">
                             <!--Incluido por pelo js ajaxLoadTags-->
                         </div>
-                        <button id="btnSaveTag" onclick="ajaxEditTag(@Model.CurrentChannel.Id);">Salvar tags</button>
                     </div>
 
                     <footer>

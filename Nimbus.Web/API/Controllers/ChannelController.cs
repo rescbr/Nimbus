@@ -1018,9 +1018,8 @@ namespace Nimbus.Web.API.Controllers
         {
             Tag newTag = new Tag();
             tag = tag.Trim('#');
-            try
-            {
-                using (var db = DatabaseFactory.OpenDbConnection())
+
+              using (var db = DatabaseFactory.OpenDbConnection())
                 {
                     using (var trans = db.OpenTransaction(System.Data.IsolationLevel.ReadCommitted))
                     {
@@ -1081,16 +1080,17 @@ namespace Nimbus.Web.API.Controllers
                                         };
                                         db.Save(ntag);
 
+                                        int idTag = (int)db.GetLastInsertId();
                                         TagChannel tagChannel = new TagChannel
                                         {
                                             ChannelId = id,
-                                            TagId = (int)db.GetLastInsertId(),
+                                            TagId = idTag,
                                             Visible = true
                                         };
                                         db.Save(tagChannel);
 
                                         newTag.TagName = ntag.TagName;
-                                        newTag.Id = ntag.Id;
+                                        newTag.Id = idTag;
                                     }                                   
                                 }
                             }
@@ -1100,18 +1100,13 @@ namespace Nimbus.Web.API.Controllers
                             }
                             trans.Commit();
                         }
-                        catch (Exception ex)
+                        catch
                         {
                             trans.Rollback();
-                            throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+                            throw;
                         }
                     }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
-            }
+                }            
             return newTag;
         }
 
@@ -1191,42 +1186,49 @@ namespace Nimbus.Web.API.Controllers
         }
 
         /// <summary>
+        /// Class criada para facilitar quando tiver q retornar um objeto ao deletar uma tag
+        /// </summary>
+        public class CurrentCountTag 
+        {
+            public int Count { get; set; }
+            public bool isDelete { get; set; }
+        }
+
+        /// <summary>
         /// Troca a visibilidade (deleta) a tag escolhida
         /// </summary>
         /// <param name="channelID"></param>
         /// <param name="tagID></param>
         /// <returns></returns>
         [HttpDelete]
-        public bool DeleteTagChannel(int id, int tagID)
+        public CurrentCountTag DeleteTagChannel(int id, int tagID)
         {
-            bool isDelete = false;
-            try
-            {
+            CurrentCountTag current = new CurrentCountTag();
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-
                     bool isOWner = IsOwner(id);
                     bool isManager = IsManager(id);
 
                     if (isOWner == true || isManager == true)//usuario possui permissao
                     {
-                        TagChannel dado = db.SelectParam<TagChannel>(ch => ch.ChannelId == id && ch.TagId == tagID).FirstOrDefault();
-                        dado.Visible = false;
 
+                        var tags = db.SelectParam<TagChannel>(ch => ch.ChannelId == id && ch.Visible == true);
+                        
+                        TagChannel dado = tags.Where(ch => ch.TagId == tagID).FirstOrDefault();
+
+                        dado.Visible = false;
                         db.Update<TagChannel>(dado);
-                        isDelete = true;
+
+                        current.isDelete = true;
+                        current.Count = (tags.Count()- 1);
                     }
                     else
                     {
                         throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotAcceptable, "sem permissao"));
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
-            }
-            return isDelete;
+            
+            return current;
         }
 
         /// <summary>
