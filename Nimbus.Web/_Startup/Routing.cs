@@ -46,7 +46,8 @@ namespace Nimbus.Web.Startup
                 defaults: new
                 {
                     @namespace = "api", //use @ antes da propriedade pq namespace é keyword.
-                    id = RouteParameter.Optional
+                    id = RouteParameter.Optional,
+                    action =  "DefaultAction"
                 }
             );
 

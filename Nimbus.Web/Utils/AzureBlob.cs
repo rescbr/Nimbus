@@ -36,6 +36,8 @@ namespace Nimbus.Web.Utils
         public void UploadStreamToAzure(Stream stream)
         {
             _blockBlob.UploadFromStream(stream);
+            _blockBlob.Properties.CacheControl = "max-age=75, must-revalidate";
+            _blockBlob.SetProperties();
         }
 
         public Stream DownloadToMemoryStream()

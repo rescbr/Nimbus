@@ -17,6 +17,50 @@ function newMessageNotification(msg) {
     
 }
 
+function getNotifications(after) {
+    if (typeof (after) === "undefined") {
+        after = "";
+    } else {
+        after = "?after=" + after;
+    }
+
+    document.getElementById("divNotificationLoadButton").style.display = "none";
+    document.getElementById("imgNotificationLoad").style.display = "block";
+
+    $.ajax({
+        url: "/api/notification/" + after,
+        type: "GET",
+        contentType: "application/json;charset=utf-8",
+        statusCode: {
+            200: function (notifObj) {
+                var divNotif = document.getElementById("divNotification");
+                //se nao houver notificacoes na div e o count == 0, nao existem notifs.
+                if (notifObj.Count == 0 && divNotif.children.length == 0) {
+                    divNotif.innerHTML = "Você não possui novas notificações. Participe no Nimbus, aumente seus pontos e fique atento a novidades!"
+                    document.getElementById("divNotificationLoadButton").style.display = "none";
+                } else {
+                    try {
+                        if (divNotif.children.length == 0) {
+                            divNotif.innerHTML = notifObj.Html;
+                        } else {
+                            divNotif.innerHTML += notifObj.Html;
+                        }
+                    } catch (e) { }
+                    if (notifObj >= 15) {
+                        var loadButton = document.getElementById("divNotificationLoadButton");
+                        loadButton.style.display = "block";
+                        loadButton.onclick = function () { getNotifications(notifObj.LastNotificationGuid); }
+                    }
+                }
+
+                document.getElementById("imgNotificationLoad").style.display = "none";
+
+            }
+        }
+    });
+
+}
+
 function newTopicCommentNotification(notif) {
     
     var parentDiv = document.getElementById("divContentComment_" + notif.parentId);
