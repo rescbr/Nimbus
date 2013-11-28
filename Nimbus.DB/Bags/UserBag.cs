@@ -12,6 +12,12 @@ namespace Nimbus.Model.Bags
         public int Interaction { get; set; }
 
         public string RoleInChannel { get; set; }
-               
+
+        public int PointsForComment { get; set; }
+
+        public int PointsForChannel { get; set; }
+
+        public int PontsForTopic { get; set; }
+
     }
 }
