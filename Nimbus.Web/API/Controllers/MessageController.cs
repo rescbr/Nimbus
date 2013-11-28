@@ -10,6 +10,7 @@ using Nimbus.Model.ORM;
 using Nimbus.Model.Bags;
 using System.Web;
 using Nimbus.Web.Utils;
+using System.Threading.Tasks;
 
 namespace Nimbus.Web.API.Controllers
 {
@@ -115,7 +116,7 @@ namespace Nimbus.Web.API.Controllers
 
                         //Notificação
                         var notification = new Notifications.MessageNotification();
-                        notification.NewMessage(dadosMsg);
+                        Task.Run(() => notification.NewMessage(dadosMsg));
 
                     }
                     catch (Exception ex)

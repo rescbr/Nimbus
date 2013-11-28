@@ -1,53 +1,46 @@
 ﻿using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 using Nimbus.Web.Notifications;
-using Nimbus.Web.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Http;
+using Nimbus.Model.ORM;
+using ServiceStack.OrmLite;
 
 namespace Nimbus.Web.API.Controllers
 {
-    ///Abreviações de tipo
-    using MessageNotificationQuery = TableQuery<NotificationTableEntity<Notifications.MessageNotificationModel>>;
-
-
     [NimbusAuthorize]
     public class NotificationController : NimbusApiController
     {
         [HttpGet]
-        public List<MessageNotificationModel> GetMessages()
+        public List<MessageNotificationModel> GetMessages(int skip = 0)
         {
-            DateTime now = DateTime.UtcNow;
-            string nowPartitionKey = NotificationTableEntity.GeneratePartitionKey(NimbusUser.UserId, now);
-            string endOfTimesPK = NotificationTableEntity.GenerateMaxPartitionKey(NimbusUser.UserId);
-            //string nowRowKey = NotificationTableEntity.GenerateRowKey(now);
+            using (var db = DatabaseFactory.OpenDbConnection())
+            {
+                var msgNotifications = db.Where<Notification<MessageNotificationModel>>
+                    (n => n.UserId == NimbusUser.UserId && n.Type == Model.NotificationTypeEnum.message)
+                    .OrderByDescending(n => n.Timestamp)
+                    .Skip(15 * skip).Take(15).Select(n => n.NotificationObject);
 
-            CloudStorageAccount _storageAccount = CloudStorageAccount.Parse(NimbusConfig.StorageAccount);
-            CloudTableClient tableClient = _storageAccount.CreateCloudTableClient();
-            CloudTable table = tableClient.GetTableReference(Const.Azure.MessageNotificationsTable);
+                return msgNotifications.ToList();
+            }
+        }
 
-            //MessageNotificationQuery query = new MessageNotificationQuery().Where(
-            //    TableQuery.CombineFilters(
-            //    TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, userPartitionKey),
-            //    TableOperators.And,
-            //    TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.GreaterThan, nowRowKey)
-            //    )).Take(15);
+        public List<MessageNotificationModel> GetMessages(Guid after)
+        {
+            using (var db = DatabaseFactory.OpenDbConnection())
+            {
+                var afterNotifications = db.Where<Notification<MessageNotificationModel>>
+                    (n => n.UserId == NimbusUser.UserId
+                    && n.Timestamp <= 
+                        db.Where<Notification<MessageNotificationModel>>
+                            (nt => nt.UserId == NimbusUser.UserId && nt.Id == after).Single().Timestamp
+                    && n.Id != after).OrderByDescending(n => n.Timestamp).Take(15).Select(n=>n.NotificationObject);
 
-            MessageNotificationQuery query = new MessageNotificationQuery().Where(
-                TableQuery.CombineFilters(
-                TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.GreaterThanOrEqual, nowPartitionKey),
-                TableOperators.And,
-                TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.LessThan, endOfTimesPK)
-                )).Take(15);
-
-
-            var results = table.ExecuteQuery(query).ToList();
-
-            return results.Select(r => r.DataObject).ToList();
-
+                return afterNotifications.ToList();
+            }
         }
     }
 }
