@@ -772,16 +772,14 @@ namespace Nimbus.Web.API.Controllers
         public CategoryBag CategoryTopic(int id)
         {
             CategoryBag category = new CategoryBag();
-            try
-            {
+
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
                     int channlId = db.SelectParam<Topic>(t => t.Id == id).Select(t => t.ChannelId).FirstOrDefault();
                     if (channlId > 0)
                     {
                         int catID = db.SelectParam<Channel>(ch => ch.Id == channlId && ch.Visible == true).Select(ch => ch.CategoryId).FirstOrDefault();
-                        Category ctg = new Category();
-                        ctg = db.SelectParam<Category>(ct => ct.Id == catID).FirstOrDefault();
+                        Category ctg = db.SelectParam<Category>(ct => ct.Id == catID).FirstOrDefault();
                         //category.ColorCode = ctg.ColorCode;
                         category.Id = ctg.Id;
                         category.ImageUrl = ctg.ImageUrl;
@@ -790,11 +788,8 @@ namespace Nimbus.Web.API.Controllers
                         category.Name = ctg.Name;
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
-            }
+            
+            
             return category;
         }
 
@@ -1000,6 +995,59 @@ namespace Nimbus.Web.API.Controllers
             return returntags;
         }
 
+        /// <summary>
+        /// Classe criada para facilitar enviar as respostas do usuário
+        /// </summary>
+        public class UserAnswerExam 
+        {
+            public List<int> Choice { get; set; }
+            public int TopicId { get; set; }
+        }
 
+        /// <summary>
+        /// Método que calcula a nota do usuário
+        /// </summary>
+        /// <param name="exam"></param>
+        /// <returns></returns>
+        public int FinishExam(UserAnswerExam exam)
+        {
+            int userGrade = 0;
+            using(var db = DatabaseFactory.OpenDbConnection())
+            {
+                var topic = db.Where<Topic>(t => t.Id == exam.TopicId && t.Visibility == true).Where(t => t != null).FirstOrDefault();
+
+                var questions = topic.Question;
+
+                var choiceUser = exam.Choice.ToList();
+
+                for (int i = 0; i < questions.Count(); i++)
+                {
+                    var correct = questions[i].CorrectAnswer;
+                   
+                    if (correct == choiceUser[i])
+                    {
+                        userGrade++;
+                    }
+                 }
+            
+            //CHAMAR O ENVIAR MSG para o perfil do usuário
+            var message = ClonedContextInstance<MessageController>();
+            var channel = db.Where<Channel>(c => c.Id == topic.ChannelId && c.Visible == true).Where(c => c != null).FirstOrDefault();
+            
+            message.SendMessageUser(new Message() 
+                                        {
+                                           ChannelId = channel.Id,
+                                           Text =
+                                           "Você realizou a avaliação " + topic.Title + " em " +
+                                           DateTime.Now.ToShortDateString() + " às " + DateTime.Now.ToShortTimeString() + " horas, " + 
+                                           "disponível no canal " + channel.Name + ".<br/>"+
+                                           "Sua nota foi " + userGrade + " com" + (userGrade/questions.Count())*100 + "% de acerto.",                                           
+                                           SenderId = 1, //enviado pelo sistema
+                                           Title = "Sua nota na avaliação " + topic.Title + " do canal " + channel.Name 
+                                        }, 0);
+            }
+
+            return userGrade;
+        }
     }
 }

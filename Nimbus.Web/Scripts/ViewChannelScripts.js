@@ -563,7 +563,7 @@ function ajaxLoadTags(id) {
                     var listTag = "";
                     var string ="";
                     for (var i = 0; i < newData.length; i++) {
-                        listTag += "<div id=\"divTag_"+ newData[i].Id + "\">"+
+                        listTag += "<div name=\"nameDivTags\" id=\"divTag_" + newData[i].Id + "\">" +
                                         "<p>#" + newData[i].TagName +
                                            "<input type=\"button\" onclick=\"ajaxdeleteTag(" + newData[i].Id + ", " + id + ");\" value=\"X\"></input>" +
                                         "</p>" +
@@ -578,7 +578,7 @@ function ajaxLoadTags(id) {
                         string = "<p>Você já possui o limite máximo de tags aceitas por canal.</p>";
                     }
                     var includeDiv = "<div id=\"divModalTags\">" + listTag + "</div>" +
-                                     "<div>" + string + "</div>";
+                                     "<div id=\"divResultTags\">" + string + "</div>";
 
                     document.getElementById('divTags').innerHTML = includeDiv;                   
                 }
@@ -604,15 +604,21 @@ function ajaxNewTag(id) {
             statusCode: {
                 200: function (newData) {
                     if (newData.Id > 0) {
-                        var newTag = "<div id=\"divTag_" + newData.Id + "\">" +
+                        var tagInfo = "<label id=\"lblTag_" + newData.Id + "\">" + newData.TagName + "</label>";
+                        document.getElementById('tagChannel').innerHTML += tagInfo;
+                        
+                        var newTag = "<div name=\"nameDivTags\" id=\"divTag_" + newData.Id + "\">" +
                                         "<p>#" + newData.TagName +
                                            "<input type=\"button\" onclick=\"ajaxdeleteTag(" + newData.Id + ", " + id + ");\" value=\"X\"></input>" +
                                         "</p>" +
                                    "</div>";
-                        document.getElementById('divModalTags').innerHTML = newTag;
+                        document.getElementById('divModalTags').innerHTML += newTag;
 
-                        var tagInfo = "<label id=\"lblTag_"+newData.Id + "\">" + newData.TagName + "</label>";
-                        document.getElementsByClassName('tagChannel').innerHTML = tagInfo;
+                        var divTags = document.getElementsByName('nameDivTags');
+                        if (divTags.length >= 5)
+                        {
+                            document.getElementById('divResultTags').innerHTML = '';
+                        }
                     }
                 },
 
@@ -633,9 +639,17 @@ function ajaxdeleteTag(idTag, id)
         contentType: "application/json;charset=utf-8",
         statusCode: {
             200: function (newData) {
-                if (newData == true) {
+                if (newData.isDelete == true) {
                     document.getElementById('divTag_' + idTag).style.display = "none";
-                    document.getElementById("lblTag_" + idTag).style.display = "none";                   
+                    document.getElementById("lblTag_" + idTag).style.display = "none";
+
+                    if (newData.Count < 5) {
+                        string = "<input id=\"txtNewTag\" type=\"text\" value=\"Nova tag\" onclick=\"this.value=''\" />" +
+                                   "<button id=\"btnSaveTag\" onclick=\"ajaxNewTag(" + id + ");\">Adicionar</button>";
+
+                        document.getElementById('divResultTags').innerHTML = '';
+                        document.getElementById('divResultTags').innerHTML = string;
+                    }
                 }
             },
 
