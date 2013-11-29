@@ -88,6 +88,20 @@
             @*colocar icone pontuaçao*@
             @Model.CurrentChannel.CountVotes
         </p>
+        @if (Model.CurrentChannel.OwnerId != Model.CurrentUser.UserId && !(Model.RolesCurrentUser.Contains("channelmanager") || Model.RolesCurrentUser.Contains("topicmanager")
+        || Model.RolesCurrentUser.Contains("usermanager") || Model.RolesCurrentUser.Contains("messagemanager")))
+        {
+            <div>
+                Vote:
+                <p>
+                    <img src="/images/Utils/starc.png" id="icoStar1" />
+                    <img src="/images/Utils/starc.png" id="icoStar2" />
+                    <img src="/images/Utils/starc.png" id="icoStar3" />
+                    <img src="/images/Utils/starc.png" id="icoStar4" />
+                    <img src="/images/Utils/starc.png" id="icoStar5" />
+                </p>
+            </div>
+        }
     </div>
 
     @if (Model.CurrentChannel.OwnerId != Model.CurrentUser.UserId)
