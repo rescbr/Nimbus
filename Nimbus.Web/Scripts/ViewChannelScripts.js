@@ -773,7 +773,7 @@ function ajaxVoteChannel(id, vote)
         contentType: "application/json;charset=utf-8",
         statusCode: {
             200: function (newData) {
-                if (newData.Id > 0) {
+                if (newData > 0) {
                   //retornar as estrelinhas
                 }
             },

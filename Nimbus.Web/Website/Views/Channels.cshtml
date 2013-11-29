@@ -98,8 +98,8 @@
                     int total = 0;
                     for (int i = 1; i < Model.CurrentChannel.UserVoteChannel; i++)
                     {                       
-                       <div onmouseover="changeStarVote(this.id, 'over');" onmouseout="changeStarVote(this.id, 'out');" class="imgStarGreen" onclick="ajaxVoteChannel(@Model.CurrentChannel.Id, @i);" id="icoStar_@i"></div>
-                       total = i;
+                       <div onmouseover="changeStarVote(this.id, 'out');" onmouseout="changeStarVote(this.id, 'over');" class="imgStarGreen" onclick="ajaxVoteChannel(@Model.CurrentChannel.Id, @i);" id="icoStar_@i"></div>
+                       total = i + 1;
                     }
                     if (total < 5 && Model.CurrentChannel.UserVoteChannel > 0)
                     {
