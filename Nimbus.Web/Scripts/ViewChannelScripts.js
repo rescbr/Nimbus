@@ -34,6 +34,24 @@ function ajaxFollowChannel(id)
     });
 }
 
+function changeStarVote(element, onmouse)
+{
+    var star = element.replace("icoStar_", "");
+
+    if (onmouse == 'over') {
+        for (var s = 1; s <= star; s++) {
+            var img = document.getElementById("icoStar_" + s);
+            img.className = "imgStarGreen";
+        }
+    }
+    else if (onmouse == 'out')
+    {
+        for (var i = 1; i <= star; i++) {
+          var img = document.getElementById("icoStar_" + i);
+            img.className = "imgStarGray";
+       }
+    }
+}
 
 function CreatedDivQuestion()
 {

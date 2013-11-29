@@ -435,6 +435,8 @@ namespace Nimbus.Web.API.Controllers
                         string firstName = db.SelectParam<User>(us => us.Id == channel.OwnerId).Select(us => us.FirstName).FirstOrDefault();
                         string lastName = db.SelectParam<User>(us => us.Id == channel.OwnerId).Select(us => us.LastName).FirstOrDefault();
 
+                        var channelUser = db.Where<ChannelUser>(c => c.ChannelId == id && c.UserId == NimbusUser.UserId && c.Visible == true).Where(c => c != null).FirstOrDefault();
+
                         showChannel.Name = channel.Name;
                         showChannel.CategoryId = channel.CategoryId;
                         showChannel.Id = channel.Id;
@@ -443,7 +445,7 @@ namespace Nimbus.Web.API.Controllers
                         showChannel.OwnerId = channel.OwnerId;
                         showChannel.Price = channel.Price;
                         showChannel.OpenToComments = channel.OpenToComments;
-                        showChannel.UserFollow = db.SelectParam<ChannelUser>(ch => ch.ChannelId == id && ch.Visible == true && ch.Follow == true).Exists(ch => ch.UserId == NimbusUser.UserId);
+                        showChannel.UserFollow = channelUser != null ? channelUser.Follow : false; 
                         if (userComment > 0 && listComments.Count > 0)
                         {
                             showChannel.participationChannel = ((userComment * 100) / listComments.Count()).ToString();
@@ -454,6 +456,7 @@ namespace Nimbus.Web.API.Controllers
                         showChannel.OwnerName = firstName + " " + lastName;
                         showChannel.CountVotes = db.SelectParam<VoteChannel>(vt => vt.ChannelId == id).Select(vt => vt.Score).Count();
                         showChannel.isAccept = accepted;
+                        showChannel.UserVoteChannel = channelUser.Vote != null? channelUser.Score : 0;
                     }
                 }
             }

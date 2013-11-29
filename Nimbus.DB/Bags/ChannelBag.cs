@@ -20,5 +20,6 @@ namespace Nimbus.Model.Bags
 
         public int CountVotes { get; set; }
 
+        public int UserVoteChannel { get; set; }
     }
 }
