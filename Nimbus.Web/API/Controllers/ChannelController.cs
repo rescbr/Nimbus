@@ -1403,8 +1403,8 @@ namespace Nimbus.Web.API.Controllers
         /// </summary>
         /// <param name="vote"></param>
         /// <returns></returns>
-        [HttpPut]
-        public int VoteChannel(int vote, int id)
+        [HttpPost]
+        public int VoteChannel(int id,int vote)
         {
             int score = -1;
             try

@@ -746,3 +746,23 @@ function ajaxSaveAllEdit(id)
         }
     }
 }
+
+function ajaxVoteChannel(id, vote)
+{
+    $.ajax({
+        url: "/api/Channel/VoteChannel/" + id + "?vote=" + vote,
+        type: "POST",
+        contentType: "application/json;charset=utf-8",
+        statusCode: {
+            200: function (newData) {
+                if (newData.Id > 0) {
+                  //retornar as estrelinhas
+                }
+            },
+            400: function () {
+                //erro
+                window.alert("Não foi possível realizar esta operação. Tente novamente mais tarde.");
+            }
+        }
+    });
+}
