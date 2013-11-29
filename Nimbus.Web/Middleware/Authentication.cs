@@ -112,7 +112,11 @@ namespace Nimbus.Web.Middleware
                 if (context.Request.AcceptTypes.Contains("text/html"))
                 {
                     string originalUrl = context.Request.Url.PathAndQuery;
-                    context.Response.Redirect(String.Format("/login?redirect={0}", Uri.EscapeDataString(originalUrl)));
+                    try
+                    {
+                        context.Response.Redirect(String.Format("/login?redirect={0}", Uri.EscapeDataString(originalUrl)));
+                    }
+                    catch { }
                 }
                 //senão continua com o 401
             }

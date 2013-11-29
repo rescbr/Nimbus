@@ -66,6 +66,7 @@
     <Compile Include="CommentReported.cs" />
     <Compile Include="ImgTopChannel.cs" />
     <Compile Include="Message.cs" />
+    <Compile Include="Notification.cs" />
     <Compile Include="Organization.cs" />
     <Compile Include="OrganizationUser.cs" />
     <Compile Include="Premium.cs" />

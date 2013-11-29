@@ -54,7 +54,7 @@ namespace Nimbus.Web.Website.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<ActionResult> Upload()
+        public ActionResult Upload()
         {
             //se alterar aqui nao esqueça de mudar no metodo Crop()
             const int dimensaoMax = 200;
@@ -114,7 +114,7 @@ namespace Nimbus.Web.Website.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<ActionResult> Crop()
+        public ActionResult Crop()
         {
             //se alterar aqui nao esqueça de mudar no metodo Crop()
             const int dimensaoMax = 200;
@@ -170,7 +170,7 @@ namespace Nimbus.Web.Website.Controllers
 
             origBlob.Delete();
 
-            var nomeImgAvatar = DateTime.Now.ToFileTime().ToString() + "avatar-" + NimbusUser.UserId;
+            var nomeImgAvatar = "avatar-" + NimbusUser.UserId;
             md5.ComputeHash(Encoding.Unicode.GetBytes(nomeImgAvatar));
             nomeImgAvatar = Base32.ToString(md5.Hash).ToLower() + ".jpg";
 
@@ -184,16 +184,16 @@ namespace Nimbus.Web.Website.Controllers
                 var user = db.Where<User>(u => u.Id == NimbusUser.UserId).FirstOrDefault();
 
                 //apaga imagem antiga
-                if (user.AvatarUrl != null && user.AvatarUrl != "/images/Utils/person_icon.png")
-                {
-                    try
-                    {
-                        var uriAntigo = new Uri(user.AvatarUrl).Segments;
-                        var blobAntigo = new AzureBlob(Const.Azure.AvatarContainer, uriAntigo[uriAntigo.Length - 1]);
-                        blobAntigo.Delete();
-                    }
-                    catch { }
-                }
+                //if (user.AvatarUrl != null && user.AvatarUrl != "/images/Utils/person_icon.png")
+                //{
+                //    try
+                //    {
+                //        var uriAntigo = new Uri(user.AvatarUrl).Segments;
+                //        var blobAntigo = new AzureBlob(Const.Azure.AvatarContainer, uriAntigo[uriAntigo.Length - 1]);
+                //        blobAntigo.Delete();
+                //    }
+                //    catch { }
+                //}
                 user.AvatarUrl = pathFinal;
                 db.Save(user);
 

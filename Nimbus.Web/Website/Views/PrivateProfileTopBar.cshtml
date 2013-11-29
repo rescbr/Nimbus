@@ -26,7 +26,14 @@
 	    </ul>
     </nav>
     @* NOTIFICAÇÕES *@
-    <div id="divNotification"></div>
+    <div id="divNotificationWrapper">
+        <div id="divNotification">
+        </div>
+        <div id="divNotificationLoad">
+            <img src="/images/utils/loading.gif" style="display:block;"  id="imgNotificationLoad" />
+            <div id="divNotificationLoadButton" style="display:none;" onclick="getNotifications();">Carregar mais notificações</div>
+        </div>
+    </div>
 
     <div id="divMyChannels" style="display:none;">
         @if (Model.CurrentUser.UserId == Model.User.Id)
@@ -153,3 +160,7 @@
     @*Tab*@
 
 </div>
+
+<script type="text/javascript">
+    $(function () { getNotifications(); });
+</script>

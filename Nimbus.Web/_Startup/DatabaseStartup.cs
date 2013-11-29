@@ -17,6 +17,7 @@ namespace Nimbus.Web
                     SqlServerDialect.Provider);
             using (var db = dbFactory.OpenDbConnection())
             {
+                
                 if (!db.TableExists("Organization"))
                 {
 
@@ -58,6 +59,7 @@ namespace Nimbus.Web
                         db.CreateTable(false, typeof(UserLikeTopic));
                         db.CreateTable(false, typeof(ViewByTopic));
                         db.CreateTable(false, typeof(VoteChannel));
+                        db.CreateTable(false, typeof(Notification<object>));
 
                         var nimbusorg = new Nimbus.Model.ORM.Organization()
                         {

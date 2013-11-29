@@ -9,16 +9,13 @@ using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Auth;
 using Microsoft.WindowsAzure.Storage.Table;
 using System.Threading.Tasks;
+using ServiceStack.OrmLite;
 
 namespace Nimbus.Web.Notifications
 {
     public class MessageNotification : NimbusNotificationBase
     {
         public void NewMessage(Model.ORM.Message msg)
-        {
-            Task.Run(() => NewMessageTask(msg));
-        }
-        public void NewMessageTask(Model.ORM.Message msg)
         {
             var sender = msg.Receivers.Where(r => r.UserId == msg.SenderId).FirstOrDefault();
             var receivers = msg.Receivers.Where(r => r.UserId != msg.SenderId).Select(s => s.UserId);
@@ -31,37 +28,40 @@ namespace Nimbus.Web.Notifications
                 MessageId = msg.Id,
                 Date = msg.Date.ToShortDateString(),
                 Time = msg.Date.ToShortTimeString(),
+                Timestamp = msg.Date.ToFileTimeUtc()
             };
-
-            var rz = new RazorTemplate();
-            string htmlNotif = rz.ParseRazorTemplate<MessageNotificationModel>
-                ("~/Website/Views/NotificationPartials/Message.cshtml", messageNotification);
-
-            Task.Run(() =>
-            {
-                StoreNotifications(messageNotification, receivers.ToArray());
-            });
 
             Parallel.ForEach(receivers, (receiver) =>
             {
+                var msgCopy = new MessageNotificationModel(messageNotification);
+
+                var rz = new RazorTemplate();
+                string htmlNotif = rz.ParseRazorTemplate<MessageNotificationModel>
+                    ("~/Website/Views/NotificationPartials/Message.cshtml", msgCopy);
+
                 NimbusHubContext.Clients.Group(NimbusHub.GetMessageGroupName(receiver)).newMessageNotification(htmlNotif);
+
+                StoreNotification(msgCopy, receiver);
             });
         }
 
-        public void StoreNotifications(MessageNotificationModel msg, int[] userids)
+        public void StoreNotification(MessageNotificationModel msg, int userid)
         {
-            CloudStorageAccount _storageAccount = CloudStorageAccount.Parse(NimbusConfig.StorageAccount);
-            CloudTableClient tableClient = _storageAccount.CreateCloudTableClient();
-            CloudTable table = tableClient.GetTableReference(Const.Azure.MessageNotificationsTable);
-
-            TableBatchOperation tbo = new TableBatchOperation();
-            foreach (var userid in userids)
+            using (var db = DatabaseFactory.OpenDbConnection())
             {
-                var entity = new NotificationTableEntity<MessageNotificationModel>(msg, userid);
-                tbo.Insert(entity);    
-            }
+   
+                var dbNotif = new Model.ORM.Notification<MessageNotificationModel>()
+                {
+                    Id = msg.Guid,
+                    UserId = userid,
+                    IsRead = false,
+                    NotificationObject = msg,
+                    Timestamp = msg.Timestamp,
+                    Type = Model.NotificationTypeEnum.message
+                };
+                db.Insert<Model.ORM.Notification<MessageNotificationModel>>(dbNotif);
 
-            table.ExecuteBatch(tbo);
+            }
         }
     }
 
@@ -73,6 +73,29 @@ namespace Nimbus.Web.Notifications
         public string Subject { get; set; }
         public string Date { get; set; }
         public string Time { get; set; }
+        //Datetime.ToFileTimeUtc()
+        public long Timestamp { get; set; }
+        public Guid Guid { get; set; }
 
+        /// <summary>
+        /// Cria nova instância de MessageNotificationModel
+        /// </summary>
+        public MessageNotificationModel() { }
+
+        /// <summary>
+        /// Cria cópia de uma instância de MessageNotificationModel *com outro Guid*
+        /// </summary>
+        /// <param name="other">instância de MessageNotificationModel</param>
+        public MessageNotificationModel(MessageNotificationModel other)
+        {
+            this.MessageId = other.MessageId;
+            this.SenderName = other.SenderName;
+            this.SenderAvatarUrl = other.SenderAvatarUrl;
+            this.Subject = other.Subject;
+            this.Date = other.Date;
+            this.Time = other.Time;
+            this.Timestamp = other.Timestamp;
+            this.Guid = Guid.NewGuid();
+        }
     }
 }
