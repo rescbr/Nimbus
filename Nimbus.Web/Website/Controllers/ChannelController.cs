@@ -18,7 +18,7 @@ namespace Nimbus.Web.Website.Controllers
     public class ChannelController : NimbusWebController
     {
         [Authorize]
-        public ActionResult Index(int id)
+        public async Task<ActionResult> Index(int id)
         {
             var channelApi = ClonedContextInstance<API.Controllers.ChannelController>();
             var userApi = ClonedContextInstance<API.Controllers.UserController>();
@@ -27,19 +27,31 @@ namespace Nimbus.Web.Website.Controllers
             var commentApi = ClonedContextInstance<API.Controllers.CommentController>();
             var categoryApi = ClonedContextInstance<API.Controllers.CategoryController>();
 
+            var taskTags = Task.Run(() => channelApi.ShowTagChannel(id));
+            var taskModerators = Task.Run(() => channelApi.ShowModerators(id));
+            var taskCurrentChannel = Task.Run(() => channelApi.ShowChannel(id));
+            var taskAllTopics = Task.Run(() => topicApi.AbstTopic(id, string.Empty, 0));
+            var taskMessages = Task.Run(() => msgApi.ChannelReceivedMessages(id));
+            var taskComments = Task.Run(() => commentApi.ShowChannelComment(id));
+            var taskRolesCurrentUser = Task.Run(() => channelApi.ReturnRolesUser(id));
+            var taskCcMessageReceiver = Task.Run(() => channelApi.GetMessageModerators(id));
+            var taskCategory = Task.Run(() => categoryApi.showAllCategory());
+
+            await Task.WhenAll(taskTags, taskModerators, taskCurrentChannel, taskAllTopics, taskMessages, 
+                taskComments, taskRolesCurrentUser, taskCcMessageReceiver, taskCategory);
             var channel = new ChannelModel()
             {
-                Tags = channelApi.ShowTagChannel(id),
-                Moderators = channelApi.ShowModerators(id),
-                CurrentChannel = channelApi.ShowChannel(id),
-                AllTopics = topicApi.AbstTopic( id,string.Empty, 0),
-                Messages = msgApi.ChannelReceivedMessages(id),
-                Comments = commentApi.ShowChannelComment(id),
-                CurrentUser = NimbusUser,
-                RolesCurrentUser = channelApi.ReturnRolesUser(id),
-                CcMessageReceiver = channelApi.GetMessageModerators(id),
-                NewTopic = null,
-                Category = categoryApi.showAllCategory()
+                Tags              = taskTags.Result,
+                Moderators        = taskModerators.Result,
+                CurrentChannel    = taskCurrentChannel.Result,
+                AllTopics         = taskAllTopics.Result,
+                Messages          = taskMessages.Result,
+                Comments          = taskComments.Result,
+                CurrentUser       = NimbusUser,
+                RolesCurrentUser  = taskRolesCurrentUser.Result,
+                CcMessageReceiver = taskCcMessageReceiver.Result,
+                NewTopic          = null,
+                Category          = taskCategory.Result
             };
             return View("Channels", channel);
         }

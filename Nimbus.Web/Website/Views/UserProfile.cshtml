@@ -161,7 +161,7 @@
                 <!-- Footer -->
             </footer>
         </div>
-        <a href="#!" class="modal-close" title="Close this modal" data-close="Close"
+        <a href="#!" id="closeModalAvatar" class="modal-close" title="Close this modal" data-close="Close"
            data-dismiss="modal">×</a>
     </section>
 
@@ -245,7 +245,7 @@
                     $("#smallavatar").attr("src", data.url);
                     //document.getElementById("useravatar").src = data.url;
                     //fechar modal aqui
-                    $("#modal-img").attr("style", "display:none");
+                    document.getElementById("closeModalAvatar").click();
                 }
             });
         });
