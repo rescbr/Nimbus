@@ -25,7 +25,31 @@ namespace Nimbus.Model.ORM
 
         [Index(Unique=false)]
         [References(typeof(User))]
-        public override int UserId { get; set; }
+        public override int? UserId
+        {
+            get
+            {
+                return base.UserId;
+            }
+            set
+            {
+                base.UserId = value;
+            }
+        }
+
+        [Index(Unique=false)]
+        [References(typeof(Channel))]
+        public override int? ChannelId
+        {
+            get
+            {
+                return base.ChannelId;
+            }
+            set
+            {
+                base.ChannelId = value;
+            }
+        }
 
         [Index(Unique=false)]
         public override long Timestamp

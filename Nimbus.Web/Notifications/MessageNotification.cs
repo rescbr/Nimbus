@@ -18,7 +18,14 @@ namespace Nimbus.Web.Notifications
         public void NewMessage(Model.ORM.Message msg)
         {
             var sender = msg.Receivers.Where(r => r.UserId == msg.SenderId).FirstOrDefault();
-            var receivers = msg.Receivers.Where(r => r.UserId != msg.SenderId).Select(s => s.UserId);
+            List<int> receivers = msg.Receivers.Where(r => r.UserId != msg.SenderId).Select(s => s.UserId).ToList();
+
+            if (receivers.Count() == 0)
+            {
+                receivers = new List<int>();
+                receivers.Add(sender.UserId);
+            }
+
 
             var messageNotification = new MessageNotificationModel
             {

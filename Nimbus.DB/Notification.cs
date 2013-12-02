@@ -14,7 +14,8 @@ namespace Nimbus.Model
     public class Notification<T>
     {
         public virtual Guid Id { get; set; }
-        public virtual int UserId { get; set; }
+        public virtual int? UserId { get; set; }
+        public virtual int? ChannelId { get; set; }
         // Timestamp em DateTime.ToFileTimeUtc()
         public virtual long Timestamp { get; set; }
         public NotificationTypeEnum Type { get; set; }

@@ -34,7 +34,7 @@ function SendMessageProfile(receiverId)
                     }
                 },
 
-                400: function () {
+                500: function () {
                     //erro
                     window.alert("Não foi possível enviar sua mensagem. Tente novamente mais tarde.");
                 }
@@ -115,7 +115,7 @@ function SaveEditProfile()
                         document.getElementById('lblAbout').value = newData.de;
                     }
                 },
-                400: function () {
+                500: function () {
                     //erro
                     window.alert("Não foi possível alterar seu perfil. Tente novamente mais tarde.");
                 }

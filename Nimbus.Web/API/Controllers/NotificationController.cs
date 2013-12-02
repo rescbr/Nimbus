@@ -35,8 +35,36 @@ namespace Nimbus.Web.API.Controllers
                 allNotifications = db.Where<Notification<string>>
                     (n => n.UserId == NimbusUser.UserId)
                     .OrderByDescending(n => n.Timestamp)
-                    .Take(15).ToList();
+                    .Take(6).ToList();
             }
+
+
+            return GenerateNotificationHtml(allNotifications);
+
+        }
+
+        [HttpGet]
+        [ActionName("DefaultAction")]
+        public NotificationWrapper Get(Guid after)
+        {
+            List<Notification<string>> allNotifications;
+            using (var db = DatabaseFactory.OpenDbConnection())
+            {
+                allNotifications = db.Where<Notification<string>>
+                    (n => n.UserId == NimbusUser.UserId 
+                        && n.Timestamp <= db.Where<Notification<string>>
+                                            (nt => nt.UserId == NimbusUser.UserId && nt.Id == after).Single().Timestamp
+                        && n.Id != after)
+                    .OrderByDescending(n => n.Timestamp)
+                    .Take(6).ToList();
+            }
+
+            return GenerateNotificationHtml(allNotifications);
+        }
+
+        [NonAction]
+        private NotificationWrapper GenerateNotificationHtml(List<Notification<string>> allNotifications)
+        {
             if (allNotifications.Count == 0) return new NotificationWrapper() { Count = 0 };
 
             var razor = new RazorTemplate();
