@@ -61,7 +61,7 @@
           @if (Model.CurrentUser.UserId == Model.User.Id)
         { 
             <div id="channelsFollow">
-                @foreach (var item in Model.MyChannels)
+                @foreach (var item in Model.ChannelFollow)
                 {
                     //partial
                     Html.RenderPartial("~/Website/Views/ChannelPartials/ChannelPartial.cshtml", item);

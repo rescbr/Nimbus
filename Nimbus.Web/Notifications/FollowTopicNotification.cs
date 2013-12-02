@@ -53,8 +53,31 @@ namespace Nimbus.Web.Notifications
 
                 foreach (var follower in channelFollowers)
                 {
+                    var ntClone = new NewTopicNotificationModel(nt);
                     NimbusHubContext.Clients.Group(NimbusHub.GetFollowerGroupName(follower.UserId)).newMessageNotification(htmlNotif);
+
+                    StoreNotification(ntClone, follower.UserId);
+
                 }
+            }
+        }
+
+        public void StoreNotification(NewTopicNotificationModel nt, int userid)
+        {
+            using (var db = DatabaseFactory.OpenDbConnection())
+            {
+
+                var dbNotif = new Model.ORM.Notification<NewTopicNotificationModel>()
+                {
+                    Id = nt.Guid,
+                    UserId = userid,
+                    IsRead = false,
+                    NotificationObject = nt,
+                    Timestamp = nt.Timestamp,
+                    Type = Model.NotificationTypeEnum.newtopic
+                };
+                db.Insert<Model.ORM.Notification<NewTopicNotificationModel>>(dbNotif);
+
             }
         }
     }

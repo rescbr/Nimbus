@@ -9,7 +9,7 @@ namespace Nimbus.Model
     public enum NotificationTypeEnum
     {
         message,
-
+        newtopic,
     }
     public class Notification<T>
     {

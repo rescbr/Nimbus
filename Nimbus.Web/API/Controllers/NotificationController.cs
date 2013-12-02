@@ -82,6 +82,15 @@ namespace Nimbus.Web.API.Controllers
                             ("~/Website/Views/NotificationPartials/Message.cshtml", model));
 
                 }
+                else if (notification.Type == Model.NotificationTypeEnum.newtopic)
+                {
+                    NewTopicNotificationModel model = TypeSerializer.DeserializeFromString
+                        <NewTopicNotificationModel>(notification.NotificationObject);
+
+                    sbuilder.Append(
+                        razor.ParseRazorTemplate<NewTopicNotificationModel>
+                            ("~/Website/Views/NotificationPartials/NewTopic.cshtml", model));
+                }
             }//);
 
             return new NotificationWrapper()
