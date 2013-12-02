@@ -27,7 +27,7 @@ function ajaxFollowChannel(id)
 
             },
 
-            400: function () {
+            500: function () {
                 window.alert("Não foi possível realizar esta operação. Tente novamente mais tarde.");
             }
         }
@@ -157,7 +157,7 @@ function ajaxSaveNewTopic(channelID)
                     //liumpar campos
                 },
 
-                400: function () {
+                500: function () {
                     //erro
                     ajaxTopicCallback(newData);
                 }
@@ -209,7 +209,7 @@ function ajaxAnswerComment(parentId,commentId, channelId, topicId, txtContent) {
                     document.getElementById(txtContent).value = '';
                 },
 
-                400: function () {
+                500: function () {
                     //erro
                     window.alert("Não foi possível enviar seu comentário. Tente novamente mais tarde.");
                 }
@@ -241,7 +241,7 @@ function ajaxSaveNewComment(topicId, channelId, txtContent)
                     document.getElementById("txtacomentario").value = '';
                 },
 
-                400: function () {
+                500: function () {
                     //erro
                     window.alert("Não foi possível enviar seu comentário. Tente novamente mais tarde.");
                 }
@@ -278,7 +278,7 @@ function ajaxDeleteComment(commentId, divName)
                     }
                 },
 
-                400: function () {
+                500: function () {
                     //erro
                     window.alert("Não foi possível enviar seu comentário. Tente novamente mais tarde.");
                 }
@@ -322,7 +322,7 @@ function ajaxSendMessage(id)
                     }
                 },
 
-                400: function () {
+                500: function () {
                     //erro
                     window.alert("Não foi possível enviar sua mensagem. Tente novamente mais tarde.");
                 }
@@ -395,7 +395,7 @@ function ajaxLoadModeratorEdit(id)
 
             },
 
-            400: function () {
+            500: function () {
                 //erro
                 window.alert("Erro ao processar requisição. Tente novamente mais tarde.");
             }
@@ -504,7 +504,7 @@ function ajaxNewModerator()
                     }
                 },
 
-                400: function () {
+                500: function () {
                     //erro
                     window.alert("Não foi possível realizar esta operação. Tente novamente mais tarde.");
                 }
@@ -542,7 +542,7 @@ function ajaxDeleteModerator(id, idUser)
                 }
             },
 
-            400: function () {
+            500: function () {
                 //erro
                 window.alert("Não foi possível realizar esta operação. Tente novamente mais tarde.");
             }
@@ -584,7 +584,7 @@ function ajaxLoadTags(id) {
                 }
             },
 
-            400: function () {
+            500: function () {
                 //erro
                 window.alert("Erro ao processar requisição. Tente novamente mais tarde.");
             }
@@ -622,7 +622,7 @@ function ajaxNewTag(id) {
                     }
                 },
 
-                400: function () {
+                500: function () {
                     //erro
                     window.alert("Não foi possível realizar esta operação. Tente novamente mais tarde.");
                 }
@@ -653,7 +653,7 @@ function ajaxdeleteTag(idTag, id)
                 }
             },
 
-            400: function () {
+            500: function () {
                 //erro
                 window.alert("Não foi possível realizar esta operação. Tente novamente mais tarde.");
             }
@@ -694,7 +694,7 @@ function ajaxSaveAllEdit(id)
                         success = true;
                     },
 
-                    400: function () {
+                    500: function () {
                         //erro
                         window.alert("Não foi possível realizar esta operação. Tente novamente mais tarde.");
                         success = false;
@@ -736,7 +736,7 @@ function ajaxSaveAllEdit(id)
                         document.getElementById('imgCapa').src = newData.ImgUrl;
                     },
 
-                    400: function () {
+                    500: function () {
                         //erro
                         window.alert("Não foi possível realizar esta operação. Tente novamente mais tarde.");
                         success = false;

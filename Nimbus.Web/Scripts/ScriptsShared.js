@@ -122,9 +122,9 @@ function verMaisTopics(id, orderBy, category, global)
                 }
             },
 
-            400: function () {
+            500: function () {
                 //erro
-                window.alert("Erro ao processar requisição. Tente novamente mais tarde.");
+                window.alert("Erro ao obter mais tópicos. Tente novamente mais tarde.");
             }
         }
     });
@@ -156,9 +156,9 @@ function verMaisChannels(id, orderBy, category, global) {
                 }
             },
 
-            400: function () {
+            500: function () {
                 //erro
-                window.alert("Erro ao processar requisição. Tente novamente mais tarde.");
+                window.alert("Erro ao obter mais canais. Tente novamente mais tarde.");
             }
         }
     });
@@ -187,7 +187,7 @@ function verMaisReadLater(id, category, global) {
                 }
             },
 
-            400: function () {
+            500: function () {
                 //erro
                 window.alert("Erro ao processar requisição. Tente novamente mais tarde.");
             }
@@ -231,7 +231,7 @@ function viewMessages(global, viewBy, typeBtn) {
                 }
             },
 
-            400: function () {
+            500: function () {
                 //erro
                 window.alert("Erro ao processar requisição. Tente novamente mais tarde.");
             }

@@ -6,7 +6,7 @@
 
 function newMessageNotification(msg) {
     try {
-        var divNotif = document.getElementById("divNotification");
+        var divNotif = document.getElementById("divNotificationWrapper");
         if (divNotif.children.length == 0) {
             divNotif.innerHTML = msg;
         } else {
@@ -33,7 +33,7 @@ function getNotifications(after) {
         contentType: "application/json;charset=utf-8",
         statusCode: {
             200: function (notifObj) {
-                var divNotif = document.getElementById("divNotification");
+                var divNotif = document.getElementById("divNotificationWrapper");
                 //se nao houver notificacoes na div e o count == 0, nao existem notifs.
                 if (notifObj.Count == 0 && divNotif.children.length == 0) {
                     divNotif.innerHTML = "Você não possui novas notificações. Participe no Nimbus, aumente seus pontos e fique atento a novidades!"
@@ -46,7 +46,7 @@ function getNotifications(after) {
                             divNotif.innerHTML += notifObj.Html;
                         }
                     } catch (e) { }
-                    if (notifObj >= 15) {
+                    if (notifObj.Count >= 6) {
                         var loadButton = document.getElementById("divNotificationLoadButton");
                         loadButton.style.display = "block";
                         loadButton.onclick = function () { getNotifications(notifObj.LastNotificationGuid); }

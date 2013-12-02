@@ -81,7 +81,7 @@ function ajaxEditTopic(id, topicType, divOld) {
                     }
                 },
 
-                400: function () {
+                500: function () {
                     //erro
                     window.alert("Não foi possível enviar seu comentário. Tente novamente mais tarde.");
                 }
@@ -211,7 +211,7 @@ function ajaxFinishExam(id)
                     }
                 },
 
-                400: function () {
+                500: function () {
                     //erro
                     window.alert("Não foi possível enviar seu comentário. Tente novamente mais tarde.");
                 }
