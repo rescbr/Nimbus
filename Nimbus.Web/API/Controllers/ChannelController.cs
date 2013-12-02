@@ -456,7 +456,7 @@ namespace Nimbus.Web.API.Controllers
                         showChannel.OwnerName = firstName + " " + lastName;
                         showChannel.CountVotes = db.SelectParam<VoteChannel>(vt => vt.ChannelId == id).Select(vt => vt.Score).FirstOrDefault();
                         showChannel.isAccept = accepted;
-                        showChannel.UserVoteChannel = channelUser.Vote != null? channelUser.Score : 0;
+                        showChannel.UserVoteChannel = (channelUser != null && channelUser.Vote != null)? channelUser.Score : 0;
                     }
                 }
             }
