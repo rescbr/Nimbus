@@ -20,7 +20,7 @@ namespace Nimbus.Model
         public bool ModeratorManager { get; set; }
         public bool IsOwner { get; set; }
         public bool Paid { get; set; }
-        public bool Accepted { get; set; }
+        public bool? Accepted { get; set; }
 
     }
 }

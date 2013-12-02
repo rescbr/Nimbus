@@ -918,7 +918,9 @@ namespace Nimbus.Web.API.Controllers
                                 }
                                 else
                                 {
+                                    role.Accepted = null; //o usuário não aceitou ainda = pendente
                                     db.Insert(userModerator);
+                                    //TODO: enviar notificação e aceitar/recusar
                                 }
 
                                 bag.Id = user.Id;
@@ -955,16 +957,47 @@ namespace Nimbus.Web.API.Controllers
                         catch (Exception ex)
                         {
                             trans.Rollback();
-                            throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+                            throw ;
                         }
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+                throw;
             }
             return bag;
+        }
+
+        /// <summary>
+        /// Método de aceitar/recusar ser moderador de um canal, retorna o sucesso da operação = finalizada ou interrompida
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="accepted"></param>
+        /// <returns></returns>
+        [HttpPut]
+        public bool AcceptOrNotBeModerator(int id, bool accepted)
+        {
+            bool isOk = false;
+            using(var db = DatabaseFactory.OpenDbConnection())
+            {
+                
+                    Role roleUser = db.Where<Role>(c => c.ChannelId == id && c.UserId == NimbusUser.UserId).FirstOrDefault();
+                    if (roleUser != null)
+                    {
+                        if (accepted == true)
+                        {
+                            roleUser.Accepted = true;
+                        }
+                        else
+                        {
+                            roleUser.Accepted = false;
+                        }
+                        db.Update<Role>(roleUser);
+                        isOk = true;
+                    }
+            }
+            return isOk;
         }
 
         /// <summary>
