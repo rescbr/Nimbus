@@ -101,68 +101,65 @@ namespace Nimbus.Web.API.Controllers
         [HttpPost]
         public Topic NewTopic(Topic topic)
         {
-            try
+            using (var db = DatabaseFactory.OpenDbConnection())
             {
-                using (var db = DatabaseFactory.OpenDbConnection())
+                using (var trans = db.OpenTransaction(System.Data.IsolationLevel.ReadCommitted))
                 {
-                    using (var trans = db.OpenTransaction(System.Data.IsolationLevel.ReadCommitted))
+                    try
                     {
-                        try
+                        bool isOwner = IsOwner(topic.ChannelId, "channel");
+                        bool isManager = IsManager(topic.ChannelId, "channel");
+                        if (isOwner == true || isManager == true)
                         {
-                            bool isOwner = IsOwner(topic.ChannelId, "channel");
-                            bool isManager = IsManager(topic.ChannelId, "channel");
-                            if (isOwner == true || isManager == true)
+                            topic.AuthorId = NimbusUser.UserId;
+                            if (string.IsNullOrEmpty(topic.ImgUrl))
                             {
-                                topic.AuthorId = NimbusUser.UserId;
-                                if (string.IsNullOrEmpty(topic.ImgUrl))
-                                {
-                                    int idCtg = db.SelectParam<Channel>(ch => ch.Id == topic.ChannelId).Select(ch => ch.CategoryId).FirstOrDefault();
-                                    topic.ImgUrl = db.SelectParam<Category>(ct => ct.Id == 1).Select(ct => ct.ImageUrl).FirstOrDefault();
-                                }
-                                topic.CreatedOn = DateTime.Now;
-                                topic.LastModified = DateTime.Now;
-                                topic.Visibility = true;
-
-                                if (string.IsNullOrEmpty(topic.Price.ToString()))
-                                {
-                                    topic.Price = 0;
-                                }
-
-                                topic.Description = HttpUtility.HtmlEncode(topic.Description);
-                                topic.Text = HttpUtility.HtmlEncode(topic.Text);
-                                topic.Title = HttpUtility.HtmlEncode(topic.Title);
-                                topic.UrlVideo = HttpUtility.HtmlEncode(topic.UrlVideo);
-
-                                if (topic.TopicType == Model.Enums.TopicType.exam)
-                                {
-                                    foreach (var item in topic.Question)
-                                    {
-                                        item.TextQuestion = HttpUtility.HtmlEncode(item.TextQuestion);
-                                        //colocar encode nas opçoes
-                                    }
-                                }
-
-                                db.Save(topic);
-                                topic.Id = (int)db.GetLastInsertId();
-                                trans.Commit();
-                                return topic;
+                                int idCtg = db.SelectParam<Channel>(ch => ch.Id == topic.ChannelId).Select(ch => ch.CategoryId).FirstOrDefault();
+                                topic.ImgUrl = db.SelectParam<Category>(ct => ct.Id == 1).Select(ct => ct.ImageUrl).FirstOrDefault();
                             }
-                            else
+                            topic.CreatedOn = DateTime.Now;
+                            topic.LastModified = DateTime.Now;
+                            topic.Visibility = true;
+
+                            if (string.IsNullOrEmpty(topic.Price.ToString()))
                             {
-                                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotAcceptable, "erro ao criar item"));
+                                topic.Price = 0;
                             }
+
+                            topic.Description = HttpUtility.HtmlEncode(topic.Description);
+                            topic.Text = HttpUtility.HtmlEncode(topic.Text);
+                            topic.Title = HttpUtility.HtmlEncode(topic.Title);
+                            topic.UrlVideo = HttpUtility.HtmlEncode(topic.UrlVideo);
+
+                            if (topic.TopicType == Model.Enums.TopicType.exam)
+                            {
+                                foreach (var item in topic.Question)
+                                {
+                                    item.TextQuestion = HttpUtility.HtmlEncode(item.TextQuestion);
+                                    //colocar encode nas opçoes
+                                }
+                            }
+
+                            db.Save(topic);
+                            topic.Id = (int)db.GetLastInsertId();
+                            trans.Commit();
+
+                            var newTopicNotification = new Notifications.FollowTopicNotification();
+                            newTopicNotification.NewTopic(topic);
+
+                            return topic;
                         }
-                        catch (Exception ex)
+                        else
                         {
-                            trans.Rollback();
-                            throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+                            throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotAcceptable, "erro ao criar item"));
                         }
                     }
+                    catch (Exception ex)
+                    {
+                        trans.Rollback();
+                        throw;
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
         }
 

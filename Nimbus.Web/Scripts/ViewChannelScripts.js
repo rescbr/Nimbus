@@ -122,12 +122,14 @@ function ajaxSaveNewTopic(channelID)
     }
     if (divTipoTopic == "divText")
     {
-        text = CKEDITOR.instances.txtaArticle.getData();
+        //text = CKEDITOR.instances.txtaArticle.getData();
+        text = $("#txtaArticle").htmlarea('html');
         enumTopicType = 0;
     }
     if (divTipoTopic == "divDiscussion")
     {
-        text = CKEDITOR.instances.txtaTextMsg.getData();
+        //text = CKEDITOR.instances.txtaTextMsg.getData();
+        text = $("#txtaTextMsg").htmlarea('html');
         enumTopicType = 2;
     }
     if (divTipoTopic == "divExam") {

@@ -10,6 +10,8 @@
 </script>
 
 @Scripts.Render("~/Scripts/jquery.form.js")
+@Styles.Render("~/Styles/jHtmlArea.css")
+@Scripts.Render("~/Scripts/jhtmlarea-0.8.js")
 
 <div class="wrapperChannel">
     <nav class="chanTopBar">
@@ -136,13 +138,13 @@
                 </div>
 
                 <div id="divText" style="display:none;">
-                    <textarea id="txtaArticle" required class="ckeditor"></textarea>
+                    <textarea id="txtaArticle"></textarea>
                 </div>
 
                 <div id="divDiscussion" style="display:none;">
                     <p>
                         Questão em debate:
-                        <textarea id="txtaTextMsg" required class="ckeditor"></textarea>
+                        <textarea id="txtaTextMsg"></textarea>
                     </p>
                 </div>
 
@@ -214,6 +216,17 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    $(function () {
+        $('#txtaArticle').width(500);
+        $('#txtaArticle').height(500);
+        $('#txtaArticle').htmlarea();
+        $('#txtaTextMsg').width(500);
+        $('#txtaTextMsg').height(500);
+        $('#txtaTextMsg').htmlarea();
+    });
+</script>
 
 <script type="text/javascript">
     var jcrop;
