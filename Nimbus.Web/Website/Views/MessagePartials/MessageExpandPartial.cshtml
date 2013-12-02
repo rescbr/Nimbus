@@ -1,12 +1,12 @@
 ﻿@model Nimbus.Model.Bags.MessageBag
 
-<div id="divMesgExpand_@Model.Id" style="margin-top:30px; background-color:red;">
+<div id="divMesgExpand_@Model.Id" style="margin-top:30px; background-color:red;" >
     <a href='/userprofile/index/@Model.Id'>
         <div class="postHeImg_m">
             <img src="@Model.AvatarUrl" width="60px;" height="60px;">
         </div>
     </a>
-   <div>
+    <div onclick="ajaxHiddeMsg('divMesgExpand_@Model.Id');">
         <nav class="postHeaderLeft_m">
             <ul class="sbs">
                 <li><a href="userprofile/index/@Model.SenderId"> @Model.UserName</a></li>
@@ -16,11 +16,11 @@
         <nav class="postHeaderRight_m">
             <ul class="sbs">
                 <li>@string.Format("{0:d/M/yyyy}", @Model.Date)</li>
-                <li>@string.Format("{0:HH:mm}",@Model.Date)</li>
-           </ul>
+                <li>@string.Format("{0:HH:mm}", @Model.Date)</li>
+            </ul>
         </nav>
-        <div class="postContent_m" onclick="ajaxHiddeMsg('divMesgExpand_@Model.Id');">
+        <div class="postContent_m">
             <p>@Model.Text </p>
         </div>
-     </div>
+    </div>
 </div>

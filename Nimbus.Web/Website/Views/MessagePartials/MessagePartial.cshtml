@@ -2,42 +2,42 @@
 @model Nimbus.Model.Bags.MessageBag
 
 <div id="messages">
-   @{
-       string readStat;
-            
-            if (Model.UserReadStatus == true)
-            {
-                readStat = "background: #BE1E2D";
-            }
-            else
-            {
-                readStat = "background: #AAAAAA";
-            }
-            
-            <div class="post_m" id="divMesg_@Model.Id" style="@readStat">
-                <a href="/userprofile/index/@Model.SenderId">
-                    <div class="postHeImg_m">
-                        <img src=@Model.AvatarUrl width="60px;" height="60px;">
-                    </div>
-                </a>
-                <div class="post_Right_m">
-                    <nav class="postHeaderLeft_m">
-                        <ul class="sbs">
-                            <li><a href="userprofile/index/@Model.SenderId">@Model.UserName</a></li>
-                            <li>@Model.Title</li>
-                        </ul>
-                    </nav>
-                    <nav class="postHeaderRight_m">
-                        <ul class="sbs">
-                            <li>@string.Format("{0:d/M/yyyy}", Model.Date)</li>
-                            <li>@string.Format("{0:HH:mm}", Model.Date)</li>
-                        </ul>
-                    </nav>
-                    <div class="postContent_m" onclick="ajaxSeeMsg(@Model.Id,'divMesg_');">
-                        <p>@Model.Text </p>
-                    </div>
-                </div>                
-            </div>       
-   }
+    @{
+        string readStat;
+
+        if (Model.UserReadStatus == true)
+        {
+            readStat = "background: #BE1E2D";
+        }
+        else
+        {
+            readStat = "background: #AAAAAA";
+        }
+
+        <div class="post_m" id="divMesg_@Model.Id" style="@readStat">
+            <a href="/userprofile/index/@Model.SenderId">
+                <div class="postHeImg_m">
+                    <img src=@Model.AvatarUrl width="60px;" height="60px;">
+                </div>
+            </a>
+            <div class="post_Right_m" onclick="ajaxSeeMsg(@Model.Id,'divMesg_');">
+                <nav class="postHeaderLeft_m">
+                    <ul class="sbs">
+                        <li><a href="userprofile/index/@Model.SenderId">@Model.UserName</a></li>
+                        <li>@Model.Title</li>
+                    </ul>
+                </nav>
+                <nav class="postHeaderRight_m">
+                    <ul class="sbs">
+                        <li>@string.Format("{0:d/M/yyyy}", Model.Date)</li>
+                        <li>@string.Format("{0:HH:mm}", Model.Date)</li>
+                    </ul>
+                </nav>
+                <div class="postContent_m">
+                    <p>@Model.Text </p>
+                </div>
+            </div>
+        </div>
+    }
 
 </div>

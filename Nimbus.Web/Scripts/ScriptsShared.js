@@ -276,7 +276,7 @@ function viewMessages(global, viewBy, typeBtn, typeClick) {
 function ajaxSeeMsg(id, starNameDiv)
 {
     var divNew = document.getElementById('divMesgExpand_' + id);
-
+    var divOld = document.getElementById('divMesg_' + id).style.background = "rgb(190, 30, 45)";
     if (divNew != null)
     {
         divNew.style.display = 'block';

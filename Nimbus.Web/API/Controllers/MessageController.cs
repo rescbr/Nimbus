@@ -258,29 +258,44 @@ namespace Nimbus.Web.API.Controllers
             MessageBag msgBag = new MessageBag();
             using (var db = DatabaseFactory.OpenDbConnection())
             {
-                var message = db.Where<ReceiverMessage>(r => r.UserId == NimbusUser.UserId && r.MessageId == id).FirstOrDefault();
-                Message msg = new Message();
-
-                if (message != null)
-                  msg = db.Where<Message>(m => m.Id == message.MessageId && m.Visible == true).FirstOrDefault();
-
-                if (message != null)
+                using (var trans = db.OpenTransaction(System.Data.IsolationLevel.ReadCommitted))
                 {
-                    User user = db.SelectParam<User>(u => u.Id == msg.SenderId).FirstOrDefault();
-                    msgBag.ChannelId = msg.ChannelId;
-                    msgBag.Date = msg.Date;
-                    msgBag.Id = msg.Id;
-                    msgBag.SenderId = msg.SenderId;
-                    msgBag.Text = msg.Text;
-                    msgBag.Receivers = msg.Receivers;
-                    msgBag.Title = msg.Title;
-                    msgBag.Visible = msg.Visible;
-                    msgBag.UserName = user.FirstName + " " + user.LastName;
-                    msgBag.AvatarUrl = user.AvatarUrl;
-                    msgBag.UserReadStatus = message.UserReadStatus;
+                    try
+                    {
 
+                        var message = db.Where<ReceiverMessage>(r => r.UserId == NimbusUser.UserId && r.MessageId == id).FirstOrDefault();
+                        Message msg = new Message();
+
+                        if (message != null)
+                            msg = db.Where<Message>(m => m.Id == message.MessageId && m.Visible == true).FirstOrDefault();
+
+                        if (message != null)
+                        {
+                            User user = db.SelectParam<User>(u => u.Id == msg.SenderId).FirstOrDefault();
+                            msgBag.ChannelId = msg.ChannelId;
+                            msgBag.Date = msg.Date;
+                            msgBag.Id = msg.Id;
+                            msgBag.SenderId = msg.SenderId;
+                            msgBag.Text = msg.Text;
+                            msgBag.Receivers = msg.Receivers;
+                            msgBag.Title = msg.Title;
+                            msgBag.Visible = msg.Visible;
+                            msgBag.UserName = user.FirstName + " " + user.LastName;
+                            msgBag.AvatarUrl = user.AvatarUrl;
+                            msgBag.UserReadStatus = message.UserReadStatus;
+
+                        }
+
+                        message.UserReadStatus = true;
+                        db.Update<ReceiverMessage>(message);
+                        trans.Commit();
+                    }
+                    catch (Exception)
+                    {
+                        trans.Rollback();
+                        throw;
+                    }
                 }
-
             }
 
             return msgBag;
