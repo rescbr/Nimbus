@@ -1,0 +1,14 @@
+﻿@model Nimbus.Web.Notifications.NewTopicNotificationModel
+<div class="divNotification" style="display:block;">
+    <div>
+        <img class="imgNotification" src="@Model.TopicImage" />
+    </div>
+    <p class="timeNotification">
+        @*hora x     data x*@
+        @Model.Time - @Model.Date
+    </p>
+    <p class="txtNotification">
+        Um novo tópico foi criado no canal<a href="/channel/index/@Model.ChannelId"><strong>@Model.ChannelName</strong></a>.
+        <a href="/topic/index/@Model.TopicId"><strong>@Model.TopicName</strong></a>
+    </p>
+</div>

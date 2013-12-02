@@ -741,6 +741,7 @@
     <Content Include="Website\Views\NotificationPartials\Message.cshtml" />
     <Content Include="Website\Views\InfoToEditTopic.cshtml" />
     <Content Include="Website\Views\MessagePartials\MessagePartial.cshtml" />
+    <Content Include="Website\Views\NotificationPartials\NewTopic.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\Controllers\DatabaseController.cs" />
@@ -761,7 +762,9 @@
     <Compile Include="Const.cs" />
     <Compile Include="NimbusAuthorizeAttribute.cs" />
     <Compile Include="Notifications\CommentNotification.cs" />
+    <Compile Include="Notifications\FollowTopicNotification.cs" />
     <Compile Include="Notifications\MessageNotification.cs" />
+    <Compile Include="Notifications\ModeratorNotification.cs" />
     <Compile Include="Notifications\NimbusHub.cs" />
     <Compile Include="Notifications\NimbusNotificationBase.cs" />
     <Compile Include="Security\SessionManagement.cs" />

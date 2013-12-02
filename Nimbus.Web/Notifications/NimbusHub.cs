@@ -63,6 +63,11 @@ namespace Nimbus.Web.Notifications
         {
             return "message" + userId.ToString();
         }
+
+        public static string GetFollowerGroupName(int userId)
+        {
+            return "message" + userId.ToString();
+        }
     }
 
     

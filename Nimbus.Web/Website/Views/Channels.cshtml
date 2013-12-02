@@ -63,8 +63,10 @@
 </div>
 
 <div id="divInfCanal">
-    <p>Dono:<a href="/userprofile" class="nameOwner"> @Model.CurrentChannel.OwnerName</a></p>
+    <p>Dono:<a href="/userprofile/index/@Model.CurrentChannel.OwnerId" class="nameOwner"> @Model.CurrentChannel.OwnerName</a></p>
+    @if (Model.Moderators.Count > 0) { 
     <p>Moderadores:</p>
+    }
     <div id="divAllModerators">
         @foreach (var item in Model.Moderators)
         {
