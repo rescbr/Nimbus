@@ -31,6 +31,7 @@
                     <ul class="sbs">
                         <li>@string.Format("{0:d/M/yyyy}", Model.Date)</li>
                         <li>@string.Format("{0:HH:mm}", Model.Date)</li>
+                        <li><img src="/images/utils/delete.png" id="deleteMsg_@Model.Id" onclick="ajaxDeleteMsg(this.id);" /></li>
                     </ul>
                 </nav>
                 <div class="postContent_m">

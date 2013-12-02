@@ -18,6 +18,8 @@ namespace Nimbus.Web
             using (var db = dbFactory.OpenDbConnection())
             {
                 db.CreateTable(false, typeof(Notification<object>));
+                db.CreateTable(false, typeof(Role));
+                db.CreateTable(false, typeof(ReceiverMessage));
                 if (!db.TableExists("Organization"))
                 {
 

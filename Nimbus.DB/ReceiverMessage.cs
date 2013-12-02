@@ -20,5 +20,7 @@ namespace Nimbus.Model
         public bool UserReadStatus { get; set; }
 
         public Enums.MessageType Status { get; set; }
+
+        public bool Visible { get; set; }
     }
 }

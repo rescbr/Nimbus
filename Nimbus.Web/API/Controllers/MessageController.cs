@@ -223,8 +223,7 @@ namespace Nimbus.Web.API.Controllers
                 if (listIdMsg.Count() > 0)
                 {
                     foreach (var msg in listIdMsg)
-                    {
-                        MessageBag bag = new MessageBag();
+                    {                        MessageBag bag = new MessageBag();
                         User user = db.SelectParam<User>(u => u.Id == msg.SenderId).FirstOrDefault();
                         bag.ChannelId = msg.ChannelId;
                         bag.Date = msg.Date;
@@ -406,21 +405,21 @@ namespace Nimbus.Web.API.Controllers
         [HttpDelete]
         public List<int> DeleteMessages(List<int> listID)
         {
+            List<int> listMsgDelete = new List<int>();
             using (var db = DatabaseFactory.OpenDbConnection())
             {
                 foreach (int item in listID)
                 {
-                    Message message = new Message();
-                    //visible= false  quando o usuario mandou ou recebeu a msg
-                    db.Update<Message>(message.Visible = false, m => m.Id == item
-                                                                         && (m.Receivers.Exists(r => r.UserId == NimbusUser.UserId)
-                                                                              || m.SenderId == NimbusUser.UserId)
-                                                                              );
-                    db.Save(message);
+                    ReceiverMessage receiver = db.Where<ReceiverMessage>(m => m.MessageId == item && m.UserId == NimbusUser.UserId && m.Visible == true).FirstOrDefault();
+                    if (receiver != null)
+                    {
+                        receiver.Visible = false;
+                        db.Update<ReceiverMessage>(receiver);
+                        listMsgDelete.Add(item);
+                    }
                 }
             }
-
-            return listID;
+            return listMsgDelete;
         }
 
     }

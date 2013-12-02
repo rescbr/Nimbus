@@ -124,3 +124,31 @@ function SaveEditProfile()
     }
     
 }
+
+function ajaxDeleteMsg(id)
+{
+    ajaxData = [];
+    ajaxData['listID'] = id;
+
+    $.ajax({
+        url: "/api/Message/DeleteMessages/",
+        data: JSON.stringify(ajaxData),
+        type: "DELETE",
+        contentType: "application/json;charset=utf-8",
+        statusCode: {
+            200: function (newData) {
+
+                if (newData > 0) {
+                    for (i = 0; i < newData; i++) {
+                        document.getElementById('divMesg_' + newData[i]).style.display = 'none';
+                    }
+                }
+            },
+
+            500: function () {
+                //erro
+                window.alert("Não foi possível deletar sua mensagem. Tente novamente mais tarde.");
+            }
+        }
+    });
+}
