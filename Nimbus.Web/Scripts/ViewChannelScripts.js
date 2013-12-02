@@ -34,11 +34,14 @@ function ajaxFollowChannel(id)
     });
 }
 
-function changeStarVote(element, onmouse)
+function changeStarVote(element, onmouse, starUser)
 {
     var star = element.replace("icoStar_", "");
 
     if (onmouse == 'over') {
+        if (starUser > 0)
+            star = starUser;
+          
         for (var s = 1; s <= star; s++) {
             var img = document.getElementById("icoStar_" + s);
             img.className = "imgStarGreen";
@@ -46,7 +49,7 @@ function changeStarVote(element, onmouse)
     }
     else if (onmouse == 'out')
     {
-        for (var i = 1; i <= star; i++) {
+        for (var i = star; i <= 5; i++) {
           var img = document.getElementById("icoStar_" + i);
             img.className = "imgStarGray";
        }
@@ -773,8 +776,19 @@ function ajaxVoteChannel(id, vote)
         contentType: "application/json;charset=utf-8",
         statusCode: {
             200: function (newData) {
-                if (newData > 0) {
-                  //retornar as estrelinhas
+                if (newData > 0) { //deu certo
+                    //retornar as estrelinhas                  
+                    for (var s = 1; s <= vote; s++) {
+                        var img = document.getElementById("icoStar_" + s);
+                        img.className = "imgStarGreen";
+                    }
+                    for (var i = vote; i <= 5; i++) {
+                        var img = document.getElementById("icoStar_" + i);
+                        img.className = "imgStarGray";
+                    }
+
+                    //mudar nota do channel
+                    document.getElementById('countVtsChannel').innerHTML = newData;
                 }
             },
             400: function () {
