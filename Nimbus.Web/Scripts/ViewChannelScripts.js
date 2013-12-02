@@ -34,6 +34,27 @@ function ajaxFollowChannel(id)
     });
 }
 
+function changeStarVote(element, onmouse, starUser)
+{
+    var star = element.replace("icoStar_", "");
+
+    if (onmouse == 'over') {
+        if (starUser > 0)
+            star = starUser;
+          
+        for (var s = 1; s <= star; s++) {
+            var img = document.getElementById("icoStar_" + s);
+            img.className = "imgStarGreen";
+        }
+    }
+    else if (onmouse == 'out')
+    {
+        for (var i = star; i <= 5; i++) {
+          var img = document.getElementById("icoStar_" + i);
+            img.className = "imgStarGray";
+       }
+    }
+}
 
 function CreatedDivQuestion()
 {
@@ -747,4 +768,35 @@ function ajaxSaveAllEdit(id)
             });
         }
     }
+}
+
+function ajaxVoteChannel(id, vote)
+{
+    $.ajax({
+        url: "/api/Channel/VoteChannel/" + id + "?vote=" + vote,
+        type: "POST",
+        contentType: "application/json;charset=utf-8",
+        statusCode: {
+            200: function (newData) {
+                if (newData > 0) { //deu certo
+                    //retornar as estrelinhas                  
+                    for (var s = 1; s <= vote; s++) {
+                        var img = document.getElementById("icoStar_" + s);
+                        img.className = "imgStarGreen";
+                    }
+                    for (var i = vote; i <= 5; i++) {
+                        var img = document.getElementById("icoStar_" + i);
+                        img.className = "imgStarGray";
+                    }
+
+                    //mudar nota do channel
+                    document.getElementById('countVtsChannel').innerHTML = newData;
+                }
+            },
+            400: function () {
+                //erro
+                window.alert("Não foi possível realizar esta operação. Tente novamente mais tarde.");
+            }
+        }
+    });
 }

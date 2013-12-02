@@ -301,9 +301,12 @@
     <Content Include="images\Utils\delete.png" />
     <Content Include="images\Utils\edit.png" />
     <Content Include="images\Utils\Jcrop.gif" />
+    <Content Include="images\Utils\loading.gif" />
     <Content Include="images\Utils\person_icon.png" />
     <Content Include="Scripts\jHtmlArea-0.8.min.js.map" />
     <Content Include="Scripts\jHtmlArea.ColorPickerMenu-0.8.min.js.map" />
+    <Content Include="images\Utils\starc.png" />
+    <Content Include="images\Utils\starv.png" />
     <None Include="Scripts\jquery-2.0.3.intellisense.js" />
     <None Include="Scripts\jHtmlArea-0.8-vsdoc.js" />
     <Content Include="Scripts\jHtmlArea-0.8.js" />
@@ -371,6 +374,7 @@
     <Content Include="Website\Views\NotificationPartials\Message.cshtml" />
     <Content Include="Website\Views\InfoToEditTopic.cshtml" />
     <Content Include="Website\Views\MessagePartials\MessagePartial.cshtml" />
+    <Content Include="Website\Views\MessagePartials\MessageExpandPartial.cshtml" />
     <Content Include="Website\Views\NotificationPartials\NewTopic.cshtml" />
   </ItemGroup>
   <ItemGroup>

@@ -8,9 +8,9 @@ namespace Nimbus.Model
 {
     public class ChannelUser
     {
-        public int UserId { get; set; }
+        public virtual int UserId { get; set; }
         
-        public int ChannelId { get; set; }
+        public virtual int ChannelId { get; set; }
         
         public bool? Vote { get; set; }
         public int Score { get; set; }

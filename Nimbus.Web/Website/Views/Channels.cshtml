@@ -86,10 +86,42 @@
 
     <div class="infoTitleChannel">
         <h2>Nota do canal</h2>
-        <p class="numberIco">
-            @*colocar icone pontuaçao*@
+        <p id="countVtsChannel" class="numberIco">
             @Model.CurrentChannel.CountVotes
         </p>
+        @if (Model.CurrentChannel.OwnerId != Model.CurrentUser.UserId && !(Model.RolesCurrentUser.Contains("channelmanager") || Model.RolesCurrentUser.Contains("topicmanager")
+        || Model.RolesCurrentUser.Contains("usermanager") || Model.RolesCurrentUser.Contains("messagemanager")))
+        {
+            <div>
+                Vote:
+                <p>
+                 @{
+                    int total = 0;
+                    for (int i = 1; i <= Model.CurrentChannel.UserVoteChannel; i++)
+                    {
+                        total = i + 1;                    
+                       <div onmouseover="changeStarVote(this.id, 'out', 0);" onmouseout="changeStarVote(this.id, 'over', total);" class="imgStarGreen" onclick="ajaxVoteChannel(@Model.CurrentChannel.Id, @i);" id="icoStar_@i"></div>
+                       
+                    }
+                    if (total < 5 && Model.CurrentChannel.UserVoteChannel > 0)
+                    {
+                        for (int j = total; j <= 5; j++)
+                        {
+                                <div onmouseover="changeStarVote(this.id, 'over', 0);" onmouseout="changeStarVote(this.id, 'out', 0);" class="imgStarGray" onclick="ajaxVoteChannel(@Model.CurrentChannel.Id, @j);" id="icoStar_@j"></div>
+                            }
+                    }
+                  }
+
+                    @if (Model.CurrentChannel.UserVoteChannel == 0)
+                    {
+                        for (int i = 1; i <= 5; i++)
+                        {
+                            <div onmouseover="changeStarVote(this.id, 'over', 0);" onmouseout="changeStarVote(this.id, 'out', 0);" class="imgStarGray" onclick="ajaxVoteChannel(@Model.CurrentChannel.Id, @i);" id="icoStar_@i"></div>
+                        }
+                    }                  
+                </p>
+            </div>
+        }
     </div>
 
     @if (Model.CurrentChannel.OwnerId != Model.CurrentUser.UserId)
@@ -113,8 +145,7 @@
             else
             {
                 <p class="numberIco">
-                    @*colocar icone participacao*@
-                    @Model.CurrentChannel.participationChannel
+                    @Model.CurrentChannel.participationChannel %
                 </p>
             }
         </p>

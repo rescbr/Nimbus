@@ -646,11 +646,6 @@ nav.topMess {
     border-radius:      12px;
 }
 
-.topMess li {
-    width:              145px;
-    text-align:         center;
-}
-
 div.messContent {
     margin:             0 auto;
 }
@@ -803,6 +798,22 @@ div#headerChannel{
     width:              180px;
     height:             100px;
 }
+
+.imgStarGreen {
+    background-image: url(/images/Utils/starv.png);
+    background-repeat: no-repeat;
+    width:14px;
+    height:14px;
+}
+
+.imgStarGray {
+    background-image: url(/images/Utils/starc.png);
+    background-repeat: no-repeat;
+    width:14px;
+    height:14px;
+}
+
+
 /*------------------ Post Canais fim --------------------*/
 /*------------------ Post Tópicos começo --------------------*/
 

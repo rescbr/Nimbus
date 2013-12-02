@@ -35,7 +35,7 @@ namespace Nimbus.Web.API.Controllers
             if (viewBy == "messageSend")
                 message = SentMessages(skip);
             if (viewBy == "messageReceived")
-                message = ReceivedMessages(skip);
+                message = ReceivedMessages(skip);            
 
 
             var rz = new RazorTemplate();
@@ -50,6 +50,19 @@ namespace Nimbus.Web.API.Controllers
             return new MessageHtmlWrapper { Html = sbuilder.ToString(), Count = message.Count };
         }
 
+        [HttpGet]
+        public MessageHtmlWrapper MessageExpandHtml(int id)
+        {
+            MessageBag message = ExpandMsg(id);
+
+            var rz = new RazorTemplate();
+            var sbuilder = new StringBuilder();
+
+                sbuilder.Append(rz.ParseRazorTemplate<MessageBag>
+                    ("~/Website/Views/MessagePartials/MessageExpandPartial.cshtml", message));            
+
+            return new MessageHtmlWrapper { Html = sbuilder.ToString() };
+        }
 
 
         [NonAction]
@@ -216,9 +229,8 @@ namespace Nimbus.Web.API.Controllers
                         bag.ChannelId = msg.ChannelId;
                         bag.Date = msg.Date;
                         bag.Id = msg.Id;
-                        bag.Receivers = msg.Receivers;
                         bag.SenderId = msg.SenderId;
-                        bag.Text = msg.Text;
+                        bag.Text = msg.Text.Length > 100? msg.Text.Substring(0,100) : msg.Text;
                         bag.Title = msg.Title;
                         bag.Visible = msg.Visible;
                         bag.UserName = user.FirstName + " " + user.LastName;
@@ -233,6 +245,60 @@ namespace Nimbus.Web.API.Controllers
             }
 
             return listMessage.OrderBy(d => d.Date).ToList();
+        }
+
+        /// <summary>
+        /// Método que retorna todas as informações de uma msg = para visualização completa da msg
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public MessageBag ExpandMsg(int id)
+        {
+            MessageBag msgBag = new MessageBag();
+            using (var db = DatabaseFactory.OpenDbConnection())
+            {
+                using (var trans = db.OpenTransaction(System.Data.IsolationLevel.ReadCommitted))
+                {
+                    try
+                    {
+
+                        var message = db.Where<ReceiverMessage>(r => r.UserId == NimbusUser.UserId && r.MessageId == id).FirstOrDefault();
+                        Message msg = new Message();
+
+                        if (message != null)
+                            msg = db.Where<Message>(m => m.Id == message.MessageId && m.Visible == true).FirstOrDefault();
+
+                        if (message != null)
+                        {
+                            User user = db.SelectParam<User>(u => u.Id == msg.SenderId).FirstOrDefault();
+                            msgBag.ChannelId = msg.ChannelId;
+                            msgBag.Date = msg.Date;
+                            msgBag.Id = msg.Id;
+                            msgBag.SenderId = msg.SenderId;
+                            msgBag.Text = msg.Text;
+                            msgBag.Receivers = msg.Receivers;
+                            msgBag.Title = msg.Title;
+                            msgBag.Visible = msg.Visible;
+                            msgBag.UserName = user.FirstName + " " + user.LastName;
+                            msgBag.AvatarUrl = user.AvatarUrl;
+                            msgBag.UserReadStatus = message.UserReadStatus;
+
+                        }
+
+                        message.UserReadStatus = true;
+                        db.Update<ReceiverMessage>(message);
+                        trans.Commit();
+                    }
+                    catch (Exception)
+                    {
+                        trans.Rollback();
+                        throw;
+                    }
+                }
+            }
+
+            return msgBag;
         }
 
         /// <summary>

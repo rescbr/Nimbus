@@ -435,6 +435,8 @@ namespace Nimbus.Web.API.Controllers
                         string firstName = db.SelectParam<User>(us => us.Id == channel.OwnerId).Select(us => us.FirstName).FirstOrDefault();
                         string lastName = db.SelectParam<User>(us => us.Id == channel.OwnerId).Select(us => us.LastName).FirstOrDefault();
 
+                        var channelUser = db.Where<ChannelUser>(c => c.ChannelId == id && c.UserId == NimbusUser.UserId && c.Visible == true).Where(c => c != null).FirstOrDefault();
+
                         showChannel.Name = channel.Name;
                         showChannel.CategoryId = channel.CategoryId;
                         showChannel.Id = channel.Id;
@@ -443,7 +445,7 @@ namespace Nimbus.Web.API.Controllers
                         showChannel.OwnerId = channel.OwnerId;
                         showChannel.Price = channel.Price;
                         showChannel.OpenToComments = channel.OpenToComments;
-                        showChannel.UserFollow = db.SelectParam<ChannelUser>(ch => ch.ChannelId == id && ch.Visible == true && ch.Follow == true).Exists(ch => ch.UserId == NimbusUser.UserId);
+                        showChannel.UserFollow = channelUser != null ? channelUser.Follow : false; 
                         if (userComment > 0 && listComments.Count > 0)
                         {
                             showChannel.participationChannel = ((userComment * 100) / listComments.Count()).ToString();
@@ -452,8 +454,9 @@ namespace Nimbus.Web.API.Controllers
                             showChannel.participationChannel = "0%";
                         showChannel.ImgUrl = channel.ImgUrl;
                         showChannel.OwnerName = firstName + " " + lastName;
-                        showChannel.CountVotes = db.SelectParam<VoteChannel>(vt => vt.ChannelId == id).Select(vt => vt.Score).Count();
+                        showChannel.CountVotes = db.SelectParam<VoteChannel>(vt => vt.ChannelId == id).Select(vt => vt.Score).FirstOrDefault();
                         showChannel.isAccept = accepted;
+                        showChannel.UserVoteChannel = channelUser.Vote != null? channelUser.Score : 0;
                     }
                 }
             }
@@ -1403,71 +1406,68 @@ namespace Nimbus.Web.API.Controllers
         /// </summary>
         /// <param name="vote"></param>
         /// <returns></returns>
-        [HttpPut]
-        public int VoteChannel(int vote, int id)
+        [HttpPost]
+        public int VoteChannel(int id,int vote)
         {
             int score = -1;
-            try
-            {
                 using(var db = DatabaseFactory.OpenDbConnection())
                 {
                     using (var trans = db.OpenTransaction(System.Data.IsolationLevel.ReadCommitted))
                     {
                         try
                         {
-                            bool? voted = db.SelectParam<ChannelUser>(vt => vt.UserId == NimbusUser.UserId && vt.ChannelId == id && vt.Accepted == true)
-                                                                                     .Select(vt => vt.Vote).FirstOrDefault();
-                            if (voted == null)
+                            ChannelUser userChannel = db.Where<ChannelUser>(vt => vt.UserId == NimbusUser.UserId && vt.ChannelId == id && vt.Accepted == true).FirstOrDefault();
+                            bool? voted = userChannel.Vote;
+
+                            VoteChannel vtChannel = db.Where<VoteChannel>(ch => ch.ChannelId == id).FirstOrDefault();
+                            if (vtChannel == null)
                             {
-                                VoteChannel vtChannel = new VoteChannel
+                                VoteChannel votechn = new VoteChannel 
                                 {
-                                    Score = vote
+                                    ChannelId = id,
+                                    Score = 0                                   
                                 };
-                                int nota = db.Query<int>("UPDATE VoteChannel SET VoteChannel.Score = VoteChannel.Score + @score OUTPUT INSERTED.Score " +
-                                                                "WHERE VoteChannel.Channel_ID = @channelID",
-                                                                new { score = vote, channelID = id }).FirstOrDefault();
+                                db.Insert<VoteChannel>(votechn);
+                                vtChannel = votechn;
+                            }
 
-                                ChannelUser chnUser = new ChannelUser { Vote = true, Score = vote };
-                                db.Update<ChannelUser>(chnUser, chn => chn.UserId == NimbusUser.UserId && chn.ChannelId == id);
+                            if ((voted == null || voted == false) && userChannel != null)
+                            {                               
+                                int notaChannel = vtChannel.Score;
 
-                                score = nota;
+                                userChannel.Vote = true;
+                                userChannel.Score = vote;                                
+                                db.Update<ChannelUser>(userChannel, c=> c.ChannelId == id && c.UserId == NimbusUser.UserId);
+
+                                score = notaChannel + vote;
+
+                                vtChannel.Score = score;
+                                db.Update<VoteChannel>(vtChannel);
+
                                 trans.Commit();
                             }
                             else if (voted == true)
                             {
-                                VoteChannel vtChannel = new VoteChannel
-                                {
-                                    Score = vote
-                                };
+                                int oldVoteUser = userChannel.Score;
 
-                                int notaVelha = db.SelectParam<ChannelUser>(vt => vt.ChannelId == id && vt.UserId == NimbusUser.UserId)
-                                                                                           .Select(vt => vt.Score).FirstOrDefault();
+                                userChannel.Score = vote;
+                                db.Update<ChannelUser>(userChannel, c=> c.UserId == NimbusUser.UserId && c.ChannelId == id);
 
-                                int nota = db.Query<int>("UPDATE VoteChannel SET VoteChannel.Score = VoteChannel.Score + @score OUTPUT INSERTED.Score " +
-                                                                "INNER JOIN ChannelUser ON VoteChannel.Channel_ID = ChannelUser.ChannelId " +
-                                                                "WHERE VoteChannel.Channel_ID = @channelID AND ChannelUser.UserId = @user ",
-                                                                new { score = (vote - notaVelha), channelID = id, user = NimbusUser.UserId }).FirstOrDefault();
+                                score = (vtChannel.Score - oldVoteUser) + vote;
+                                vtChannel.Score = score;
 
-                                ChannelUser chnUser = new ChannelUser { Score = nota };
-                                db.Update<ChannelUser>(chnUser, chn => chn.UserId == NimbusUser.UserId && chn.ChannelId == id);
-
-                                score = nota;
+                                db.Update<VoteChannel>(vtChannel);
                                 trans.Commit();
                             }
                         }
                         catch (Exception ex)
                         {
                             trans.Rollback();
-                            throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+                            throw ;
                         }
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
-            }
-
+           
             return score;
         }
 

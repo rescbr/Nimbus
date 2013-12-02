@@ -10,10 +10,10 @@ namespace Nimbus.Model.ORM
     public class ChannelUser : Nimbus.Model.ChannelUser
     {
         [References(typeof(User))]
-        public int UserId { get; set; }
+        public override int UserId { get; set; }
         
         [References(typeof(Channel))]
-        public int ChannelId { get; set; }
+        public override int ChannelId { get; set; }
         
     }
 }

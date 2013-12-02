@@ -75,7 +75,33 @@ namespace Nimbus.Web.API.Controllers
                     userBag.Occupation = user.Occupation;
                     userBag.State = user.State;
                     userBag.Age = (int)Math.Floor((DateTime.Now.Subtract(user.BirthDate).Days) / 365.25);
-                    userBag.Interaction = 0;//TODO: arrumar p valor certo - pensar nas regras
+
+
+                    var roles = db.Where<Channel>(c => c.Visible == true && c.OrganizationId == NimbusOrganization.Id).Select(c => db.Where<Role>(rl => rl.UserId == id && rl.ChannelId == c.Id &&
+                                                                                                                                  (rl.IsOwner == true || rl.ChannelMagager == true || rl.MessageManager == true
+                                                                                                                                   || rl.ModeratorManager == true || rl.TopicManager == true
+                                                                                                                                   || rl.UserManager == true)).FirstOrDefault()).Where(r => r != null);
+                                       
+                     int pointsChn = ((roles.Select(c => c.UserId == id && c.IsOwner == true).Count() * 50)
+                                    + (roles.Select(c=> c.UserId == id && (c.ChannelMagager == true ||  c.MessageManager == true || 
+                                                                            c.ModeratorManager == true || c.TopicManager == true || c.UserManager == true)).Count() * 25));
+                                                          
+
+                     int pointsTpc = roles.Where(r => r.UserId == id).Select(r => db.Where<Topic>(t => t.AuthorId == r.UserId &&
+                                                                                                     t.ChannelId == r.ChannelId && t.Visibility == true))
+                                                                     .FirstOrDefault().Where(r => r != null).Count();
+
+                     int pointsCmt = roles.Where(r => r.UserId == id).Select(r => db.Where<Comment>(c => c.UserId == id && c.Visible == true && c.ChannelId == r.ChannelId))
+                                                                     .Where(c => c!= null).Count();
+
+                     pointsChn = pointsChn * 30;
+                     pointsCmt = pointsCmt * 1;
+                     pointsTpc = pointsTpc * 50;
+
+                    userBag.PointsForChannel = pointsChn;
+                    userBag.PointsForComment = pointsCmt;
+                    userBag.PontsForTopic = pointsTpc;
+                    userBag.Interaction = pointsTpc + pointsCmt + pointsChn + 100; //100 = pq o usuário se cadastrou no nimbus
 
                     //throw http exception
                     if (userBag == null)

@@ -196,45 +196,113 @@ function verMaisReadLater(id, category, global) {
 }
 
 //método que busca  as mensagens por paginaçao e/ou enviadas
-function viewMessages(global, viewBy, typeBtn) {
-    if (global == 'skipMessageSend')
+function viewMessages(global, viewBy, typeBtn, typeClick) {
+    var divB; var divN;
+    if (global == 'skipMessageSend') {
         value = skipMessageSend;
-    if (global == 'skipMessageReceived')
-        value = skipMessageReceived;
+        divB = 'divSeeMessagesSend';
+        divN = 'divSeeMessages';
+        if (countSend < 15)
+            btnStyle = 'none';
+        else btnStyle = 'block';
+        document.getElementById('liMsgSend').onclick = function () { viewMessages('skipMessageSend', 'messageSend', 'send', 'back'); }
+    }
+    if (global == 'skipMessageReceived') {
+        value = skipMessageReceived;       
+        divN = 'divSeeMessagesSend';
+        divB = 'divSeeMessages';
+        if (countReceived < 15)
+            btnStyle = 'none';
+        else btnStyle = 'block';
+        document.getElementById('liMsgReceived').onclick = function () { viewMessages('skipMessageReceived', 'messageReceived', 'received', 'back'); }
+    }
 
     var btn = document.getElementById('btn_moreMessages');
 
     if (typeBtn == 'send')
-        btn.setAttribute('onclick', 'viewMessages(\'skipMessageSend\', \'messageSend\', \'send\');');
+        btn.onclick = function(){ viewMessages('skipMessageSend', 'messageSend', 'send','seeMore');}
     else
-        btn.setAttribute('onclick', 'viewMessages(\'skipMessageReceived\', \'messageReceived\', \'\');');
+        btn.onclick = function () { viewMessages('skipMessageReceived', 'messageReceived', '', 'seeMore'); }
 
-    $.ajax({
-        url: "/api/message/MessagesHtml/?viewBy=" + viewBy + "&skip=" + value,
-        type: "GET",
-        contentType: "application/json;charset=utf-8",
-        statusCode: {
-            200: function (newData) {
+    if (typeClick == 'seeMore' || typeClick == 'firstGetSend') {
+        $.ajax({
+            url: "/api/message/MessagesHtml/?viewBy=" + viewBy + "&skip=" + value,
+            type: "GET",
+            contentType: "application/json;charset=utf-8",
+            statusCode: {
+                200: function (newData) {
+                    if (global == 'skipMessageSend') {
+                        skipMessageSend = skipMessageSend + 1;
+                        divB = "divSeeMessagesSend";
+                        divN = "divSeeMessages";
+                        countSend = newData.Count;
+                    }
+                    else
+                        if (global == 'skipMessageReceived') {
+                            skipMessageReceived = skipMessageReceived + 1;
+                            divN = "divSeeMessagesSend";
+                            divB = "divSeeMessages";
+                            countReceived = newData.Count;
+                        }
 
-                if (global == 'skipMessageSend')
-                    skipMessageSend = skipMessageSend + 1;
-                if (global == 'skipMessageReceived')
-                    skipMessageReceived = skipMessageReceived + 1;
+                    document.getElementById(divB).style.display = 'block';
+                    document.getElementById(divN).style.display = 'none';
 
-                document.getElementById('divSeeMessages').innerHTML += newData.Html;
+                    document.getElementById(divB).innerHTML += newData.Html;
 
-                if (newData.Count < 15) {
-                    btn.style.display = "none";
+                    if (newData.Count < 15) {
+                        btn.style.display = "none";
+                    }
+                    else {
+                        btn.style.display = "block";
+                    }
+                },
+
+                500: function () {
+                    //erro
+                    window.alert("Erro ao processar requisição. Tente novamente mais tarde.");
                 }
-                else {
-                    btn.style.display = "block";
-                }
-            },
-
-            500: function () {
-                //erro
-                window.alert("Erro ao processar requisição. Tente novamente mais tarde.");
             }
-        }
-    });
+        });
+    }
+    else if(typeClick == 'back')
+    {
+        document.getElementById(divB).style.display = 'block';
+        document.getElementById(divN).style.display = 'none';
+        btn.style.display = btnStyle;
+    }
+}
+
+function ajaxSeeMsg(id, starNameDiv)
+{
+    var divNew = document.getElementById('divMesgExpand_' + id);
+    var divOld = document.getElementById('divMesg_' + id).style.background = "rgb(190, 30, 45)";
+    if (divNew != null)
+    {
+        divNew.style.display = 'block';
+    }
+    else {
+        $.ajax({
+            url: "/api/message/MessageExpandHtml/" + id,
+            type: "GET",
+            contentType: "application/json;charset=utf-8",
+            statusCode: {
+                200: function (newData) {
+                    var div = document.getElementById(starNameDiv + id);
+
+                    div.parentElement.innerHTML += newData.Html;
+                },
+
+                500: function () {
+                    //erro
+                    window.alert("Erro abrir sua mensagem. Tente novamente mais tarde.");
+                }
+            }
+        });
+    }
+}
+
+function ajaxHiddeMsg(div)
+{
+    document.getElementById(div).style.display = 'none';
 }
