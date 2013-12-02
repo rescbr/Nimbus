@@ -744,6 +744,7 @@
     <Content Include="Website\Views\NotificationPartials\Message.cshtml" />
     <Content Include="Website\Views\InfoToEditTopic.cshtml" />
     <Content Include="Website\Views\MessagePartials\MessagePartial.cshtml" />
+    <Content Include="Website\Views\MessagePartials\MessageExpandPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\Controllers\DatabaseController.cs" />

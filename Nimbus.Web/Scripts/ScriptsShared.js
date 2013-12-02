@@ -238,3 +238,37 @@ function viewMessages(global, viewBy, typeBtn) {
         }
     });
 }
+
+function ajaxSeeMsg(id, starNameDiv)
+{
+    var divNew = document.getElementById('divMesgExpand_' + id);
+
+    if (divNew != null)
+    {
+        divNew.style.display = 'block';
+    }
+    else {
+        $.ajax({
+            url: "/api/message/MessageExpandHtml/" + id,
+            type: "GET",
+            contentType: "application/json;charset=utf-8",
+            statusCode: {
+                200: function (newData) {
+                    var div = document.getElementById(starNameDiv + id);
+
+                    div.parentElement.innerHTML += newData.Html;
+                },
+
+                500: function () {
+                    //erro
+                    window.alert("Erro abrir sua mensagem. Tente novamente mais tarde.");
+                }
+            }
+        });
+    }
+}
+
+function ajaxHiddeMsg(div)
+{
+    document.getElementById(div).style.display = 'none';
+}
