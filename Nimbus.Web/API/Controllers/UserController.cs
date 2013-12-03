@@ -53,8 +53,6 @@ namespace Nimbus.Web.API.Controllers
         [HttpGet]
         public UserBag showProfile(int? id)
         {
-            try
-            {
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
                     if (id == null)
@@ -81,19 +79,23 @@ namespace Nimbus.Web.API.Controllers
                                                                                                                                   (rl.IsOwner == true || rl.ChannelMagager == true || rl.MessageManager == true
                                                                                                                                    || rl.ModeratorManager == true || rl.TopicManager == true
                                                                                                                                    || rl.UserManager == true)).FirstOrDefault()).Where(r => r != null);
-                                       
-                     int pointsChn = ((roles.Select(c => c.UserId == id && c.IsOwner == true).Count() * 50)
-                                    + (roles.Select(c=> c.UserId == id && (c.ChannelMagager == true ||  c.MessageManager == true || 
-                                                                            c.ModeratorManager == true || c.TopicManager == true || c.UserManager == true)).Count() * 25));
-                                                          
+                    int pointsChn = 0;
+                    int pointsTpc = 0;
+                    int pointsCmt = 0;
+                    if (roles.Count() > 0)
+                    {
+                         pointsChn = ((roles.Select(c => c.UserId == id && c.IsOwner == true).Count() * 50)
+                                       + (roles.Select(c => c.UserId == id && (c.ChannelMagager == true || c.MessageManager == true ||
+                                                                               c.ModeratorManager == true || c.TopicManager == true || c.UserManager == true)).Count() * 25));
 
-                     int pointsTpc = roles.Where(r => r.UserId == id).Select(r => db.Where<Topic>(t => t.AuthorId == r.UserId &&
-                                                                                                     t.ChannelId == r.ChannelId && t.Visibility == true))
-                                                                     .FirstOrDefault().Where(r => r != null).Count();
 
-                     int pointsCmt = roles.Where(r => r.UserId == id).Select(r => db.Where<Comment>(c => c.UserId == id && c.Visible == true && c.ChannelId == r.ChannelId))
-                                                                     .Where(c => c!= null).Count();
+                         pointsTpc = roles.Where(r => r.UserId == id).Select(r => db.Where<Topic>(t => t.AuthorId == r.UserId &&
+                                                                                                        t.ChannelId == r.ChannelId && t.Visibility == true))
+                                                                        .FirstOrDefault().Count();
 
+                        pointsCmt = roles.Where(r => r.UserId == id).Select(r => db.Where<Comment>(c => c.UserId == id && c.Visible == true && c.ChannelId == r.ChannelId))
+                                                                        .Where(c => c != null).Count();
+                    }
                      pointsChn = pointsChn * 30;
                      pointsCmt = pointsCmt * 1;
                      pointsTpc = pointsTpc * 50;
@@ -112,12 +114,7 @@ namespace Nimbus.Web.API.Controllers
 
                     user.Password = "";
                     return userBag;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+                }            
         }
 
 

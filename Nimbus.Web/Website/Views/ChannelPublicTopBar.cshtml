@@ -17,8 +17,6 @@
     </nav>
 
     <div id="divNotification">
-        @*ultimos topicos + ultimos comentarios*@
-        @*TODO:colocar script p 'ver mais' index de pagina*@
         @foreach (var item in Model.AllTopics.Take(15).OrderByDescending(m => m.LastModified))
         {
             @*Imagem e texto*@

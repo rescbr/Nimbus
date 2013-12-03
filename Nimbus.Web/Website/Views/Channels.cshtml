@@ -245,7 +245,15 @@
     <div class="modal-inner">
         <header id="modal-label">
             <!-- Header -->
-            Editar canal
+            <p>
+                <h1>Editar canal</h1>
+                @if (Model.RolesCurrentUser.Contains("channelmanager") || Model.CurrentUser.UserId == Model.CurrentChannel.OwnerId)
+                {
+                    <a href="#" onclick="ajaxDeleteChannel(@Model.CurrentChannel.Id, @Model.CurrentUser.UserId);">
+                        <img src="/images/utils/delete.png" alt="Deletar canal" title="Deletar canal" />Deletar
+                    </a>
+                }
+            </p>
         </header>
 
         @if (Model.RolesCurrentUser.Contains("channelmanager") || Model.CurrentChannel.OwnerId == Model.CurrentUser.UserId)

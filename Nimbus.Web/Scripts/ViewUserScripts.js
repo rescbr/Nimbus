@@ -128,7 +128,7 @@ function SaveEditProfile()
 function ajaxDeleteMsg(id)
 {
     ajaxData = [];
-    ajaxData['listID'] = id;
+    ajaxData.push(id.replace('deleteMsg_', ''));
 
     $.ajax({
         url: "/api/Message/DeleteMessages/",
@@ -138,9 +138,12 @@ function ajaxDeleteMsg(id)
         statusCode: {
             200: function (newData) {
 
-                if (newData > 0) {
-                    for (i = 0; i < newData; i++) {
+                if (newData.length > 0) {
+                    for (i = 0; i < newData.length; i++) {
                         document.getElementById('divMesg_' + newData[i]).style.display = 'none';
+                        var divExpand = document.getElementById('divMesgExpand_' + newData[i]);
+                        if (divExpand != null)
+                            divExpand.style.display = 'none';
                     }
                 }
             },

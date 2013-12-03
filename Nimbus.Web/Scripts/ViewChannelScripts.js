@@ -83,6 +83,36 @@ function CreatedDivQuestion()
     CurrentQuestion = nextPerg;
 }
 
+function ajaxDeleteChannel(id, idUser)
+{
+    $.ajax({
+        url: "/api/channel/DeleteChannel/" + id,
+        type: "DELETE",
+        contentType: "application/json;charset=utf-8",
+        statusCode: {
+            200: function (newData) {
+                if (newData.indexOf('userprofile') > 0)
+                {
+                    window.location.href = newData;
+                }
+                else if (newData.indexOf('transferido') > 0) {
+                    window.alert(newData);
+                    window.location.href = "/userprofile/index/"+ idUser;
+                }               
+                else {
+                    //avisar que nao tem permissao
+                    window.alert("Você não possui permissão para deletar este canal.");
+                }
+            },
+
+            500: function () {
+                //erro
+                window.alert("Erro ao tentar deletar este canal. Tente novamente mais tarde.");
+            }
+        }
+    });
+}
+
 function DisableOption(currentOpt, nameDiv)
 {    
     var indexPerg = parseInt(nameDiv.replace("divPergunta", ""));
@@ -436,7 +466,6 @@ function addAutocompleteToSearch() {
         }
     });
 }
-
 
 function AcceptOrNotBeModerator(id, accepted) {    
     $.ajax({

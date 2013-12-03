@@ -20,7 +20,8 @@
                     <img src=@Model.AvatarUrl width="60px;" height="60px;">
                 </div>
             </a>
-            <div class="post_Right_m" onclick="ajaxSeeMsg(@Model.Id,'divMesg_');">
+
+            <div class="post_Right_m">
                 <nav class="postHeaderLeft_m">
                     <ul class="sbs">
                         <li><a href="userprofile/index/@Model.SenderId">@Model.UserName</a></li>
@@ -34,11 +35,15 @@
                         <li><img src="/images/utils/delete.png" id="deleteMsg_@Model.Id" onclick="ajaxDeleteMsg(this.id);" /></li>
                     </ul>
                 </nav>
-                <div class="postContent_m">
-                    <p>@Model.Text </p>
-                </div>
             </div>
-        </div>
+          
+            <div onclick="ajaxSeeMsg(@Model.Id,'divMesg_');">
+                    <div class="postContent_m">
+                        <p>@Model.Text </p>
+                    </div>
+                </div>
+       </div>
+       
     }
 
 </div>
