@@ -143,13 +143,11 @@ function ajaxSaveNewTopic(channelID)
     }
     if (divTipoTopic == "divText")
     {
-        //text = CKEDITOR.instances.txtaArticle.getData();
         text = $("#txtaArticle").htmlarea('html');
         enumTopicType = 0;
     }
     if (divTipoTopic == "divDiscussion")
     {
-        //text = CKEDITOR.instances.txtaTextMsg.getData();
         text = $("#txtaTextMsg").htmlarea('html');
         enumTopicType = 2;
     }
@@ -315,7 +313,7 @@ function ajaxDeleteComment(commentId, divName)
 function ajaxSendMessage(id)
 {
     ajaxMessage = {};
-    var text = CKEDITOR.instances.txtTextMsg.getData();
+    var text = $("#txtTextMsg").htmlarea('html');
     var title = document.getElementById('txtTitleMsg').value;
 
     if (text != "") {
