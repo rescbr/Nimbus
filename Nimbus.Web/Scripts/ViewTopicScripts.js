@@ -218,3 +218,28 @@ function ajaxFinishExam(id)
         });
     }
 }
+
+function ajaxDeleteTopic(id, idChn)
+{
+    $.ajax({
+        url: "/api/topic/DeleteTopic/" + id,
+        type: "DELETE",
+        contentType: "application/json;charset=utf-8",
+        statusCode: {
+            200: function (newData) {
+                if (newData == true) {
+                    window.location.href = "/channel/index/" + idChn;
+                }
+                else
+                {
+                    window.alert("Você não possui permissão para realizar essa operação.");
+                }
+            }
+        },
+
+        500: function () {
+            //erro
+            window.alert("Não foi possível enviar seu comentário. Tente novamente mais tarde.");
+        }
+    });
+}

@@ -1046,5 +1046,55 @@ namespace Nimbus.Web.API.Controllers
 
             return userGrade;
         }
+
+        /// <summary>
+        /// Método para deletar um tópico
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete]
+        public bool DeleteTopic(int id)
+        {
+            bool flag = false;
+
+            using(var db = DatabaseFactory.OpenDbConnection())
+            {                
+                Topic topic = db.Where<Topic>(t => t.Id == id).FirstOrDefault();
+                
+                if(topic != null)
+                {
+                    bool allow = db.Where<Role>(r => r.UserId == NimbusUser.UserId && r.ChannelId == topic.ChannelId).Select(r => r.IsOwner).FirstOrDefault();
+
+                    if (allow == true)
+                    {
+                        using (var trans = db.OpenTransaction(System.Data.IsolationLevel.ReadCommitted))
+                        {
+                            try
+                            {
+                                db.Update<Comment>(new Comment{ Visible = false}, cmt=> cmt.TopicId == id);
+
+                                topic.Visibility = false;
+                                db.Update<Topic>(topic);
+
+                                trans.Commit();
+                                flag = true;
+                            }
+                            catch (Exception)
+                            {
+                                trans.Rollback();
+                                flag = false;
+                                throw;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        flag = false;
+                    }
+                }
+            }
+
+            return flag;
+        }
     }
 }
