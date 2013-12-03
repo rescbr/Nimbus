@@ -3,7 +3,7 @@
 function SendMessageProfile(receiverId)
 {
     ajaxMessage = {};    
-    var text = CKEDITOR.instances.txtTextMsg.getData();
+    var text = $("#txtTextMsg").htmlarea('html');
     var title = document.getElementById('inpTitleMsg').value;
 
     if (text != "")

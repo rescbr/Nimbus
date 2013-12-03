@@ -6,6 +6,8 @@
 @Scripts.Render("~/Scripts/ScriptsShared.js")
 @Scripts.Render("~/Scripts/jquery.form.js")
 @Scripts.Render("~/Scripts/jquery.autocomplete.js")
+@Styles.Render("~/Styles/jHtmlArea.css")
+@Scripts.Render("~/Scripts/jHtmlArea-0.8.js")
 
 <script>
     currentChannel = @Model.CurrentChannel.Id;
@@ -204,28 +206,28 @@
                         Para:
                         <input type="text" name="txtOwnerName" value="@Model.CurrentChannel.OwnerName" disabled="disabled" />
                     </p>
-                    <p>
-                        Cc:
-                        <textarea name="txtaCc" disabled="disabled" cols="40" rows="5">
-                            @if (Model.Moderators.Count > 0)
-                            {
-                                foreach (var item in Model.Moderators)
-                                {
-                                    @item.FirstName @item.LastName
-                                }
-                            }
-                            else
-                            {
-                                <text>Apenas o dono do canal poderá receber está mensagem.</text>
-                            }
-                        </textarea>
+                    <p>     
+                        @{
+            int countMod = Model.Moderators.Count;
+            if (countMod > 0)
+            {
+                                    <text>Cc:</text>
+                for (int i = 0; i < countMod; i++)
+                {
+                    string virgula = "; ";
+                    if (i == countMod - 1) { virgula = ""; }
+                    var mod = Model.Moderators[i];
+                                        <text>@mod.FirstName @mod.LastName@virgula</text>
+                }
+            }
+                                            }
                     </p>
                     <p>
                         Assunto:
                         <input id="txtTitleMsg" name="txtTitleMsg" type="text" maxlength="100" />
                     </p><br />
                     <p>
-                        <textarea id="txtTextMsg" name="txtTextMsg" rows="10" cols="60" class="ckeditor"></textarea>
+                        <textarea id="txtTextMsg" name="txtTextMsg" rows="10" cols="60"></textarea>
                     </p>
             </div>
 
@@ -334,15 +336,11 @@
 
 @*Sempre manter no fim da página*@
 <script type="text/javascript">
-    CKEDITOR.replace('txtTextMsg', {
-        toolbar: [
-            { name: 'document', items: ['Source', '-', 'NewPage', 'Preview', '-', 'Templates'] },	// Defines toolbar group with name (used to create voice label) and items in 3 subgroups.
-            ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo'],			// Defines toolbar group without name.
-            '/',																					// Line break - next group will be placed in new line.
-            { name: 'basicstyles', items: ['Bold', 'Italic'] }
-        ]
+    $(function () {
+        $('#txtTextMsg').width(400);
+        $('#txtTextMsg').height(100);
+        $('#txtTextMsg').htmlarea();
     });
-
 </script>
 @Scripts.Render("~/Scripts/ViewTopicScripts.js")
 @Scripts.Render("~/Scripts/ViewChannelScripts.js")

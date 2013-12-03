@@ -8,13 +8,30 @@ function newMessageNotification(msg) {
     try {
         var divNotif = document.getElementById("divNotificationWrapper");
         if (divNotif.children.length == 0) {
-            divNotif.innerHTML = msg;
+            divNotif.innerHTML = msg.Html;
         } else {
-            divNotif.insertBefore(makeElementFromHtml(msg), divNotif.children[0]);
+            divNotif.insertBefore(makeElementFromHtml(msg.Html), divNotif.children[0]);
         }
         
     } catch (e) { }
     
+    try {
+        var divMsg = document.getElementById("divSeeMessages");
+        if (divMsg !== null) {
+            $.ajax({
+                url: "/api/message/messagehtml/" + msg.MessageId,
+                type: "GET",
+                contentType: "application/json;charset=utf-8",
+                statusCode: {
+                    200: function (msgObj) {
+                        var divMsg = document.getElementById("divSeeMessages");
+                        divMsg.insertBefore(makeElementFromHtml(msgObj.Html), divMsg.children[0]);
+                    }
+                }
+            });
+        }
+    } catch (e) { }
+
 }
 
 function getNotifications(after) {

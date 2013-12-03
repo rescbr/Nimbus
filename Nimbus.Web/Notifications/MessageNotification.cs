@@ -10,6 +10,8 @@ using Microsoft.WindowsAzure.Storage.Auth;
 using Microsoft.WindowsAzure.Storage.Table;
 using System.Threading.Tasks;
 using ServiceStack.OrmLite;
+using Nimbus.Model.Bags;
+using Nimbus.Model.ORM;
 
 namespace Nimbus.Web.Notifications
 {
@@ -46,7 +48,13 @@ namespace Nimbus.Web.Notifications
                 string htmlNotif = rz.ParseRazorTemplate<MessageNotificationModel>
                     ("~/Website/Views/NotificationPartials/Message.cshtml", msgCopy);
 
-                NimbusHubContext.Clients.Group(NimbusHub.GetMessageGroupName(receiver)).newMessageNotification(htmlNotif);
+                var wrapper = new MessageNotificationWrapper()
+                {
+                    MessageId = msgCopy.MessageId,
+                    Html = htmlNotif
+                };
+
+                NimbusHubContext.Clients.Group(NimbusHub.GetMessageGroupName(receiver)).newMessageNotification(wrapper);
 
                 StoreNotification(msgCopy, receiver);
             });
@@ -71,6 +79,13 @@ namespace Nimbus.Web.Notifications
             }
         }
     }
+
+    public class MessageNotificationWrapper
+    {
+        public int MessageId { get; set; }
+        public string Html { get; set; }
+    }
+
 
     public class MessageNotificationModel
     {

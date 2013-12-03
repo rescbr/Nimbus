@@ -28,6 +28,48 @@ namespace Nimbus.Web.API.Controllers
         }
 
         [HttpGet]
+        public MessageHtmlWrapper MessageHtml(int id)
+        {
+            MessageBag bag = new MessageBag();
+            using (var db = DatabaseFactory.OpenDbConnection())
+            {
+                var receiverMsg = db.Where<ReceiverMessage>(r => r.UserId == NimbusUser.UserId
+                                                      && r.MessageId == id
+                                                      && r.Status == Model.Enums.MessageType.received).FirstOrDefault();
+                if (receiverMsg != null)
+                {
+                    var msg = db.Where<Message>(m => m.Id == id).FirstOrDefault();
+                    if (msg == null) return new MessageHtmlWrapper() { Count = 0 };
+                    //                                    .Select(r =>
+                    //                                        db.Where<Message>(m => m.Id == r.MessageId && m.Visible == true).FirstOrDefault())
+                    //                                    .Where(msg => msg != null);
+    
+                    User user = db.SelectParam<User>(u => u.Id == msg.SenderId).FirstOrDefault();
+                    bag.ChannelId = msg.ChannelId;
+                    bag.Date = msg.Date;
+                    bag.Id = msg.Id;
+                    bag.SenderId = msg.SenderId;
+                    bag.Text = msg.Text.Length > 100 ? msg.Text.Substring(0, 100) : msg.Text;
+                    bag.Title = msg.Title;
+                    bag.Visible = msg.Visible;
+                    bag.UserName = user.FirstName + " " + user.LastName;
+                    bag.AvatarUrl = user.AvatarUrl;
+                    bag.UserReadStatus = receiverMsg.UserReadStatus;
+                }
+                else
+                {
+                    return new MessageHtmlWrapper() { Count = 0 };
+                }
+            }
+
+            var rz = new RazorTemplate();
+            string htmlMessage = rz.ParseRazorTemplate<MessageBag>
+                    ("~/Website/Views/MessagePartials/MessagePartial.cshtml", bag);
+            return new MessageHtmlWrapper { Count = 1, Html = htmlMessage };
+        }
+
+
+        [HttpGet]
         public MessageHtmlWrapper MessagesHtml(string viewBy = null, int skip = 0)
         {
             List<MessageBag> message = new List<MessageBag>();
@@ -223,7 +265,8 @@ namespace Nimbus.Web.API.Controllers
                 if (listIdMsg.Count() > 0)
                 {
                     foreach (var msg in listIdMsg)
-                    {                        MessageBag bag = new MessageBag();
+                    { 
+                        MessageBag bag = new MessageBag();
                         User user = db.SelectParam<User>(u => u.Id == msg.SenderId).FirstOrDefault();
                         bag.ChannelId = msg.ChannelId;
                         bag.Date = msg.Date;
