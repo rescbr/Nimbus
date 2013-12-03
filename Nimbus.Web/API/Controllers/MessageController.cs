@@ -256,7 +256,7 @@ namespace Nimbus.Web.API.Controllers
             using (var db = DatabaseFactory.OpenDbConnection())
             {
 
-                var listIdMsg = db.Where<ReceiverMessage>(r => r.UserId == NimbusUser.UserId && r.Status == Model.Enums.MessageType.received)
+                var listIdMsg = db.Where<ReceiverMessage>(r => r.UserId == NimbusUser.UserId && r.Status == Model.Enums.MessageType.received && r.Visible == true)
                                                     .Skip(15 * skip).Take(15)
                                                     .Select(r =>
                                                         db.Where<Message>(m => m.Id == r.MessageId && m.Visible == true).FirstOrDefault())
@@ -363,7 +363,7 @@ namespace Nimbus.Web.API.Controllers
                 if (idsAllow == true)
                 {
                     //BUG: ReceiverMessage precisa de um datetime para poder ordenar por data.
-                    var listMsg = db.Where<ReceiverMessage>(r => r.Status == Model.Enums.MessageType.received)
+                    var listMsg = db.Where<ReceiverMessage>(r => r.Status == Model.Enums.MessageType.received && r.Visible == true)
                                                           .Skip(15 * skip).Take(15)
                                                           .Select(r =>
                                                               db.Where<Message>(m => m.Id == r.MessageId && m.Visible == true && m.ChannelId == id)
@@ -408,7 +408,7 @@ namespace Nimbus.Web.API.Controllers
             List<MessageBag> listMessage = new List<MessageBag>();
             using (var db = DatabaseFactory.OpenDbConnection())
             {
-                var msgSend = db.Where<ReceiverMessage>(r => r.UserId == NimbusUser.UserId && r.Status == Model.Enums.MessageType.send)
+                var msgSend = db.Where<ReceiverMessage>(r => r.UserId == NimbusUser.UserId && r.Status == Model.Enums.MessageType.send && r.Visible == true)
                                                      .Skip(15 * skip).Take(15)
                                                      .Select(r =>
                                                          db.Where<Message>(m => m.Id == r.MessageId && m.Visible == true).FirstOrDefault())
