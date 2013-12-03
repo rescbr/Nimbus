@@ -89,5 +89,16 @@ namespace Nimbus.Web.Website.Controllers
             login.Password = ""; //limpa a senha antes de enviar
             return View(login);
         }
+
+        [HttpGet]
+        [ActionName("Logout")]
+        public ActionResult Logout()
+        {
+            var cookie = Request.Cookies["nsc-session"];
+            cookie.Value = "";
+            cookie.Expires = DateTime.Now.AddDays(-1);
+            Response.Cookies.Add(cookie);
+            return Redirect("/");
+        }
     }
 }
