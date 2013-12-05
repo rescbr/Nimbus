@@ -252,17 +252,28 @@ function ajaxFavoritedTopic(id, typePage)
         contentType: "application/json;charset=utf-8",
         statusCode: {
             200: function (newData) {
-
+               
                 var count = document.getElementById('lblCountFavorite').innerHTML;
 
                 if (newData == true) {
-
-                    document.getElementById('pFavoritar').innerHTML = "Desfavoritar";
-                    count = parseInt(count) + 1;
+                    if (typePage == 'pageTopic') {
+                        document.getElementById('pFavoritar').innerHTML = "Desfavoritar";
+                        count = parseInt(count) + 1;
+                    }
+                    else
+                    {
+                        //trocar estrelinha
+                    }
                 }
                 else {
-                    document.getElementById('pFavoritar').innerHTML = "Favoritar";
-                    count = parseInt(count) - 1;
+                    if (typePage == 'pageTopic') {
+                        document.getElementById('pFavoritar').innerHTML = "Favoritar";
+                        count = parseInt(count) - 1;
+                    }
+                    else
+                    {
+                        //trocar estrelinha
+                    }
                 }
                 document.getElementById('lblCountFavorite').innerHTML = count;
             }
