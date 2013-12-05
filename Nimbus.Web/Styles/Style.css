@@ -1210,7 +1210,7 @@ p.catTopic{
     margin-bottom:      20px;
 }
 
-div#btnEditTopic {
+div#btnEditTopic, div#btnFavoritedTopic {
     margin:             0 auto;
     background:         #2b2d2e;
     width:              80px;
@@ -1218,12 +1218,12 @@ div#btnEditTopic {
     cursor:             pointer;
 }
 
-#btnEditTopic:hover, #btnEditTopic p:hover {
+#btnEditTopic:hover, #btnEditTopic p:hover, #btnFavoritedTopic:hover, #btnFavoritedTopic p:hover {
     color:              #87c240;
     cursor:             pointer;
 }
 
-#btnEditTopic p {
+#btnEditTopic p, #btnFavoritedTopic p {
     color:              #FFFFFF;
     text-align:         center;
     font-size:          small;

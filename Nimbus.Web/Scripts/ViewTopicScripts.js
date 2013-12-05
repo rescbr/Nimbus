@@ -243,3 +243,34 @@ function ajaxDeleteTopic(id, idChn)
         }
     });
 }
+
+function ajaxFavoritedTopic(id, typePage)
+{
+    $.ajax({
+        url: "/api/topic/TopicFavorite/" + id,
+        type: "POST",
+        contentType: "application/json;charset=utf-8",
+        statusCode: {
+            200: function (newData) {
+
+                var count = document.getElementById('lblCountFavorite').innerHTML;
+
+                if (newData == true) {
+
+                    document.getElementById('pFavoritar').innerHTML = "Desfavoritar";
+                    count = parseInt(count) + 1;
+                }
+                else {
+                    document.getElementById('pFavoritar').innerHTML = "Favoritar";
+                    count = parseInt(count) - 1;
+                }
+                document.getElementById('lblCountFavorite').innerHTML = count;
+            }
+        },
+
+        500: function () {
+            //erro
+            window.alert("Não foi possível enviar seu comentário. Tente novamente mais tarde.");
+        }
+    });
+}

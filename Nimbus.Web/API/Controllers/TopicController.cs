@@ -580,42 +580,48 @@ namespace Nimbus.Web.API.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpPut]
+        [HttpPost]
         public bool TopicFavorite(int id)
         {
             bool flag = false;
-            try
-            {
+
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
                     UserTopicFavorite user = new UserTopicFavorite();
                     user = db.SelectParam<UserTopicFavorite>(us => us.UserId == NimbusUser.UserId && us.TopicId == id).FirstOrDefault();
-                    UserTopicFavorite usrFavorite = new UserTopicFavorite();
+                   
                     if (user == null) //nunca favoritou
                     {
-                        usrFavorite.UserId = NimbusUser.UserId;
-                        usrFavorite.TopicId = id;
-                        usrFavorite.FavoritedOn = DateTime.Now;
-                        usrFavorite.Visible = true;
-                        db.Insert(usrFavorite);
+                        user.UserId = NimbusUser.UserId;
+                        user.TopicId = id;
+                        user.FavoritedOn = DateTime.Now;
+                        user.Visible = true;
+                        db.Insert<UserTopicFavorite>(user);
                         flag = true;
                     }
                     else
                     {
                         user.FavoritedOn = DateTime.Now;
                         user.Visible = (user.Visible == true) ? false : true;
-                        db.Update(user);
-                        flag = true;
+                        db.Update<UserTopicFavorite>(user);
+                        flag = user.Visible;
                     }
-                }
-            }
-            catch (Exception ex)
-            {
-                flag = false;
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
-            }
-
+                }    
             return flag;
+        }
+
+        /// <summary>
+        /// Retorna se o tópico visitado é favoritado ou não
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public bool TopicIsFavorite(int id)
+        {
+            using(var db = DatabaseFactory.OpenDbConnection())
+            {
+                return db.Where<UserTopicFavorite>(t => t.TopicId == id && t.UserId == NimbusUser.UserId).Exists(t => t.Visible == true);
+            }
         }
 
         /// <summary>
