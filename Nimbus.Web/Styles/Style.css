@@ -805,6 +805,7 @@ div#headerChannel{
     width:20px;
     height:20px;
     cursor:pointer;
+    float:left;
 }
 
 .imgStarGray {
@@ -813,6 +814,7 @@ div#headerChannel{
     width:20px;
     height:20px;
     cursor:pointer;
+    float:left;
 }
 
 

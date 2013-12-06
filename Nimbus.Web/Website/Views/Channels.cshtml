@@ -97,7 +97,7 @@
         {
             <div>
                 Vote:
-                <p>
+                <div>
                  @{
                      int total = 0;
                     for (int i = 1; i <= Model.CurrentChannel.UserVoteChannel; i++)
@@ -121,7 +121,7 @@
                             <div onmouseover="changeStarVote(this.id, 'over');" onmouseout="changeStarVote(this.id, 'out');" class="imgStarGray" onclick="ajaxVoteChannel(@Model.CurrentChannel.Id, @i);" id="icoStar_@i"></div>
                         }
                     }                  
-                </p>
+                </div>
             </div>
         }
     </div>
