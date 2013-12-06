@@ -27,7 +27,7 @@ namespace Nimbus.Web.Website.Controllers
             var aux = topicApi.ShowTopic(id);
 
             if (aux == null) throw new HttpException(404, "Topic not found");
-
+           
             var topic = new TopicModel()
             {
                 CurrentTopic = aux,
@@ -38,6 +38,8 @@ namespace Nimbus.Web.Website.Controllers
                 Category = topicApi.CategoryTopic( aux.Id),
                 NumFavorites = topicApi.CountFavorite(id),
                 NumLikes = topicApi.CountLikes(id),
+                NumUnLikes = topicApi.CountUnLikes(id),
+                UserLike = topicApi.UserLiked(id),
                 FavoriteTopic = topicApi.TopicIsFavorite(id)
             };
             return View("Topic", topic);

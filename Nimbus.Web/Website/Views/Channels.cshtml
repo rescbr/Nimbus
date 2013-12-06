@@ -24,7 +24,7 @@
     {
         <a href="#" onclick="ajaxFollowChannel(@Model.CurrentChannel.Id);">
             <div class="followChannelPage">
-                <p id="pFollow">Deixar de seguir</p>
+                <p id="pFollow">Não seguir</p>
             </div>
         </a>
     }
@@ -95,7 +95,7 @@
         @if (Model.CurrentChannel.OwnerId != Model.CurrentUser.UserId && !(Model.RolesCurrentUser.Contains("channelmanager") || Model.RolesCurrentUser.Contains("topicmanager")
         || Model.RolesCurrentUser.Contains("usermanager") || Model.RolesCurrentUser.Contains("messagemanager")))
         {
-            <div>
+            <div style="padding-bottom:40px;">
                 Vote:
                 <div>
                  @{

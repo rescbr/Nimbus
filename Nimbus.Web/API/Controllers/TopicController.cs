@@ -769,6 +769,84 @@ namespace Nimbus.Web.API.Controllers
         }
 
         /// <summary>
+        /// Retorna o número de unlikes que o tópico possui
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public int CountUnLikes(int id)
+        {
+            int count = 0;
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {
+                    count = db.SelectParam<UserLikeTopic>(fl => fl.TopicId == id && fl.Visible == false).Count();
+                }          
+            return count;
+        }
+
+        /// <summary>
+        /// Retornase o usuario deu like,unlike ou nenhum dos dois para um tópico
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public bool? UserLiked(int id)
+        {
+            bool? liked = null;
+            using (var db = DatabaseFactory.OpenDbConnection())
+            {
+               var user = db.SelectParam<UserLikeTopic>(fl => fl.TopicId == id && fl.UserId == NimbusUser.UserId).FirstOrDefault();
+               if (user == null)
+                   liked = null;
+               else
+                   liked = user.Visible; //true = like ; false = unlike
+            }
+            return liked;
+        }
+        
+        /// <summary>
+        /// método para like e unlike de um topico
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public bool? LikeTopic(int id, string type)
+        {
+            bool? success = null;
+            using (var db = DatabaseFactory.OpenDbConnection())
+            {
+                var user = db.Where<UserLikeTopic>(u => u.UserId == NimbusUser.UserId && u.TopicId == id).FirstOrDefault();
+
+                if (user == null)//novo
+                {
+                    UserLikeTopic userLike = new UserLikeTopic()
+                    {
+                        Visible = type == "like"?true:false,
+                        UserId = NimbusUser.UserId,
+                        TopicId = id,
+                        LikedOn = DateTime.Now
+                    };
+                    db.Insert<UserLikeTopic>(userLike);
+                    success = userLike.Visible;
+                }
+                else //atualizar
+                {
+                    user.LikedOn = DateTime.Now;
+                    if (type == "like")
+                        user.Visible = true;
+                    else
+                        user.Visible = false;
+                    db.Update<UserLikeTopic>(user);
+
+                    success = user.Visible;
+
+                }
+            }
+            return success;
+        }
+
+        /// <summary>
         /// Retorna as informações da categoria que o tópico pertence
         /// </summary>
         /// <param name="channelID"></param>
