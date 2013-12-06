@@ -51,7 +51,7 @@ function changeStarVote(element, onmouse)
         }
         else if(voteUser > starMouse)
         {
-            for (var i = starMouse; i <= 5; i++) {
+            for (var i =(parseInt(starMouse) + 1); i <= 5; i++) {
                 var img = document.getElementById("icoStar_" + i);
                 img.className = "imgStarGray";
             }
