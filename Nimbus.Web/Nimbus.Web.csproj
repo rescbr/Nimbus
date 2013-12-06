@@ -382,6 +382,7 @@
     <Content Include="Website\Views\MessagePartials\MessagePartial.cshtml" />
     <Content Include="Website\Views\MessagePartials\MessageExpandPartial.cshtml" />
     <Content Include="Website\Views\NotificationPartials\NewTopic.cshtml" />
+    <Content Include="Website\Views\SearchContent.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\Controllers\DatabaseController.cs" />
@@ -417,8 +418,11 @@
     <Compile Include="Website\Controllers\NotificationController.cs" />
     <Compile Include="Website\Controllers\TopicController.cs" />
     <Compile Include="Website\Controllers\TrendingTopicController.cs" />
+    <Compile Include="Website\Models\NewsModel.cs" />
+    <Compile Include="Website\Models\SearchModel.cs" />
     <Compile Include="Website\Models\TopicModel.cs" />
     <Compile Include="Website\Models\ChannelModel.cs" />
+    <Compile Include="Website\Models\TopModel.cs" />
     <Compile Include="Website\Models\TrendingTopicModel.cs" />
     <Compile Include="_Startup\DatabaseStartup.cs" />
     <Compile Include="ExtensionMethods.cs" />

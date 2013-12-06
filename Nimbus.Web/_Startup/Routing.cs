@@ -50,7 +50,6 @@ namespace Nimbus.Web.Startup
                     action =  "DefaultAction"
                 }
             );
-
             
         }
 
