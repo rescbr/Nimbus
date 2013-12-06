@@ -365,10 +365,9 @@ namespace Nimbus.Web.API.Controllers
                     {
                         TopicBag topic = new TopicBag()
                         {
-                            Title = HttpUtility.HtmlDecode(item.Title),
-                            //Description = RemoveHTMLString.StripTagsCharArray(topic.Description); 
-                            Description = HttpUtility.HtmlDecode(item.Description),
-                            Text = HttpUtility.HtmlDecode(item.Text),
+                            Title = item.Title,
+                            Description =item.Description,
+                            Text = item.Text,
                             AuthorId = item.AuthorId,
                             ChannelId = item.ChannelId,
                             //Count
@@ -557,8 +556,8 @@ namespace Nimbus.Web.API.Controllers
                                 TopicType = item.TopicType,
                                 ImgUrl = item.ImgUrl,
                                 LastModified = item.LastModified,
-                                Count = count
-
+                                Count = count,
+                                UserFavorited = db.Where<UserTopicFavorite>(u => u.UserId == NimbusUser.UserId && u.TopicId == item.Id).Exists( u => u.Visible)
                             };
                             tpcList.Add(bag);
                         }
@@ -589,14 +588,17 @@ namespace Nimbus.Web.API.Controllers
                 {
                     UserTopicFavorite user = new UserTopicFavorite();
                     user = db.SelectParam<UserTopicFavorite>(us => us.UserId == NimbusUser.UserId && us.TopicId == id).FirstOrDefault();
-                   
+                    
                     if (user == null) //nunca favoritou
                     {
-                        user.UserId = NimbusUser.UserId;
-                        user.TopicId = id;
-                        user.FavoritedOn = DateTime.Now;
-                        user.Visible = true;
-                        db.Insert<UserTopicFavorite>(user);
+                        UserTopicFavorite usertpv = new UserTopicFavorite()
+                        {
+                            FavoritedOn = DateTime.Now,
+                            TopicId = id,
+                            UserId = NimbusUser.UserId,
+                            Visible = true
+                        };
+                        db.Insert<UserTopicFavorite>(usertpv);
                         flag = true;
                     }
                     else

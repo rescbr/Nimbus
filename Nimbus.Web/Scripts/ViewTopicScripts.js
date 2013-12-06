@@ -253,29 +253,33 @@ function ajaxFavoritedTopic(id, typePage)
         statusCode: {
             200: function (newData) {
                
-                var count = document.getElementById('lblCountFavorite').innerHTML;
 
                 if (newData == true) {
                     if (typePage == 'pageTopic') {
+                        var count = document.getElementById('lblCountFavorite').innerHTML;
                         document.getElementById('pFavoritar').innerHTML = "Desfavoritar";
                         count = parseInt(count) + 1;
+                        document.getElementById('lblCountFavorite').innerHTML = count;
                     }
                     else
                     {
-                        //trocar estrelinha
+                        document.getElementById('imgFvt_' + id).src = "/images/utils/starv.png";
+                        document.getElementById('divTpfvt_' + id).className = "btnRightTopicIsFavorited-grade";
                     }
                 }
                 else {
                     if (typePage == 'pageTopic') {
+                        var count = document.getElementById('lblCountFavorite').innerHTML;
                         document.getElementById('pFavoritar').innerHTML = "Favoritar";
                         count = parseInt(count) - 1;
+                        document.getElementById('lblCountFavorite').innerHTML = count;
                     }
                     else
                     {
-                        //trocar estrelinha
+                        document.getElementById('imgFvt_' + id).src = "/images/utils/starc.png";
+                        document.getElementById('divTpfvt_' + id).className = "btnRightTopic-grade";
                     }
                 }
-                document.getElementById('lblCountFavorite').innerHTML = count;
             }
         },
 

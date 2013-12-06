@@ -8,16 +8,26 @@
                     <h1>@Model.Title</h1>
                     <img src="@Model.ImgUrl" alt="@Model.TopicType.ToString()" title="@Model.Title" width="180" height="100">
                 </div>
+
+                <p class="contentTopic-grade">
+                    @Model.Description
+                </p>
             </a>
-            <p class="contentTopic-grade">
-                @Model.Description
-            </p>
             <div class="footerTopic-grade">
                 <div class="btnLeftTopic-grade">
                     <p onclick="unReadLater();">Ler mais tarde</p> @*chamar js passando item.id*@
                 </div>
-                <div class="btnRightTopic-grade">
-                    <p>s2</p> @*adicionar aos favoritos*@
-                </div>
+                @if (Model.UserFavorited == false)
+                    {
+                        <div id="divTpfvt_@Model.Id" class="btnRightTopic-grade" onclick="ajaxFavoritedTopic(@Model.Id, 'abstract');">
+                            <p><img id="imgFvt_@Model.Id" src="/images/utils/starc.png" /></p> @*adicionar aos favoritos*@
+                        </div>
+                    }
+                    else
+                    {
+                    <div id="divTpfvt_@Model.Id" class="btnRightTopicIsFavorited-grade" onclick="ajaxFavoritedTopic(@Model.Id, 'abstract');">
+                        <p><img id="imgFvt_@Model.Id" src="/images/utils/starv.png" /></p> @*adicionar aos favoritos*@
+                    </div>
+                }
             </div>
         </div>

@@ -859,14 +859,16 @@ p.contentTopic-grade{
 }
 
 .footerTopic-grade {
-    background:         #87c240;
+    background:         #FFFFFF;
     width:              180px;
     height:             40px;
 }
 
 .btnLeftTopic-grade {
+    background:         #87c240;
     width:             139px;
     float:             left;
+    text-align:         center;
 }
 
 .btnLeftTopic-grade p{
@@ -877,7 +879,8 @@ p.contentTopic-grade{
 
 .btnRightTopic-grade {
     float:              right;
-    color:              #FFFFFF;
+    background:         #2b2d2e;
+    color:              #87c240;
     width:              40px;
     border-left:        1px solid #FFFFFF;
 }
@@ -888,7 +891,24 @@ p.contentTopic-grade{
     text-align:         center;
 }
 
-.btnLeftTopic-grade:hover, .btnRightTopic-grade:hover {
+.btnRightTopicIsFavorited-grade {
+    float:              right;
+    background:         #2b2d2e;
+    width:              40px;
+    border-left:        1px solid #FFFFFF;
+}
+
+.btnRightTopicIsFavorited-grade p {
+    line-height:        3em;
+    text-align:         center;
+}
+
+.btnRightTopicIsFavorited-grade:hover, .btnRightTopic-grade:hover {
+    cursor:pointer;
+    background: #403c3c;
+    }
+
+.btnLeftTopic-grade:hover  {
     cursor:             pointer;
     background:         #7db43b;
 }

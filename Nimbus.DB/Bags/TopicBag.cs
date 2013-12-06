@@ -10,5 +10,6 @@ namespace Nimbus.Model.Bags
     {
         public int Count { get; set; }
 
+        public bool UserFavorited { get; set; }
     }
 }
