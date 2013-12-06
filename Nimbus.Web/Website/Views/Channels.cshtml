@@ -13,6 +13,7 @@
     currentChannel = @Model.CurrentChannel.Id;
     roles = @Html.Raw(Json.Encode(Model.RolesCurrentUser));   
     countFollowers = @Model.CurrentChannel.countFollowers;
+    voteUser = @Model.CurrentChannel.UserVoteChannel;
 </script>
 
 <div id="divCapa">
@@ -98,19 +99,18 @@
                 Vote:
                 <p>
                  @{
-                    int total = 0;
+                     int total = 0;
                     for (int i = 1; i <= Model.CurrentChannel.UserVoteChannel; i++)
-                    {
-                        total = i + 1;                    
-                       <div onmouseover="changeStarVote(this.id, 'out', 0);" onmouseout="changeStarVote(this.id, 'over', total);" class="imgStarGreen" onclick="ajaxVoteChannel(@Model.CurrentChannel.Id, @i);" id="icoStar_@i"></div>
-                       
+                    {              
+                       <div onmouseover="changeStarVote(this.id, 'over');" onmouseout="changeStarVote(this.id, 'out');" class="imgStarGreen" onclick="ajaxVoteChannel(@Model.CurrentChannel.Id, @i);" id="icoStar_@i"></div>
+                        total = i;
                     }
                     if (total < 5 && Model.CurrentChannel.UserVoteChannel > 0)
                     {
-                        for (int j = total; j <= 5; j++)
+                        for (int j = total + 1; j <= 5; j++)
                         {
-                                <div onmouseover="changeStarVote(this.id, 'over', 0);" onmouseout="changeStarVote(this.id, 'out', 0);" class="imgStarGray" onclick="ajaxVoteChannel(@Model.CurrentChannel.Id, @j);" id="icoStar_@j"></div>
-                            }
+                                <div onmouseover="changeStarVote(this.id, 'over');" onmouseout="changeStarVote(this.id, 'out');" class="imgStarGray" onclick="ajaxVoteChannel(@Model.CurrentChannel.Id, @j);" id="icoStar_@j"></div>
+                        }
                     }
                   }
 
@@ -118,7 +118,7 @@
                     {
                         for (int i = 1; i <= 5; i++)
                         {
-                            <div onmouseover="changeStarVote(this.id, 'over', 0);" onmouseout="changeStarVote(this.id, 'out', 0);" class="imgStarGray" onclick="ajaxVoteChannel(@Model.CurrentChannel.Id, @i);" id="icoStar_@i"></div>
+                            <div onmouseover="changeStarVote(this.id, 'over');" onmouseout="changeStarVote(this.id, 'out');" class="imgStarGray" onclick="ajaxVoteChannel(@Model.CurrentChannel.Id, @i);" id="icoStar_@i"></div>
                         }
                     }                  
                 </p>

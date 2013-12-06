@@ -34,25 +34,39 @@ function ajaxFollowChannel(id)
     });
 }
 
-function changeStarVote(element, onmouse, starUser)
-{
-    var star = element.replace("icoStar_", "");
+function changeStarVote(element, onmouse)
+{  
+    var starMouse = element.replace("icoStar_", "");
 
-    if (onmouse == 'over') {
-        if (starUser > 0)
-            star = starUser;
-          
-        for (var s = 1; s <= star; s++) {
-            var img = document.getElementById("icoStar_" + s);
-            img.className = "imgStarGreen";
+    if (onmouse == 'over')
+    {
+        if (voteUser < starMouse) {
+            if (voteUser == 0)
+                voteUser = 1;
+
+            for (var i = voteUser; i <= starMouse; i++) {
+                var img = document.getElementById("icoStar_" + i);
+                img.className = "imgStarGreen";
+            }
+        }
+        else if(voteUser > starMouse)
+        {
+            for (var i = starMouse; i <= 5; i++) {
+                var img = document.getElementById("icoStar_" + i);
+                img.className = "imgStarGray";
+            }
         }
     }
     else if (onmouse == 'out')
     {
-        for (var i = star; i <= 5; i++) {
-          var img = document.getElementById("icoStar_" + i);
+        for (var i = 1; i <= voteUser; i++) {
+            var img = document.getElementById("icoStar_" + i);
+            img.className = "imgStarGreen";
+        }
+        for (var i = voteUser + 1; i <= 5; i++) {
+            var img = document.getElementById("icoStar_" + i);
             img.className = "imgStarGray";
-       }
+        }
     }
 }
 

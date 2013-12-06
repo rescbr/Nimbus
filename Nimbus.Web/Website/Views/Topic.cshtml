@@ -32,8 +32,8 @@
     <p id="pTopicDescription" class="txtInfTopic">@Model.CurrentTopic.Description</p>
 
     <h1 class="favTopic">
-        <img src="/images/favorite_topic_icon.png" style="margin: 0px 0px -5px 10px;" />
-        <estrela><label id="lblCountFavorite"> @Model.NumFavorites</label>
+        <img src="/images/starv.png" />
+        <label id="lblCountFavorite"> @Model.NumFavorites</label>
     </h1>
 
     @if (Model.RolesCurrentUser.Contains("channelmanager") || Model.RolesCurrentUser.Contains("topicmanager") ||
@@ -73,7 +73,7 @@
         <h2>Número de Likes</h2>
         <p class="numberIco">
             @*colocar icone de likes*@
-           <coracao> @Model.NumLikes
+            @Model.NumLikes
         </p>
     </div>
 
