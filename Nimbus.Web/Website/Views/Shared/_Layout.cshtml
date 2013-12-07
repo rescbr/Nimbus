@@ -31,8 +31,8 @@
 
                 <nav class="center">
                     <ul class="sbs">
-                        <a href="/SearchContent.cshtml"><li class="BSearch">Search</li></a>
-                        <a href="/TrendingTopics.cshtml"><li class="BTrTop">Trending</li></a>
+                        <li class="BSearch"><a href="#" onclick="openDivSearch();">Search</a></li>
+                        <a href="/TrendingTopics"><li class="BTrTop">Trending</li></a>
                         <a href="#"><li class="BTop">Top</li></a>
                         <a href="#"><li class="BNews">News</li></a>
                     </ul>
@@ -41,16 +41,26 @@
                 {
                     <nav class="right">
                         <ul class="sbs">
-                            <li><div class="userpic"><img src="@user.AvatarUrl" width="35" height="35" id="smallavatar" /></div></li>
-                            <li><h2 class="userName">@user.FirstName</h2></li>
+                                <li><div class="userpic" onclick="window.location.href('/userprofile/index/@user.UserId')"><img src="@user.AvatarUrl" width="35" height="35" id="smallavatar" /></div></li>
+                                <li><h2 class="userName" onclick="window.location.href('/userprofile/index/@user.UserId')">@user.FirstName</h2></li>
                                 <li><div class="press exitbutton"><a href="/login/logout">Sair</a></div></li>
                         </ul>
                     </nav>
                 }
-            </div>
+            </div>       
         </header>
 
         <div class="wrapper">
+            <div id="divBarSearch" style="display:none;">               
+                        <input id="txtFieldSearch" style="width:350px;" type="text" value="Busque por canais, tópicos ou pessoas" onclick="this.value=''" />
+                        <select id="slcFilterSearch">
+                                <option value="0">Todos</option>
+                                <option value="1">Canal</option>
+                                <option value="2">Tópico</option>
+                                <option value="3">Usuário</option>
+                            </select>
+                       <img src="/images/utils/search.png" title="Buscar" class="cpointer" alt="Buscar" onclick="ajaxSearch();" />
+            </div>
             <div class="container-body">
                 <div class="middle-body">
                     @RenderBody()
