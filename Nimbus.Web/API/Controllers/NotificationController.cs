@@ -39,7 +39,7 @@ namespace Nimbus.Web.API.Controllers
             }
 
 
-            return GenerateNotificationHtml(allNotifications);
+            return GenerateUserNotificationHtml(allNotifications);
 
         }
 
@@ -59,11 +59,45 @@ namespace Nimbus.Web.API.Controllers
                     .Take(6).ToList();
             }
 
-            return GenerateNotificationHtml(allNotifications);
+            return GenerateUserNotificationHtml(allNotifications);
+        }
+
+        [HttpGet]
+        public NotificationWrapper Channel(int id)
+        {
+            List<Notification<string>> allNotifications;
+            using (var db = DatabaseFactory.OpenDbConnection())
+            {
+                allNotifications = db.Where<Notification<string>>
+                    (n => n.ChannelId == id)
+                    .OrderByDescending(n => n.Timestamp)
+                    .Take(6).ToList();
+            }
+
+            return GenerateChannelNotificationHtml(allNotifications);
+
+        }
+
+        [HttpGet]
+        public NotificationWrapper Channel(int id, Guid after)
+        {
+            List<Notification<string>> allNotifications;
+            using (var db = DatabaseFactory.OpenDbConnection())
+            {
+                allNotifications = db.Where<Notification<string>>
+                    (n => n.ChannelId == id
+                        && n.Timestamp <= db.Where<Notification<string>>
+                                            (nt => nt.ChannelId == id && nt.Id == after).Single().Timestamp
+                        && n.Id != after)
+                    .OrderByDescending(n => n.Timestamp)
+                    .Take(6).ToList();
+            }
+
+            return GenerateChannelNotificationHtml(allNotifications);
         }
 
         [NonAction]
-        private NotificationWrapper GenerateNotificationHtml(List<Notification<string>> allNotifications)
+        private NotificationWrapper GenerateUserNotificationHtml(List<Notification<string>> allNotifications)
         {
             if (allNotifications.Count == 0) return new NotificationWrapper() { Count = 0 };
 
@@ -84,11 +118,11 @@ namespace Nimbus.Web.API.Controllers
                 }
                 else if (notification.Type == Model.NotificationTypeEnum.newtopic)
                 {
-                    NewTopicNotificationModel model = TypeSerializer.DeserializeFromString
-                        <NewTopicNotificationModel>(notification.NotificationObject);
+                    TopicNotificationModel model = TypeSerializer.DeserializeFromString
+                        <TopicNotificationModel>(notification.NotificationObject);
 
                     sbuilder.Append(
-                        razor.ParseRazorTemplate<NewTopicNotificationModel>
+                        razor.ParseRazorTemplate<TopicNotificationModel>
                             ("~/Website/Views/NotificationPartials/NewTopic.cshtml", model));
                 }
             }//);
@@ -101,6 +135,38 @@ namespace Nimbus.Web.API.Controllers
             };
         }
 
+        [NonAction]
+        private NotificationWrapper GenerateChannelNotificationHtml(List<Notification<string>> allNotifications)
+        {
+            if (allNotifications.Count == 0) return new NotificationWrapper() { Count = 0 };
+
+            var razor = new RazorTemplate();
+            var sbuilder = new StringBuilder();
+            //Parallel.ForEach(allNotifications, (notification) =>
+            foreach (var notification in allNotifications)
+            {
+                if(notification.Type == Model.NotificationTypeEnum.newtopic || 
+                    notification.Type == Model.NotificationTypeEnum.edittopic ||
+                    notification.Type == Model.NotificationTypeEnum.deletetopic)
+                {
+                    TopicNotificationModel model = TypeSerializer.DeserializeFromString
+                        <TopicNotificationModel>(notification.NotificationObject);
+
+                    sbuilder.Append(
+                        razor.ParseRazorTemplate<TopicNotificationModel>
+                            ("~/Website/Views/NotificationPartials/ChannelTopic.cshtml", model));
+                }
+            }//);
+
+            return new NotificationWrapper()
+            {
+                Count = allNotifications.Count,
+                Html = sbuilder.ToString(),
+                LastNotificationGuid = allNotifications.Last().Id
+            };
+        }
+        
+        
         [HttpGet]
         public List<MessageNotificationModel> Messages()
         {

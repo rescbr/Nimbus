@@ -1,4 +1,15 @@
 ﻿@model Nimbus.Web.Website.Models.ChannelModel
+@{
+    string lastNotificationGuid;
+    if (Model.ChannelNotifications.LastNotificationGuid == Guid.Empty)
+    {
+        lastNotificationGuid = "";
+    }
+    else
+    {
+        lastNotificationGuid = Model.ChannelNotifications.LastNotificationGuid.ToString();
+    }
+}
 
 <script type="text/javascript">
     //global
@@ -51,38 +62,24 @@
                  <button id="btn_skipAll" onclick="verMaisTopics(@Model.CurrentChannel.Id, 'alltpc', 0, 'skipAll');">Ver mais</button>
             }
         </div>
-
-
+    
         <div id="divNotifications">
-        @* Mudar o estilo de Notificações *@
-
-        @*ultimos topicos + ultimos comentarios*@
-        @*TODO:colocar script p 'ver mais' index de pagina*@
-        @foreach (var item in Model.AllTopics.Take(15).OrderByDescending(m => m.LastModified))
-        {
-            @*Notificações - Precisa colocar as Tags ( no perfil do usuario tambem )*@
-            <div id="divNotification" style="display:block;">
-                @*para cada item da lista que ele recber//TODO*@
-                <div>
-                    <img id="imgNotification" src="#" />
+            <div id="divNotification">
+                <div id="divNotificationWrapper">
+                    @if (Model.ChannelNotifications.Count > 0)
+                    {
+                        @Html.Raw(Model.ChannelNotifications.Html);
+                    }
+                    else
+                    {
+                        <text>Não há novas atividades neste canal.</text>
+                    }
                 </div>
-                <div id="attChoice">
-                    <div id="btnAccept">
-                        <p>Aceitar</p>
-                    </div>
-                    <div id="btnAccept">
-                        <p>Recusar</p>
-                    </div>
+                <div id="divNotificationLoad">
+                    <img src="/images/utils/loading.gif" style="display:none;" id="imgNotificationLoad" />
+                    <div id="divNotificationLoadButton" style="display:block;" onclick="getChannelNotifications(@Model.CurrentChannel.Id, '@lastNotificationGuid');">Carregar mais notificações</div>
                 </div>
-                <p id="timeNotification">
-                    @*hora x     data x*@
-                    00:00 - 12:12
-                </p>
-                <p id="txtNotification">
-                    texto generico
-                </p>
             </div>
-            }
             @if (Model.Comments.Count > 0)
             {
                 <div id="divComments">

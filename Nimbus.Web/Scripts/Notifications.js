@@ -34,6 +34,52 @@ function newMessageNotification(msg) {
 
 }
 
+function getChannelNotifications(id, after) {
+    if (typeof (after) === "undefined" || after == "") {
+        after = "";
+    } else {
+        after = "?after=" + after;
+    }
+
+    document.getElementById("divNotificationLoadButton").style.display = "none";
+    document.getElementById("imgNotificationLoad").style.display = "block";
+
+    $.ajax({
+        url: "/api/notification/channel/" + id + after,
+        type: "GET",
+        contentType: "application/json;charset=utf-8",
+        statusCode: {
+            200: function (notifObj) {
+                var divNotif = document.getElementById("divNotificationWrapper");
+                //se nao houver notificacoes na div e o count == 0, nao existem notifs.
+                if (notifObj.Count == 0) {
+                    if (divNotif.children.length == 0) {
+                        divNotif.innerHTML = "Não há novas atividades neste canal."
+                    }
+                    document.getElementById("divNotificationLoadButton").style.display = "none";
+                } else {
+                    try {
+                        if (divNotif.children.length == 0) {
+                            divNotif.innerHTML = notifObj.Html;
+                        } else {
+                            divNotif.innerHTML += notifObj.Html;
+                        }
+                    } catch (e) { }
+                    if (notifObj.Count >= 6) {
+                        var loadButton = document.getElementById("divNotificationLoadButton");
+                        loadButton.style.display = "block";
+                        loadButton.onclick = function () { getChannelNotifications(id, notifObj.LastNotificationGuid); }
+                    }
+                }
+
+                document.getElementById("imgNotificationLoad").style.display = "none";
+
+            }
+        }
+    });
+
+}
+
 function getNotifications(after) {
     if (typeof (after) === "undefined") {
         after = "";
