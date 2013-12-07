@@ -306,3 +306,37 @@ function ajaxHiddeMsg(div)
 {
     document.getElementById(div).style.display = 'none';
 }
+
+function openDivSearch()
+{
+    document.getElementById('divBarSearch').style.display = 'block';
+}
+
+function ajaxSearch()
+{
+    var text = document.getElementById('txtFieldSearch');
+    text = text.value;
+
+    var select = document.getElementById("slcFilterSearch").selectedIndex;
+    var option = document.getElementById("slcFilterSearch").options;
+    var typeSearch = option[select].value;
+    
+    var stringUrl;
+    if(typeSearch == '0')
+    {
+        stringUrl = "";
+    }
+    else if (typeSearch == '1')
+    {
+        window.location.href = "/search/index/?text=" + text + "&filter=" + 1;
+    }
+    else if (typeSearch == '2')
+    {
+        window.location.href = "/search/index/?text=" + text + "&filter=" + 2;
+    }
+    else if (typeSearch == '3')
+    {
+        window.location.href = "/search/index/?text=" + text + "&filter=" + 3;
+    }
+
+}

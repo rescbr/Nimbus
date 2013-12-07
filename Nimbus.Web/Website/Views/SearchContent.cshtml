@@ -1,5 +1,16 @@
 ﻿@model Nimbus.Web.Website.Models.SearchModel
 @{
-    ViewBag.Title = "Canal";
+    ViewBag.Title = "Busca";
     Layout = "~/Website/Views/Shared/_Layout.cshtml";
+}
+
+@foreach (var item in Model.ItensFound)
+{
+    <a href="/@item.ItemPageUrl/index/@item.IdItem">
+        <div>
+            <img src="@item.UrlImage" title="@item.TypeSearch" alt="@item.TypeSearch" />
+            <p>@item.Title</p>
+            <p>@item.Description</p>
+        </div> 
+    </a>
 }

@@ -124,38 +124,52 @@ namespace Nimbus.Web.API.Controllers
         /// <param name="q">Query de Pesquisa</param>
         /// <returns></returns>
         [HttpGet]
-        public List<User> SearchUser(string q)
+        public List<SearchBag> SearchUser(string q)
         {
-            List<User> users = new List<User>();
+            List<SearchBag> usersFound = new List<SearchBag>();
             if (!string.IsNullOrEmpty(q))
             {
                 int idOrg = NimbusOrganization.Id;
-                try
-                {
                     using (var db = DatabaseFactory.OpenDbConnection())
-                    {
-                        users = db.SelectParam<User>(usr => (usr.FirstName.Contains(q) ||
-                                                                usr.LastName.Contains(q) ||
-                                                                usr.Occupation.Contains(q) ||
-                                                                usr.Interest.Contains(q)));
+                    {//restringir a busca pela organizaçao
 
+                      var users = db.Query<Model.ORM.User>(
+                            @"
+                            SELECT [User].[Id], [User].[FirstName], [User].[LastName],
+                                   [User].[Occupation], [User].[Interest], [User].[AvatarUrl]
+                            FROM [User]
+                            WHERE ((([User].[FirstName] LIKE @strQuery) OR 
+			                            ([User].[LastName] LIKE @strQuery) OR 
+			                            ([User].[Occupation] LIKE @strQuery) OR 
+			                            ([User].[Interest] LIKE @strQuery))) ",                                                   
+                            new {strQuery = "%" + q + "%" });
 
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
-                }
+                      foreach (var item in users)
+                      {
+                          string description = !string.IsNullOrEmpty(item.Interest)?item.Interest : item.Occupation;
+                          description = !string.IsNullOrEmpty(description)? description : item.Experience;
+                          description = !string.IsNullOrEmpty(description)? description : "Sem informações adicionais.";
+                          
+                          SearchBag bag = new SearchBag() { 
+                              Description = description,
+                              IdItem = item.Id,
+                              Title = item.FirstName + " " + item.LastName,
+                              UrlImage = item.AvatarUrl,
+                              TypeSearch = "user",
+                              ItemPageUrl="userprofile"
+                          };
+                          usersFound.Add(bag);
+                      }
+                    }                
             }
             else
             {
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Nenhum registro encontrado para '" + q + "'"));
             }
-            return users;
+            return usersFound;
         }
 
-
-
+        
         /// <summary>
         /// Método que retorna os usuarios existentes excluindo os que já sao moderadores do canal
         /// </summary>

@@ -474,8 +474,9 @@ namespace Nimbus.Web.API.Controllers
         /// <param name="q">query de pesquisa</param>
         /// <returns></returns>
         [HttpGet]
-        public List<Channel> SearchChannel(string q)
+        public List<SearchBag> SearchChannel(string q)
         {
+            List<SearchBag> channelsFound = new List<SearchBag>();
             List<Channel> channels = new List<Channel>();
             if (!string.IsNullOrEmpty(q))
             {
@@ -497,8 +498,8 @@ namespace Nimbus.Web.API.Controllers
 
                             var idChannels = db.Where<TagChannel>(tgc => tgc.TagId == tagID).Select(tgc => tgc.ChannelId);
 
-                            channels = idChannels.Select(ch => db.Where<Channel>(c => c.Visible == true && c.OrganizationId == idOrg && c.Id == ch)
-                                                                 .FirstOrDefault()).Where(ch => ch != null).ToList();
+                             channels = idChannels.Select(ch => db.Where<Channel>(c => c.Visible == true && c.OrganizationId == idOrg && c.Id == ch)
+                                                                 .FirstOrDefault()).Where(ch => ch != null).ToList();                            
                         }
                         else
                         {
@@ -514,6 +515,17 @@ namespace Nimbus.Web.API.Controllers
                                 channels = db.SelectParam<Channel>(chn => chn.Name.Contains(q) && chn.Visible == true && chn.OrganizationId == idOrg);
                             }
                         }
+                        foreach (var channel in channels)
+                        {
+                            SearchBag bag = new SearchBag();                            
+                            bag.IdItem = channel.Id;
+                            bag.Title = channel.Name;
+                            bag.Description = channel.Description;
+                            bag.UrlImage = channel.ImgUrl;
+                            bag.TypeSearch = "channel";
+                            bag.ItemPageUrl = "channel";
+                            channelsFound.Add(bag);
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -525,7 +537,7 @@ namespace Nimbus.Web.API.Controllers
             {
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Nenhum registro encontrado para '" + q + "'"));
             }
-            return channels;
+            return channelsFound;
         }
 
 
