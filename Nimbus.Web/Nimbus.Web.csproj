@@ -394,6 +394,7 @@
     <Compile Include="API\Controllers\MessageController.cs" />
     <Compile Include="API\Controllers\NotificationController.cs" />
     <Compile Include="API\Controllers\ReportController.cs" />
+    <Compile Include="API\Controllers\SearchController.cs" />
     <Compile Include="API\Controllers\TopicController.cs" />
     <Compile Include="API\Controllers\UserController.cs" />
     <Compile Include="API\Controllers\DataMining.cs" />

@@ -13,28 +13,32 @@ namespace Nimbus.Web.Website.Controllers
 
         public ActionResult Index(string text, int filter)
         {
-            var channelApi = ClonedContextInstance<API.Controllers.ChannelController>();
-            var topicApi = ClonedContextInstance<API.Controllers.TopicController>();
-            var userApi = ClonedContextInstance<API.Controllers.UserController>();
+            var searchApi = ClonedContextInstance<API.Controllers.SearchController>();            
+
              var search = new SearchModel();
+             search.Text = text;
              if (filter == 0) //todos
              {
-                 
+                 search.ItensFound = searchApi.SearchAll(text);
+                 search.FieldType = 0;
              }
              else if (filter == 1)//channel
              {
-                 search.ItensFound = channelApi.SearchChannel(text);
+                 search.ItensFound = searchApi.SearchChannel(text);
+                 search.FieldType = 1;
              }
              else if (filter == 2)//topic
              {
-                 search.ItensFound = topicApi.SearchTopic(text);
+                 search.ItensFound = searchApi.SearchTopic(text);
+                 search.FieldType = 2;
              }
              else if (filter == 3)//user
              {
-                 search.ItensFound = userApi.SearchUser(text);
+                 search.ItensFound = searchApi.SearchUser(text);
+                 search.FieldType = 3;
              }
 
-            return View("Search", search);
+            return View("SearchContent", search);
         }
 
     }
