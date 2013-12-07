@@ -1,6 +1,7 @@
 ﻿using Nimbus.Model.Bags;
 using Nimbus.Model.ORM;
 using Nimbus.Plumbing;
+using Nimbus.Web.API.Controllers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +31,8 @@ namespace Nimbus.Web.Website.Models
         public List<User> CcMessageReceiver { get; set; }
 
         public List<Category> Category { get; set; }
+
+        public NotificationWrapper ChannelNotifications { get; set; }
         
     }
 }
