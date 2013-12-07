@@ -404,7 +404,7 @@
     <Compile Include="Const.cs" />
     <Compile Include="NimbusAuthorizeAttribute.cs" />
     <Compile Include="Notifications\CommentNotification.cs" />
-    <Compile Include="Notifications\FollowTopicNotification.cs" />
+    <Compile Include="Notifications\TopicNotification.cs" />
     <Compile Include="Notifications\MessageNotification.cs" />
     <Compile Include="Notifications\ModeratorNotification.cs" />
     <Compile Include="Notifications\NimbusHub.cs" />

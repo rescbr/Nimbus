@@ -227,6 +227,9 @@ namespace Nimbus.Web.API.Controllers
                                 topic.Text = HttpUtility.HtmlDecode(topic.Text);
                                 topic.Title = HttpUtility.HtmlDecode(topic.Title);
 
+                                var notification = new Notifications.TopicNotification();
+                                notification.EditTopic(tpc);
+
                                 return topic;
                             }
                             else
@@ -237,7 +240,7 @@ namespace Nimbus.Web.API.Controllers
                         catch (Exception ex)
                         {
                             trans.Rollback();
-                            throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+                            throw;
                         }
                     }
                 }
@@ -1157,12 +1160,16 @@ namespace Nimbus.Web.API.Controllers
                         {
                             try
                             {
-                                db.Update<Comment>(new Comment{ Visible = false}, cmt=> cmt.TopicId == id);
+                                db.Update<Comment>(new Comment { Visible = false }, cmt => cmt.TopicId == id);
 
                                 topic.Visibility = false;
                                 db.Update<Topic>(topic);
 
                                 trans.Commit();
+
+                                var notification = new Notifications.TopicNotification();
+                                notification.DeleteTopic(topic);
+
                                 flag = true;
                             }
                             catch (Exception)

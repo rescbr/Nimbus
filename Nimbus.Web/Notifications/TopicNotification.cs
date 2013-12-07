@@ -59,7 +59,47 @@ namespace Nimbus.Web.Notifications
             }
         }
 
-        public void StoreNotification(TopicNotificationModel nt, int userid)
+        public void EditTopic(Topic topic)
+        {
+            var now = DateTime.UtcNow;
+            var nt = new TopicNotificationModel()
+            {
+                TopicId = topic.Id,
+                TopicName = topic.Title,
+                ChannelId = topic.ChannelId,
+                TopicImage = topic.ImgUrl,
+                NotificationType = Model.NotificationTypeEnum.edittopic,
+
+                Date = now.ToShortDateString(),
+                Time = now.ToShortTimeString(),
+                Timestamp = now.ToFileTimeUtc(),
+                Guid = Guid.NewGuid()
+            };
+
+            StoreNotificationChannel(nt);
+        }
+
+        public void DeleteTopic(Topic topic)
+        {
+            var now = DateTime.UtcNow;
+            var nt = new TopicNotificationModel()
+            {
+                TopicId = topic.Id,
+                TopicName = topic.Title,
+                ChannelId = topic.ChannelId,
+                TopicImage = topic.ImgUrl,
+                NotificationType = Model.NotificationTypeEnum.deletetopic,
+
+                Date = now.ToShortDateString(),
+                Time = now.ToShortTimeString(),
+                Timestamp = now.ToFileTimeUtc(),
+                Guid = Guid.NewGuid()
+            };
+
+            StoreNotificationChannel(nt);
+        }
+
+        private void StoreNotification(TopicNotificationModel nt, int userid)
         {
             using (var db = DatabaseFactory.OpenDbConnection())
             {
@@ -78,7 +118,7 @@ namespace Nimbus.Web.Notifications
             }
         }
 
-        public void StoreNotificationChannel(TopicNotificationModel nt)
+        private void StoreNotificationChannel(TopicNotificationModel nt)
         {
             using (var db = DatabaseFactory.OpenDbConnection())
             {
