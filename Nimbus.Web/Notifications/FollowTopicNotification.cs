@@ -1,20 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Microsoft.AspNet.SignalR;
+﻿using Nimbus.Model.ORM;
 using Nimbus.Web.Utils;
-
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Auth;
-using Microsoft.WindowsAzure.Storage.Table;
-using System.Threading.Tasks;
 using ServiceStack.OrmLite;
-using Nimbus.Model.ORM;
+using System;
+using System.Linq;
 
 namespace Nimbus.Web.Notifications
 {
-    public class FollowTopicNotification : NimbusNotificationBase
+    public class TopicNotification : NimbusNotificationBase
     {
         /// <summary>
         /// Envia notificações de tópico novo para os usuários seguidores do canal.
@@ -34,40 +26,45 @@ namespace Nimbus.Web.Notifications
 
                 var now = DateTime.UtcNow;
 
-                var nt = new NewTopicNotificationModel()
+                var nt = new TopicNotificationModel()
                 {
                     TopicId = topic.Id,
                     TopicName = topic.Title,
                     ChannelId = topic.ChannelId,
                     ChannelName = channel.Name,
                     TopicImage = topic.ImgUrl,
-
+                    NotificationType = Model.NotificationTypeEnum.newtopic,
+                    
                     Date = now.ToShortDateString(),
                     Time = now.ToShortTimeString(),
                     Timestamp = now.ToFileTimeUtc(),
                 };
 
                 var rz = new RazorTemplate();
-                string htmlNotif = rz.ParseRazorTemplate<NewTopicNotificationModel>
+                string htmlNotif = rz.ParseRazorTemplate<TopicNotificationModel>
                     ("~/Website/Views/NotificationPartials/NewTopic.cshtml", nt);
 
                 foreach (var follower in channelFollowers)
                 {
-                    var ntClone = new NewTopicNotificationModel(nt);
+                    var ntClone = new TopicNotificationModel(nt);
                     NimbusHubContext.Clients.Group(NimbusHub.GetFollowerGroupName(follower.UserId)).newMessageNotification(htmlNotif);
 
                     StoreNotification(ntClone, follower.UserId);
 
                 }
+
+                var ntChClone = new TopicNotificationModel(nt);
+                StoreNotificationChannel(ntChClone);
+
             }
         }
 
-        public void StoreNotification(NewTopicNotificationModel nt, int userid)
+        public void StoreNotification(TopicNotificationModel nt, int userid)
         {
             using (var db = DatabaseFactory.OpenDbConnection())
             {
 
-                var dbNotif = new Model.ORM.Notification<NewTopicNotificationModel>()
+                var dbNotif = new Model.ORM.Notification<TopicNotificationModel>()
                 {
                     Id = nt.Guid,
                     UserId = userid,
@@ -76,19 +73,39 @@ namespace Nimbus.Web.Notifications
                     Timestamp = nt.Timestamp,
                     Type = Model.NotificationTypeEnum.newtopic
                 };
-                db.Insert<Model.ORM.Notification<NewTopicNotificationModel>>(dbNotif);
+                db.Insert<Model.ORM.Notification<TopicNotificationModel>>(dbNotif);
+
+            }
+        }
+
+        public void StoreNotificationChannel(TopicNotificationModel nt)
+        {
+            using (var db = DatabaseFactory.OpenDbConnection())
+            {
+
+                var dbNotif = new Model.ORM.Notification<TopicNotificationModel>()
+                {
+                    Id = nt.Guid,
+                    ChannelId = nt.ChannelId,
+                    IsRead = false,
+                    NotificationObject = nt,
+                    Timestamp = nt.Timestamp,
+                    Type = Model.NotificationTypeEnum.newtopic
+                };
+                db.Insert<Model.ORM.Notification<TopicNotificationModel>>(dbNotif);
 
             }
         }
     }
 
-    public class NewTopicNotificationModel
+    public class TopicNotificationModel
     {
         public int TopicId { get; set; }
         public string TopicName { get; set; }
         public int ChannelId { get; set; }
         public string ChannelName { get; set; }
         public string TopicImage { get; set; }
+        public Model.NotificationTypeEnum NotificationType { get; set; }
 
         public string Date { get; set; }
         public string Time { get; set; }
@@ -97,15 +114,15 @@ namespace Nimbus.Web.Notifications
         public Guid Guid { get; set; }
 
         /// <summary>
-        /// Cria nova instância de NewTopicNotificationModel
+        /// Cria nova instância de TopicNotificationModel
         /// </summary>
-        public NewTopicNotificationModel() { }
+        public TopicNotificationModel() { }
 
         /// <summary>
-        /// Cria cópia de uma instância de NewTopicNotificationModel *com outro Guid*
+        /// Cria cópia de uma instância de TopicNotificationModel *com outro Guid*
         /// </summary>
-        /// <param name="other">instância de NewTopicNotificationModel</param>
-        public NewTopicNotificationModel(NewTopicNotificationModel other)
+        /// <param name="other">instância de TopicNotificationModel</param>
+        public TopicNotificationModel(TopicNotificationModel other)
         {
             this.TopicId = other.TopicId;
             this.TopicName = other.TopicName;
@@ -115,6 +132,7 @@ namespace Nimbus.Web.Notifications
             this.Date = other.Date;
             this.Time = other.Time;
             this.Timestamp = other.Timestamp;
+            this.NotificationType = other.NotificationType;
             this.Guid = Guid.NewGuid();
         }
     }

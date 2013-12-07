@@ -1,0 +1,28 @@
+﻿@using Nimbus.Model
+@model Nimbus.Web.Notifications.TopicNotificationModel
+<div class="divNotification" style="display:block;">
+    <div class="imgNotificationCrop">
+        <img class="imgNotification" src="@Model.TopicImage" />
+    </div>
+    <p class="timeNotification">
+        @*hora x     data x*@
+        @Model.Time - @Model.Date
+    </p>
+    <p class="txtNotification">
+        @if(Model.NotificationType == NotificationTypeEnum.newtopic){
+            <text>
+            Um novo tópico foi criado:
+            <a href="/topic/index/@Model.TopicId"><strong>@Model.TopicName</strong></a>
+            </text>
+        }
+        else if (Model.NotificationType == NotificationTypeEnum.edittopic)
+        {
+            <text>O tópico <a href="/topic/index/@Model.TopicId"><strong>@Model.TopicName</strong></a> foi modificado.</text>
+        }
+        else if (Model.NotificationType == NotificationTypeEnum.deletetopic)
+        {
+            <text>O tópico <a href="/topic/index/@Model.TopicId"><strong>@Model.TopicName</strong></a> foi removido.</text>
+        }
+        
+    </p>
+</div>

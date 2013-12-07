@@ -379,6 +379,7 @@
     <Content Include="Website\Views\MessagePartials\MessagePartial.cshtml" />
     <Content Include="Website\Views\MessagePartials\MessageExpandPartial.cshtml" />
     <Content Include="Website\Views\NotificationPartials\NewTopic.cshtml" />
+    <Content Include="Website\Views\NotificationPartials\ChannelTopic.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\Controllers\DatabaseController.cs" />
@@ -406,6 +407,7 @@
     <Compile Include="Notifications\NimbusNotificationBase.cs" />
     <Compile Include="Security\SessionManagement.cs" />
     <Compile Include="Utils\AzureBlob.cs" />
+    <Compile Include="Utils\CleanHTML.cs" />
     <Compile Include="Utils\ImageManipulation.cs" />
     <Compile Include="Utils\NotificationTableEntity.cs" />
     <Compile Include="Utils\RazorTemplate.cs" />

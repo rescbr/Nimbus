@@ -10,6 +10,9 @@ namespace Nimbus.Model
     {
         message,
         newtopic,
+        edittopic,
+        deletetopic,
+
     }
     public class Notification<T>
     {

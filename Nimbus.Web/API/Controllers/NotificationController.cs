@@ -84,11 +84,11 @@ namespace Nimbus.Web.API.Controllers
                 }
                 else if (notification.Type == Model.NotificationTypeEnum.newtopic)
                 {
-                    NewTopicNotificationModel model = TypeSerializer.DeserializeFromString
-                        <NewTopicNotificationModel>(notification.NotificationObject);
+                    TopicNotificationModel model = TypeSerializer.DeserializeFromString
+                        <TopicNotificationModel>(notification.NotificationObject);
 
                     sbuilder.Append(
-                        razor.ParseRazorTemplate<NewTopicNotificationModel>
+                        razor.ParseRazorTemplate<TopicNotificationModel>
                             ("~/Website/Views/NotificationPartials/NewTopic.cshtml", model));
                 }
             }//);

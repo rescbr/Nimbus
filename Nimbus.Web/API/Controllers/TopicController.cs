@@ -144,7 +144,7 @@ namespace Nimbus.Web.API.Controllers
                             topic.Id = (int)db.GetLastInsertId();
                             trans.Commit();
 
-                            var newTopicNotification = new Notifications.FollowTopicNotification();
+                            var newTopicNotification = new Notifications.TopicNotification();
                             newTopicNotification.NewTopic(topic);
 
                             return topic;
