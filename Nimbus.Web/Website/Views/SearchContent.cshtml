@@ -4,6 +4,50 @@
     Layout = "~/Website/Views/Shared/_Layout.cshtml";
 }
 
+<script>
+    $(function ()
+    {
+        var item = document.getElementById('aOpenDivSearch');
+        item.onclick = function () { };
+    });
+</script>
+
+
+<div id="divBarSearchPage">
+    <input id="txtFieldSearch" style="width:350px;" value="@Model.Text" type="text" />
+    <select id="slcFilterSearch">
+        @if(Model.FieldType == 0)
+        { 
+        <option value="0" selected>Todos</option>
+        }
+        else
+        {  
+        <option value="0">Todos</option>
+        }
+        @if(Model.FieldType == 1){
+        <option value="1" selected>Canal</option>
+        }
+        else{
+        <option value="1">Canal</option>
+        }
+        @if(Model.FieldType == 2){
+            <option selected value="2">Tópico</option>
+        }
+        else { 
+             <option value="2">Tópico</option>
+        }
+        @if (Model.FieldType == 3) { 
+        <option selected value="3">Usuário</option>
+        }
+        else { 
+        <option value="3">Usuário</option>
+        }
+        
+    </select>
+    <img src="/images/utils/search.png" title="Buscar" class="cpointer" alt="Buscar" onclick="ajaxSearch();" />
+</div>
+
+<div>
 @foreach (var item in Model.ItensFound)
 {
     <a href="/@item.ItemPageUrl/index/@item.IdItem">
@@ -14,3 +58,4 @@
         </div> 
     </a>
 }
+</div>

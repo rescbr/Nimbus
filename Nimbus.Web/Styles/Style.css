@@ -153,6 +153,7 @@ nav.center {
     height:             43px;
     cursor:             pointer;
 }
+
 nav.right {
 	display:            inline-block;
 	float:              left;
