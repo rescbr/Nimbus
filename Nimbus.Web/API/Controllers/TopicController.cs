@@ -685,49 +685,46 @@ namespace Nimbus.Web.API.Controllers
         public bool ValidateShowTopic(int id)
         {
             bool allow = false;
-            try
+            //ver permissao p vizualizar => se é pago = ter pagado, se é privado = ser aceito
+            using (var db = DatabaseFactory.OpenDbConnection())
             {
-                //ver permissao p vizualizar => se é pago = ter pagado, se é privado = ser aceito
-                using (var db = DatabaseFactory.OpenDbConnection())
+                Topic tpc = db.SelectParam<Topic>(tp => tp.Id == id).FirstOrDefault();
+                if (tpc.Visibility == false) return false;
+
+
+                bool chnPrivate = db.SelectParam<Channel>(ch => ch.Id == tpc.ChannelId).Select(ch => ch.IsPrivate).FirstOrDefault();
+                if (chnPrivate == false)
                 {
-                    Topic tpc = db.SelectParam<Topic>(tp => tp.Id == id).FirstOrDefault();
-                    bool chnPrivate = db.SelectParam<Channel>(ch => ch.Id == tpc.ChannelId).Select(ch => ch.IsPrivate).FirstOrDefault();
-                    if (chnPrivate == false)
+                    allow = true;
+                }
+                else
+                {
+                    bool? pending = db.SelectParam<ChannelUser>(ch => ch.ChannelId == tpc.ChannelId && ch.UserId == NimbusUser.UserId)
+                                                                                                    .Select(ch => ch.Accepted).FirstOrDefault();
+                    if (pending == false && pending != null) //não esta pendente = já foi aceito
                     {
                         allow = true;
                     }
                     else
                     {
-                        bool? pending = db.SelectParam<ChannelUser>(ch => ch.ChannelId == tpc.ChannelId && ch.UserId == NimbusUser.UserId)
-                                                                                                        .Select(ch => ch.Accepted).FirstOrDefault();
-                        if (pending == false && pending != null) //não esta pendente = já foi aceito
-                        {
-                            allow = true;
-                        }
-                        else
-                        {
-                            allow = false;
-                        }
+                        allow = false;
                     }
-                    if (tpc.Price > 0)
+                }
+                if (tpc.Price > 0)
+                {
+                    bool paid = db.SelectParam<RoleTopic>(tp => tp.ChannelId == tpc.ChannelId && tp.TopicId == id)
+                                                                         .Select(tp => tp.Paid).FirstOrDefault();
+                    if (paid == true)
                     {
-                        bool paid = db.SelectParam<RoleTopic>(tp => tp.ChannelId == tpc.ChannelId && tp.TopicId == id)
-                                                                             .Select(tp => tp.Paid).FirstOrDefault();
-                        if (paid == true)
-                        {
-                            allow = true;
-                        }
-                        else
-                        {
-                            allow = false;
-                        }
+                        allow = true;
+                    }
+                    else
+                    {
+                        allow = false;
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
-            }
+
             return allow;
         }
 
