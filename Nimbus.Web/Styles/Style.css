@@ -802,20 +802,29 @@ div#headerChannel{
 .imgStarGreen {
     background-image: url(/images/Utils/starv.png);
     background-repeat: no-repeat;
-    width:14px;
-    height:14px;
+    width:20px;
+    height:20px;
+    cursor:pointer;
+    float:left;
 }
 
 .imgStarGray {
     background-image: url(/images/Utils/starc.png);
     background-repeat: no-repeat;
-    width:14px;
-    height:14px;
+    width:20px;
+    height:20px;
+    cursor:pointer;
+    float:left;
 }
 
 
 /*------------------ Post Canais fim --------------------*/
 /*------------------ Post Tópicos começo --------------------*/
+
+#linkLike, #linkUnLike{
+    cursor:pointer;
+}
+
 
 div.divTopic-grade {
     float:             left;
@@ -859,14 +868,16 @@ p.contentTopic-grade{
 }
 
 .footerTopic-grade {
-    background:         #87c240;
+    background:         #FFFFFF;
     width:              180px;
     height:             40px;
 }
 
 .btnLeftTopic-grade {
+    background:         #87c240;
     width:             139px;
     float:             left;
+    text-align:         center;
 }
 
 .btnLeftTopic-grade p{
@@ -877,10 +888,12 @@ p.contentTopic-grade{
 
 .btnRightTopic-grade {
     float:              right;
-    color:              #FFFFFF;
+    background:         #2b2d2e;
+    color:              #87c240;
     width:              40px;
     border-left:        1px solid #FFFFFF;
 }
+
 
 .btnRightTopic-grade p {
     line-height:        3em;
@@ -888,7 +901,25 @@ p.contentTopic-grade{
     text-align:         center;
 }
 
-.btnLeftTopic-grade:hover, .btnRightTopic-grade:hover {
+.btnRightTopicIsFavorited-grade {
+    float:              right;
+    background:         #2b2d2e;
+    width:              40px;
+    ali
+    border-left:        1px solid #FFFFFF;
+}
+
+.btnRightTopicIsFavorited-grade p {
+    line-height:        3em;
+    text-align:         center;
+}
+
+.btnRightTopicIsFavorited-grade:hover, .btnRightTopic-grade:hover {
+    cursor:pointer;
+    background: #403c3c;
+    }
+
+.btnLeftTopic-grade:hover  {
     cursor:             pointer;
     background:         #7db43b;
 }
@@ -1210,7 +1241,7 @@ p.catTopic{
     margin-bottom:      20px;
 }
 
-div#btnEditTopic {
+div#btnEditTopic, div#btnFavoritedTopic {
     margin:             0 auto;
     background:         #2b2d2e;
     width:              80px;
@@ -1218,12 +1249,12 @@ div#btnEditTopic {
     cursor:             pointer;
 }
 
-#btnEditTopic:hover, #btnEditTopic p:hover {
+#btnEditTopic:hover, #btnEditTopic p:hover, #btnFavoritedTopic:hover, #btnFavoritedTopic p:hover {
     color:              #87c240;
     cursor:             pointer;
 }
 
-#btnEditTopic p {
+#btnEditTopic p, #btnFavoritedTopic p {
     color:              #FFFFFF;
     text-align:         center;
     font-size:          small;

@@ -20,7 +20,8 @@
         @foreach (var item in Model.AllTopics.Take(15).OrderByDescending(m => m.LastModified))
         {
             @*Imagem e texto*@
-            <div class="divTopic-grade">
+            <p>Colocar notificação das mudanças no channel</p>
+            @*<div class="divTopic-grade">
                 <a href="/topic/index/@item.Id">
                     <div class="headerTopic-grade">
                         <h1>@item.Title</h1>
@@ -33,12 +34,12 @@
                 <div class="footerTopic-grade">
                     <div class="btnLeftTopic-grade">
                         <p onclick="unReadLater();">Ler mais tarde</p> @*chamar js passando item.id*@
-                    </div>
+                    @*</div>
                     <div class="btnRightTopic-grade">
                         <p>s2</p> @*adicionar aos favoritos*@
-                    </div>
+                    @*</div>
                 </div>
-            </div>
+            </div>*@
         }   
     </div>
 

@@ -8,7 +8,7 @@ using System.Web;
 
 namespace Nimbus.Web.Website.Models
 {
-    public class TopicModel
+     public class TopicModel
     {        
         public NimbusUser CurrentUser { get; set; }
 
@@ -22,8 +22,14 @@ namespace Nimbus.Web.Website.Models
                 
         public CategoryBag Category { get; set; }
 
+        public bool FavoriteTopic { get; set; }
+
         public int NumFavorites { get; set; }
 
         public int NumLikes { get; set; }
+
+        public int NumUnLikes { get; set; }
+
+        public bool? UserLike { get; set; }
     }
 }

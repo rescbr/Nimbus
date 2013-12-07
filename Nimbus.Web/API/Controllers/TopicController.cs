@@ -365,10 +365,9 @@ namespace Nimbus.Web.API.Controllers
                     {
                         TopicBag topic = new TopicBag()
                         {
-                            Title = HttpUtility.HtmlDecode(item.Title),
-                            //Description = RemoveHTMLString.StripTagsCharArray(topic.Description); 
-                            Description = HttpUtility.HtmlDecode(item.Description),
-                            Text = HttpUtility.HtmlDecode(item.Text),
+                            Title = item.Title,
+                            Description =item.Description,
+                            Text = item.Text,
                             AuthorId = item.AuthorId,
                             ChannelId = item.ChannelId,
                             //Count
@@ -557,8 +556,8 @@ namespace Nimbus.Web.API.Controllers
                                 TopicType = item.TopicType,
                                 ImgUrl = item.ImgUrl,
                                 LastModified = item.LastModified,
-                                Count = count
-
+                                Count = count,
+                                UserFavorited = db.Where<UserTopicFavorite>(u => u.UserId == NimbusUser.UserId && u.TopicId == item.Id).Exists( u => u.Visible)
                             };
                             tpcList.Add(bag);
                         }
@@ -580,42 +579,51 @@ namespace Nimbus.Web.API.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpPut]
+        [HttpPost]
         public bool TopicFavorite(int id)
         {
             bool flag = false;
-            try
-            {
+
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
                     UserTopicFavorite user = new UserTopicFavorite();
                     user = db.SelectParam<UserTopicFavorite>(us => us.UserId == NimbusUser.UserId && us.TopicId == id).FirstOrDefault();
-                    UserTopicFavorite usrFavorite = new UserTopicFavorite();
+                    
                     if (user == null) //nunca favoritou
                     {
-                        usrFavorite.UserId = NimbusUser.UserId;
-                        usrFavorite.TopicId = id;
-                        usrFavorite.FavoritedOn = DateTime.Now;
-                        usrFavorite.Visible = true;
-                        db.Insert(usrFavorite);
+                        UserTopicFavorite usertpv = new UserTopicFavorite()
+                        {
+                            FavoritedOn = DateTime.Now,
+                            TopicId = id,
+                            UserId = NimbusUser.UserId,
+                            Visible = true
+                        };
+                        db.Insert<UserTopicFavorite>(usertpv);
                         flag = true;
                     }
                     else
                     {
                         user.FavoritedOn = DateTime.Now;
                         user.Visible = (user.Visible == true) ? false : true;
-                        db.Update(user);
-                        flag = true;
+                        db.Update<UserTopicFavorite>(user);
+                        flag = user.Visible;
                     }
-                }
-            }
-            catch (Exception ex)
-            {
-                flag = false;
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
-            }
-
+                }    
             return flag;
+        }
+
+        /// <summary>
+        /// Retorna se o tópico visitado é favoritado ou não
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public bool TopicIsFavorite(int id)
+        {
+            using(var db = DatabaseFactory.OpenDbConnection())
+            {
+                return db.Where<UserTopicFavorite>(t => t.TopicId == id && t.UserId == NimbusUser.UserId).Exists(t => t.Visible == true);
+            }
         }
 
         /// <summary>
@@ -758,6 +766,84 @@ namespace Nimbus.Web.API.Controllers
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
             return count;
+        }
+
+        /// <summary>
+        /// Retorna o número de unlikes que o tópico possui
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public int CountUnLikes(int id)
+        {
+            int count = 0;
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {
+                    count = db.SelectParam<UserLikeTopic>(fl => fl.TopicId == id && fl.Visible == false).Count();
+                }          
+            return count;
+        }
+
+        /// <summary>
+        /// Retornase o usuario deu like,unlike ou nenhum dos dois para um tópico
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public bool? UserLiked(int id)
+        {
+            bool? liked = null;
+            using (var db = DatabaseFactory.OpenDbConnection())
+            {
+               var user = db.SelectParam<UserLikeTopic>(fl => fl.TopicId == id && fl.UserId == NimbusUser.UserId).FirstOrDefault();
+               if (user == null)
+                   liked = null;
+               else
+                   liked = user.Visible; //true = like ; false = unlike
+            }
+            return liked;
+        }
+        
+        /// <summary>
+        /// método para like e unlike de um topico
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public bool? LikeTopic(int id, string type)
+        {
+            bool? success = null;
+            using (var db = DatabaseFactory.OpenDbConnection())
+            {
+                var user = db.Where<UserLikeTopic>(u => u.UserId == NimbusUser.UserId && u.TopicId == id).FirstOrDefault();
+
+                if (user == null)//novo
+                {
+                    UserLikeTopic userLike = new UserLikeTopic()
+                    {
+                        Visible = type == "like"?true:false,
+                        UserId = NimbusUser.UserId,
+                        TopicId = id,
+                        LikedOn = DateTime.Now
+                    };
+                    db.Insert<UserLikeTopic>(userLike);
+                    success = userLike.Visible;
+                }
+                else //atualizar
+                {
+                    user.LikedOn = DateTime.Now;
+                    if (type == "like")
+                        user.Visible = true;
+                    else
+                        user.Visible = false;
+                    db.Update<UserLikeTopic>(user);
+
+                    success = user.Visible;
+
+                }
+            }
+            return success;
         }
 
         /// <summary>
@@ -1045,6 +1131,56 @@ namespace Nimbus.Web.API.Controllers
             }
 
             return userGrade;
+        }
+
+        /// <summary>
+        /// Método para deletar um tópico
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete]
+        public bool DeleteTopic(int id)
+        {
+            bool flag = false;
+
+            using(var db = DatabaseFactory.OpenDbConnection())
+            {                
+                Topic topic = db.Where<Topic>(t => t.Id == id).FirstOrDefault();
+                
+                if(topic != null)
+                {
+                    bool allow = db.Where<Role>(r => r.UserId == NimbusUser.UserId && r.ChannelId == topic.ChannelId).Select(r => r.IsOwner).FirstOrDefault();
+
+                    if (allow == true)
+                    {
+                        using (var trans = db.OpenTransaction(System.Data.IsolationLevel.ReadCommitted))
+                        {
+                            try
+                            {
+                                db.Update<Comment>(new Comment{ Visible = false}, cmt=> cmt.TopicId == id);
+
+                                topic.Visibility = false;
+                                db.Update<Topic>(topic);
+
+                                trans.Commit();
+                                flag = true;
+                            }
+                            catch (Exception)
+                            {
+                                trans.Rollback();
+                                flag = false;
+                                throw;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        flag = false;
+                    }
+                }
+            }
+
+            return flag;
         }
     }
 }

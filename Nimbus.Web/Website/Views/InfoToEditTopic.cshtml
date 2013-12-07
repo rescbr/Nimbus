@@ -7,6 +7,10 @@
 @Scripts.Render("~/Scripts/jHtmlArea-0.8.js")
 
 <div id="divInfos">
+    <div style="width:50px; height:20px; background-color:#87c240;" onclick="ajaxDeleteTopic(@Model.CurrentTopic.Id, @Model.CurrentChannel.Id);">
+        <p style="color:#FFFFFF">Excluir</p>
+    </div>
+
     <p>Nome: <input id="iptNewTitle" value="@Model.CurrentTopic.Title" /></p>
     <p>Descrição:<input id="iptNewDescription" value="@Model.CurrentTopic.Description" /></p>
     <p>

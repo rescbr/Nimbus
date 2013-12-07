@@ -218,3 +218,130 @@ function ajaxFinishExam(id)
         });
     }
 }
+
+function ajaxDeleteTopic(id, idChn)
+{
+    $.ajax({
+        url: "/api/topic/DeleteTopic/" + id,
+        type: "DELETE",
+        contentType: "application/json;charset=utf-8",
+        statusCode: {
+            200: function (newData) {
+                if (newData == true) {
+                    window.location.href = "/channel/index/" + idChn;
+                }
+                else
+                {
+                    window.alert("Você não possui permissão para realizar essa operação.");
+                }
+            }
+        },
+
+        500: function () {
+            //erro
+            window.alert("Não foi possível enviar seu comentário. Tente novamente mais tarde.");
+        }
+    });
+}
+
+function ajaxFavoritedTopic(id, typePage)
+{
+    $.ajax({
+        url: "/api/topic/TopicFavorite/" + id,
+        type: "POST",
+        contentType: "application/json;charset=utf-8",
+        statusCode: {
+            200: function (newData) {
+               
+
+                if (newData == true) {
+                    if (typePage == 'pageTopic') {
+                        var count = document.getElementById('lblCountFavorite').innerHTML;
+                        document.getElementById('pFavoritar').innerHTML = "Desfavoritar";
+                        count = parseInt(count) + 1;
+                        document.getElementById('lblCountFavorite').innerHTML = count;
+                    }
+                    else
+                    {
+                        document.getElementById('imgFvt_' + id).src = "/images/utils/starv.png";
+                        document.getElementById('divTpfvt_' + id).className = "btnRightTopicIsFavorited-grade";
+                    }
+                }
+                else {
+                    if (typePage == 'pageTopic') {
+                        var count = document.getElementById('lblCountFavorite').innerHTML;
+                        document.getElementById('pFavoritar').innerHTML = "Favoritar";
+                        count = parseInt(count) - 1;
+                        document.getElementById('lblCountFavorite').innerHTML = count;
+                    }
+                    else
+                    {
+                        document.getElementById('imgFvt_' + id).src = "/images/utils/starc.png";
+                        document.getElementById('divTpfvt_' + id).className = "btnRightTopic-grade";
+                    }
+                }
+            }
+        },
+
+        500: function () {
+            //erro
+            window.alert("Não foi possível enviar seu comentário. Tente novamente mais tarde.");
+        }
+    });
+}
+
+function ajaxLikeUnLike(id, type, userCondition)
+{
+    $.ajax({
+        url: "/api/topic/LikeTopic/" + id + "?type=" + type,
+        type: "POST",
+        contentType: "application/json;charset=utf-8",
+        statusCode: {
+            200: function (newData) {
+                //true= like; false = unlike, null = erro
+                var countLike = document.getElementById('lblLike').innerHTML;
+                var countNLike = document.getElementById('lblUnLike').innerHTML;
+                countLike = parseInt(countLike);
+                countNLike = parseInt(countNLike);
+
+                if (newData == true) { //deu like
+                    document.getElementById('linkLike').onclick = function () { };
+
+                    if (userCondition == 'deulike') { //coloca método de unlike
+                        document.getElementById('linkUnLike').onclick = function () {
+                            ajaxLikeUnLike(id, "unlike", "deuunlike");
+                        };
+                        countLike = countLike + 1;
+                        countNLike = countNLike - 1; //retira o unlike anterior
+                    }
+                    else if (userCondition == 'null')
+                    {
+                        countLike = countLike + 1; //nunca votou msm
+                    }                   
+                }
+                else {
+                    document.getElementById('linkUnLike').onclick = function () { };
+
+                    if (userCondition == 'deuunlike') {
+                        document.getElementById('linkLike').onclick = function () {
+                            ajaxLikeUnLike(id, "like", "deulike");
+                        };
+
+                        countNLike = countNLike + 1;
+                        countLike = countLike - 1;
+                    }
+                    else if (userCondition == 'null') {
+                        countNLike = countNLike - 1;
+                    }
+                }
+                document.getElementById('lblLike').innerHTML = countLike;
+                document.getElementById('lblUnLike').innerHTML = countNLike;
+            }
+        },
+
+        500: function () {
+            //erro
+            window.alert("Não foi possível enviar seu comentário. Tente novamente mais tarde.");
+        }
+    });
+}
