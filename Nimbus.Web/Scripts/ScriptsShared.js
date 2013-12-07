@@ -324,7 +324,7 @@ function ajaxSearch()
     var stringUrl;
     if(typeSearch == '0')
     {
-        stringUrl = "";
+        window.location.href = "/search/index/?text=" + text + "&filter=" + 0;
     }
     else if (typeSearch == '1')
     {
