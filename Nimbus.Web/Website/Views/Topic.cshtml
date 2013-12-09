@@ -12,6 +12,8 @@
 
 <script>
     channelID = @Model.CurrentTopic.ChannelId;
+    skipComments = 1;
+    skipCommentsChild = 1;
 </script>
 <div id="divCapa">
     <img src="@Model.Category.ImgTopChannel" id="imgcapa" height="192" alt="" width="864" />
@@ -145,6 +147,7 @@
     <script type="text/javascript">
         nimbusRegisterTopic = Number(@Model.CurrentTopic.Id);
     </script>
+    
     <div id="divCommentsTopic">
         <div class="infoTitleChannel">
             <h2>Comentários</h2>
@@ -153,6 +156,10 @@
             @{ Html.RenderAction("Comments", "Topic", new { id = Model.CurrentTopic.Id }); }
             @* renato: favor deixar essa div aqui, tks. *@
             <div id="placeholderAfterLastComment"></div>
+            @if (Model.Comments.Count() == 15)
+            {
+                <button id="btn_skipComments" onclick="seeMoreComments(@Model.CurrentTopic.Id, 'divAllComments', 'skipComments');">Ver mais</button>
+            }
         </div>
 
         <div id="divAddNewComment">

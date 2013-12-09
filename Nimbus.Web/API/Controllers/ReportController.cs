@@ -7,9 +7,11 @@ using System.Web.Http;
 using Nimbus.Web.API.Models;
 using System.Net;
 using System.Net.Http;
+using Nimbus.Model.ORM;
 
 namespace Nimbus.Web.API.Controllers
 {
+    [NimbusAuthorize]
     public class ReportController: NimbusApiController
     {
         /// <summary>
@@ -17,7 +19,6 @@ namespace Nimbus.Web.API.Controllers
         /// </summary>
         /// <param name="dados"></param>
         /// <returns></returns>
-        [Authorize]
         [HttpPost]
         public ReportModel ReportComment(ReportModel dados )
         {
@@ -73,9 +74,7 @@ namespace Nimbus.Web.API.Controllers
                             var userReported = new Nimbus.Model.ORM.UserReported
                             {
                                 UserReportedId = dados.userReported_id,
-                                UserReporterId = NimbusUser.UserId,
-                                ReportId = reportID,
-                                Type = Model.Enums.ReportType.comment
+                                UserReporterId = NimbusUser.UserId
                             };
                             db.Insert(userReported);
                             trans.Commit();
@@ -96,6 +95,25 @@ namespace Nimbus.Web.API.Controllers
             return dados;
         }
 
+        /// <summary>
+        /// Reporta o usuário
+        /// </summary>
+        /// <param name="dados"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public UserReported ReportUser(UserReported dados)
+        {
+            if (dados != null)
+            {
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {                 
+                    db.Insert<UserReported>(dados);
+
+                    dados.Id = (int)db.GetLastInsertId();
+                }
+            }
+            return dados;
+        }
     }
 }   
 

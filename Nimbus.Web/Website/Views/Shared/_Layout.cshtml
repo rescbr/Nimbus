@@ -32,9 +32,9 @@
                 <nav class="center">
                     <ul class="sbs">
                         <li class="BSearch" id="aOpenDivSearch" onclick="openDivSearch();">Search</li>
-                        <a href="/TrendingTopics"><li class="BTrTop">Trending</li></a>
-                        ><li class="BTop">Top<li>
-                        <a href="#"><li class="BNews">News</li></a>
+                        <li class="BTrTop">Trending</li>
+                        <li class="BTop">Top</li>
+                        <li class="BNews">News</li>
                     </ul>
                 </nav>
                 @if (user != null)
@@ -43,7 +43,7 @@
                         <ul class="sbs">
                                 <li><div class="userpic" onclick="window.location.href('/userprofile/index/@user.UserId')"><img src="@user.AvatarUrl" width="35" height="35" id="smallavatar" /></div></li>
                                 <li><h2 class="userName" onclick="window.location.href('/userprofile/index/@user.UserId')">@user.FirstName</h2></li>
-                                <li><div class="press exitbutton"><a href="/login/logout">Sair</a></div></li>
+                                <li><div class="press exitbutton"><a class="exit" href="/login/logout">Sair</a></div></li>
                         </ul>
                     </nav>
                 }

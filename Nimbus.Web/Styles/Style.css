@@ -184,14 +184,29 @@ div.exitbutton {
 	text-align:         center;
 	font-weight:        bold;
 	float:              left;
-	margin-top:         30px;
+	margin-top:         10px;
 	line-height:        15px;
     height:             15px;
     width:              15px;
     border-radius:      100%;
-    background-color:   #BE1E2D;
-}*/
+    background-color:   #87c240;
+}
+*/
 
+
+.exit{
+	display:            inline-block;
+	text-align:         center;
+	float:              left;
+	margin-top:         8px;
+    margin-left:        10px;
+	line-height:        15px;   
+    color:              #87c240;
+}
+.exit:hover{
+	font-weight:        bold; 
+    color:              #87c240;
+}
 
 /*------------------ fim header --------------------*/
 
@@ -550,6 +565,27 @@ div.aboutUser {
 p.aboutUser-other {
     margin-top:         5px;
     margin-bottom:      5px;
+}
+
+.reportUser {
+    float:right;
+    cursor:pointer;
+    margin-right:42px;
+    width:120px;
+    height:30px;
+    line-height: 2em;
+    text-align: center;
+    background: #2b2d2e;
+}
+
+.reportUser p {
+    text-align: center;
+    color: #FFFFFF;
+    }
+
+.reportUser p:hover, .reportUser a:hover, .reportUser a:active {
+    color:              #87c240;
+    cursor:             pointer;
 }
 
 div.participation {
@@ -1505,7 +1541,7 @@ div#footer {/*
     cursor:            pointer;
 }
 
-.userpic:hover, .logo:hover, .BSearch:hover, .BTrTop:hover, .BTop:hover, .BNews:hover, .press:hover, .accRef:hover, #profileEdit:hover, .c-lista:hover .c-grade:hover, .postFoBoxL_l:hover, .postFoBoxR_l:hover, .postFoBoxL_g:hover, .postFoBoxR_g:hover, .post_m:hover, .chanPaidImg:hover {
+.userpic:hover, .logo:hover, .BSearch:hover, .BTrTop:hover, .BTop:hover, .BNews:hover, .press:hover,  #profileEdit:hover, .c-lista:hover .c-grade:hover, .postFoBoxL_l:hover, .postFoBoxR_l:hover, .postFoBoxL_g:hover, .postFoBoxR_g:hover, .post_m:hover, .chanPaidImg:hover {
 	background:        #bcbec0;
     cursor:            pointer;
 }
@@ -1514,6 +1550,10 @@ div#footer {/*
     display:           inline-block;
 }
 
+.accRef a:hover {
+    color: #87c240;
+    cursor: pointer;
+}
 div.accRef {
     padding:            2px;
     padding-right:      10px;
@@ -1522,12 +1562,13 @@ div.accRef {
     width:              auto;
     height:             22px;
     font-size:          small;
-    border:             1px solid #BE1E2D;
+    background:         #2d2b2e; 
     display:            inline-block;
 }
 
-.accRef p {
+.accRef a {
     text-align:         center;
+    color: #FFFFFF;
  }
 
 

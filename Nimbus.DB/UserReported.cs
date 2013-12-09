@@ -8,16 +8,15 @@ namespace Nimbus.Model
 {
     public class UserReported
     {
-        public virtual int Id { get; set; }
+        public int Id { get; set; }
 
-        public virtual int UserReportedId { get; set; }
+        public int UserReportedId { get; set; }
 
-        public virtual int UserReporterId { get; set; }
+        public int UserReporterId { get; set; }
 
 
-        public Enums.ReportType Type { get; set; }
-
-        public int ReportId { get; set; }
+        public string Justification { get; set; }
+        
     }
 
 }

@@ -29,7 +29,6 @@ namespace Nimbus.Web
                         db.CreateTable(false, typeof(Organization));
                         db.CreateTable(false, typeof(User));
                         db.CreateTable(false, typeof(UserAds));
-                        db.CreateTable(false, typeof(UserReported));
                         db.CreateTable(false, typeof(Channel));
                         db.CreateTable(false, typeof(ChannelReported));
                         db.CreateTable(false, typeof(ChannelUser));
@@ -56,6 +55,7 @@ namespace Nimbus.Web
                         db.CreateTable(false, typeof(UserInfoPayment));
                         db.CreateTable(false, typeof(UserTopicFavorite));
                         db.CreateTable(false, typeof(UserLikeTopic));
+                        db.CreateTable(false, typeof(UserReported));
                         db.CreateTable(false, typeof(ViewByTopic));
                         db.CreateTable(false, typeof(VoteChannel));
                         db.CreateTable(false, typeof(Notification<object>));

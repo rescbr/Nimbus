@@ -379,7 +379,7 @@ namespace Nimbus.Web.API.Controllers
                                     name = "[removido]";
                                 }
                                 else
-                                    name = HttpUtility.HtmlDecode(userChild.FirstName + " " + userChild.LastName);
+                                    name = userChild.FirstName + " " + userChild.LastName;
 
                                 CommentBag child = new CommentBag()
                                 {
@@ -387,7 +387,7 @@ namespace Nimbus.Web.API.Controllers
                                     UserName = name,
                                     UserId = userChild.Id,
                                     Id = itemChild.Id,
-                                    Text = HttpUtility.HtmlDecode(itemChild.Text),
+                                    Text = itemChild.Text,
                                     ParentId = itemChild.ParentId,
                                     PostedOn = itemChild.PostedOn,
                                     IsNew = itemChild.IsNew,
@@ -404,10 +404,10 @@ namespace Nimbus.Web.API.Controllers
                             CommentBag bag = new CommentBag()
                             {
                                 AvatarUrl = user.AvatarUrl,
-                                UserName = HttpUtility.HtmlDecode(user.FirstName + " " + user.LastName),
+                                UserName = user.FirstName + " " + user.LastName,
                                 UserId = user.Id,
                                 Id = item.Id,
-                                Text = HttpUtility.HtmlDecode(item.Text),
+                                Text =item.Text,
                                 ParentId = item.ParentId,
                                 PostedOn = item.PostedOn,
                                 IsNew = item.IsNew,

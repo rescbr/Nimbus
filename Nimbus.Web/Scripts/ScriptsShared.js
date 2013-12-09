@@ -130,6 +130,40 @@ function verMaisTopics(id, orderBy, category, global)
     });
 }
 
+//método que busca os comentarios de 15 em 15 e 'filhos' de 5 em 5
+function seeMoreComments(id, nameDiv, global) {
+    if (global == 'skipComments')
+        value = skipComments;
+    else if (global == 'skipCommentsChild')
+        value = skipCommentsChild;
+
+    $.ajax({
+        url: "/api/comments/AbstTopicHtml/" + id + "?skip=" + value,
+        type: "GET",
+        contentType: "application/json;charset=utf-8",
+        statusCode: {
+            200: function (newData) {
+
+                if (global == 'skipComments')
+                    skipComments = skipComments + 1;
+                else if (global == 'skipCommentsChild')
+                    skipCommentsChild = skipCommentsChild + 1;
+
+                document.getElementById(nameDiv).innerHTML += newData.Html;
+
+                if (newData.Count < 15) {
+                    document.getElementById("btn_" + global).style.display = "none";
+                }
+            },
+
+            500: function () {
+                //erro
+                window.alert("Erro ao carregar mais comentários. Tente novamente mais tarde.");
+            }
+        }
+    });
+}
+
 //método que busca canais de 15 em 15
 function verMaisChannels(id, orderBy, category, global) {
     if (global == 'skipMyChannels')

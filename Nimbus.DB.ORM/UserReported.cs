@@ -10,13 +10,13 @@ namespace Nimbus.Model.ORM
     public class UserReported  : Nimbus.Model.UserReported
     {
         [AutoIncrement]
-        public override int Id { get; set; }
+        public int Id { get; set; }
 
         [References(typeof(User))]
-        public override int UserReportedId { get; set; }
+        public int UserReportedId { get; set; }
 
         [References(typeof(User))]
-        public override int UserReporterId { get; set; }
+        public int UserReporterId { get; set; }
 
     }
 
