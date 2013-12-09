@@ -27,10 +27,10 @@ function ajaxEditTopic(id, topicType, divOld) {
         video = document.getElementById('iframeNewVideo').src;
     }
     if (topicType == 'text') {
-        text = CKEDITOR.instances.txtaArticle.getData();
+        text = $("#txtaArticle").htmlarea('html');
     }
     if (topicType == 'discussion') {
-        text = CKEDITOR.instances.txtaTextMsg.getData();
+        text = $("#txtaTextMsg").htmlarea('html');
     }
     if (topicType == 'exam') {
         exam = examEdit();
