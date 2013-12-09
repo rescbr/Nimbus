@@ -1,68 +1,22 @@
-﻿@model Nimbus.Web.Website.Models.TrendingTopicModel
+﻿@using System.Collections.Generic;
+@using Nimbus.Model.Bags;
+@model List<TopicBag>
 @{Layout = "~/Website/Views/Shared/_Layout.cshtml";}
 
 <div class="content-top">
 	<div class="cont-left">
 		<h1>Trending Topics</h1>
 	</div>
-	<nav class="cont-right">
-		<ul class="sbs">
-			<li><h2>Filtro</h2></li>
-			<li>
-                <form name="checkListForm">
-				    <select class="sel">
-					    <option value="todas">Todas categorias</option>
-					    <option value="quimica">Química</option>
-					    <option value="culinaria">Culinária</option>
-					    <option value="outros">Outros</option>
-				    </select>
-				</form>
-			</li>
-			<li>
-				<div class="c-lista">
-					<div class="ret1"></div>
-					<div class="ret2"></div>
-				</div>
-			</li>
-			<li>
-				<div class="c-grade">
-					<div class="quad1"></div>
-					<div class="quad2"></div>
-					<div class="quad3"></div>
-					<div class="quad4"></div>
-				</div>
-			</li>
-		</ul>
-	</nav>
 </div>
 
 @*Miniaturas dos topicos*@
 
-<div id="divTrendingTopics" style="display:none;">
+<div id="divTrendingTopics" style="display:block;">
     @*depois vai ser carregado por js + ajax, mas para facilitar, motando o modelo aqui*@
 
-    @foreach (var item in Model.Topics.OrderByDescending(m => m.LastModified))
+    @foreach (var item in Model)
     {
-        @*Imagem e texto*@
-        <div class="divTopic-grade">
-            <a href="/topic/index/@item.Id">
-                <div class="headerTopic-grade">
-                    <h1>@item.Title</h1>
-                    <img src="@item.ImgUrl" alt="@item.TopicType.ToString()" title="@item.Title" width="180" height="100">
-                </div>
-            </a>
-            <p class="contentTopic-grade">
-                @item.Description
-            </p>
-            <div class="footerTopic-grade">
-                <div class="btnLeftTopic-grade">
-                    <p onclick="unReadLater();">Ler mais tarde</p> @*chamar js passando item.id*@
-                </div>
-                <div class="btnRightTopic-grade">
-                    <p>s2</p> @*adicionar aos favoritos*@
-                </div>
-            </div>
-        </div>
+        Html.RenderPartial("~/Website/Views/ChannelPartials/TopicPartial.cshtml", item);
     }
 </div>
 

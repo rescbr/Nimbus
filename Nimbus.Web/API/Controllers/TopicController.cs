@@ -339,63 +339,67 @@ namespace Nimbus.Web.API.Controllers
         }
 
         /// <summary>
-        /// carregar informações gerais dos trending tópicos
+        /// Trending Topics de todas as categorias
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public List<TopicBag> ShowTTopic(int id)
+        public List<TopicBag> TrendingTopics()
         {
-            List<TopicBag> topicList = new List<TopicBag>();
-            try
-            {
-                using (var db = DatabaseFactory.OpenDbConnection())
-                {
-                    ICollection<int> idChannel;
-                    if (id == 0)
-                    {
-                        idChannel = db.SelectParam<Channel>(ch => ch.Visible == true && ch.OrganizationId == NimbusOrganization.Id)
-                                                            .Select(ch => ch.Id).ToList();
-                    }
-                    else
-                    {
-                        idChannel = db.SelectParam<Channel>(ch => ch.Visible == true && ch.OrganizationId == NimbusOrganization.Id && ch.CategoryId == id)
-                                                            .Select(ch => ch.Id).ToList();
+            /************************************************************************
+             *                      CONFIDENCE SORT TÓPICO                          * 
+             *            para ordenar TOP tópicos de acordo com a votação          *
+             * query baseada em:                                                    *
+             * https://github.com/reddit/reddit/blob/master/r2/r2/lib/db/_sorts.pyx *
+             * http://www.evanmiller.org/how-not-to-sort-by-average-rating.html     *
+             ************************************************************************/
 
-                    }
-                    //TODO: COLOCAR P APARECER DE DFATO SO OS TRENDING
-                    ICollection<Topic> tpcs = db.SelectParam<Topic>(tp => tp.Visibility == true && idChannel.Contains(tp.ChannelId)).ToList();
-                    foreach (var item in tpcs)
+            List<TopicBag> tpcList = new List<TopicBag>();
+            using (var db = DatabaseFactory.OpenDbConnection())
+            {
+                var trending = db.Query<Topic>(
+                #region queryzinha 2, o retorno
+@"
+select [Id], [ImgUrl], [Title], [TopicType], [Description], [LastModified]
+from (
+	select top 12 [Topic].[Id], [Topic].[ImgUrl], [Topic].[Title], [Topic].[TopicType], [Topic].[Description], [Topic].[LastModified],
+	 (select ((([positive] + 1.9208) / ([positive] + [negative]) - 
+			  1.96 * SQRT(([positive] * [negative]) / ([positive] + [negative]) + 0.9604) / 
+			  ([positive] + [negative])) / (1 + 3.8416 / ([positive] + [negative]))) as [confidence_score]
+			from (
+				select 
+					(select count([Visible]) from [UserLikeTopic] where [UserLikeTopic].[Visible] = 1 and [UserLikeTopic].[TopicId] = [Topic].[Id]) as [positive], 
+					(select count([Visible]) from [UserLikeTopic] where [UserLikeTopic].[Visible] = 0 and [UserLikeTopic].[TopicId] = [Topic].[Id]) as [negative]
+				) tmpCount
+			where [positive] + [negative] > 0) as [score]
+	from [Topic]
+	order 
+	by score desc
+) tmpScoreSort"
+                #endregion
+);
+
+                if (trending.Count > 0)
+                {
+                    foreach (var item in trending)
                     {
-                        TopicBag topic = new TopicBag()
+                        int count = db.SelectParam<ViewByTopic>(vt => vt.TopicId == item.Id).Select(vt => vt.CountView).FirstOrDefault();
+                        TopicBag bag = new TopicBag()
                         {
-                            Title = item.Title,
-                            Description =item.Description,
-                            Text = item.Text,
-                            AuthorId = item.AuthorId,
-                            ChannelId = item.ChannelId,
-                            //Count
-                            CreatedOn = item.CreatedOn,
                             Id = item.Id,
+                            Description = item.Description,
+                            Title = item.Title,
+                            TopicType = item.TopicType,
                             ImgUrl = item.ImgUrl,
                             LastModified = item.LastModified,
-                            Price = item.Price,
-                            Question = item.Question,
-                            TopicType = item.TopicType,
-                            UrlCapa = item.UrlCapa,
-                            UrlVideo = item.UrlVideo,
-                            Visibility = item.Visibility
-
+                            Count = count,
+                            UserFavorited = db.Where<UserTopicFavorite>(u => u.UserId == NimbusUser.UserId && u.TopicId == item.Id).Exists(u => u.Visible)
                         };
-                        topicList.Add(topic);
+                        tpcList.Add(bag);
                     }
-
                 }
+
+                return tpcList;
             }
-            catch (Exception ex)
-            {
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
-            }
-            return topicList;
         }
 
         #endregion

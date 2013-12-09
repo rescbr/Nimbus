@@ -14,11 +14,10 @@ namespace Nimbus.Web.Website.Controllers
         {
             var topicApi = ClonedContextInstance<API.Controllers.TopicController>();
 
-            List<TopicBag> topics = new List<TopicBag>();
             //TODO colocar p chamar a funçao CERTA
-            topics = topicApi.ShowTTopic(0);//inicial é trazer todos os Tts sem ser filtrado por categoria
+            var topics = topicApi.TrendingTopics();//inicial é trazer todos os Tts sem ser filtrado por categoria
 
-            return View("TrendingTopic", topics);
+            return View("TrendingTopics", topics);
         }
 
     }
