@@ -1,5 +1,16 @@
 ﻿@model Nimbus.Web.Website.Models.ChannelModel
 
+@{
+    string lastNotificationGuid;
+    if (Model.ChannelNotifications.LastNotificationGuid == Guid.Empty)
+    {
+        lastNotificationGuid = "";
+    }
+    else
+    {
+        lastNotificationGuid = Model.ChannelNotifications.LastNotificationGuid.ToString();
+    }
+}
 <script type="text/javascript">
     //global
     currentDiv = 'divNotification';
@@ -17,30 +28,23 @@
     </nav>
 
     <div id="divNotification">
-        @foreach (var item in Model.AllTopics.Take(15).OrderByDescending(m => m.LastModified))
-        {
-            @*Imagem e texto*@
-            <p>Colocar notificação das mudanças no channel</p>
-            @*<div class="divTopic-grade">
-                <a href="/topic/index/@item.Id">
-                    <div class="headerTopic-grade">
-                        <h1>@item.Title</h1>
-                        <img src="@item.ImgUrl" alt="@item.TopicType.ToString()" title="@item.Title" width="180" height="100">
-                    </div>
-                </a>
-                <p class="contentTopic-grade">
-                    @item.Description
-                </p>
-                <div class="footerTopic-grade">
-                    <div class="btnLeftTopic-grade">
-                        <p onclick="unReadLater();">Ler mais tarde</p> @*chamar js passando item.id*@
-                    @*</div>
-                    <div class="btnRightTopic-grade">
-                        <p>s2</p> @*adicionar aos favoritos*@
-                    @*</div>
-                </div>
-            </div>*@
-        }   
+        <div id="divNotificationWrapper">
+            @if (Model.ChannelNotifications.Count > 0)
+            {
+                @Html.Raw(Model.ChannelNotifications.Html);
+            }
+            else
+            {
+                <text>Não há novas atividades neste canal.</text>
+            }
+        </div>
+        @if (Model.ChannelNotifications.Count > 0)
+         {
+           <div id="divNotificationLoad">
+               <img src="/images/utils/loading.gif" style="display:none;" id="imgNotificationLoad" />
+               <div id="divNotificationLoadButton" style="display:block;" onclick="getChannelNotifications(@Model.CurrentChannel.Id, '@lastNotificationGuid');">Carregar mais notificações</div>
+           </div>
+         }
     </div>
 
     <div id="divPopularTopics" style="display:none;">

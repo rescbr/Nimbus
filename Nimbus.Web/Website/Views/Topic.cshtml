@@ -17,16 +17,7 @@
 </script>
 
 <div id="divCapa">
-    <img src="@Model.Category.ImgTopChannel" id="imgcapa" height="192" alt="" width="864" />
-    @if (Model.CurrentChannel.OwnerId != Model.CurrentUser.UserId && !Model.RolesCurrentUser.Contains("channelmanager")
-        && !Model.RolesCurrentUser.Contains("topicmanager"))
-    {
-         <div id="divReportTopic" class="reportChannel">
-            <a href="#modal-reportTopic" class="call-modal">           
-              <p> Reportar tópico </p>           
-            </a> 
-         </div>
-    }
+    <img src="@Model.Category.ImgTopChannel" id="imgcapa" height="192" alt="" width="864" />   
 </div>
 
 
@@ -82,16 +73,18 @@
 
     <div class="infoTitleChannel">
         <h2>Número de Likes</h2>
-        <p class="favTopic">
-            @*colocar icone de likes*@
-            <img src="/images/utils/coracheio.png" title="Likes" alt="Likes" />
-            <label id="lblLike">@Model.NumLikes</label>
-        </p>
-        <p class="favTopic">
-            @*colocar icone de likes*@
-            <img src="/images/utils/coravazado.png" title="Likes" alt="Likes" />
-            <label id="lblUnLike">@Model.NumUnLikes</label>
-        </p>
+        <div id="divCountLikes">
+            <p class="favTopic">
+                @*colocar icone de likes*@
+                <img src="/images/utils/coracheio.png" title="Likes" alt="Likes" />
+                <label id="lblLike">@Model.NumLikes</label>
+            </p>
+            <p class="favTopic">
+                @*colocar icone de likes*@
+                <img src="/images/utils/coravazado.png" title="Likes" alt="Likes" />
+                <label id="lblUnLike">@Model.NumUnLikes</label>
+            </p>
+        </div>
         <div id="divLikesEvents">
             @if (Model.UserLike == null)
             {
@@ -117,10 +110,25 @@
             }
             else if (Model.UserLike == false)
             {
-                <p id="linkLike" onclick="ajaxLikeUnLike(@Model.CurrentTopic.Id, 'like','deulike');"><img src="/images/utils/coracheio.png" title="Gostei" alt="Gostei" /> Gostei</p>
-                <p id="linkUnLike"><img src="/images/utils/coravazado.png" title="Não gostei" alt="Não gostei" />Não gostei</p>
+                <p id="linkLike" onclick="ajaxLikeUnLike(@Model.CurrentTopic.Id, 'like','deulike');">
+                    <img src="/images/utils/coracheio.png" title="Gostei" alt="Gostei" /> Gostei
+                </p>
+                <p id="linkUnLike">
+                    <img src="/images/utils/coravazado.png" title="Não gostei" alt="Não gostei" />
+                    Não gostei
+                </p>
             }
         </div>
+
+        @if (Model.CurrentChannel.OwnerId != Model.CurrentUser.UserId && !Model.RolesCurrentUser.Contains("channelmanager")
+        && !Model.RolesCurrentUser.Contains("topicmanager"))
+        {
+            <div id="btnReportTopic" style="margin-top:50px; width:120px;" >
+                <a href="#modal-reportTopic" class="call-modal">
+                    <p> Reportar tópico </p>
+                </a>
+            </div>
+        }
     </div>
 
     <div id="divCanaisRelacionados">
@@ -205,7 +213,8 @@ else
 
 </div>
 
-<section class="semantic-content" id="modal-reportTopic" tabindex="-2" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
+@*Modal reportar um tópico*@
+<section class="semantic-content" id="modal-reportTopic" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
     <div class="modal-inner">
         <header id="modal-label">
             Reportar tópico
@@ -229,3 +238,4 @@ else
     <a href="#!" id="closeModalMessage" class="modal-close" title="Close this modal" data-close="Close"
        data-dismiss="modal">×</a>
 </section>
+

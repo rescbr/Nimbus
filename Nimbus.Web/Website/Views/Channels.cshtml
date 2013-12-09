@@ -163,6 +163,16 @@
         </p>
     </div>   
 
+    @if (Model.CurrentChannel.OwnerId != Model.CurrentUser.UserId && !Model.RolesCurrentUser.Contains("channelmanager")
+        && !Model.RolesCurrentUser.Contains("topicmanager"))
+    {
+        <div id="btnReportChannel" style="width:120px;">
+            <a href="#modal-reportChannel" class="call-modal">
+                <p> Reportar canal </p>
+            </a>
+        </div>
+    }
+
     <div class="infoTitleChannel divCanaisRelacionados">
         <h2>Canais Relacionados</h2>
         <div class="channels">
@@ -333,6 +343,32 @@
        data-dismiss="modal">×</a>
 </section>
 
+@*Modal para reportar canal*@
+
+<section class="semantic-content" id="modal-reportChannel" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
+    <div class="modal-inner">
+        <header id="modal-label">
+            Reportar tópico
+        </header>
+        <div class="modal-content">
+            <!-- The modals content -->
+            <p>Reportar: @Model.CurrentChannel.Name</p>
+            <p>
+                Justificativa:
+                <textarea id="txtJustificativa" name="txtJustificativa" rows="10" cols="60" required></textarea>
+                <label style="color:red;" id="lblAvisoJustificativa"></label>
+            </p>
+        </div>
+        <footer>
+            <!-- Footer -->
+            <div class="accRef" onclick="ajaxReportChannel(@Model.CurrentUser.UserId, @Model.CurrentChannel.OwnerId, @Model.CurrentChannel.Id);">
+                <a href="#">Enviar</a>
+            </div>
+        </footer>
+    </div>
+    <a href="#!" id="closeModalMessage" class="modal-close" title="Close this modal" data-close="Close"
+       data-dismiss="modal">×</a>
+</section>
 
 @*Sempre manter no fim da página*@
 <script type="text/javascript">

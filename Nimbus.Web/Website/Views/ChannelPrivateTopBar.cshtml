@@ -75,10 +75,13 @@
                         <text>Não há novas atividades neste canal.</text>
                     }
                 </div>
-                <div id="divNotificationLoad">
-                    <img src="/images/utils/loading.gif" style="display:none;" id="imgNotificationLoad" />
-                    <div id="divNotificationLoadButton" style="display:block;" onclick="getChannelNotifications(@Model.CurrentChannel.Id, '@lastNotificationGuid');">Carregar mais notificações</div>
-                </div>
+                @if (Model.ChannelNotifications.Count > 0)
+                {
+                    <div id="divNotificationLoad">
+                        <img src="/images/utils/loading.gif" style="display:none;" id="imgNotificationLoad" />
+                        <div id="divNotificationLoadButton" style="display:block;" onclick="getChannelNotifications(@Model.CurrentChannel.Id, '@lastNotificationGuid');">Carregar mais notificações</div>
+                    </div>
+                }
             </div>
             @if (Model.Comments.Count > 0)
             {

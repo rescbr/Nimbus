@@ -5,10 +5,14 @@
         <img src="@Model.AvatarUrl" id="imgTopic_@Model.Id" height="48" alt="" width="48" />
     </div>
     <div class="divCommentContent">
-        <div class="delComment">
+        <div class="delComment">           
+            @if (Model.IsRepotable)
+            {
+               <a href="#modal-reportComment"><img id="btnReportComment" class="cpointer" src="/images/utils/report.png" title="Reportar comentário" alt="Reportar comentário" /></a>
+            }
             @if (Model.IsDeletable)
             {
-               <img id="btnDelete_@Model.Id" src="/images/utils/delete.png" onclick="ajaxDeleteComment(@Model.Id,'divComment_@Model.Id' );"  />                
+                <img id="btnDelete_@Model.Id" class="cpointer" title="Excluir" alt="Excluir" src="/images/utils/delete.png" onclick="ajaxDeleteComment(@Model.Id,'divComment_@Model.Id' );" />
             }
         </div>
         <p class="titleCommentContent">
@@ -21,3 +25,30 @@
     </div>
 
 </div>
+
+@*Modal reportar um cometário*@
+<section class="semantic-content" id="modal-reportComment" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
+    <div class="modal-inner">
+        <header id="modal-label">
+            Reportar comentário
+        </header>
+        <div class="modal-content">
+            <!-- The modals content -->
+            <p>Reportar comentário realizado por: @Model.UserName</p>
+            <p>Comentário reportado: " <i>@Model.Text</i> "</p> 
+            <p>
+                Justificativa:
+                <textarea id="txtJustificativa" name="txtJustificativa" rows="10" cols="60" required></textarea>
+                <label style="color:red;" id="lblAvisoJustificativa"></label>
+            </p>
+        </div>
+        <footer>
+            <!-- Footer -->
+            <div class="accRef" onclick="ajaxReportComment(@Model.UserId, @Model.Id);">
+                <a href="#">Enviar</a>
+            </div>
+        </footer>
+    </div>
+    <a href="#!" id="closeModalMessage" class="modal-close" title="Close this modal" data-close="Close"
+       data-dismiss="modal">×</a>
+</section>

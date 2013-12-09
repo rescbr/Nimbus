@@ -865,3 +865,40 @@ function ajaxVoteChannel(id, vote)
         }
     });
 }
+
+function ajaxReportChannel(idUserReporter, idUserReported, idChannel) {
+
+    var text = document.getElementById('txtJustificativa').value;
+
+    if (text.replace(" ", "") != '' && text.length > 10) {
+        ajaxData = {};
+        ajaxData['Justification'] = text;
+        ajaxData['UserReportedId'] = idUserReported; //foi reportado
+        ajaxData['UserReporterId'] = idUserReporter;
+        ajaxData['ChannelReportedId'] = idChannel;
+
+        $.ajax({
+            url: "/api/report/ReportChannel/",
+            data: JSON.stringify(ajaxData),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            statusCode: {
+                200: function (newData) {
+                    if (newData.Id > 0) {
+                        window.alert("Operação realizada com sucesso!");
+                        document.getElementById('txtJustificativa').value = '';
+                    }
+                },
+
+                500: function () {
+                    //erro
+                    window.alert("Não foi possível realizar esta operação. Tente novamente mais tarde.");
+                }
+            }
+        });
+
+    }
+    else {
+        document.getElementById('lblAvisoJustificativa').innerHTML = "* Campo obrigatório! Verifique se sua mensagem contém pelo menos 10 caracteres.";
+    }
+}

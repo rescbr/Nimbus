@@ -985,29 +985,6 @@ div#divCapa {
     height:             192px;
 }
 
-.reportChannel {
-    position:           relative;
-    left:               720px;
-    top:                -60px;
-    width:              120px;
-    background:         #2b2d2e;
-    cursor:             pointer;  
-    height:             30px; 
-    text-align:        center;
-}
-
-.reportChannel p {
-    text-align:        center;
-    color:             #FFFFFF
-    }
-
-.reportChannel p:hover {
-    cursor:             pointer;
-    color:              #87c240;    
-    }
-
-
-
 div.followChannelPage {
     position:           relative;
     left:               760px;
@@ -1255,6 +1232,7 @@ div#nameChannelPage {
 }
 */
 
+
 #imgTopic {
     background:         #bcbec0;
     top:                142px;
@@ -1308,7 +1286,7 @@ p.catTopic{
     margin-bottom:      20px;
 }
 
-div#btnEditTopic, div#btnFavoritedTopic {
+div#btnEditTopic, div#btnFavoritedTopic, #btnReportTopic, #btnReportChannel {
     margin:             0 auto;
     background:         #2b2d2e;
     width:              80px;
@@ -1316,16 +1294,17 @@ div#btnEditTopic, div#btnFavoritedTopic {
     cursor:             pointer;
 }
 
-#btnEditTopic:hover, #btnEditTopic p:hover, #btnFavoritedTopic:hover, #btnFavoritedTopic p:hover {
+#btnEditTopic:hover, #btnEditTopic p:hover, #btnFavoritedTopic:hover, #btnFavoritedTopic p:hover,#btnReportTopic p:hover, #btnReportChannel p:hover {
     color:              #87c240;
     cursor:             pointer;
 }
 
-#btnEditTopic p, #btnFavoritedTopic p {
+#btnEditTopic p, #btnFavoritedTopic p, #btnReportTopic p, #btnReportChannel p {
     color:              #FFFFFF;
     text-align:         center;
     font-size:          small;
 }
+
 
 /* Content - Parte da direita */
 div.divContentTopic {
