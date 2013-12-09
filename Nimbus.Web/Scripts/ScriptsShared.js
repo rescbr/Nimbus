@@ -138,7 +138,7 @@ function seeMoreComments(id, nameDiv, global) {
         value = skipCommentsChild;
 
     $.ajax({
-        url: "/api/comments/AbstTopicHtml/" + id + "?skip=" + value,
+        url: "/api/comments/ShowTopicComment/" + id + "?skip=" + value,
         type: "GET",
         contentType: "application/json;charset=utf-8",
         statusCode: {

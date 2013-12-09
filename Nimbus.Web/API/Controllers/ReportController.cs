@@ -114,6 +114,25 @@ namespace Nimbus.Web.API.Controllers
             }
             return dados;
         }
+
+        /// <summary>
+        /// Reporta um tópico
+        /// </summary>
+        /// <param name="dados"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public TopicReported ReportTopic(TopicReported dados)
+        {
+            if (dados != null)
+            {
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {
+                    db.Insert<TopicReported>(dados);
+                    dados.Id = (int)db.GetLastInsertId();
+                }
+            }
+            return dados;
+        }
     }
 }   
 

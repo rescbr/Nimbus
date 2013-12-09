@@ -18,7 +18,7 @@
             
             @if (comment.CommentChild.Count() == 3)
             {
-                @for (int i = 1; i <= 3; i++)
+                for (int i = 0; i < 3; i++)
                 {
                      <div id="divChildComment_@comment.CommentChild[i].Id" class="divChildComment">
                         @{ Html.RenderPartial("~/Website/Views/CommentPartials/PartialComment.cshtml", comment.CommentChild[i]); }
@@ -26,7 +26,7 @@
                 }                     
                 <button id="btn_skipCommentsChild" onclick="seeMoreComments(@comment.TopicId, 'divChildComment_@comment.Id', 'skipCommentsChild');">Ver mais</button>
             }      
-        </div>
+        @*</div>*@
 
             <div id="divAnswerTopic_@comment.Id" style="margin-top: 4px;">
                 <div class="replyTopBtn" id="bntAnswer_@comment.Id" onclick="EnableDivHiddenBtn('divAnswerComment_@comment.Id', 'bntAnswer_@comment.Id');">

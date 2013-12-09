@@ -342,16 +342,14 @@ namespace Nimbus.Web.API.Controllers
         /// <param name="topicID"></param>
         /// <returns></returns>
         [HttpGet]
-        public List<CommentBag> ShowTopicComment(int id)
+        public List<CommentBag> ShowTopicComment(int id, int skip)
         {
             List<CommentBag> listComments = new List<CommentBag>();
-
-            try
-            {
-                using (var db = DatabaseFactory.OpenDbConnection())
+            using (var db = DatabaseFactory.OpenDbConnection())
                 {
                     //pega todos comentários 'pai'
-                    List<Comment> comments = db.SelectParam<Comment>(cmt => cmt.TopicId == id && cmt.Visible == true && cmt.ParentId == null);
+                    List<Comment> comments = db.SelectParam<Comment>(cmt => cmt.TopicId == id && cmt.Visible == true && cmt.ParentId == null).Skip(5* skip).Take(5).ToList();
+                  
                     if (comments.Count > 0)
                     {
                         Channel chn = db.Where<Channel>(c => c.Id == comments.FirstOrDefault().ChannelId).FirstOrDefault();
@@ -366,7 +364,7 @@ namespace Nimbus.Web.API.Controllers
                             User user = db.SelectParam<User>(u => u.Id == item.UserId).FirstOrDefault();
 
                             //busco todos os filhos desse comentário
-                            List<Comment> cmtChild = db.SelectParam<Comment>(c => c.ParentId == item.Id && item.Visible == true);
+                            List<Comment> cmtChild = db.SelectParam<Comment>(c => c.ParentId == item.Id && item.Visible == true).Take(3).ToList();
                             List<CommentBag> listChild = new List<CommentBag>();
 
                             foreach (var itemChild in cmtChild)
@@ -421,12 +419,8 @@ namespace Nimbus.Web.API.Controllers
                             listComments.Add(bag);
                         }
                     }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
-            }
+                }          
+            
             return listComments;
         }
 

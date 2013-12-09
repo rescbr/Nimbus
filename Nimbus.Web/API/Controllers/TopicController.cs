@@ -315,14 +315,14 @@ namespace Nimbus.Web.API.Controllers
                                         var q = HttpUtility.ParseQueryString(querystring);
                                         param = q["v"];
                                     }
-                                    topic.UrlVideo = "//www.youtube.com/embed/" + param;
+                                    topic.UrlVideo = "//www.youtube.com/embed/" + param + "?wmode=transparent";
                                 }
                                 else
                                 {
                                     //já foi salvo da forma correta
                                     int posicao = url.IndexOf("http:") + 5;
                                     param = url.Substring(posicao);
-                                    topic.UrlVideo = param;
+                                    topic.UrlVideo = param + "?wmode=transparent";
                                 }
                             }
                            

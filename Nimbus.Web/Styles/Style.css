@@ -985,6 +985,29 @@ div#divCapa {
     height:             192px;
 }
 
+.reportChannel {
+    position:           relative;
+    left:               720px;
+    top:                -60px;
+    width:              120px;
+    background:         #2b2d2e;
+    cursor:             pointer;  
+    height:             30px; 
+    text-align:        center;
+}
+
+.reportChannel p {
+    text-align:        center;
+    color:             #FFFFFF
+    }
+
+.reportChannel p:hover {
+    cursor:             pointer;
+    color:              #87c240;    
+    }
+
+
+
 div.followChannelPage {
     position:           relative;
     left:               760px;
@@ -996,7 +1019,8 @@ div.followChannelPage {
     cursor:             pointer;
 }
 
-.followChannelPage p {
+
+.followChannelPage p, .reportChannel p {
     text-align:         center;
     font-size:          1.2em;
     color:              #FFFFFF;
@@ -1236,7 +1260,7 @@ div#nameChannelPage {
     top:                142px;
     position:           absolute;
     margin-left:        68px;
-    z-index:            999999;
+    /*z-index:            999999;*/
     float:              none;
 }
 

@@ -28,15 +28,14 @@
          <h1 class="userNProfBar">@Model.CurrentUser.FirstName @Model.CurrentUser.LastName</h1>        
         }
     </div>
-
-    <div id="divReportUser" onclick="openModalreportUser();" class="reportUser">
-        <a href="#modal-reportUser" class="call-modal">
-            @if (Model.User.Id != Model.CurrentUser.UserId)
-            {
-                <p>Reportar usuário</p>
-            }
-        </a>
-    </div>
+    @if (Model.User.Id != Model.CurrentUser.UserId)
+       {
+             <a href="#modal-reportUser" class="call-modal">
+                <div id="divReportUser" class="reportUser">
+                        <p>Reportar usuário</p>  
+                </div>
+            </a>
+       }
 </div>
 
     <div class="proBar">

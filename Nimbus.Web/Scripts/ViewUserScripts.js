@@ -182,7 +182,7 @@ function ajaxReportUser(idUserReporter, idUserReported)
 
                 500: function () {
                     //erro
-                    window.alert("Não foi possível enviar sua mensagem. Tente novamente mais tarde.");
+                    window.alert("Não foi possível realizar esta operação. Tente novamente mais tarde.");
                 }
             }
         });
