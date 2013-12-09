@@ -335,7 +335,7 @@ namespace Nimbus.Web.API.Controllers
 
             return isOwnerOrManager;
         }
-
+        
         /// <summary>
         /// Visualizar todos os comentarios de um tópico
         /// </summary>
@@ -393,7 +393,8 @@ namespace Nimbus.Web.API.Controllers
                                     TopicId = itemChild.TopicId,
                                     IsParent = false,
                                     ChannelId = itemChild.ChannelId,
-                                    IsDeletable = (userChild.Id == NimbusUser.UserId || isOwnerOrManager)
+                                    IsDeletable = (userChild.Id == NimbusUser.UserId || isOwnerOrManager),
+                                    IsRepotable = !isOwnerOrManager
                                 };
                                 listChild.Add(child);
                             }
@@ -414,7 +415,8 @@ namespace Nimbus.Web.API.Controllers
                                 IsParent = item.ParentId > 0 ? false : true,
                                 ChannelId = item.ChannelId,
                                 CommentChild = listChild,
-                                IsDeletable = (user.Id == NimbusUser.UserId || isOwnerOrManager)
+                                IsDeletable = (user.Id == NimbusUser.UserId || isOwnerOrManager),
+                                IsRepotable = !isOwnerOrManager
                             };
                             listComments.Add(bag);
                         }

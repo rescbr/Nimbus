@@ -17,6 +17,8 @@ namespace Nimbus.Model.Bags
 
         public bool IsDeletable { get; set; }
 
+        public bool IsRepotable { get; set; }
+
         public List<CommentBag> CommentChild { get; set; }
     }
 }

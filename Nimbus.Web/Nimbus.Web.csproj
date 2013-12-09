@@ -305,6 +305,7 @@
     <Content Include="images\Utils\coravazado.png" />
     <Content Include="images\Utils\delete.png" />
     <Content Include="images\Utils\edit.png" />
+    <Content Include="images\Utils\report.png" />
     <Content Include="images\Utils\search.png" />
     <Content Include="images\Utils\Jcrop.gif" />
     <Content Include="images\Utils\loading.gif" />

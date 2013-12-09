@@ -33,7 +33,7 @@ namespace Nimbus.Web.Website.Controllers
                 CurrentTopic = aux,
                 CurrentChannel = channelApi.ShowChannel(aux.ChannelId),
                 CurrentUser = NimbusUser,
-                Comments = commentApi.ShowTopicComment(id,1), //Renato: usar a Action Comments
+                Comments = commentApi.ShowTopicComment(id,0), //Renato: usar a Action Comments
                 RolesCurrentUser = channelApi.ReturnRolesUser(aux.ChannelId), 
                 Category = topicApi.CategoryTopic( aux.Id),
                 NumFavorites = topicApi.CountFavorite(id),
