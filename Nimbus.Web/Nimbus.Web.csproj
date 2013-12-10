@@ -421,8 +421,9 @@
     <Compile Include="Website\Controllers\ChannelController.cs" />
     <Compile Include="Website\Controllers\NotificationController.cs" />
     <Compile Include="Website\Controllers\SearchController.cs" />
+    <Compile Include="Website\Controllers\TopController.cs" />
     <Compile Include="Website\Controllers\TopicController.cs" />
-    <Compile Include="Website\Controllers\TrendingTopicController.cs" />
+    <Compile Include="Website\Controllers\TrendingController.cs" />
     <Compile Include="Website\Models\NewsModel.cs" />
     <Compile Include="Website\Models\SearchModel.cs" />
     <Compile Include="Website\Models\TopicModel.cs" />

@@ -117,17 +117,15 @@ namespace Nimbus.Web.API.Controllers
 
                             topics = db.SelectParam<Topic>(tp => (tp.Text.Contains(q) ||
                                                                  tp.Title.Contains(q) ||
-                                                                 tp.Description.Contains(q) ||
-                                                                 tp.Question.Exists(question => question.TextQuestion.Contains(q) || question.ChoicesAnswer.Values.Contains(q))
-                                                                 ) && tp.Visibility == true && idChannelTopic.Contains(tp.ChannelId));
+                                                                 tp.Description.Contains(q))
+                                                                 && tp.Visibility == true && idChannelTopic.Contains(tp.ChannelId));
                         }
                         else
                         {
                             topics = db.SelectParam<Topic>(tp => (tp.Text.Contains(q) ||
                                                                  tp.Title.Contains(q) ||
-                                                                 tp.Description.Contains(q) ||
-                                                                 tp.Question.Exists(question => question.TextQuestion.Contains(q) || question.ChoicesAnswer.Values.Contains(q))
-                                                                 ) && tp.Visibility == true && idChannelTopic.Contains(tp.ChannelId));
+                                                                 tp.Description.Contains(q))
+                                                                 && tp.Visibility == true && idChannelTopic.Contains(tp.ChannelId));
                         }
                     }
                 }

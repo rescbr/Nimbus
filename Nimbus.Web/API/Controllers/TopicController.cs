@@ -338,33 +338,42 @@ namespace Nimbus.Web.API.Controllers
             return topic;
         }
 
+        #endregion
+
         /// <summary>
         /// Trending Topics de todas as categorias
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public List<TopicBag> TrendingTopics()
+        public List<TopicBag> TrendingTopics(int skip = 0, int take = 12)
         {
-            /************************************************************************
-             *                      CONFIDENCE SORT TÓPICO                          * 
-             *            para ordenar TOP tópicos de acordo com a votação          *
-             * query baseada em:                                                    *
-             * https://github.com/reddit/reddit/blob/master/r2/r2/lib/db/_sorts.pyx *
-             * http://www.evanmiller.org/how-not-to-sort-by-average-rating.html     *
-             ************************************************************************/
+            if (skip < 0) skip = 0;
+            if (take <= 0) take = 12;
+            /***************************************************************************
+             *                           HOT SORT TÓPICO                               * 
+             *        para ordenar TRENDING tópicos de acordo com o tempo              *
+             * query baseada em:                                                       *
+             * https://github.com/reddit/reddit/blob/master/sql/functions.sql          *
+             * http://bibwild.wordpress.com/2012/05/08/reddit-story-ranking-algorithm/ *
+             * http://technotes.iangreenleaf.com/posts/2013-12-09-reddits-empire-is-built-on-a-flawed-algorithm.html
+             ***************************************************************************/
 
             List<TopicBag> tpcList = new List<TopicBag>();
             using (var db = DatabaseFactory.OpenDbConnection())
             {
                 var trending = db.Query<Topic>(
-                #region queryzinha 2, o retorno
-@"
-select [Id], [ImgUrl], [Title], [TopicType], [Description], [LastModified]
+                #region queryzinha 3: a vingança do sql
+                //este SQL utiliza o metodo de skip/take do sql server 2012 (que funciona no sql azure tbm).
+                //não irá funcionar em versoes antigas.
+@"                
+select [Id], [ImgUrl], [Title], [TopicType], [Description], [LastModified], [CreatedOn]
 from (
-	select top 12 [Topic].[Id], [Topic].[ImgUrl], [Topic].[Title], [Topic].[TopicType], [Topic].[Description], [Topic].[LastModified],
-	 (select ((([positive] + 1.9208) / ([positive] + [negative]) - 
-			  1.96 * SQRT(([positive] * [negative]) / ([positive] + [negative]) + 0.9604) / 
-			  ([positive] + [negative])) / (1 + 3.8416 / ([positive] + [negative]))) as [confidence_score]
+	select [Topic].[Id], [Topic].[ImgUrl], [Topic].[Title], [Topic].[TopicType], [Topic].[Description], [Topic].[LastModified], [Topic].[CreatedOn],
+		   (select round(
+					cast((log(case when abs([positive] - [negative]) > 1 then abs([positive] - [negative]) else 1 end) 
+						* sign([positive] - [negative])) + (datediff(second, '20130101', [Topic].[CreatedOn]) / 45000)
+					as numeric), 7) 
+				as [hot_score]
 			from (
 				select 
 					(select count([Visible]) from [UserLikeTopic] where [UserLikeTopic].[Visible] = 1 and [UserLikeTopic].[TopicId] = [Topic].[Id]) as [positive], 
@@ -372,12 +381,12 @@ from (
 				) tmpCount
 			where [positive] + [negative] > 0) as [score]
 	from [Topic]
-	order 
-	by score desc
-) tmpScoreSort"
-                #endregion
-);
-
+	order by score desc
+    offset @skip rows fetch next @take rows only
+) tmpScoreSort", 
+               #endregion
+                new { skip = skip*take, take = take });
+                
                 if (trending.Count > 0)
                 {
                     foreach (var item in trending)
@@ -402,7 +411,70 @@ from (
             }
         }
 
-        #endregion
+        [HttpGet]
+        public List<TopicBag> TopTopics(int skip = 0, int take = 12)
+        {
+            if (skip < 0) skip = 0;
+            if (take <= 0) take = 12;
+            /************************************************************************
+             *                      CONFIDENCE SORT TÓPICO                          * 
+             *            para ordenar TOP tópicos de acordo com a votação          *
+             * query baseada em:                                                    *
+             * https://github.com/reddit/reddit/blob/master/r2/r2/lib/db/_sorts.pyx *
+             * http://www.evanmiller.org/how-not-to-sort-by-average-rating.html     *
+             ************************************************************************/
+
+            List<TopicBag> tpcList = new List<TopicBag>();
+            using (var db = DatabaseFactory.OpenDbConnection())
+            {
+                
+                var top = db.Query<Topic>(
+                #region queryzinha 2, o retorno
+                    //este SQL utiliza o metodo de skip/take do sql server 2012 (que funciona no sql azure tbm).
+                    //não irá funcionar em versoes antigas.
+@"
+select [Id], [ImgUrl], [Title], [TopicType], [Description], [LastModified]
+from (
+	select [Topic].[Id], [Topic].[ImgUrl], [Topic].[Title], [Topic].[TopicType], [Topic].[Description], [Topic].[LastModified],
+	 (select ((([positive] + 1.9208) / ([positive] + [negative]) - 
+			  1.96 * SQRT(([positive] * [negative]) / ([positive] + [negative]) + 0.9604) / 
+			  ([positive] + [negative])) / (1 + 3.8416 / ([positive] + [negative]))) as [confidence_score]
+			from (
+				select 
+					(select count([Visible]) from [UserLikeTopic] where [UserLikeTopic].[Visible] = 1 and [UserLikeTopic].[TopicId] = [Topic].[Id]) as [positive], 
+					(select count([Visible]) from [UserLikeTopic] where [UserLikeTopic].[Visible] = 0 and [UserLikeTopic].[TopicId] = [Topic].[Id]) as [negative]
+				) tmpCount
+			where [positive] + [negative] > 0) as [score]
+	from [Topic]
+	order by score desc
+    offset @skip rows fetch next @take rows only
+) tmpScoreSort",
+                #endregion
+                new { skip = skip*take, take = take });
+
+                if (top.Count > 0)
+                {
+                    foreach (var item in top)
+                    {
+                        int count = db.SelectParam<ViewByTopic>(vt => vt.TopicId == item.Id).Select(vt => vt.CountView).FirstOrDefault();
+                        TopicBag bag = new TopicBag()
+                        {
+                            Id = item.Id,
+                            Description = item.Description,
+                            Title = item.Title,
+                            TopicType = item.TopicType,
+                            ImgUrl = item.ImgUrl,
+                            LastModified = item.LastModified,
+                            Count = count,
+                            UserFavorited = db.Where<UserTopicFavorite>(u => u.UserId == NimbusUser.UserId && u.TopicId == item.Id).Exists(u => u.Visible)
+                        };
+                        tpcList.Add(bag);
+                    }
+                }
+
+                return tpcList;
+            }
+        }
 
         public class TopicHtmlWrapper
         {

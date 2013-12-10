@@ -7,10 +7,10 @@ using System.Web.Mvc;
 
 namespace Nimbus.Web.Website.Controllers
 {
-    public class TrendingTopicController:NimbusWebController
+    public class TrendingController:NimbusWebController
     {
         [Authorize]
-        public ActionResult Index(int id)
+        public ActionResult Index()
         {
             var topicApi = ClonedContextInstance<API.Controllers.TopicController>();
 
