@@ -1340,8 +1340,6 @@ namespace Nimbus.Web.API.Controllers
         public Channel NewChannel(Channel channel)
         {
             //TODO:Notificação
-            try
-            {
                 channel.CreatedOn = DateTime.Now;
                 channel.Followers = 0;
                 channel.LastModification = DateTime.Now;
@@ -1406,7 +1404,7 @@ namespace Nimbus.Web.API.Controllers
                             catch (Exception ex)
                             {
                                 trans.Rollback();
-                                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+                                throw;
                             }
                         }
                     }
@@ -1414,12 +1412,7 @@ namespace Nimbus.Web.API.Controllers
                     {
                         throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotAcceptable, "sem permissao"));
                     }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
-            }
+                }          
             return channel;
         }
         
@@ -1448,6 +1441,7 @@ namespace Nimbus.Web.API.Controllers
                         channel.CategoryId = editChannel.CategoryId > 0? editChannel.CategoryId : channel.CategoryId;
                         channel.Description = !string.IsNullOrEmpty(editChannel.Description)? System.Web.HttpUtility.HtmlEncode(editChannel.Description): channel.Description;
                         channel.ImgUrl = db.SelectParam<Category>(c => c.Id == editChannel.CategoryId).Select(c => c.ImageUrl).FirstOrDefault();
+                        channel.ImgUrl = channel.ImgUrl.ToLower().Replace("category", "capachannel");
                         channel.IsCourse = editChannel.IsCourse ;
                         channel.IsPrivate = editChannel.IsPrivate;
                         channel.LastModification = DateTime.Now;

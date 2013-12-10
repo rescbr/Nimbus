@@ -28,7 +28,7 @@
 
     <h1 id="nameTopicPage">
        <label id="lblTopicTitle"> @Model.CurrentTopic.Title</label> <br />
-        @Model.CurrentChannel.Name
+       <a href="/channel/index/@Model.CurrentChannel.Id"> @Model.CurrentChannel.Name</a>
     </h1>
 
     <p id="pTopicDescription" class="txtInfTopic">@Model.CurrentTopic.Description</p>
