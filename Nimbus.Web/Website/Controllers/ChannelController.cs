@@ -33,7 +33,7 @@ namespace Nimbus.Web.Website.Controllers
             var taskCurrentChannel = Task.Run(() => channelApi.ShowChannel(id));
             var taskAllTopics = Task.Run(() => topicApi.AbstTopic(id, string.Empty, 0));
             var taskMessages = Task.Run(() => msgApi.ChannelReceivedMessages(id));
-            var taskComments = Task.Run(() => commentApi.ShowChannelComment(id));
+            var taskComments = Task.Run(() => commentApi.ShowChannelComment(id, 0));
             var taskRolesCurrentUser = Task.Run(() => channelApi.ReturnRolesUser(id));
             var taskCcMessageReceiver = Task.Run(() => channelApi.GetMessageModerators(id));
             var taskCategory = Task.Run(() => categoryApi.showAllCategory());

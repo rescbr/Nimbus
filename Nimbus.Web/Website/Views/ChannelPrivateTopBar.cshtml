@@ -18,6 +18,7 @@
     CurrentQuestion = '1';
     skipPopular = 1;
     skipAll = 1;
+    skipComments = 1;
 </script>
 
 @Scripts.Render("~/Scripts/jquery.form.js")
@@ -87,11 +88,15 @@
             {
                 <div id="divComments">
                     <p>Novos Comentários</p>
-                    @foreach (var item in Model.Comments.Take(10).OrderByDescending(c => c.PostedOn))
+                    @foreach (var item in Model.Comments.OrderByDescending(c => c.PostedOn))
                     {
-                        Html.RenderAction("ParentComment", "Topic", new { id = item.Id });
+                        Html.RenderPartial("~/Website/Views/CommentPartials/PartialComment.cshtml", item);
+                        
+                    }  @if (Model.Comments.Count() == 5)
+                    {
+                        <button id="btn_skipComments" onclick="seeMoreComments(@Model.CurrentChannel.Id, 'divComments', 'skipComments','channel');">Ver mais</button>
                     }
-                </div>
+               </div>
             }
         </div>
 
