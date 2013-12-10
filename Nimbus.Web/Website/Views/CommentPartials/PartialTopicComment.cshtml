@@ -1,12 +1,10 @@
-﻿@model List<Nimbus.Model.Bags.CommentBag>
+﻿@model Nimbus.Model.Bags.CommentBag
 
-@if (Model.Count > 0)
-{
-    foreach (var comment in Model)
-    {
-        <div id="divContentComment_@comment.Id" class="blockComment">
+  
+        
+       <div id="divContentComment_@Model.Id" class="blockComment">
             <div class="firstBlockComment">
-                @{   Html.RenderPartial("~/Website/Views/CommentPartials/PartialComment.cshtml", comment); }
+                @{   Html.RenderPartial("~/Website/Views/CommentPartials/PartialComment.cshtml", Model); }
             </div>
 
             @*@foreach (var child in comment.CommentChild)
@@ -14,31 +12,41 @@
                 <div id="divChildComment_@child.Id" class="divChildComment">
                     @{ Html.RenderPartial("~/Website/Views/CommentPartials/PartialComment.cshtml", child); }
                 </div>
-            }*@
-            
-            @if (comment.CommentChild.Count() == 3)
-            {
-                for (int i = 0; i < 3; i++)
-                {
-                     <div id="divChildComment_@comment.CommentChild[i].Id" class="divChildComment">
-                        @{ Html.RenderPartial("~/Website/Views/CommentPartials/PartialComment.cshtml", comment.CommentChild[i]); }
-                    </div>              
-                }                     
-                <button id="btn_skipCommentsChild" onclick="seeMoreComments(@comment.TopicId, 'divChildComment_@comment.Id', 'skipCommentsChild');">Ver mais</button>
-            }      
+            }*@            
+           @if (Model.CommentChild.Count > 0)
+           { 
+               <div id="divAllCommentChild_@Model.Id">
+                @{
+                   int max = Model.CommentChild.Count();
+                 max = max > 3 ? 3 : max;
+
+                 for (int i = 0; i < max; i++)
+                 {
+                     <div id="divChildComment_@Model.CommentChild[i].Id" class="divChildComment">
+                        @{ Html.RenderPartial("~/Website/Views/CommentPartials/PartialComment.cshtml", Model.CommentChild[i]); }
+                    </div>
+                 }
+
+                 if (Model.CommentChild.Count() == 3)
+                 {
+                    <button id="btn_skipCommentsChild" onclick="seeMoreComments(@Model.Id, 'divAllCommentChild_@Model.Id', 'skipCommentsChild','child');">Ver mais</button>
+                 }
+}
+              </div>
+           }      
         @*</div>*@
 
-            <div id="divAnswerTopic_@comment.Id" style="margin-top: 4px;">
-                <div class="replyTopBtn" id="bntAnswer_@comment.Id" onclick="EnableDivHiddenBtn('divAnswerComment_@comment.Id', 'bntAnswer_@comment.Id');">
+         <div id="divAnswerTopic_@Model.Id" style="margin-top: 4px;">
+                <div class="replyTopBtn" id="bntAnswer_@Model.Id" onclick="EnableDivHiddenBtn('divAnswerComment_@Model.Id', 'bntAnswer_@Model.Id');">
                     <p>
                         Responder
                     </p>
                 </div>
             </div>
 
-            <div id="divAnswerComment_@comment.Id" style="display:none; margin-left: 74px">
-                <textarea id="txtaAnswer_@comment.Id" name="txtaAnswerTopic" cols="50" rows="2" style="border: 1px solid #87c240; max-width: 384px; min-width: 384px"></textarea>
-                <div class="replyTopBtn" id="btnSendAnswer" onclick="ajaxAnswerComment(0, @comment.Id, @comment.ChannelId, @comment.TopicId, 'txtaAnswer_@comment.Id');">
+         <div id="divAnswerComment_@Model.Id" style="display:none; margin-left: 74px">
+                <textarea id="txtaAnswer_@Model.Id" name="txtaAnswerTopic" cols="50" rows="2" style="border: 1px solid #87c240; max-width: 384px; min-width: 384px"></textarea>
+                <div class="replyTopBtn" id="btnSendAnswer" onclick="ajaxAnswerComment(0, @Model.Id, @Model.ChannelId, @Model.TopicId, 'txtaAnswer_@Model.Id');">
                     <p>
                         Enviar
                     </p>
@@ -46,9 +54,4 @@
             </div>
 
         </div>
-    }
-}
-else
-{
-    <div id="divNoComments" class="divComentario"><strong>Seja o primeiro a comentar!</strong></div>
-}
+         

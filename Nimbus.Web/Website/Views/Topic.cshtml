@@ -172,17 +172,25 @@
         </div>
         <div id="divAllComments" class="divComentario">
             @*{ Html.RenderAction("Comments", "Topic", new { id = Model.CurrentTopic.Id }); }*@
-            @foreach(var comment in Model.Comments)
+            
+       @if(Model.Comments.Count() > 0)
+       { 
+            foreach(var comment in Model.Comments)
             {
-               Html.RenderPartial("~/Website/Views/CommentPartials/PartialComment.cshtml", comment);               
+               Html.RenderPartial("~/Website/Views/CommentPartials/PartialTopicComment.cshtml", comment);               
 
             @* renato: favor deixar essa div aqui, tks. *@
             <div id="placeholderAfterLastComment"></div>
             }
 
-            @if (Model.Comments.Count() == 15)
+            if (Model.Comments.Count() == 5)
             {
-                <button id="btn_skipComments" onclick="seeMoreComments(@Model.CurrentTopic.Id, 'divAllComments', 'skipComments');">Ver mais</button>
+                <button id="btn_skipComments" onclick="seeMoreComments(@Model.CurrentTopic.Id, 'divAllComments', 'skipComments','topic');">Ver mais</button>
+            }
+       }
+       else
+            {
+                <div id="divNoComments" class="divComentario"><strong>Seja o primeiro a comentar!</strong></div>
             }
         </div>
 

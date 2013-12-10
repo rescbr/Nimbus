@@ -131,37 +131,54 @@ function verMaisTopics(id, orderBy, category, global)
 }
 
 //método que busca os comentarios de 15 em 15 e 'filhos' de 5 em 5
-function seeMoreComments(id, nameDiv, global) {
+function seeMoreComments(id, nameDiv, global, page) {
+       
+    var limite = 0;
+    var value = -1;
     if (global == 'skipComments')
         value = skipComments;
     else if (global == 'skipCommentsChild')
         value = skipCommentsChild;
 
-    $.ajax({
-        url: "/api/comments/ShowTopicComment/" + id + "?skip=" + value,
-        type: "GET",
-        contentType: "application/json;charset=utf-8",
-        statusCode: {
-            200: function (newData) {
+    if (page == 'topic') {
+        limite = 15;
+    }
+    else if (page == 'channel') {
+        limite = 5;
+    }
+    else if (page == 'child')
+    {
+        limite = 3;
+    }
 
-                if (global == 'skipComments')
-                    skipComments = skipComments + 1;
-                else if (global == 'skipCommentsChild')
-                    skipCommentsChild = skipCommentsChild + 1;
+    var stringUrl = "/api/comment/CommentsHtml/" + id + "?skip=" + value + "&type=" + page;
 
-                document.getElementById(nameDiv).innerHTML += newData.Html;
+        $.ajax({
+            url: stringUrl,
+            type: "GET",
+            contentType: "application/json;charset=utf-8",
+            statusCode: {
+                200: function (newData) {
+                    if (newData.Count > 0) {
+                            if (global == 'skipComments')
+                                skipComments = skipComments + 1;
+                            else if (global == 'skipCommentsChild')
+                                skipCommentsChild = skipCommentsChild + 1;
 
-                if (newData.Count < 15) {
-                    document.getElementById("btn_" + global).style.display = "none";
+                            document.getElementById(nameDiv).innerHTML += newData.Html;
+                        }
+                        if (newData.Count < limite) {
+                            document.getElementById("btn_" + global).style.display = "none";
+                        }
+                  
+                },
+                500: function () {
+                    //erro
+                    window.alert("Erro ao carregar mais comentários. Tente novamente mais tarde.");
                 }
-            },
-
-            500: function () {
-                //erro
-                window.alert("Erro ao carregar mais comentários. Tente novamente mais tarde.");
             }
-        }
-    });
+        });
+    
 }
 
 //método que busca canais de 15 em 15
