@@ -222,7 +222,7 @@ namespace Nimbus.Web.Website.Controllers
                 channel.CreatedOn = DateTime.Now;
                 channel.Description = Request.Form["txtaDescNewChannel"];
                 channel.Followers = 0;
-                channel.ImgUrl = categoryAPI.GetImgTopChannel(idCateg); 
+                channel.ImgUrl = categoryAPI.GetImgTopChannel(idCateg).ToLower(); 
                 channel.IsCourse = Convert.ToBoolean(Request.Form["isCourse"]);
                 channel.IsPrivate = false;
                 channel.LastModification = DateTime.Now;
