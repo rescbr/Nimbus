@@ -265,9 +265,9 @@ function ajaxAnswerComment(parentId,commentId, channelId, topicId, txtContent) {
             contentType: "application/json;charset=utf-8",
             statusCode: {
                 200: function (newData) {
-                    var div = document.getElementById("divAnswer_" + commentId);
-                    if (div === null)
-                        div.style.display = 'none';
+                   // var div = document.getElementById("divAnswer_" + commentId);
+                   // if (div === null)
+                   //    div.style.display = 'none';
 
                     document.getElementById("divComment_" + commentId).style.display = 'none';
                     //liumpar campos
