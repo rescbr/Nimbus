@@ -106,13 +106,22 @@ namespace Nimbus.Web.API.Controllers
         [HttpDelete]
         public CommentBag DeleteComment(Comment comment)
         {
-            //TODO: Adicionar restrição!
-            //if (Model.CurrentUser.UserId == Model.CurrentChannel.OwnerId ||
-            //                  comments.UserId == Model.CurrentUser.UserId || Model.RolesCurrentUser.Contains("channelmanager")
-            //                                                             || Model.RolesCurrentUser.Contains("topicmanager"))
-            try
+            CommentBag bag = new CommentBag();
+            using (var db = DatabaseFactory.OpenDbConnection())
             {
-                using (var db = DatabaseFactory.OpenDbConnection())
+                Comment cmt = new Comment();
+                cmt = db.SelectParam<Comment>(c => c.Id == comment.Id).FirstOrDefault();
+                //pegar permissões
+                Channel channel = db.Where<Channel>(c => c.Id == cmt.ChannelId && c.Visible == true).Where(c => c!= null).FirstOrDefault();
+                var rolesUser = db.Where<Role>(r => r.ChannelId == cmt.ChannelId && r.UserId == NimbusUser.UserId).Where(r => r != null).FirstOrDefault();
+                
+                bool isAllow = false;
+                if (rolesUser != null)
+                {
+                    isAllow = rolesUser.ChannelMagager == true || rolesUser.TopicManager == true;
+                }
+
+                if (NimbusUser.UserId == channel.OwnerId || cmt.UserId == NimbusUser.UserId || isAllow == true)
                 {
                     using (var trans = db.OpenTransaction(System.Data.IsolationLevel.ReadCommitted))
                     {
@@ -120,9 +129,6 @@ namespace Nimbus.Web.API.Controllers
                         {
                             //se ele é pai => apaga ele e os filhos
                             // se ele é um filho => deixa visible, coloca fo to do usuario como avatar padrao, tira o nome e coloca texto como: comentario removido
-                            Comment cmt = new Comment();
-                            CommentBag bag = new CommentBag();
-                            cmt = db.SelectParam<Comment>(c => c.Id == comment.Id).FirstOrDefault();
                             if (cmt.ParentId > 0) // é filho
                             {
 
@@ -131,10 +137,10 @@ namespace Nimbus.Web.API.Controllers
                                 db.Update<Comment>(cmt, c => c.Id == cmt.Id);
                                 db.Save(cmt);
 
-                                bag.Text = cmt.Text;
+                                bag.Text = "Comentário removido";
                                 bag.ParentId = cmt.ParentId;
                                 bag.AvatarUrl = "/images/Utils/person_icon.png";
-                                bag.UserName = "Nome do usuário";
+                                bag.UserName = "[removido]";
                             }
                             else
                             {
@@ -164,15 +170,12 @@ namespace Nimbus.Web.API.Controllers
                         catch (Exception ex)
                         {
                             trans.Rollback();
-                            throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+                            throw;
                         }
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
-            }
+            return bag;
         }
 
         /// <summary>
@@ -400,33 +403,36 @@ namespace Nimbus.Web.API.Controllers
 
                             foreach (var itemChild in cmtChild)
                             {
+                                CommentBag child = new CommentBag();
                                 User userChild = db.SelectParam<User>(u => u.Id == itemChild.UserId).FirstOrDefault();
                                 string name = "";
                                 if (itemChild.Text == "Comentário removido")
                                 {
                                     userChild.AvatarUrl = "/images/Utils/person_icon.png";
                                     name = "[removido]";
+                                    child.IsDeletable = false;
+                                    child.IsRepotable = false;
+
                                 }
                                 else
-                                    name = userChild.FirstName + " " + userChild.LastName;
-
-                                CommentBag child = new CommentBag()
                                 {
-                                    AvatarUrl = userChild.AvatarUrl,
-                                    UserName = name,
-                                    UserId = userChild.Id,
-                                    Id = itemChild.Id,
-                                    Text = itemChild.Text,
-                                    ParentId = itemChild.ParentId,
-                                    PostedOn = itemChild.PostedOn,
-                                    IsNew = itemChild.IsNew,
-                                    IsAnswer = itemChild.IsAnswer,
-                                    TopicId = itemChild.TopicId,
-                                    IsParent = false,
-                                    ChannelId = itemChild.ChannelId,
-                                    IsDeletable = (userChild.Id == NimbusUser.UserId || isOwnerOrManager),
-                                    IsRepotable = !isOwnerOrManager
-                                };
+                                    name = userChild.FirstName + " " + userChild.LastName;
+                                    child.IsDeletable = (userChild.Id == NimbusUser.UserId || isOwnerOrManager);
+                                    child.IsRepotable = !isOwnerOrManager;
+                                }
+
+                                child.AvatarUrl = userChild.AvatarUrl;
+                                child.UserName = name;
+                                child.UserId = userChild.Id;
+                                child.Id = itemChild.Id;
+                                child.Text = itemChild.Text;
+                                child.ParentId = itemChild.ParentId;
+                                child.PostedOn = itemChild.PostedOn;
+                                child.IsNew = itemChild.IsNew;
+                                child.IsAnswer = itemChild.IsAnswer;
+                                child.TopicId = itemChild.TopicId;
+                                child.IsParent = false;
+                                child.ChannelId = itemChild.ChannelId;
                                 listChild.Add(child);
                             }
 
@@ -488,33 +494,37 @@ namespace Nimbus.Web.API.Controllers
 
                     foreach (var itemChild in cmtChild)
                     {
+                        CommentBag child = new CommentBag();
+
                         User userChild = db.SelectParam<User>(u => u.Id == itemChild.UserId).FirstOrDefault();
                         string name = "";
                         if (itemChild.Text == "Comentário removido")
                         {
                             userChild.AvatarUrl = "/images/Utils/person_icon.png";
                             name = "[removido]";
+                            child.IsDeletable = false;
+                            child.IsRepotable = false;
                         }
                         else
-                            name = userChild.FirstName + " " + userChild.LastName;
-
-                        CommentBag child = new CommentBag()
                         {
-                            AvatarUrl = userChild.AvatarUrl,
-                            UserName = name,
-                            UserId = userChild.Id,
-                            Id = itemChild.Id,
-                            Text = itemChild.Text,
-                            ParentId = itemChild.ParentId,
-                            PostedOn = itemChild.PostedOn,
-                            IsNew = itemChild.IsNew,
-                            IsAnswer = itemChild.IsAnswer,
-                            TopicId = itemChild.TopicId,
-                            IsParent = false,
-                            ChannelId = itemChild.ChannelId,
-                            IsDeletable = (userChild.Id == NimbusUser.UserId || isOwnerOrManager),
-                            IsRepotable = !isOwnerOrManager
-                        };
+                            name = userChild.FirstName + " " + userChild.LastName;
+                            child.IsDeletable = (userChild.Id == NimbusUser.UserId || isOwnerOrManager);
+                            child.IsRepotable = !isOwnerOrManager;
+                        }
+
+                        child.AvatarUrl = userChild.AvatarUrl;
+                        child.UserName = name;
+                        child.UserId = userChild.Id;
+                        child.Id = itemChild.Id;
+                        child.Text = itemChild.Text;
+                        child.ParentId = itemChild.ParentId;
+                        child.PostedOn = itemChild.PostedOn;
+                        child.IsNew = itemChild.IsNew;
+                        child.IsAnswer = itemChild.IsAnswer;
+                        child.TopicId = itemChild.TopicId;
+                        child.IsParent = false;
+                        child.ChannelId = itemChild.ChannelId;
+
                         listChild.Add(child);
                     }
                 }

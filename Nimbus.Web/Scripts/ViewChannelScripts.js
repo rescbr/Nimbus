@@ -331,11 +331,14 @@ function ajaxDeleteComment(commentId, divName)
                 200: function (newData) {
                     if (newData.ParentId > 0)
                     {
-                        document.getElementById("lblText_"+ commentId).value = newData.Text;
+                        document.getElementById("lblText_"+ commentId).value = "Comentário removido";
                         document.getElementById("lblPostedOn_" + commentId).value = newData.PostedOn;
                         document.getElementById("imgTopic_"+ commentId).src = newData.AvatarUrl;
                         document.getElementById("lblUserName_" + commentId).value = newData.UserName;
-                        document.getElementById("btnDelete_"+ commentId).style.display = 'none';
+                        document.getElementById("btnDelete_" + commentId).style.display = 'none';
+
+                        document.getElementById("btnReportComment_" + commentId).style.display = 'none';
+                        document.getElementById("btnDelete_" + commentId).style.display = 'none';
                     }
                     else
                     {
