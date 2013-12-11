@@ -1026,45 +1026,46 @@ namespace Nimbus.Web.API.Controllers
         /// <summary>
         /// Add/retirar channel da lista de ler mais tarde 
         /// </summary>
-        /// <param name="channelID"></param>
+        /// <param name="id"></param>
         /// <param name="readOn"></param>
-        /// <returns></returns>
-        [HttpPut]
-        public bool ReadChannelLater(int id, DateTime readOn)
+        /// <param name="willRead"></param>
+        /// <returns></returns>   
+        [HttpPost]
+        public bool ReadChannelLater(int id, DateTime? readOn = null, bool willRead = false)
         {
             bool operation = false;
-            try
+
+            using (var db = DatabaseFactory.OpenDbConnection())
             {
-                using (var db = DatabaseFactory.OpenDbConnection())
+                UserChannelReadLater user = db.SelectParam<UserChannelReadLater>(rl => rl.UserId == NimbusUser.UserId && rl.ChannelId == id).FirstOrDefault();
+                if (willRead == false)//retirar da lista
                 {
-                    //se ja existir = retirar//se não existir = criar
-                    UserChannelReadLater user = db.SelectParam<UserChannelReadLater>(rl => rl.UserId == NimbusUser.UserId && rl.ChannelId == id).FirstOrDefault();
-                    if (user != null)
+                    user.Visible = false;
+                    user.ReadOn = null;
+                    db.Update<UserChannelReadLater>(user);
+                    operation = true;
+                }
+                else if (willRead == true)//colocar na lista
+                {
+                    user.Visible = true;
+                    readOn = DateTime.Now;
+                    if (user == null)
                     {
-                        //retirando
-                        user.Visible = false;
-                        user.ReadOn = null;
+                        user.UserId = NimbusUser.UserId;
+                        user.ChannelId = id;
+                        db.Insert<UserChannelReadLater>(user);
+                        operation = true;
                     }
                     else
                     {
-                        user.Visible = true;
-                        user.UserId = NimbusUser.UserId;
-                        user.ReadOn = readOn;
-                        user.Date = DateTime.Now;
-                        user.ChannelId = id;
+                        db.Update<UserChannelReadLater>(user);
+                        operation = true;
                     }
-                    db.Save(user);
                 }
-                operation = true;
             }
-            catch (Exception ex)
-            {
-                operation = false;
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
-            }
-
             return operation;
         }
+
            
         /// <summary>
         /// Add tags para os canais

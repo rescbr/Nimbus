@@ -418,3 +418,27 @@ function ajaxReportComment(idUserReported, idCmt) {
         document.getElementById('lblAvisoJustificativa').innerHTML = "* Campo obrigatório! Verifique se sua mensagem contém pelo menos 10 caracteres.";
     }
 }
+
+function ajaxTopicReadLater(id, readOn, read)
+{
+    $.ajax({
+        url: "/api/topic/ReadTopicLater/" + id + "?readOn=" + null + "&willRead=" + read,
+        type: "POST",
+        contentType: "application/json;charset=utf-8",
+        statusCode: {
+            200: function (newData) {
+                if (newData == true) {
+                    document.getElementById('pReadLater_' + id).innerHTML = 'Marcado';
+                }
+                else
+                {
+                    document.getElementById('pReadLater_' + id).innerHTML = 'Ler mais tarde';
+                }
+            },
+            500: function () {
+                //erro
+                window.alert("Não foi possível realizar esta operação. Tente novamente mais tarde.");
+            }
+        }
+    });
+}

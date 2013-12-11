@@ -17,6 +17,7 @@ namespace Nimbus.Web
                     SqlServerDialect.Provider);
             using (var db = dbFactory.OpenDbConnection())
             {
+                db.CreateTable(false, typeof(UserTopicReadLater));
                 if (!db.TableExists("Organization"))
                 {
 

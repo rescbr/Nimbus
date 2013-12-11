@@ -14,9 +14,19 @@
                 </p>
             </a>
             <div class="footerTopic-grade">
-                <div class="btnLeftTopic-grade">
-                    <p onclick="unReadLater();">Ler mais tarde</p> @*chamar js passando item.id*@
-                </div>
+                @if (Model.UserReadLater == true)
+                {
+                    <div class="btnLeftTopic-grade" onclick="ajaxTopicReadLater(@Model.Id, 'null', 'false');">
+                        <p id="pReadLater_@Model.Id">Marcado</p> 
+                    </div>
+                }
+                else
+                {
+                    <div onclick="ajaxTopicReadLater(@Model.Id, 'null', 'true');" class="btnLeftTopic-grade">
+                        <p id="pReadLater_@Model.Id">Ler mais tarde</p>
+                    </div>
+                }
+
                 @if (Model.UserFavorited == false)
                     {
                         <div id="divTpfvt_@Model.Id" class="btnRightTopic-grade" onclick="ajaxFavoritedTopic(@Model.Id, 'abstract');">
