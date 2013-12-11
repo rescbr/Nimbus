@@ -7,7 +7,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <link rel="stylesheet" type="text/css" href="/Styles/Style.css" />
-
     <title>@ViewBag.Title - Nimbus</title>
 
 </head>
@@ -32,9 +31,9 @@
                 <nav class="center">
                     <ul class="sbs">
                         <li class="BSearch" id="aOpenDivSearch" onclick="openDivSearch();">Search</li>
-                        <li class="BTrTop"><a href="/trending">Trending</a></li>
-                        <li class="BTop">Top</li>
-                        <li class="BNews">News</li>
+                        <li class="BTrTop" onclick="window.location.href = '/trending';">Trending</li>
+                        <li class="BTop" onclick="window.location.href = '/top';">Top</li>
+                       @* <li class="BNews" onclick="window.location.href='/news' ;">News</li>*@
                     </ul>
                 </nav>
                 @if (user != null)

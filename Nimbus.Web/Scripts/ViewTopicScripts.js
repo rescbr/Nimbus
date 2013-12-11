@@ -428,12 +428,14 @@ function ajaxTopicReadLater(id, readOn, read)
         statusCode: {
             200: function (newData) {
                 if (newData == true && read == "true") {
+                    document.getElementById('divReadLater_' + id).onclick = function () {
+                        ajaxTopicReadLater(id, 'null', 'false');
+                    };
+
                     document.getElementById('pReadLater_' + id).innerHTML = 'Marcado';
                 }
-                else
-                {
-                    document.getElementById('divReadLater_'+id).onclick = function ()
-                    {
+                else {
+                    document.getElementById('divReadLater_' + id).onclick = function () {
                         ajaxTopicReadLater(id, 'null', 'true');
                     };
                     document.getElementById('pReadLater_' + id).innerHTML = 'Ler mais tarde';

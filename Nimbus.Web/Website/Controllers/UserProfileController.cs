@@ -41,7 +41,7 @@ namespace Nimbus.Web.Website.Controllers
             var userprofile = new UserProfileModel()
             {
                 CurrentUser = NimbusUser,
-                ChannelPaid = taskChannelPaid.Result,
+                //ChannelPaid = taskChannelPaid.Result,
                 User =  taskUser.Result,
                 ChannelFollow = taskChannelFollow.Result,
                 MyChannels =  taskMyChannels.Result,
