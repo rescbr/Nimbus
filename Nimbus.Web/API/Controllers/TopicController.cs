@@ -349,6 +349,8 @@ namespace Nimbus.Web.API.Controllers
         {
             if (skip < 0) skip = 0;
             if (take <= 0) take = 12;
+
+            #region comentarios + exemplos
             /***************************************************************************
              *                           HOT SORT TÓPICO                               * 
              *        para ordenar TRENDING tópicos de acordo com o tempo              *
@@ -357,6 +359,7 @@ namespace Nimbus.Web.API.Controllers
              * http://bibwild.wordpress.com/2012/05/08/reddit-story-ranking-algorithm/ *
              * http://technotes.iangreenleaf.com/posts/2013-12-09-reddits-empire-is-built-on-a-flawed-algorithm.html
              ***************************************************************************/
+            #endregion
 
             List<TopicBag> tpcList = new List<TopicBag>();
             using (var db = DatabaseFactory.OpenDbConnection())
@@ -550,6 +553,7 @@ from (
                         foreach (var item in topic)
                         {
                             int count = db.SelectParam<ViewByTopic>(vt => vt.TopicId == item.Id).Select(vt => vt.CountView).FirstOrDefault();
+                            bool willRead =  db.Where<UserTopicReadLater>(u=>u.UserId == NimbusUser.UserId && u.TopicId == item.Id).Select(u => u.Visible).FirstOrDefault();
                             TopicBag bag = new TopicBag()
                             {
                                 Id = item.Id,
@@ -559,7 +563,8 @@ from (
                                 ImgUrl = item.ImgUrl,
                                 LastModified = item.LastModified,
                                 Count = count,
-                                UserFavorited = db.Where<UserTopicFavorite>(u => u.UserId == NimbusUser.UserId && u.TopicId == item.Id).Exists( u => u.Visible)
+                                UserFavorited = db.Where<UserTopicFavorite>(u => u.UserId == NimbusUser.UserId && u.TopicId == item.Id).Exists( u => u.Visible),
+                                UserReadLater = willRead != null ? willRead : false
                             };
                             tpcList.Add(bag);
                         }
@@ -631,41 +636,49 @@ from (
         /// <summary>
         /// Add/retirar tópico da lista de ler mais tarde 
         /// </summary>
-        /// <param name="topicID"></param>
+        /// <param name="id"></param>
         /// <param name="readOn"></param>
+        /// <param name="willRead"></param>
         /// <returns></returns>
         [HttpPost]
-        public bool ReadChannelLater(int id, DateTime? readOn = null)
+        public bool ReadTopicLater(int id, DateTime? readOn = null, bool willRead = false)
         {
             bool operation = false;
-            try
+
+            using (var db = DatabaseFactory.OpenDbConnection())
             {
-                using (var db = DatabaseFactory.OpenDbConnection())
+                UserTopicReadLater user = db.SelectParam<UserTopicReadLater>(rl => rl.UserId == NimbusUser.UserId && rl.TopicId == id).FirstOrDefault();
+
+                if (willRead == false)//retirar da lista
                 {
-                    //se ja existir = retirar//se não existir = criar
-                    UserTopicReadLater user = db.SelectParam<UserTopicReadLater>(rl => rl.UserId == NimbusUser.UserId && rl.TopicId == id).FirstOrDefault();
-                    if (user != null)
+                    user.Visible = false;
+                    user.ReadOn = null;
+                    db.Update<UserTopicReadLater>(user);
+                    operation = true;
+                }
+                else if (willRead == true)//colocar na lista
+                {
+                    if (user == null)
                     {
-                        user.Visible = false;
-                        user.ReadOn = null;
+                        UserTopicReadLater uTpL = new UserTopicReadLater
+                        {
+                            Visible = true,
+                            ReadOn = DateTime.Now,
+                            UserId = NimbusUser.UserId,
+                            TopicId = id
+                        };                        
+                        db.Insert<UserTopicReadLater>(uTpL);
+                        operation = true;
                     }
                     else
                     {
                         user.Visible = true;
-                        user.UserId = NimbusUser.UserId;
-                        user.ReadOn = readOn;
-                        user.TopicId = id;
+                        readOn = DateTime.Now;
+                        db.Update<UserTopicReadLater>(user);
+                        operation = true;
                     }
-                    db.Save(user);
-                }
-                operation = true;
+                }    
             }
-            catch (Exception ex)
-            {
-                operation = false;
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
-            }
-
             return operation;
         }
 

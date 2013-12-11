@@ -18,8 +18,7 @@ namespace Nimbus.Web
             using (var db = dbFactory.OpenDbConnection())
             {
                 if (!db.TableExists("Organization"))
-                {
-
+                  {
                     using (var trans = db.OpenTransaction())
                     {
                         //criar tabelas
