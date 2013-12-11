@@ -130,12 +130,12 @@ function newTopicCommentNotification(notif) {
     if (parentDiv !== null) {
         //existe comentario pai
         $.ajax({
-            url: "/topic/comment/" + notif.commentId,
+            url: "/api/comment/commentshtml/" + notif.commentId + "?type=onechild",
             type: "GET",
             contentType: "text/html;charset=utf-8",
             statusCode: {
-                200: function (htmlData) {
-                    var recvElement = makeElementFromHtml(htmlData);
+                200: function (cw) {
+                    var recvElement = makeElementFromHtml(cw.Html);
                     parentDiv.insertBefore(recvElement, document.getElementById("divAnswerTopic_" + notif.parentId));
                 }
             }
@@ -143,23 +143,24 @@ function newTopicCommentNotification(notif) {
     } else if (document.getElementById("divNoComments") !== null) {
         //renderiza todos os comentarios
         $.ajax({
-            url: "/topic/comments/" + notif.topicId,
+            url: "/api/comment/commentshtml/" + notif.topicId + "?type=topic",
             type: "GET",
             contentType: "text/html;charset=utf-8",
             statusCode: {
-                200: function (htmlData) {
-                    document.getElementById("divAllComments").innerHTML = htmlData;
+                200: function (cw) {
+                    document.getElementById("divAllComments").innerHTML = cw.Html;
                 }
             }
         });
     } else {
+        //insere comentario pai
         $.ajax({
-            url: "/topic/parentcomment/" + notif.commentId,
+            url: "/api/comment/commentshtml/" + notif.commentId + "?type=oneparent",
             type: "GET",
             contentType: "text/html;charset=utf-8",
             statusCode: {
-                200: function (htmlData) {
-                    var recvElement = makeElementFromHtml(htmlData);
+                200: function (cw) {
+                    var recvElement = makeElementFromHtml(cw.Html);
                     document.getElementById("divAllComments").insertBefore(recvElement,
                         document.getElementById("placeholderAfterLastComment"));
                 }
