@@ -179,14 +179,13 @@
     <div class="infoTitleChannel divCanaisRelacionados">
         <h2>Canais Relacionados</h2>
         <div class="channels">
-            @* Editar essa parte para que mostre os canais relacionados ( copiei da userprofile )
-            @foreach (var item in Model.ChannelPaid)
-            {
-                <div class="chanPaidImg">
-                    <img src="@item.ImgUrl" alt="@item.Name" width="40" height="40" />
-                </div>
-            }*@
-        </div>
+                @foreach (var item in Model.RelatedChannels)
+                {
+                    //partial
+                    Html.RenderPartial("~/Website/Views/ChannelPartials/ChannelPartial.cshtml", item);
+
+                }
+            </div>
     </div>
 
 </div>

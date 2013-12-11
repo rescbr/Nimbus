@@ -27,6 +27,7 @@ namespace Nimbus.Web.Website.Controllers
             var commentApi = ClonedContextInstance<API.Controllers.CommentController>();
             var categoryApi = ClonedContextInstance<API.Controllers.CategoryController>();
             var notificationApi = ClonedContextInstance<API.Controllers.NotificationController>();
+            var datamindingApi = ClonedContextInstance<API.Controllers.DataMiningController>();
 
             var taskTags = Task.Run(() => channelApi.ShowTagChannel(id));
             var taskModerators = Task.Run(() => channelApi.ShowModerators(id));
@@ -38,10 +39,10 @@ namespace Nimbus.Web.Website.Controllers
             var taskCcMessageReceiver = Task.Run(() => channelApi.GetMessageModerators(id));
             var taskCategory = Task.Run(() => categoryApi.showAllCategory());
             var taskNotifications = Task.Run(() => notificationApi.Channel(id));
-
+            var taskRelatedChannels = Task.Run(() => datamindingApi.RelatedChannels(id));
 
             await Task.WhenAll(taskTags, taskModerators, taskCurrentChannel, taskAllTopics, taskMessages, 
-                taskComments, taskRolesCurrentUser, taskCcMessageReceiver, taskCategory, taskNotifications);
+                taskComments, taskRolesCurrentUser, taskCcMessageReceiver, taskCategory, taskNotifications, taskRelatedChannels);
             var channel = new ChannelModel()
             {
                 Tags              = taskTags.Result,
@@ -55,6 +56,7 @@ namespace Nimbus.Web.Website.Controllers
                 CcMessageReceiver = taskCcMessageReceiver.Result,
                 NewTopic          = null,
                 Category          = taskCategory.Result,
+                RelatedChannels   = taskRelatedChannels.Result,
                 ChannelNotifications = taskNotifications.Result,
             };
             return View("Channels", channel);

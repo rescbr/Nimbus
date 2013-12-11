@@ -22,6 +22,7 @@ namespace Nimbus.Web.Website.Models
 
         public Topic NewTopic { get; set; }
 
+        public List<Channel> RelatedChannels { get; set; }
         public List<MessageBag> Messages { get; set; }
 
         public List<CommentBag> Comments { get; set; }

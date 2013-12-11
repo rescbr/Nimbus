@@ -385,6 +385,7 @@
     <Content Include="Website\Views\NotificationPartials\NewTopic.cshtml" />
     <Content Include="Website\Views\NotificationPartials\ChannelTopic.cshtml" />
     <Content Include="Website\Views\SearchContent.cshtml" />
+    <Content Include="Website\Views\TopTopics.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\Controllers\DatabaseController.cs" />
