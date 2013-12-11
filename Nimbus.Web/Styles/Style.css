@@ -76,7 +76,7 @@ p {
 
 a, a:hover, a:visited {
     text-decoration:    none;
-    color:              #000000;
+    color:              #FFFFFF;
 }
 /*------------------ começo header --------------------*/
 
@@ -1539,6 +1539,10 @@ div#footer {/*
 .press {
      cursor:           pointer;
 }
+
+ .press a {
+     color: #FFFFFF;
+ }
 
 .c-grade:hover, .c-lista:hover {
     cursor:            pointer;

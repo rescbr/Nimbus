@@ -294,13 +294,13 @@
                     Aberto para comentários:
                     @if(Model.CurrentChannel.OpenToComments == true)
                     { 
-                        <input type="radio" name="openComment" checked required /><text>Sim</text>
-                        <input type="radio" name="openComment" required /><text>Não</text>                                                                                      
+                        <input type="radio" name="openComment" value="sim" checked required /><text>Sim</text>
+                        <input type="radio" name="openComment" value="nao" required /><text>Não</text>
                     }
                     else
-                    { 
-                        <input type="radio" name="openComment" required /><text>Sim</text>
-                        <input type="radio" name="openComment" checked required /><text>Não</text>
+                    {
+                        <input type="radio" name="openComment" value="sim" required /><text>Sim</text>
+                        <input type="radio" name="openComment" value="nao" checked required /><text>Não</text>
                     }                                                                                      
                 </p>
                 

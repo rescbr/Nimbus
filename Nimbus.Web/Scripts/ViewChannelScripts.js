@@ -649,10 +649,10 @@ function ajaxLoadTags(id) {
         contentType: "application/json;charset=utf-8",
         statusCode: {
             200: function (newData) {
+                //incluir itens na div
+                var listTag = "";
+                var string = "";
                 if (newData.length > 0) {
-                    //incluir itens na div
-                    var listTag = "";
-                    var string ="";
                     for (var i = 0; i < newData.length; i++) {
                         listTag += "<div name=\"nameDivTags\" id=\"divTag_" + newData[i].Id + "\">" +
                                         "<p>#" + newData[i].TagName +
@@ -664,15 +664,19 @@ function ajaxLoadTags(id) {
                         string = "<input id=\"txtNewTag\" type=\"text\" value=\"Nova tag\" onclick=\"this.value=''\" />" +
                                       "<button id=\"btnSaveTag\" onclick=\"ajaxNewTag(" + id + ");\">Adicionar</button>";
                     }
-                    else
-                    {
+                    else {
                         string = "<p>Você já possui o limite máximo de tags aceitas por canal.</p>";
-                    }
-                    var includeDiv = "<div id=\"divModalTags\">" + listTag + "</div>" +
+                    }                   
+                }
+                else
+                {
+                    string = "<input id=\"txtNewTag\" type=\"text\" value=\"Nova tag\" onclick=\"this.value=''\" />" +
+                                     "<button id=\"btnSaveTag\" onclick=\"ajaxNewTag(" + id + ");\">Adicionar</button>";
+                }
+                var includeDiv = "<div id=\"divModalTags\">" + listTag + "</div>" +
                                      "<div id=\"divResultTags\">" + string + "</div>";
 
-                    document.getElementById('divTags').innerHTML = includeDiv;                   
-                }
+                document.getElementById('divTags').innerHTML = includeDiv;
             },
 
             500: function () {
@@ -803,9 +807,12 @@ function ajaxSaveAllEdit(id)
         ajaxData = {};
         ajaxData['Name'] = title;
         ajaxData['Id'] = id;
-        if(document.getElementsByName('openComment')[0].isChecked)
+
+        var rdb = document.getElementsByName('openComment');
+        
+        if(document.getElementsByName('openComment')[0].checked)
             ajaxData['OpenToComments'] = true;
-        if (document.getElementsByName('openComment')[1].isChecked)
+        if (document.getElementsByName('openComment')[1].checked)
             ajaxData['OpenToComments'] = false;
         
         var category = document.getElementById('slcCategory');
@@ -823,8 +830,9 @@ function ajaxSaveAllEdit(id)
                 statusCode: {
                     200: function (newData) {
                         document.getElementById('closeModalEdit').click();
-                        document.getElementById('hChannelName').innerHTML = newData.Title;
+                        document.getElementById('hChannelName').innerHTML = newData.Name;
                         document.getElementById('imgCapa').src = newData.ImgUrl;
+                        title.value = newData.Name;
                     },
 
                     500: function () {

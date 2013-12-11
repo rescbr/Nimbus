@@ -525,7 +525,7 @@ namespace Nimbus.Web.API.Controllers
                 {
                     if (item.OrganizationId == 1) // quando o cara não é org pagante, nao pode mudar a capa do channel, logo no abstract iria ficar uma 'cor solida feia'
                     {
-                        item.ImgUrl = item.ImgUrl.Replace("/CapaChannel/", "/category/");
+                        item.ImgUrl = item.ImgUrl.ToLower().Replace("/capachannel/", "/category/");
                     }
                 }
             } 
@@ -649,7 +649,7 @@ namespace Nimbus.Web.API.Controllers
                    {
                        if (item.OrganizationId == 1) // quando o cara não é org pagante, nao pode mudar a capa do channel, logo no abstract iria ficar uma 'cor solida feia'
                        {
-                           item.ImgUrl = item.ImgUrl.Replace("/CapaChannel/", "/category/");
+                           item.ImgUrl = item.ImgUrl.Replace("/capachannel/", "/category/");
                        }
                    }
                 }                
@@ -1340,8 +1340,6 @@ namespace Nimbus.Web.API.Controllers
         public Channel NewChannel(Channel channel)
         {
             //TODO:Notificação
-            try
-            {
                 channel.CreatedOn = DateTime.Now;
                 channel.Followers = 0;
                 channel.LastModification = DateTime.Now;
@@ -1354,6 +1352,7 @@ namespace Nimbus.Web.API.Controllers
                         int idUser = db.SelectParam<OrganizationUser>(us => us.UserId == NimbusUser.UserId
                                                                                    && us.OrganizationId == channel.OrganizationId).Select(us => us.UserId).FirstOrDefault();
 
+                        //TODO: verificar se é role ou roleORganization
                         bool isManager = db.SelectParam<Role>(us => us.UserId == idUser)
                                                                         .Exists(us => us.IsOwner == true || us.ChannelMagager == true);
                         if (isManager == true)
@@ -1379,19 +1378,33 @@ namespace Nimbus.Web.API.Controllers
                                 db.Insert(channel);
                                 int channelID = (int)db.GetLastInsertId();
                                 channel.Id = channelID;
+                                Role role = new Role { 
+                                    Accepted = true,
+                                    ChannelId= channelID,
+                                    ChannelMagager = true,
+                                    IsOwner = true,
+                                    MessageManager = true,
+                                    ModeratorManager = true,
+                                    Paid = true,
+                                    TopicManager = true,
+                                    UserId = NimbusUser.UserId,
+                                    UserManager = true
+                                };
+                                db.Insert<Role>(role);
+
                                 VoteChannel vote = new VoteChannel
                                 {
                                     ChannelId = channelID,
                                     Score = 0
                                 };
-                                db.Insert(vote);
+                                db.Insert<VoteChannel>(vote);
                                 trans.Commit();
 
                             }
                             catch (Exception ex)
                             {
                                 trans.Rollback();
-                                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+                                throw;
                             }
                         }
                     }
@@ -1399,12 +1412,7 @@ namespace Nimbus.Web.API.Controllers
                     {
                         throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotAcceptable, "sem permissao"));
                     }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
-            }
+                }          
             return channel;
         }
         
@@ -1433,6 +1441,7 @@ namespace Nimbus.Web.API.Controllers
                         channel.CategoryId = editChannel.CategoryId > 0? editChannel.CategoryId : channel.CategoryId;
                         channel.Description = !string.IsNullOrEmpty(editChannel.Description)? System.Web.HttpUtility.HtmlEncode(editChannel.Description): channel.Description;
                         channel.ImgUrl = db.SelectParam<Category>(c => c.Id == editChannel.CategoryId).Select(c => c.ImageUrl).FirstOrDefault();
+                        channel.ImgUrl = channel.ImgUrl.ToLower().Replace("category", "capachannel");
                         channel.IsCourse = editChannel.IsCourse ;
                         channel.IsPrivate = editChannel.IsPrivate;
                         channel.LastModification = DateTime.Now;
