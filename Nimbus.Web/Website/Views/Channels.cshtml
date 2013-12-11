@@ -66,6 +66,9 @@
 </div>
 
 <div id="divInfCanal">
+ 
+    <p id="pTopicDescription">@Model.CurrentChannel.Description</p>
+  <br />
     <p>Dono:<a href="/userprofile/index/@Model.CurrentChannel.OwnerId" class="nameOwner"> @Model.CurrentChannel.OwnerName</a></p>
     @if (Model.Moderators.Count > 0) { 
     <p>Moderadores:</p>
@@ -272,7 +275,9 @@
         {
             <div>
                 <p>Nome do canal:</p>
-                <input id="txtEditTitle" type="text" value="@Model.CurrentChannel.Name" maxlength="150" />
+                <input id="txtEditTitle" type="text" value="@Model.CurrentChannel.Name" maxlength="100" />
+                <p>Descrição:</p>
+                <textarea id="txtaDescription" maxlength="200">@Model.CurrentChannel.Description</textarea>
                 <p>
                     Categoria:
                     <select id="slcCategory" name="slcCategory">

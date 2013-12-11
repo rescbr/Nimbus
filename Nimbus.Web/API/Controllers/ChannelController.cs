@@ -438,6 +438,7 @@ namespace Nimbus.Web.API.Controllers
                         var channelUser = db.Where<ChannelUser>(c => c.ChannelId == id && c.UserId == NimbusUser.UserId && c.Visible == true).Where(c => c != null).FirstOrDefault();
 
                         showChannel.Name = channel.Name;
+                        showChannel.Description = channel.Description;
                         showChannel.CategoryId = channel.CategoryId;
                         showChannel.Id = channel.Id;
                         showChannel.countFollowers = db.Where<ChannelUser>(c => c.ChannelId == id && c.Follow == true && c.Visible == true).Count().ToString();
@@ -1312,7 +1313,9 @@ namespace Nimbus.Web.API.Controllers
                 channel.CreatedOn = DateTime.Now;
                 channel.Followers = 0;
                 channel.LastModification = DateTime.Now;
-
+                channel.Description = channel.Description.Substring(0, 200);
+                channel.Name = channel.Description.Substring(0, 100);
+             
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
                     bool allow = false; //zero = padrao Nimbus
@@ -1406,9 +1409,9 @@ namespace Nimbus.Web.API.Controllers
                     {
                         channel = db.SelectParam<Channel>(chn => chn.Id == editChannel.Id && chn.Visible == true).FirstOrDefault();
 
-                        channel.Name = !string.IsNullOrEmpty(editChannel.Name) ? System.Web.HttpUtility.HtmlEncode(editChannel.Name) : channel.Name;
+                        channel.Name = !string.IsNullOrEmpty(editChannel.Name) ? editChannel.Name.Substring(0,100) : channel.Name;
                         channel.CategoryId = editChannel.CategoryId > 0? editChannel.CategoryId : channel.CategoryId;
-                        channel.Description = !string.IsNullOrEmpty(editChannel.Description)? System.Web.HttpUtility.HtmlEncode(editChannel.Description): channel.Description;
+                        channel.Description = !string.IsNullOrEmpty(editChannel.Description)? editChannel.Description.Substring(0,200): channel.Description;
                         channel.ImgUrl = db.SelectParam<Category>(c => c.Id == editChannel.CategoryId).Select(c => c.ImageUrl).FirstOrDefault();
                         channel.ImgUrl = channel.ImgUrl.ToLower().Replace("category", "capachannel");
                         channel.IsCourse = editChannel.IsCourse ;

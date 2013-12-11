@@ -769,7 +769,10 @@ function ajaxLoadEditInfo(id, isOwner)
 function ajaxSaveAllEdit(id)
 {
     //tags e novos moderadores -> são salvas assim que são criadas
-    var success = false;
+    var success = false; var caracteres = false;
+    title = document.getElementById('txtEditTitle').value;
+    description = document.getElementById('txtaDescription').value;
+ 
     //alterou somente a permissao
     var obj = $("select[id*='newPermissionSelect_']");
 
@@ -803,10 +806,10 @@ function ajaxSaveAllEdit(id)
     }
     //salvar nome
     if (success == true) {
-        title = document.getElementById('txtEditTitle').value;
         ajaxData = {};
         ajaxData['Name'] = title;
         ajaxData['Id'] = id;
+        ajaxData['Description'] = description;
 
         var rdb = document.getElementsByName('openComment');
         
