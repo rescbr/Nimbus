@@ -350,21 +350,29 @@ namespace Nimbus.Web.API.Controllers
         public CommentHtmlWrapper CommentsHtml(int id = 0, int skip = 0, string type = null)
         {
             List<CommentBag> comments = new List<CommentBag>();
+            string partial = "~/Website/Views/CommentPartials/PartialComment.cshtml";
 
             if (type == "channel")
                 comments = ShowChannelComment(id, skip);
-            if (type == "topic")
+            else if (type == "topic")
                 comments = ShowTopicComment(id, skip);
-            if (type == "child")
+            else if (type == "child")
                 comments = ShowMoreCommentChild(id, skip);
+            else if (type == "oneparent")
+            {
+                comments = ShowParentComment(id, 0);
+                //comments.FirstOrDefault().IsRazorEngine = true;
+                partial = "~/Website/Views/CommentPartials/PartialTopicComment.cshtml";
+            }
+            else if (type == "onechild")
+                comments = ShowChildComment(id);
 
             var rz = new RazorTemplate();
             string html = "";
 
             foreach (var cmt in comments)
             {
-                html += rz.ParseRazorTemplate<CommentBag>
-                    ("~/Website/Views/CommentPartials/PartialComment.cshtml", cmt);
+                html += rz.ParseRazorTemplate<CommentBag>(partial, cmt);
             }
 
             return new CommentHtmlWrapper { Html = html, Count = comments.Count };
@@ -470,7 +478,7 @@ namespace Nimbus.Web.API.Controllers
         /// <param name="skip"></param>
         /// <returns></returns>
         [HttpGet]
-        public List<CommentBag>ShowMoreCommentChild(int id, int skip)
+        public List<CommentBag> ShowMoreCommentChild(int id, int skip)
         {
             List<CommentBag> listChild = new List<CommentBag>();
             using (var db = DatabaseFactory.OpenDbConnection())
@@ -589,6 +597,164 @@ namespace Nimbus.Web.API.Controllers
             return listComments;
         }
 
+        /// <summary>
+        /// Visualizar o comentario pai
+        /// </summary>
+        /// <param name="id">id coment</param>
+        /// <returns></returns>
+        [HttpGet]
+        public List<CommentBag> ShowParentComment(int id, int skip = 0)
+        {
+            List<CommentBag> listComments = new List<CommentBag>();
+            using (var db = DatabaseFactory.OpenDbConnection())
+            {
+                //pega todos comentários 'pai'
+                List<Comment> comments = db.SelectParam<Comment>(cmt => cmt.Id == id && cmt.Visible == true && cmt.ParentId == null).ToList();
+
+                if (comments.Count > 0)
+                {
+                    Channel chn = db.Where<Channel>(c => c.Id == comments.FirstOrDefault().ChannelId).FirstOrDefault();
+                    ChannelController cc = ClonedContextInstance<ChannelController>();
+                    var userRoles = cc.ReturnRolesUser(chn.Id);
+                    bool isOwnerOrManager = (NimbusUser.UserId == chn.OwnerId ||
+                        userRoles.Contains("channelmanager") ||
+                        userRoles.Contains("topicmanager"));
+
+                    foreach (Comment item in comments)
+                    {
+                        User user = db.SelectParam<User>(u => u.Id == item.UserId).FirstOrDefault();
+
+                        //busco todos os filhos desse comentário
+                        List<Comment> cmtChild = db.SelectParam<Comment>(c => c.ParentId == item.Id && item.Visible == true).Take(3).ToList();
+                        List<CommentBag> listChild = new List<CommentBag>();
+
+                        foreach (var itemChild in cmtChild)
+                        {
+                            CommentBag child = new CommentBag();
+                            User userChild = db.SelectParam<User>(u => u.Id == itemChild.UserId).FirstOrDefault();
+                            string name = "";
+                            if (itemChild.Text == "Comentário removido")
+                            {
+                                userChild.AvatarUrl = "/images/Utils/person_icon.png";
+                                name = "[removido]";
+                                child.IsDeletable = false;
+                                child.IsRepotable = false;
+
+                            }
+                            else
+                            {
+                                name = userChild.FirstName + " " + userChild.LastName;
+                                child.IsDeletable = (userChild.Id == NimbusUser.UserId || isOwnerOrManager);
+                                child.IsRepotable = !isOwnerOrManager;
+                            }
+
+                            child.AvatarUrl = userChild.AvatarUrl;
+                            child.UserName = name;
+                            child.UserId = userChild.Id;
+                            child.Id = itemChild.Id;
+                            child.Text = itemChild.Text;
+                            child.ParentId = itemChild.ParentId;
+                            child.PostedOn = itemChild.PostedOn;
+                            child.IsNew = itemChild.IsNew;
+                            child.IsAnswer = itemChild.IsAnswer;
+                            child.TopicId = itemChild.TopicId;
+                            child.IsParent = false;
+                            child.ChannelId = itemChild.ChannelId;
+                            listChild.Add(child);
+                        }
+
+                        //crio o objeto para o comentario 
+                        CommentBag bag = new CommentBag()
+                        {
+                            AvatarUrl = user.AvatarUrl,
+                            UserName = user.FirstName + " " + user.LastName,
+                            UserId = user.Id,
+                            Id = item.Id,
+                            Text = item.Text,
+                            ParentId = item.ParentId,
+                            PostedOn = item.PostedOn,
+                            IsNew = item.IsNew,
+                            IsAnswer = item.IsAnswer,
+                            TopicId = item.TopicId,
+                            IsParent = item.ParentId > 0 ? false : true,
+                            ChannelId = item.ChannelId,
+                            CommentChild = listChild,
+                            IsDeletable = (user.Id == NimbusUser.UserId || isOwnerOrManager),
+                            IsRepotable = !isOwnerOrManager
+                        };
+                        listComments.Add(bag);
+                    }
+                }
+            }
+
+            return listComments;
+        }
+
+
+        /// <summary>
+        /// método que retornar mais comentarios filhos
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="skip"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public List<CommentBag> ShowChildComment(int id)
+        {
+            List<CommentBag> listChild = new List<CommentBag>();
+            using (var db = DatabaseFactory.OpenDbConnection())
+            {
+                //pega o comentário 
+                Comment comment = db.Where<Comment>(cmt => cmt.Visible == true && cmt.Id == id).FirstOrDefault();
+
+                if (comment != null)
+                {
+                    Channel chn = db.Where<Channel>(c => c.Id == comment.ChannelId).FirstOrDefault();
+                    ChannelController cc = ClonedContextInstance<ChannelController>();
+                    var userRoles = cc.ReturnRolesUser(chn.Id);
+                    bool isOwnerOrManager = (NimbusUser.UserId == chn.OwnerId ||
+                        userRoles.Contains("channelmanager") ||
+                        userRoles.Contains("topicmanager"));
+
+                    User user = db.SelectParam<User>(u => u.Id == comment.UserId).FirstOrDefault();
+
+
+                    CommentBag child = new CommentBag();
+
+                    string name = "";
+                    if (comment.Text == "Comentário removido")
+                    {
+                        user.AvatarUrl = "/images/Utils/person_icon.png";
+                        name = "[removido]";
+                        child.IsDeletable = false;
+                        child.IsRepotable = false;
+                    }
+                    else
+                    {
+                        name = user.FirstName + " " + user.LastName;
+                        child.IsDeletable = (user.Id == NimbusUser.UserId || isOwnerOrManager);
+                        child.IsRepotable = !isOwnerOrManager;
+                    }
+
+                    child.AvatarUrl = user.AvatarUrl;
+                    child.UserName = name;
+                    child.UserId = user.Id;
+                    child.Id = comment.Id;
+                    child.Text = comment.Text;
+                    child.ParentId = comment.ParentId;
+                    child.PostedOn = comment.PostedOn;
+                    child.IsNew = comment.IsNew;
+                    child.IsAnswer = comment.IsAnswer;
+                    child.TopicId = comment.TopicId;
+                    child.IsParent = false;
+                    child.ChannelId = comment.ChannelId;
+
+                    listChild.Add(child);
+                    
+                }
+            }
+
+            return listChild;
+        }
 
         public class CommentUser
         {

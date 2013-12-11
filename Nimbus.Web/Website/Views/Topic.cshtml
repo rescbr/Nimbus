@@ -178,11 +178,9 @@
             foreach(var comment in Model.Comments)
             {
                Html.RenderPartial("~/Website/Views/CommentPartials/PartialTopicComment.cshtml", comment);               
-
+            }
             @* renato: favor deixar essa div aqui, tks. *@
             <div id="placeholderAfterLastComment"></div>
-            }
-
             if (Model.Comments.Count() == 5)
             {
                 <button id="btn_skipComments" onclick="seeMoreComments(@Model.CurrentTopic.Id, 'divAllComments', 'skipComments','topic');">Ver mais</button>

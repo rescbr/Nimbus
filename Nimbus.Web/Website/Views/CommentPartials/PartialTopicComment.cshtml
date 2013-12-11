@@ -1,57 +1,60 @@
 ﻿@model Nimbus.Model.Bags.CommentBag
 
-  
-        
-       <div id="divContentComment_@Model.Id" class="blockComment">
-            <div class="firstBlockComment">
-                @{   Html.RenderPartial("~/Website/Views/CommentPartials/PartialComment.cshtml", Model); }
-            </div>
+<div id="divContentComment_@Model.Id" class="blockComment">
+    <div class="firstBlockComment">
+        @{   
+#if RAZORENGINE
+            <text>@Include("~/Website/Views/CommentPartials/PartialComment.cshtml", Model)</text>
+#else
+            Html.RenderPartial("~/Website/Views/CommentPartials/PartialComment.cshtml", Model); 
+#endif            
+         }
+    </div>
+    
+    @if (Model.CommentChild.Count > 0)
+    {
+        <div id="divAllCommentChild_@Model.Id">
+            @{
+        int max = Model.CommentChild.Count();
+        max = max > 3 ? 3 : max;
 
-            @*@foreach (var child in comment.CommentChild)
-            {
-                <div id="divChildComment_@child.Id" class="divChildComment">
-                    @{ Html.RenderPartial("~/Website/Views/CommentPartials/PartialComment.cshtml", child); }
-                </div>
-            }*@            
-           @if (Model.CommentChild.Count > 0)
-           { 
-               <div id="divAllCommentChild_@Model.Id">
-                @{
-                   int max = Model.CommentChild.Count();
-                 max = max > 3 ? 3 : max;
-
-                 for (int i = 0; i < max; i++)
-                 {
-                     <div id="divChildComment_@Model.CommentChild[i].Id" class="divChildComment">
-                        @{ Html.RenderPartial("~/Website/Views/CommentPartials/PartialComment.cshtml", Model.CommentChild[i]); }
-                    </div>
+        for (int i = 0; i < max; i++)
+        {
+            <div id="divChildComment_@Model.CommentChild[i].Id" class="divChildComment">
+                @{ 
+#if RAZORENGINE
+            <text>@Include("~/Website/Views/CommentPartials/PartialComment.cshtml", Model.CommentChild[i])</text>
+#else
+            Html.RenderPartial("~/Website/Views/CommentPartials/PartialComment.cshtml", Model.CommentChild[i]); 
+#endif
+                    
                  }
-
-                 if (Model.CommentChild.Count() == 3)
-                 {
-                    <button id="btn_skipCommentsChild" onclick="seeMoreComments(@Model.Id, 'divAllCommentChild_@Model.Id', 'skipCommentsChild','child');">Ver mais</button>
-                 }
-}
-              </div>
-           }      
-        @*</div>*@
-
-         <div id="divAnswerTopic_@Model.Id" style="margin-top: 4px;">
-                <div class="replyTopBtn" id="bntAnswer_@Model.Id" onclick="EnableDivHiddenBtn('divAnswerComment_@Model.Id', 'bntAnswer_@Model.Id');">
-                    <p>
-                        Responder
-                    </p>
-                </div>
             </div>
-
-         <div id="divAnswerComment_@Model.Id" style="display:none; margin-left: 74px">
-                <textarea id="txtaAnswer_@Model.Id" name="txtaAnswerTopic" cols="50" rows="2" style="border: 1px solid #87c240; max-width: 384px; min-width: 384px"></textarea>
-                <div class="replyTopBtn" id="btnSendAnswer" onclick="ajaxAnswerComment(0, @Model.Id, @Model.ChannelId, @Model.TopicId, 'txtaAnswer_@Model.Id');">
-                    <p>
-                        Enviar
-                    </p>
-                </div>
-            </div>
-
+        }
+            }
         </div>
-         
+        if (Model.CommentChild.Count() == 3)
+        {
+            <button id="btn_skipCommentsChild" onclick="seeMoreComments(@Model.Id, 'divAllCommentChild_@Model.Id', 'skipCommentsChild','child');">Ver mais</button>
+        }
+    }
+    @*</div>*@
+
+    <div id="divAnswerTopic_@Model.Id" style="margin-top: 4px;">
+        <div class="replyTopBtn" id="bntAnswer_@Model.Id" onclick="EnableDivHiddenBtn('divAnswerComment_@Model.Id', 'bntAnswer_@Model.Id');">
+            <p>
+                Responder
+            </p>
+        </div>
+    </div>
+
+    <div id="divAnswerComment_@Model.Id" style="display:none; margin-left: 74px">
+        <textarea id="txtaAnswer_@Model.Id" name="txtaAnswerTopic" cols="50" rows="2" style="border: 1px solid #87c240; max-width: 384px; min-width: 384px"></textarea>
+        <div class="replyTopBtn" id="btnSendAnswer" onclick="ajaxAnswerComment(0, @Model.Id, @Model.ChannelId, @Model.TopicId, 'txtaAnswer_@Model.Id');">
+            <p>
+                Enviar
+            </p>
+        </div>
+    </div>
+
+</div>
