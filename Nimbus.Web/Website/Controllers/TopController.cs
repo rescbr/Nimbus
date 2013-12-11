@@ -14,7 +14,7 @@ namespace Nimbus.Web.Website.Controllers
 
             //TODO colocar p chamar a funçao CERTA
             var topics = topicApi.TopTopics();//inicial é trazer todos os Tts sem ser filtrado por categoria
-            return View("TrendingTopics", topics);
+            return View("TopTopics", topics);
         }
     }
 }

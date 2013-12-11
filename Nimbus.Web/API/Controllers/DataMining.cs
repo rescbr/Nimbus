@@ -13,7 +13,7 @@ namespace Nimbus.Web.API.Controllers
     public class DataMiningController : NimbusApiController
     {
         [HttpGet]
-        public IEnumerable<Channel> RelatedChannels(int id, int qtd = 5)
+        public List<Channel> RelatedChannels(int id, int qtd = 5)
         {
             using (var db = DatabaseFactory.OpenDbConnection())
             {
@@ -36,8 +36,12 @@ namespace Nimbus.Web.API.Controllers
                 var listRelatedChannelIds = relatedCounter.OrderByDescending(ctr => ctr.Value).Take(qtd).Select(chid => chid.Key).ToArray();
 
                 var relatedChannels = db.Where<Channel>(ch => listRelatedChannelIds.Contains(ch.Id));
+                foreach (var item in relatedChannels)
+                {
+                    item.ImgUrl = item.ImgUrl.ToLower().Replace("capachannel", "category");
+                }
 
-                return relatedChannels;
+                return relatedChannels.ToList();
             }
         }
     }

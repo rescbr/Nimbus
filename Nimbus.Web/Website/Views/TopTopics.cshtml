@@ -1,0 +1,26 @@
+﻿@using System.Collections.Generic;
+@using Nimbus.Model.Bags;
+@model List<TopicBag>
+@{Layout = "~/Website/Views/Shared/_Layout.cshtml";}
+
+@Scripts.Render("~/Scripts/ScriptsShared.js")
+@Scripts.Render("~/Scripts/ViewTopicScripts.js")
+
+<div class="content-top">
+    <div class="cont-left">
+        <h1>Top Topics</h1>
+    </div>
+</div>
+
+@*Miniaturas dos topicos*@
+
+<div id="divTrendingTopics" style="display:block;">
+    @*depois vai ser carregado por js + ajax, mas para facilitar, motando o modelo aqui*@
+
+    @foreach (var item in Model)
+    {
+        Html.RenderPartial("~/Website/Views/ChannelPartials/TopicPartial.cshtml", item);
+    }
+</div>
+
+@*Miniaturas dos topicos*@
