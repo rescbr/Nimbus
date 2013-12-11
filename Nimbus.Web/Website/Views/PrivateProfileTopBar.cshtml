@@ -87,7 +87,7 @@
             </div>
             if (Model.ReadLater.Count() == 15)
             {
-                <button id="btn_skipAll" onclick="verMaisReadLater(@Model.CurrentUser.UserId, 0, 'skipReadLater');">Ver mais</button>
+                <button id="btn_skipReadLater" onclick="verMaisTopics(@Model.CurrentUser.UserId,'readLater', 0, 'skipReadLater');">Ver mais</button>
             }
         }
     </div>
