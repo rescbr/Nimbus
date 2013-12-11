@@ -16,13 +16,13 @@
             <div class="footerTopic-grade">
                 @if (Model.UserReadLater == true)
                 {
-                    <div class="btnLeftTopic-grade" onclick="ajaxTopicReadLater(@Model.Id, 'null', 'false');">
+                    <div class="btnLeftTopic-grade" id="divReadLater_@Model.Id" onclick="ajaxTopicReadLater(@Model.Id, 'null', 'false');">
                         <p id="pReadLater_@Model.Id">Marcado</p> 
                     </div>
                 }
                 else
                 {
-                    <div onclick="ajaxTopicReadLater(@Model.Id, 'null', 'true');" class="btnLeftTopic-grade">
+                    <div onclick="ajaxTopicReadLater(@Model.Id, 'null', 'true');" id="divReadLater_@Model.Id" class="btnLeftTopic-grade">
                         <p id="pReadLater_@Model.Id">Ler mais tarde</p>
                     </div>
                 }

@@ -486,18 +486,25 @@ from (
         }
 
         [HttpGet]
-        public TopicHtmlWrapper AbstTopicHtml(int channelID = 0, string viewBy = null, int categoryID = 0, int skip = 0)
-        {
-            var topics = AbstTopic(channelID, viewBy, categoryID, skip);
+        public TopicHtmlWrapper AbstTopicHtml(int id = 0, string viewBy = null, int categoryID = 0, int skip = 0, string type = null)
+        { 
             var rz = new RazorTemplate();
             string html = "";
+            List<TopicBag> topics = new List<TopicBag>();
 
+            if (type == "abstopic")
+            {
+                 topics = AbstTopic(id, viewBy, categoryID, skip);               
+            }
+            else if (type == "marcado")
+            {
+                 topics = showReadLaterTopic(id, skip);               
+            }
             foreach (var topic in topics)
             {
                 html += rz.ParseRazorTemplate<TopicBag>
                     ("~/Website/Views/ChannelPartials/TopicPartial.cshtml", topic);
             }
-
             return new TopicHtmlWrapper { Html = html, Count = topics.Count };
         }
 
@@ -681,6 +688,47 @@ from (
             }
             return operation;
         }
+
+        /// <summary>
+        /// Método para retornar os topicos que o usuário vai ler mais tarde
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public List<TopicBag> showReadLaterTopic(int id, int skip)
+        {
+            List<TopicBag> listTpc = new List<TopicBag>();
+
+            using (var db = DatabaseFactory.OpenDbConnection())
+            {
+
+                var listUserTpc = db.SelectParam<UserTopicReadLater>(t => t.UserId == NimbusUser.UserId && t.Visible == true)
+                                                             .Skip(15 * skip).Take(15);
+
+                var listTopic = listUserTpc.Select(r => db.Where<Topic>(t => t.Visibility == true && t.Id == r.TopicId).FirstOrDefault()).ToList();
+
+                foreach (var item in listTopic)
+                {
+                    TopicBag bag = new TopicBag 
+                    {
+                        AuthorId = item.AuthorId,
+                        ChannelId = item.ChannelId,
+                        Id = item.Id,
+                        ImgUrl = item.ImgUrl,
+                        Title = item.Title,
+                        TopicType = item.TopicType,
+                        Visibility = item.Visibility,
+                        UserReadLater = listUserTpc.Where(c => c.UserId == NimbusUser.UserId && c.TopicId == item.Id).Select(c => c.Visible).FirstOrDefault(),
+                        UserFavorited = db.Where<UserTopicFavorite>(c => c.Visible == true && c.TopicId == item.Id).Exists(c => c.UserId == NimbusUser.UserId)
+                    };
+                    listTpc.Add(bag);
+                }
+            }
+
+            return listTpc;
+        }
+
+
 
         /// <summary>
         /// Verifica se o tópico é privado ou pago e se o usuário possui permissão para visualizar o conteúdo

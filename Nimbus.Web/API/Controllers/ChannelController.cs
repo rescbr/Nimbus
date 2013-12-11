@@ -486,8 +486,7 @@ namespace Nimbus.Web.API.Controllers
                 channels = MyChannel(id, skip);
             if(viewBy == "channelsFollow")
                 channels = FollowsChannel(idUser, skip);
-            if (viewBy == "readLater")
-                channels = showReadLaterChannel(idUser, skip);
+            
             
             var rz = new RazorTemplate();
             string html = "";
@@ -500,7 +499,7 @@ namespace Nimbus.Web.API.Controllers
 
             return new ChannelHtmlWrapper { Html = html, Count = channels.Count };
         }
-                           
+
 
         /// <summary>
         /// visualizar 'meus canais'
@@ -656,38 +655,7 @@ namespace Nimbus.Web.API.Controllers
            
             return listChannel;
         }
-
-        /// <summary>
-        /// Método para retornar os channels que o usuário vai ler mais tarde
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        [HttpGet]
-        public List<Channel> showReadLaterChannel(int id, int skip)
-        {
-            List<Channel> listChannel = new List<Channel>();
-                using (var db = DatabaseFactory.OpenDbConnection())
-                {
-
-                    var listUserChannel = db.SelectParam<UserChannelReadLater>(ch => ch.UserId == NimbusUser.UserId && ch.Visible == true)
-                                                                 .Skip(15 * skip).Take(15)
-                                                                 .Select(ch => ch.ChannelId);
-
-                    listChannel = listUserChannel.Select(rl => db.Where<Channel>(ch => ch.Visible == true && ch.Id == rl)
-                                                .FirstOrDefault()).Where(ch => ch != null).ToList();
-
-                    foreach (var item in listChannel)
-                    {
-                        if (item.OrganizationId == 1) // quando o cara não é org pagante, nao pode mudar a capa do channel, logo no abstract iria ficar uma 'cor solida feia'
-                        {
-                            item.ImgUrl = item.ImgUrl.Replace("/CapaChannel/", "/category/");
-                        }
-                    }
-                }
-           
-            return listChannel;
-        }
-
+         
         #endregion
 
 

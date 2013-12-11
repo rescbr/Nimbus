@@ -98,13 +98,18 @@ function ChangeTo(tipoPost, tipoAtual)
 //método que busca os tópicos de um canal
 function verMaisTopics(id, orderBy, category, global)
 {
+    var type = "abstopic";
     if (global == 'skipPopular')
         value = skipPopular;
     else if (global == 'skipAll')
         value = skipAll;
+    else if (global == 'skipReadLater') {
+        value = skipReadLater;
+        type = "marcado";
+    }
 
     $.ajax({
-        url: "/api/topic/AbstTopicHtml/" + id +"?viewBy=" + orderBy + "&categoryID=" + category + "&skip=" +value ,
+        url: "/api/topic/AbstTopicHtml/" + id +"?viewBy=" + orderBy + "&categoryID=" + category + "&skip=" +value + "&type=" + type,
         type: "GET",
         contentType: "application/json;charset=utf-8",
         statusCode: {
@@ -114,6 +119,8 @@ function verMaisTopics(id, orderBy, category, global)
                     skipPopular = skipPopular + 1;
                 else if (global == 'skipAll')
                     skipAll = skipAll + 1;
+                else if (global == 'skipReadLater')
+                    skipReadLater = skipReadLater + 1;
 
                 document.getElementById(orderBy).innerHTML += newData.Html;
 
@@ -215,36 +222,6 @@ function verMaisChannels(id, orderBy, category, global) {
     });
 }
 
-//método que busca os tópicos de read later
-function verMaisReadLater(id, category, global) {
-    if (global == 'skipReadLater')
-        value = skipReadLater;
- 
-
-    $.ajax({
-        url: "/api/channel/AbstChannelHtml/" + id + "?viewBy=readLater" + "&categoryID=" + category + "&skip=" + value,
-        type: "GET",
-        contentType: "application/json;charset=utf-8",
-        statusCode: {
-            200: function (newData) {
-
-                if (global == 'skipReadLater')
-                    skipReadLater = skipReadLater + 1;
-
-                document.getElementById("readLater").innerHTML += newData.Html;
-
-                if (newData.Count < 15) {
-                    document.getElementById("btn_" + global).style.display = "none";
-                }
-            },
-
-            500: function () {
-                //erro
-                window.alert("Erro ao processar requisição. Tente novamente mais tarde.");
-            }
-        }
-    });
-}
 
 //método que busca  as mensagens por paginaçao e/ou enviadas
 function viewMessages(global, viewBy, typeBtn, typeClick) {

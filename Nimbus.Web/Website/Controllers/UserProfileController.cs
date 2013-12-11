@@ -25,12 +25,13 @@ namespace Nimbus.Web.Website.Controllers
             var userApi = ClonedContextInstance<API.Controllers.UserController>();
             var msgApi = ClonedContextInstance<API.Controllers.MessageController>();
             var categoryApi = ClonedContextInstance<API.Controllers.CategoryController>();
+            var topicApi = ClonedContextInstance<API.Controllers.TopicController>();
 
             var taskChannelPaid = Task.Run(() => channelApi.UserChannelPaid(NimbusUser.UserId));
             var taskUser = Task.Run(() => userApi.showProfile(id));
             var taskChannelFollow = Task.Run(() => channelApi.FollowsChannel(NimbusOrganization.Id, 0));
             var taskMyChannels = Task.Run(() => channelApi.MyChannel(id , 0));
-            var taskReadLater = Task.Run(() => channelApi.showReadLaterChannel(NimbusOrganization.Id, 0));
+            var taskReadLater = Task.Run(() => topicApi.showReadLaterTopic(NimbusOrganization.Id, 0));
             var taskMessages = Task.Run(() => msgApi.ReceivedMessages(0));
             var taskCategories = Task.Run(() => categoryApi.showAllCategory());
             var taskChannelManager = Task.Run(()=>channelApi.ModeratorChannel(id));

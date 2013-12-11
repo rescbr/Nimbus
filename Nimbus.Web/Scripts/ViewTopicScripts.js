@@ -427,11 +427,15 @@ function ajaxTopicReadLater(id, readOn, read)
         contentType: "application/json;charset=utf-8",
         statusCode: {
             200: function (newData) {
-                if (newData == true) {
+                if (newData == true && read == "true") {
                     document.getElementById('pReadLater_' + id).innerHTML = 'Marcado';
                 }
                 else
                 {
+                    document.getElementById('divReadLater_'+id).onclick = function ()
+                    {
+                        ajaxTopicReadLater(id, 'null', 'true');
+                    };
                     document.getElementById('pReadLater_' + id).innerHTML = 'Ler mais tarde';
                 }
             },
