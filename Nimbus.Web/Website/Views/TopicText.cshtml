@@ -1,11 +1,7 @@
 ﻿@model Nimbus.Web.Website.Models.TopicModel
 
 <div id="divCurrent_@Model.CurrentTopic.TopicType">
-
-    <p>
-        <label id="pTopicText">@(new HtmlString(Model.CurrentTopic.Text))</label> 
-    </p>
-
+    @(new HtmlString(Model.CurrentTopic.Text))
 </div>
 
 
