@@ -649,7 +649,7 @@ namespace Nimbus.Web.API.Controllers
                    {
                        if (item.OrganizationId == 1) // quando o cara não é org pagante, nao pode mudar a capa do channel, logo no abstract iria ficar uma 'cor solida feia'
                        {
-                           item.ImgUrl = item.ImgUrl.Replace("/capachannel/", "/category/");
+                           item.ImgUrl = item.ImgUrl.ToLower().Replace("/capachannel/", "/category/");
                        }
                    }
                 }                
