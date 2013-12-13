@@ -868,7 +868,20 @@ input[type=submit].divSaveNewChannel:hover, button.divSaveNewChannel:hover {
 
 /*Novo Tópico*/
 label#lblVideo, label#lblText, label#lblDiscussion, label#lblExam {
-    font-weight:        bold;
+    padding:            4px;
+    background:         #d1d3d4;
+    color:              #2b2d2e;
+    margin-left:        24px;
+    cursor:             pointer;
+}
+
+button#bntAddItem {
+    margin-left:        250px;
+    background:         #d1d3d4;
+    color:              #2b2d2e;
+    height:             26px;
+    width:              100px;
+    border:             none;
     cursor:             pointer;
 }
 
@@ -1196,6 +1209,7 @@ nav.chanTopBar {
     cursor:             pointer;
 }
 
+/*
 .wrapperChannel div.divTopic-grade:first-child {
     margin-left:        10px;
 }
@@ -1203,7 +1217,7 @@ nav.chanTopBar {
 .wrapperChannel div.divTopic-grade:last-child {
     margin-right:       10px;
 }
-
+*/
 div.divNotifications, div#divComments, div#divPopularTopics, div#divAllTopics {
     margin:             0 auto;
     height:             100%;

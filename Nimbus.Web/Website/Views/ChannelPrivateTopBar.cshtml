@@ -72,7 +72,7 @@
                     }
                     else
                     {
-                        <text>Não há novas atividades neste canal.</text>
+                        <p>Não há novas atividades neste canal.</p>
                     }
                 </div>
                 @if (Model.ChannelNotifications.Count > 0)
@@ -128,7 +128,7 @@
                 <p>
                     Descricao
                 </p>
-                <textarea cols="30" rows="5" id="txtaDescription" maxlength="150" required name="txtaDescription" placeholder="Descrição do Tópico" style="max-width: 384px; min-width: 384px" ></textarea>                
+                <textarea cols="30" rows="5" id="txtaDescription" maxlength="150" required name="txtaDescription" placeholder="Descrição do Tópico" style="max-width: 384px; min-width: 384px; background: #ffffff;" ></textarea>                
             </div>
 
             <div class="divformNewChannel">
@@ -146,8 +146,7 @@
 
             <div id="divTypeTopic" style="display:none;">
                 <div id="divVideo" style="display:none;" class="divformNewChannel">
-                    <input type="text" id="iptnamevideo" name="iptnamevideo" value="URL do vídeo" onfocus="javascript: this.value = ''"
-                                                    onchange="getUrlVideo(this.name, 'divFrameVideo','iframeVideo');" />
+                    <input type="text" id="iptnamevideo" name="iptnamevideo" value="URL do vídeo" onfocus="javascript: this.value =''" onchange="getUrlVideo(this.name, 'divFrameVideo','iframeVideo');" placeholder="URL do Video" style="max-width: 384px; min-width: 384px" />
                     <label>Somente url do youtube</label><br />
                     <div id="divFrameVideo" style="display:none">                        
                             <iframe name="iframeVideo" width="420" height="345" id="iframeVideo" src=""></iframe>
@@ -155,14 +154,14 @@
                 </div>
 
                 <div id="divText" style="display:none;" class="divformNewChannel">
-                    <textarea id="txtaArticle"></textarea>
+                    <textarea id="txtaArticle" placeholder="Escreva Aqui" style="max-width: 384px; min-width: 384px; background: #ffffff;"></textarea>
                 </div>
 
                 <div id="divDiscussion" style="display:none;" class="divformNewChannel">
                     <p>
-                        Questão em debate:
-                        <textarea id="txtaTextMsg"></textarea>
-                        </p>
+                        Questão em debate
+                   </p>
+                    <textarea id="txtaTextMsg" placeholder="Escreva Aqui" style="max-width: 384px; min-width: 384px; background: #ffffff;"></textarea>
                 </div>
 
                 <div id="divExam" style="display:none;" class="divformNewChannel">
@@ -233,13 +232,12 @@
             }
         </div>
     </div>
-
 <script type="text/javascript">
     $(function () {
-        $('#txtaArticle').width(500);
+        $('#txtaArticle').width(384);
         $('#txtaArticle').height(300);
         $('#txtaArticle').htmlarea();
-        $('#txtaTextMsg').width(500);
+        $('#txtaTextMsg').width(384);
         $('#txtaTextMsg').height(300);
         $('#txtaTextMsg').htmlarea();
     });
