@@ -32,7 +32,7 @@
         </div>
         <div id="divNotificationLoad">
             <img src="/images/utils/loading.gif" style="display:block;" id="imgNotificationLoad" />
-            <div id="divNotificationLoadButton" style="display:none;" onclick="getNotifications();">Carregar mais notificações</div>
+            <div id="divNotificationLoadButton" style="display:none;" onclick="getNotifications();"><p>Carregar mais notificações</p></div>
         </div>
     </div>
 
@@ -129,36 +129,45 @@
         <form action='/userprofile/SaveNewChannel' method="post" enctype="multipart/form-data" name="saveChannel">
             @if (Model.CurrentUser.UserId == Model.User.Id)
             {
+                <div class="divformNewChannel">
+                    <p>Nome</p>
+                    <input id="txtNameNewChannel" name="txtNameNewChannel" type="text" style="max-width: 384px; min-width: 384px" required />
+                </div>
+                
+                <div class="divformNewChannel">
+                    <p>Descrição</p>
+                    <textarea id="txtaDescNewChannel" name="txtaDescNewChannel" style="max-width: 384px; min-width: 384px"></textarea>
+                </div>
+                
+                <div class="divformNewChannel">
+                    <p>Categoria</p>
+                    <select id="slcCategory" name="slcCategory" style="max-width: 384px; min-width: 384px">
+                        <option value="0" selected>Selecionar categoria</option>
+                        @foreach (var item in Model.Categories.OrderBy(c => c.Name))
+                        {
+                                            <option value="@item.Id">@item.Name</option>
+                        }
+                                    </select>
+                </div>
+                
+                <div class="divformNewChannel">
+                    <p>Este canal é um curso?</p>
                     <p>
-                        Nome:
-                        <input id="txtNameNewChannel" name="txtNameNewChannel" type="text" maxlength="50" min="" required />
+                        <input type="radio" name="isCourse" value="true" required  /> Sim
+                        <input type="radio" name="isCourse" value="false" required /> Não
                     </p>
+                </div>
+                
+                <div class="divformNewChannel">
+                    <p>Aberto para comentários?</p>
                     <p>
-                        Descrição:
-                        <textarea id="txtaDescNewChannel" name="txtaDescNewChannel" cols="30" rows="5" maxlength="400"></textarea>
+                        <input type="radio" name="openComment" value="true" required /> Sim
+                        <input type="radio" name="openComment" value="false" required /> Não
                     </p>
-                    <p>
-                        Categoria:
-                        <select id="slcCategory" name="slcCategory">
-                            <option value="0" selected>Selecionar categoria</option>
-                            @foreach (var item in Model.Categories.OrderBy(c => c.Name))
-                            {
-                                    <option value="@item.Id">@item.Name</option>
-                            }
-                            </select>
-                        </p>
-                        <p>
-                            Este canal é um curso?
-                            <input type="radio" name="isCourse" value="true" required /> Sim
-                            <input type="radio" name="isCourse" value="false" required />Não
-                        </p>
-                        <p>
-                            Aberto para comentários:
-                            <input type="radio" name="openComment" value="true" required /> Sim
-                            <input type="radio" name="openComment" value="false" required />Não
-                        </p>
-                        <input type="submit" value="Cancelar" id="cancelar" onclick="Clear();" />
-                        <input type="submit" value="Salvar" id="salvar" />
+                </div>
+                
+                 <input type="submit" value="Cancelar" id="cancelar" onclick="Clear();" />
+                 <input type="submit" value="Salvar" id="salvar" />
                         @*Se for pago, escolher preço
                           Se for de org != nimbus, poder escolher entre privado ou aberto, poder escolher
                             a foto da capa personalizada

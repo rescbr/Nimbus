@@ -633,7 +633,7 @@ div.chanPaidImg {
 
 nav.profTopBar {
     margin-top:         24px;
-    width:              600px;
+    width:              644px;
     height:             39px;
     background:         #2b2d2e;
     font-weight:        normal;
@@ -641,14 +641,19 @@ nav.profTopBar {
 }
 
 .profTopBar li {
-    width:              100px;
+    width:              107px;
     text-align:         center;
     line-height:        3em;
 }
 
+
+.chanTopBar li:last-child {
+    width:              109px;
+}
+
 .profTopBar p {
     text-align:         center;
-    width:              100px;
+    width:              107px;
     height:             39px;
     font-weight:        normal;
     color:              #FFFFFF;
@@ -780,8 +785,14 @@ p.timeNotification {
 }
 
 p.txtNotification {
-    padding-top:          24px;
+    height:             24px;
+    padding-top:        24px;
     font-size:           medium;
+    overflow:            hidden;
+}
+
+p.txtNotification a {
+    color:              #87c240;
 }
 
 div.attChoice {
@@ -810,13 +821,26 @@ div.btnAccept:hover, div.btnAccept:hover p {
     cursor:             pointer;
 }
 
+/*------------------ Private Profile - New Channel ----------------*/
+div#divNewChannel {
+    margin:             24px;
+    width:              596px;
+}
+
+div.divformNewChannel {
+    background:         #f1f2f2;
+    width:              408px;
+    padding:            12px;
+    border-bottom:      1px solid #d1d3d4;
+}
+
 /*------------------ Private Profile - fim Att --------------------*/
 
 /*------------------ Post Canais começo --------------------*/
 
 div#divChannel {
     float:             left;
-    margin:            24px;
+    margin:            24px 0 0 24px;
     width:             180px;
     height:            150px;
     background:        #d1d3d4;
@@ -871,7 +895,7 @@ div#headerChannel{
 
 div.divTopic-grade {
     float:             left;
-    margin:            15px;
+    margin:            24px 0 0 24px;
     width:             180px;
     height:            auto;
     background:        none;
@@ -929,32 +953,32 @@ p.contentTopic-grade{
     text-align:         center;
 }
 
-.btnRightTopic-grade {
+div.btnRightTopic-grade {
     float:              right;
     background:         #2b2d2e;
     color:              #87c240;
     width:              40px;
+    height:             39px;
     border-left:        1px solid #FFFFFF;
 }
 
 
 .btnRightTopic-grade p {
-    line-height:        3em;
-    color:              #2b2d2e;
     text-align:         center;
+    padding-top:         8px;
 }
 
-.btnRightTopicIsFavorited-grade {
+div.btnRightTopicIsFavorited-grade {
     float:              right;
     background:         #2b2d2e;
     width:              40px;
-    ali
+    height:             39px;
     border-left:        1px solid #FFFFFF;
 }
 
 .btnRightTopicIsFavorited-grade p {
-    line-height:        3em;
     text-align:         center;
+    padding-top:         8px;
 }
 
 .btnRightTopicIsFavorited-grade:hover, .btnRightTopic-grade:hover {
@@ -1451,10 +1475,36 @@ p#timeNotification {
 }
 
 p#txtNotification {
+    height:             24px;
     padding-top:        24px;
     font-size:          medium;
+    overflow:           hidden;
 }
 
+p.txtNotification a {
+    color:              #87c240;
+    font-weight:        bold;
+}
+
+/*carregar mais*/
+div#divNotificationLoadButton{
+    margin:             0 auto;
+    background:         #2b2d2e;
+    width:              200px;
+    height:             26px;
+    cursor:             pointer;
+}
+
+div#divNotificationLoadButton:hover, #divNotificationLoadButton p:hover{
+    color:              #87c240;
+    cursor:             pointer;
+}
+
+#divNotificationLoadButton p{
+    color:              #FFFFFF;
+    text-align:         center;
+    font-size:          small;
+}
 
 /*Top Bar*/
 nav.chanTopBar {
