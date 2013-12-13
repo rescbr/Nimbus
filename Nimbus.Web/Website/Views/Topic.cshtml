@@ -24,14 +24,19 @@
 <div id="divInfTopic">
     <div style="width: 150px; margin: 0 auto;">
             <img src="@Model.CurrentTopic.ImgUrl " id="imgTopic" height="100" alt=""  width="150" />
-        </div>
+    </div>
 
     <h1 id="nameTopicPage">
-       <label id="lblTopicTitle"> @Model.CurrentTopic.Title</label> <br />
-       <a href="/channel/index/@Model.CurrentChannel.Id"> @Model.CurrentChannel.Name</a>
+       <label id="lblTopicTitle"> @Model.CurrentTopic.Title</label>
     </h1>
+    <a href="/channel/index/@Model.CurrentChannel.Id"><p id="channelTopicPage">@Model.CurrentChannel.Name</p></a>
 
-    <p id="pTopicDescription" class="txtInfTopic">@Model.CurrentTopic.Description</p>
+    <div class="infoTitleChannel">
+        <h2>Sobre</h2>
+        <p id="pTopicDescription" class="txtInfTopic">
+            @Model.CurrentTopic.Description
+        </p>
+    </div>
 
     <h1 class="favTopic">
         <img src="/images/utils/starv.png" />
@@ -138,7 +143,14 @@
 
 
 <div id="divContentTopic" style="float:left; width: 644px;">
-  
+  @*Temporario*@
+    <nav class="topicTopBar">
+        <ul class="sbs">
+            <li class="press"><a name="divNotification" onclick="EnableDiv(this.name,'currentDiv');"><p>Questionário</p></a></li>
+            <li class="press"><a name="divMyChannels" onclick="EnableDiv(this.name, 'currentDiv');"><p>Desempenho</p></a></li>
+        </ul>
+    </nav>
+    @*Fim Temporario*@
     <div class="contentPageTopic">
     @*Topico em formato texto*@
     @if (Model.CurrentTopic.TopicType == Nimbus.Model.Enums.TopicType.exam)
@@ -223,7 +235,7 @@ else
 <section class="semantic-content" id="modal-reportTopic" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
     <div class="modal-inner">
         <header id="modal-label">
-            Reportar tópico
+            Reportar Tópico
         </header>
         <div class="modal-content">
             <!-- The modals content -->

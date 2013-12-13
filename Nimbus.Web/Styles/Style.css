@@ -1218,6 +1218,7 @@ nav.chanTopBar {
     margin-right:       10px;
 }
 */
+
 div.divNotifications, div#divComments, div#divPopularTopics, div#divAllTopics {
     margin:             0 auto;
     height:             100%;
@@ -1245,13 +1246,13 @@ nav.topicTopBar {
 }
 
 .topicTopBar li {
-    width:              215px;
+    width:              322px;
     text-align:         center;
     line-height:        3em;
 }
 
 .topicTopBar li:last-child {
-    width:              214px;
+    width:              322px;
 }
 
 .topicTopBar li:hover {
@@ -1265,7 +1266,7 @@ nav.topicTopBar {
 /* Content */
 .topicTopBar p {
     text-align:         center;
-    width:              214px;
+    width:              322px;
     height:             39px;
     text-decoration:    none;
     color:              #FFFFFF;
@@ -1316,7 +1317,6 @@ div#nameChannelPage {
     background:         #bcbec0;
     top:                142px;
     position:           absolute;
-    margin-left:        68px;
     /*z-index:            999999;*/
     float:              none;
 }
@@ -1329,12 +1329,22 @@ div#divInfTopic {
     background:         #f1f2f2;
     float:              left;
     padding:            10px 10px 0 10px;
+    color:              #000000;
 }
 
 h1#nameTopicPage {
     margin-left:        10px;
+    margin-top:         65px;
     text-align:         left;
-    margin-top:         55px;
+    color:              #000000;
+}
+
+p#channelTopicPage {
+    font-size:          small;
+    line-height:        1em;
+    text-align:         right;
+    margin-right:       10px;
+    color:              #000000;
 }
 
 p.txtInfTopic {
@@ -1405,8 +1415,60 @@ div.contentTitleTopic {
     height:             1.3em;
 }
 
-div.contentPageTopic {
-    margin:             48px 0 48px 24px;
+div.contentPageTopic {/*
+    margin:             24px 0 24px 24px;*/
+}
+
+/* Topico Avaliacao */
+div#divAllQuestions{
+    margin:           0 24px 0 24px;
+}
+
+div#divQuestTopAval {
+    width:             548px;
+    padding:           24px;
+    background:        #FFFFFF;
+    border-bottom:     1px solid #bcbec0;
+}
+
+section.divPergExam p{
+    color:             #87c240;
+    font-size:         1em;
+    font-weight:       bold;
+}
+
+section.divPergExam label.enunciado{
+    color:             #000000;
+    font-size:         1em;
+    font-weight:       bold;
+}
+
+section.divPergExam label.resposta{
+    color:             #2b2d2e;
+    font-weight:       normal;
+}
+
+
+div#divBtnFinishExam {
+    margin-left:        500px;
+    width:              288px;
+    height:             26px;
+    clear:              both;
+}
+
+button.btnFinishTopicAval {
+    float:              left;
+    background:         #87c240;
+    width:              120px;
+    height:             26px;
+    cursor:             pointer;
+    border:             none;
+    color:              #FFFFFF;
+}
+
+button.btnFinishTopicAval:hover {
+    color:              #2b2d2e;
+    cursor:             pointer;
 }
 
 /* Comentarios */

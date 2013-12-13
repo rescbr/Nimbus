@@ -9,8 +9,9 @@
             var answers = question.ChoicesAnswer.ToList();
             answers.Shuffle();
 
-            <section class="divPergExam"  >
-                <p><strong>@(i + 1)</strong> - <label class="enunciado">@question.TextQuestion</label></p>
+            <div id="divQuestTopAval">
+            <section class="divPergExam">
+                <p>@(i + 1). <label class="enunciado">@question.TextQuestion</label></p>
 
                 @foreach (var answer in answers)
                 {
@@ -19,6 +20,7 @@
                     <label class="resposta">@answer.Value</label><br />
                 }
             </section>
+            </div>
         }
     </div>
 
@@ -27,9 +29,7 @@
         !Model.RolesCurrentUser.Contains("channelmanager")) 
     {*@
         <div id="divBtnFinishExam">
-            <div onclick="ajaxFinishExam(@Model.CurrentTopic.Id);">
-                <p>Terminar</p>
-            </div>
+            <button onclick="ajaxFinishExam(@Model.CurrentTopic.Id);" class="btnFinishTopicAval">Terminar</button>
         </div>
     @*}*@
 </div>
