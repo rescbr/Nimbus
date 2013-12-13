@@ -602,7 +602,8 @@ div.participation {
     margin-top:         30px;
     margin-bottom:      30px;
     text-align:         center;
-    font-size:          300%;
+    font-size:          3em;
+    line-height:        1em;
     color:              #87c240;
 }
 
@@ -821,8 +822,8 @@ div.btnAccept:hover, div.btnAccept:hover p {
     cursor:             pointer;
 }
 
-/*------------------ Private Profile - New Channel ----------------*/
-div#divNewChannel {
+/*------------------ PrivateProfileTopBar New Channel & ChannelPrivateTopBar New Topic ----------------*/
+div#divNewChannel, div#divNewTopic {
     margin:             24px;
     width:              596px;
 }
@@ -834,6 +835,46 @@ div.divformNewChannel {
     border-bottom:      1px solid #d1d3d4;
 }
 
+div.divBtnNewChannel {
+    margin-left:        192px;
+    width:              288px;
+    height:             26px;
+    clear:              both;
+}
+
+input[type=submit].divCnclNewChannel, button.divCnclNewChannel, input[type=submit].divSaveNewChannel, button.divSaveNewChannel {
+    float:              left;
+    background:         #2b2d2e;
+    width:              120px;
+    height:             26px;
+    cursor:             pointer;
+    border:             none;
+    color:              #FFFFFF;
+}
+
+input[type=submit].divSaveNewChannel, button.divSaveNewChannel {
+    background:         #87c240;
+}
+
+input[type=submit].divCnclNewChannel:hover, button.divCnclNewChannel:hover  {
+    color:              #87c240;
+    cursor:             pointer;
+}
+
+input[type=submit].divSaveNewChannel:hover, button.divSaveNewChannel:hover {
+    color:              #2b2d2e;
+    cursor:             pointer;
+}
+
+/*Novo Tópico*/
+label#lblVideo, label#lblText, label#lblDiscussion, label#lblExam {
+    font-weight:        bold;
+    cursor:             pointer;
+}
+
+ul.ulPerg1 {
+    margin:             0 0 0 24px;
+}
 /*------------------ Private Profile - fim Att --------------------*/
 
 /*------------------ Post Canais começo --------------------*/
@@ -1452,9 +1493,7 @@ div.delComment {
 
 .divNotification {
     background:         #d1d3d4;
-    margin-bottom:      20px;
-    margin-top:         20px;
-    margin-left:        10px;
+    margin:             24px 0 0 24px;
     width:              590px;
     height:             70px;
     border-bottom:      2px solid #87c240;
@@ -1487,6 +1526,10 @@ p.txtNotification a {
 }
 
 /*carregar mais*/
+div#divNotificationLoad{
+    margin:             24px;
+}
+
 div#divNotificationLoadButton{
     margin:             0 auto;
     background:         #2b2d2e;
@@ -1495,12 +1538,12 @@ div#divNotificationLoadButton{
     cursor:             pointer;
 }
 
-div#divNotificationLoadButton:hover, #divNotificationLoadButton p:hover{
+div#divNotificationLoadButton:hover, #divNotificationLoadButton p:hover, #divNotificationLoadButton a:hover{
     color:              #87c240;
     cursor:             pointer;
 }
 
-#divNotificationLoadButton p{
+#divNotificationLoadButton p, #divNotificationLoadButton a{
     color:              #FFFFFF;
     text-align:         center;
     font-size:          small;
@@ -1546,14 +1589,6 @@ nav.chanTopBar {
     text-decoration:    none;
     color:              #87c240;
     cursor:             pointer;
-}
-
-.wrapperChannel div.divTopic-grade:first-child {
-    margin-left:        10px;
-}
-
-.wrapperChannel div.divTopic-grade:last-child {
-    margin-right:       10px;
 }
 
 div.divNotifications, div#divComments, div#divPopularTopics, div#divAllTopics {

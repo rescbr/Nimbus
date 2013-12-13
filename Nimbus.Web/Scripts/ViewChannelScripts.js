@@ -74,11 +74,10 @@ function CreatedDivQuestion()
 {
     var nextPerg= parseInt(CurrentQuestion) + 1; //variavel global
     var html = 
-    "<div id=\"divPergunta" + nextPerg + "\" class=\"divPergEditarNimbus\">" +
-                   "<p>Enunciado da questão:"+
+    "<br /> <div id=\"divPergunta" + nextPerg + "\" class=\"divPergEditarNimbus\">" +
+                   "<p>Enunciado da questão</p>"+
     "<input id=\"QuestionPerg" + nextPerg + "\" class=\"enunciado\" type=\"text\" maxlength=\"600\" />" +
-    "</p>"+
-    "<p>Respostas:</p>"+
+    "<p>Respostas</p>"+
      "<div>"+
          "<ul id=\"ulPerg" + nextPerg + "\">" +
            "<li id=\"liPerg" + nextPerg + "_opt1\">" + //ex: pergunta 1 _ opçao 1

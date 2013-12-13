@@ -36,8 +36,7 @@
         </ul>
     </nav>
 
-<div>
-
+    <div>
         <div id="divPopularTopics" style="display:none;">
             <div id="popular">
                 @foreach (var item in Model.AllTopics.OrderByDescending(m => m.Count))
@@ -79,8 +78,10 @@
                 @if (Model.ChannelNotifications.Count > 0)
                 {
                     <div id="divNotificationLoad">
-                        <img src="/images/utils/loading.gif" style="display:none;" id="imgNotificationLoad" />
-                        <div id="divNotificationLoadButton" style="display:block;" onclick="getChannelNotifications(@Model.CurrentChannel.Id, '@lastNotificationGuid');">Carregar mais notificações</div>
+                        <div style="margin: 0 auto;">
+                             <img src="/images/utils/loading.gif" id="imgNotificationLoad" />
+                        </div>
+                        <div id="divNotificationLoadButton" style="display:block;" onclick="getChannelNotifications(@Model.CurrentChannel.Id, '@lastNotificationGuid');"><p>Carregar mais notificações</p></div>
                     </div>
                 }
             </div>
@@ -101,39 +102,50 @@
         </div>
 
         <div id="divNewTopic" style="display:none;">
-            <p>
-                Nome do tópico:
-                <input type="text" id="txtNameTopic" maxlength="50" min="5" required name="txtNameTopic" />
-            </p>
-            <p>
-                Imagem ilustrativa:
+            <div class="divformNewChannel">
+                <p>
+                    Nome do Tópico
+                </p>
+                <input type="text" id="txtNameTopic" maxlength="50" min="5" required name="txtNameTopic" placeholder="Nome do Tópico" style="max-width: 384px; min-width: 384px" />
+            </div>
+
+            <div class="divformNewChannel">
+                <p>
+                    Imagem ilustrativa
+                </p>
                 <div id="divImgTopico" style="display:none;">
                     <img id="imgPrevia" src="" height="100" width="150" />
                 </div>
-            </p>
                 <form action='/channel/upload' method="post" enctype="multipart/form-data" name="imagem_original">
                     <input type="file" name="inptImgTopic" id="inptImgTopic" />
                     <input type="submit" value="Carregar" class="hidden" style="display:none" id="upload" /><br />
                     <label>Imagem de no máx. 5MB</label>
                     <input type="hidden" id="url" name="url" />
                 </form>
-        
-            <p>
-                Descrição:<br />
-                <textarea cols="30" rows="5" id="txtaDescription" maxlength="150" required name="txtaDescription"></textarea>
-            </p>
+            </div>
 
-        
-                <p>Tipo:</p>
+            <div class="divformNewChannel">
+                <p>
+                    Descricao
+                </p>
+                <textarea cols="30" rows="5" id="txtaDescription" maxlength="150" required name="txtaDescription" placeholder="Descrição do Tópico" style="max-width: 384px; min-width: 384px" ></textarea>                
+            </div>
+
+            <div class="divformNewChannel">
+                <p>
+                    Tipo do Tópico
+                </p>
                 <div>
                     <label id="lblVideo" onclick="EnableTwoDiv('divVideo', 'divTipoTopic', 'divTypeTopic');">Vídeo</label>
                     <label id="lblText" onclick="EnableTwoDiv('divText', 'divTipoTopic', 'divTypeTopic');">Artigo</label>
                     <label id="lblDiscussion" onclick="EnableTwoDiv('divDiscussion', 'divTipoTopic', 'divTypeTopic');">Discussão</label>
                     <label id="lblExam" onclick="EnableTwoDiv('divExam', 'divTipoTopic', 'divTypeTopic');">Avaliação</label>
                 </div>
-       
+            </div>
+
+
             <div id="divTypeTopic" style="display:none;">
-                <div id="divVideo" style="display:none;">
+                <div id="divVideo" style="display:none;" class="divformNewChannel">
                     <input type="text" id="iptnamevideo" name="iptnamevideo" value="URL do vídeo" onfocus="javascript: this.value = ''"
                                                     onchange="getUrlVideo(this.name, 'divFrameVideo','iframeVideo');" />
                     <label>Somente url do youtube</label><br />
@@ -142,45 +154,46 @@
                     </div>
                 </div>
 
-                <div id="divText" style="display:none;">
+                <div id="divText" style="display:none;" class="divformNewChannel">
                     <textarea id="txtaArticle"></textarea>
                 </div>
 
-                <div id="divDiscussion" style="display:none;">
+                <div id="divDiscussion" style="display:none;" class="divformNewChannel">
                     <p>
                         Questão em debate:
                         <textarea id="txtaTextMsg"></textarea>
-                    </p>
+                        </p>
                 </div>
 
-                <div>
-                    <div id="divExam" style="display:none;">
-                        <div id="divPergunta1" class="divPergEditarNimbus">
-                            <p>
-                                Enunciado da questão:
-                                <input id="QuestionPerg1" class="enunciado" type="text" maxlength="600" />
-                            </p>
-                            <p>Respostas:</p>
-                            <div>
-                                <ul id="ulPerg1">
-                                    <li id="liPerg1_opt1">
-                                        @*pergunta 1 _ opçao 1*@
-                                        <input type="radio" class="rdbPergEditNimbus" name="radio_perg1" id="rdbPerg1_opt1" />
-                                        <input id="txtPerg1_opt1" class="resposta" type="text" onfocus="javascript: this.value = ''" value="Opção 1" />
-                                    </li>
-                                    <li id="liPerg1_opt2">
-                                        <input type="radio" class="fakeDisable rdbPergEditNimbus" name="radio_perg1" id="rdbPerg1_opt2" />
-                                        <input id="txtPerg1_opt2" class="fakeDisable" onclick="DisableOption('2', 'divPergunta1');" type="text" value="Opção 2" />
-                                    </li>
-                                </ul>
-                            </div>
+                <div id="divExam" style="display:none;" class="divformNewChannel">
+                    <div id="divPergunta1" class="divPergEditarNimbus">
+                        <p>
+                            Enunciado da questão
+                        </p>
+                        <input id="QuestionPerg1" class="enunciado" type="text" maxlength="600" />
+                        <p>Respostas</p>
+                        <div>
+                            <ul id="ulPerg1">
+                                <li id="liPerg1_opt1">
+                                    @*pergunta 1 _ opçao 1*@
+                                    <input type="radio" class="rdbPergEditNimbus" name="radio_perg1" id="rdbPerg1_opt1" />
+                                    <input id="txtPerg1_opt1" class="resposta" type="text" onfocus="javascript: this.value = ''" value="Opção 1" />
+                                </li>
+                                <li id="liPerg1_opt2">
+                                    <input type="radio" class="fakeDisable rdbPergEditNimbus" name="radio_perg1" id="rdbPerg1_opt2" />
+                                    <input id="txtPerg1_opt2" class="fakeDisable" onclick="DisableOption('2', 'divPergunta1');" type="text" value="Opção 2" />
+                                </li>
+                            </ul>
                         </div>
                     </div>
-                    <button id="bntAddItem" onclick="CreatedDivQuestion();">Add item</button>
+                    <button id="bntAddItem" onclick="CreatedDivQuestion();">Add item</button> @*Do jeito que tá, o botão de ADD fica entre as perguntas DDD: // E se tirar dessa div, ele aparece em todas as outras opções*@
                 </div>
-                <br />
-             
-                <button id="btnSalvar" onclick="SaveNewTopic(@Model.CurrentChannel.Id, false);">Salvar tópico</button>
+                
+            </div>
+
+            <div class="divBtnNewChannel">
+                <button class="divCnclNewChannel">Cancelar</button> @*Cancelar - Fazer a parte em JS*@
+                <button id="btnSalvar" onclick="SaveNewTopic(@Model.CurrentChannel.Id, false);" class="divSaveNewChannel">Criar Tópico</button>
             </div>
         </div>
 
@@ -220,7 +233,6 @@
             }
         </div>
     </div>
-</div>
 
 <script type="text/javascript">
     $(function () {

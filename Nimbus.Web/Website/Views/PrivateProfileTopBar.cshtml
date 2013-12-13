@@ -31,7 +31,9 @@
         <div id="divNotificationWrapper">
         </div>
         <div id="divNotificationLoad">
-            <img src="/images/utils/loading.gif" style="display:block;" id="imgNotificationLoad" />
+            <div style="margin: 0 auto;">
+                <img src="/images/utils/loading.gif" id="imgNotificationLoad" />
+            </div>
             <div id="divNotificationLoadButton" style="display:none;" onclick="getNotifications();"><p>Carregar mais notificações</p></div>
         </div>
     </div>
@@ -131,12 +133,12 @@
             {
                 <div class="divformNewChannel">
                     <p>Nome</p>
-                    <input id="txtNameNewChannel" name="txtNameNewChannel" type="text" style="max-width: 384px; min-width: 384px" required />
+                    <input id="txtNameNewChannel" name="txtNameNewChannel" type="text" placeholder="Nome do Canal" style="max-width: 384px; min-width: 384px" required />
                 </div>
                 
                 <div class="divformNewChannel">
                     <p>Descrição</p>
-                    <textarea id="txtaDescNewChannel" name="txtaDescNewChannel" style="max-width: 384px; min-width: 384px"></textarea>
+                    <textarea id="txtaDescNewChannel" name="txtaDescNewChannel" placeholder="Descrição do Canal" style="max-width: 384px; min-width: 384px"></textarea>
                 </div>
                 
                 <div class="divformNewChannel">
@@ -145,9 +147,9 @@
                         <option value="0" selected>Selecionar categoria</option>
                         @foreach (var item in Model.Categories.OrderBy(c => c.Name))
                         {
-                                            <option value="@item.Id">@item.Name</option>
+                            <option value="@item.Id">@item.Name</option>
                         }
-                                    </select>
+                    </select>
                 </div>
                 
                 <div class="divformNewChannel">
@@ -165,9 +167,13 @@
                         <input type="radio" name="openComment" value="false" required /> Não
                     </p>
                 </div>
+
+                <div class="divBtnNewChannel">
+                    <input type="submit" value="Cancelar" id="cancelar" onclick="Clear();" class="divCnclNewChannel" />
+                    <input type="submit" value="Salvar" id="salvar" class="divSaveNewChannel" />
+                </div>
+                 @**@
                 
-                 <input type="submit" value="Cancelar" id="cancelar" onclick="Clear();" />
-                 <input type="submit" value="Salvar" id="salvar" />
                         @*Se for pago, escolher preço
                           Se for de org != nimbus, poder escolher entre privado ou aberto, poder escolher
                             a foto da capa personalizada
