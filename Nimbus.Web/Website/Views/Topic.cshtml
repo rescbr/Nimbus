@@ -143,14 +143,6 @@
 
 
 <div id="divContentTopic" style="float:left; width: 644px;">
-  @*Temporario*@
-    <nav class="topicTopBar">
-        <ul class="sbs">
-            <li class="press"><a name="divNotification" onclick="EnableDiv(this.name,'currentDiv');"><p>Questionário</p></a></li>
-            <li class="press"><a name="divMyChannels" onclick="EnableDiv(this.name, 'currentDiv');"><p>Desempenho</p></a></li>
-        </ul>
-    </nav>
-    @*Fim Temporario*@
     <div class="contentPageTopic">
     @*Topico em formato texto*@
     @if (Model.CurrentTopic.TopicType == Nimbus.Model.Enums.TopicType.exam)
@@ -165,6 +157,14 @@
     else
     {
         @*Topico avaliacao*@
+        @*Temporario*@
+        <nav class="topicTopBar">
+            <ul class="sbs">
+                <li class="press"><a name="divNotification" onclick="EnableDiv(this.name,'currentDiv');"><p>Questionário</p></a></li>
+                <li class="press"><a name="divMyChannels" onclick="EnableDiv(this.name, 'currentDiv');"><p>Desempenho</p></a></li>
+            </ul>
+        </nav>
+        @*Fim Temporario*@
         @RenderPage("~/Website/Views/TopicText.cshtml")
     }
     </div>
