@@ -348,26 +348,24 @@ function ajaxSearch(campo)
     var text = document.getElementById('txtFieldSearch' + campo);
     text = text.value;
 
-    var select = document.getElementById("slcFilterSearch" + campo).selectedIndex;
-    var option = document.getElementById("slcFilterSearch" + campo).options;
-    var typeSearch = option[select].value;
-    
-    var stringUrl;
-    if(typeSearch == '0')
-    {
-        window.location.href = "/search/index/?text=" + text + "&filter=0";
-    }
-    else if (typeSearch == '1')
-    {
-        window.location.href = "/search/index/?text=" + text + "&filter=1";
-    }
-    else if (typeSearch == '2')
-    {
-        window.location.href = "/search/index/?text=" + text + "&filter=2";
-    }
-    else if (typeSearch == '3')
-    {
-        window.location.href = "/search/index/?text=" + text + "&filter=3";
+    if (text != '' && text != null) {
+        var select = document.getElementById("slcFilterSearch" + campo).selectedIndex;
+        var option = document.getElementById("slcFilterSearch" + campo).options;
+        var typeSearch = option[select].value;
+
+        var stringUrl;
+        if (typeSearch == '0') {
+            window.location.href = "/search/index/?text=" + text + "&filter=0";
+        }
+        else if (typeSearch == '1') {
+            window.location.href = "/search/index/?text=" + text + "&filter=1";
+        }
+        else if (typeSearch == '2') {
+            window.location.href = "/search/index/?text=" + text + "&filter=2";
+        }
+        else if (typeSearch == '3') {
+            window.location.href = "/search/index/?text=" + text + "&filter=3";
+        }
     }
 
 }
