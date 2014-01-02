@@ -34,14 +34,21 @@ namespace Nimbus.Web.API.Controllers
                 }
 
                 var listRelatedChannelIds = relatedCounter.OrderByDescending(ctr => ctr.Value).Take(qtd).Select(chid => chid.Key).ToArray();
-
-                var relatedChannels = db.Where<Channel>(ch => listRelatedChannelIds.Contains(ch.Id));
-                foreach (var item in relatedChannels)
+                if (listRelatedChannelIds.Count() > 0)
                 {
-                    item.ImgUrl = item.ImgUrl.ToLower().Replace("capachannel", "category");
+                    var relatedChannels = db.Where<Channel>(ch => listRelatedChannelIds.Contains(ch.Id));
+                    foreach (var item in relatedChannels)
+                    {
+                        item.ImgUrl = item.ImgUrl.ToLower().Replace("capachannel", "category");
+                    }
+                    return relatedChannels.ToList();
+                }
+                else
+                {
+                    return new List<Channel>();
                 }
 
-                return relatedChannels.ToList();
+               
             }
         }
     }

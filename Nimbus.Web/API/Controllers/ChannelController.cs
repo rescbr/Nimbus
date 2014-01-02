@@ -1313,8 +1313,8 @@ namespace Nimbus.Web.API.Controllers
                 channel.CreatedOn = DateTime.Now;
                 channel.Followers = 0;
                 channel.LastModification = DateTime.Now;
-                channel.Description = channel.Description.Substring(0, 200);
-                channel.Name = channel.Description.Substring(0, 100);
+                channel.Description = channel.Description.Length > 200 ? channel.Description.Substring(0, 200): channel.Description;
+                channel.Name = channel.Name.Length > 100 ? channel.Name.Substring(0, 100) : channel.Name;
              
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {

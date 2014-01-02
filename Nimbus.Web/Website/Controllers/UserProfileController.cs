@@ -220,13 +220,10 @@ namespace Nimbus.Web.Website.Controllers
                 int idCateg = Convert.ToInt32(Request.Form["slcCategory"]);
 
                 channel.CategoryId = idCateg;
-                channel.CreatedOn = DateTime.Now;
                 channel.Description = Request.Form["txtaDescNewChannel"];
-                channel.Followers = 0;
                 channel.ImgUrl = categoryAPI.GetImgTopChannel(idCateg).ToLower(); 
                 channel.IsCourse = Convert.ToBoolean(Request.Form["isCourse"]);
                 channel.IsPrivate = false;
-                channel.LastModification = DateTime.Now;
                 channel.Name = Request.Form["txtNameNewChannel"];
                 channel.OpenToComments = Convert.ToBoolean(Request.Form["openComment"]); ;
                 channel.OrganizationId = NimbusOrganization.Id;
