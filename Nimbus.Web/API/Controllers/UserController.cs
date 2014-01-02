@@ -210,15 +210,15 @@ WHERE ([tUser].[test] IS NOT NULL) AND
                     User currentUser = db.SelectParam<User>(us => us.Id == NimbusUser.UserId).FirstOrDefault();
                     if (currentUser != null)
                     {
-                        currentUser.FirstName = HttpUtility.HtmlEncode(user.FirstName);
-                        currentUser.LastName = HttpUtility.HtmlEncode(user.LastName);
-                        currentUser.City = HttpUtility.HtmlEncode(user.City);
-                        currentUser.State = HttpUtility.HtmlEncode(user.State);
-                        currentUser.Country = HttpUtility.HtmlEncode(user.Country);
-                        currentUser.Interest = HttpUtility.HtmlEncode(user.Interest);
-                        currentUser.Occupation = HttpUtility.HtmlEncode(user.Occupation);
-                        currentUser.Experience = HttpUtility.HtmlEncode(user.Experience);
-                        currentUser.About = HttpUtility.HtmlEncode(user.About);
+                        currentUser.FirstName = user.FirstName;
+                        currentUser.LastName = user.LastName;
+                        currentUser.City = user.City;
+                        currentUser.State = user.State;
+                        currentUser.Country = user.Country;
+                        currentUser.Interest = user.Interest;
+                        currentUser.Occupation = user.Occupation;
+                        currentUser.Experience = user.Experience;
+                        currentUser.About = user.About;
                         currentUser.BirthDate = currentUser.BirthDate;
 
                         db.Save(currentUser);

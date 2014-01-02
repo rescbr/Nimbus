@@ -1,7 +1,10 @@
 ﻿@model Nimbus.Web.Website.Models.TopicModel
 
 <div id="divCurrent_@Model.CurrentTopic.TopicType">
-    @(new HtmlString(Model.CurrentTopic.Text))
+    @*//Renato: Verificar Html.Raw*@
+    <div id="pTopicText">
+        @(new HtmlString(Model.CurrentTopic.Text))
+    </div>
 </div>
 
 

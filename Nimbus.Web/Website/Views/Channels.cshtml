@@ -9,6 +9,7 @@
 @Styles.Render("~/Styles/jHtmlArea.css")
 @Scripts.Render("~/Scripts/jHtmlArea-0.8.js")
 
+@* Renato: o Html.Raw abaixo está OK *@
 <script>
     currentChannel = @Model.CurrentChannel.Id;
     roles = @Html.Raw(Json.Encode(Model.RolesCurrentUser));   

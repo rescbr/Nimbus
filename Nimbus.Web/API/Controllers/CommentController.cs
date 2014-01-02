@@ -60,7 +60,7 @@ namespace Nimbus.Web.API.Controllers
                                 if (parentComment == null || parentComment.Visible == false)
                                     answer.ParentId = null;
 
-                                answer.Text = HttpUtility.HtmlEncode(answer.Text);
+                                answer.Text = answer.Text;
                                 answer.PostedOn = DateTime.Now;
                                 answer.UserId = NimbusUser.UserId;
                                 answer.Visible = true;
@@ -202,10 +202,10 @@ namespace Nimbus.Web.API.Controllers
                 CommentBag bag = new CommentBag()
                 {
                     AvatarUrl = user.AvatarUrl,
-                    UserName = HttpUtility.HtmlDecode(user.FirstName + " " + user.LastName),
+                    UserName = user.FirstName + " " + user.LastName,
                     UserId = user.Id,
                     Id = comment.Id,
-                    Text = HttpUtility.HtmlDecode(comment.Text),
+                    Text = comment.Text,
                     ParentId = comment.ParentId,
                     PostedOn = comment.PostedOn,
                     IsNew = comment.IsNew,
@@ -279,10 +279,10 @@ namespace Nimbus.Web.API.Controllers
                             parentComments[comment.Comment.Id] = new CommentBag()
                             {
                                 AvatarUrl = comment.User.AvatarUrl,
-                                UserName = HttpUtility.HtmlDecode(comment.User.FirstName + " " + comment.User.LastName),
+                                UserName = comment.User.FirstName + " " + comment.User.LastName,
                                 UserId = comment.User.Id,
                                 Id = comment.Comment.Id,
-                                Text = HttpUtility.HtmlDecode(comment.Comment.Text),
+                                Text = comment.Comment.Text,
                                 ParentId = comment.Comment.ParentId,
                                 PostedOn = comment.Comment.PostedOn,
                                 IsNew = comment.Comment.IsNew,
@@ -304,10 +304,10 @@ namespace Nimbus.Web.API.Controllers
                                 parentComments[parentKey].CommentChild.Add(new CommentBag()
                                 {
                                     AvatarUrl = comment.User.AvatarUrl,
-                                    UserName = HttpUtility.HtmlDecode(comment.User.FirstName + " " + comment.User.LastName),
+                                    UserName = comment.User.FirstName + " " + comment.User.LastName,
                                     UserId = comment.User.Id,
                                     Id = comment.Comment.Id,
-                                    Text = HttpUtility.HtmlDecode(comment.Comment.Text),
+                                    Text = comment.Comment.Text,
                                     ParentId = comment.Comment.ParentId,
                                     PostedOn = comment.Comment.PostedOn,
                                     IsNew = comment.Comment.IsNew,

@@ -126,19 +126,20 @@ namespace Nimbus.Web.API.Controllers
                                 topic.Price = 0;
                             }
 
-                            topic.Description = HttpUtility.HtmlEncode(topic.Description);
-                            topic.Text = HttpUtility.HtmlEncode(topic.Text);
-                            topic.Title = HttpUtility.HtmlEncode(topic.Title);
-                            topic.UrlVideo = HttpUtility.HtmlEncode(topic.UrlVideo);
+                            topic.Description = topic.Description;
+                            topic.Text = HtmlSanitizer.SanitizeHtml(topic.Text);
+                            topic.Title = topic.Title;
+                            topic.UrlVideo = topic.UrlVideo;
 
-                            if (topic.TopicType == Model.Enums.TopicType.exam)
-                            {
-                                foreach (var item in topic.Question)
-                                {
-                                    item.TextQuestion = HttpUtility.HtmlEncode(item.TextQuestion);
-                                    //colocar encode nas opçoes
-                                }
-                            }
+                            //Renato: comentado devido processo de remoção de htmlencode
+                            //if (topic.TopicType == Model.Enums.TopicType.exam)
+                            //{
+                            //    foreach (var item in topic.Question)
+                            //    {
+                            //        item.TextQuestion = HttpUtility.HtmlEncode(item.TextQuestion);
+                            //        //colocar encode nas opçoes
+                            //    }
+                            //}
 
                             db.Save(topic);
                             topic.Id = (int)db.GetLastInsertId();
@@ -185,28 +186,31 @@ namespace Nimbus.Web.API.Controllers
                             if (isOwner == true || isManager == true)
                             {
                                 Topic tpc = db.SelectParam<Topic>(tp => tp.Id == topic.Id).FirstOrDefault();
-                                tpc.Description = HttpUtility.HtmlEncode(topic.Description);
+                                tpc.Description = topic.Description;
 
                                 if (string.IsNullOrEmpty(topic.ImgUrl))
                                 {
                                     int idCtg = db.SelectParam<Channel>(ch => ch.Id == tpc.ChannelId).Select(ch => ch.CategoryId).FirstOrDefault();
                                     tpc.ImgUrl =db.SelectParam<Category>(ct => ct.Id == 1).Select(ct => ct.ImageUrl).FirstOrDefault();
                                 }
-                                tpc.LastModified = DateTime.Now;                                
-                                tpc.Text =  HttpUtility.HtmlEncode(topic.Text);
+                                tpc.LastModified = DateTime.Now;      
+                          
+                                tpc.Text =  HtmlSanitizer.SanitizeHtml(topic.Text);
+                                
                                 if (topic.TopicType == Model.Enums.TopicType.exam)
                                 {
-                                    foreach (var item in topic.Question)
-                                    {
-                                        item.TextQuestion = HttpUtility.HtmlEncode(item.TextQuestion);
-                                        //colocar encode nas opçoes
-                                    }
+                                    //Renato: comentado devido processo de remoção de htmlencode
+                                    //foreach (var item in topic.Question)
+                                    //{
+                                    //    item.TextQuestion = HttpUtility.HtmlEncode(item.TextQuestion);
+                                    //    //colocar encode nas opçoes
+                                    //}
                                     tpc.Question = topic.Question;
                                 }
 
-                                tpc.Title = HttpUtility.HtmlEncode(topic.Title);
-                                tpc.UrlCapa = topic.UrlCapa != null ?  HttpUtility.HtmlEncode(topic.UrlCapa) : tpc.UrlCapa;
-                                tpc.UrlVideo =  HttpUtility.HtmlEncode(topic.UrlVideo);
+                                tpc.Title = topic.Title;
+                                tpc.UrlCapa = topic.UrlCapa != null ?  topic.UrlCapa : tpc.UrlCapa;
+                                tpc.UrlVideo = topic.UrlVideo;
                                 tpc.Visibility = true;
                                 if (string.IsNullOrEmpty(topic.Price.ToString()))
                                 {
@@ -221,11 +225,12 @@ namespace Nimbus.Web.API.Controllers
                                 db.Update<Topic>(tpc);
                                 trans.Commit();
 
-                                topic.Title = HttpUtility.HtmlDecode(topic.Title);
-                                topic.Description = HttpUtility.HtmlDecode(topic.Description);
-                                topic.ImgUrl = HttpUtility.HtmlDecode(topic.ImgUrl);
-                                topic.Text = HttpUtility.HtmlDecode(topic.Text);
-                                topic.Title = HttpUtility.HtmlDecode(topic.Title);
+                                //Renato: comentado devido processo de remoção de htmlencode
+                                //topic.Title = HttpUtility.HtmlDecode(topic.Title);
+                                //topic.Description = HttpUtility.HtmlDecode(topic.Description);
+                                //topic.ImgUrl = HttpUtility.HtmlDecode(topic.ImgUrl);
+                                //topic.Text = HttpUtility.HtmlDecode(topic.Text);
+                                //topic.Title = HttpUtility.HtmlDecode(topic.Title);
 
                                 var notification = new Notifications.TopicNotification();
                                 notification.EditTopic(tpc);
@@ -270,9 +275,10 @@ namespace Nimbus.Web.API.Controllers
                     {
                         topic = db.SelectParam<Topic>(tp => tp.Id == id).FirstOrDefault();
 
-                        topic.Title = HttpUtility.HtmlDecode(topic.Title);                       
-                        topic.Description = HttpUtility.HtmlDecode(topic.Description);
-                        topic.Text = HttpUtility.HtmlDecode(topic.Text);
+                        //Renato: comentado devido processo de remoção de htmlencode
+                        //topic.Title = HttpUtility.HtmlDecode(topic.Title);                       
+                        //topic.Description = HttpUtility.HtmlDecode(topic.Description);
+                        //topic.Text = HttpUtility.HtmlDecode(topic.Text);
 
                         if (topic.TopicType == Nimbus.Model.Enums.TopicType.exam)
                         {
@@ -287,11 +293,13 @@ namespace Nimbus.Web.API.Controllers
                             {
                                 //se nunca tiver feito o exame, pode fazer. Canal privado = pode limitar. Canal free = sempre aberto 
                                 //caso seja um teste free, o 'bool' já permite refazer - apagar as respostas
-                                foreach (Nimbus.Model.Question item in topic.Question)
-                                {
-                                    item.TextQuestion = HttpUtility.HtmlDecode(item.TextQuestion);
-                                    //colocar p opçoes e arrumar p retornar esse
-                                }
+
+                                //Renato: comentado devido processo de remoção de htmlencode
+                                //foreach (Nimbus.Model.Question item in topic.Question)
+                                //{
+                                //    item.TextQuestion = HttpUtility.HtmlDecode(item.TextQuestion);
+                                //    //colocar p opçoes e arrumar p retornar esse
+                                //}
                             }
                             #endregion
                         }

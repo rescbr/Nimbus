@@ -31,6 +31,7 @@
         <div id="divNotificationWrapper">
             @if (Model.ChannelNotifications.Count > 0)
             {
+                //Renato: Verificar Html.Raw
                 @Html.Raw(Model.ChannelNotifications.Html);
             }
             else

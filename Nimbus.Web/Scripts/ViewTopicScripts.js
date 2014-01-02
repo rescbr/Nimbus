@@ -76,8 +76,12 @@ function ajaxEditTopic(id, topicType, divOld) {
                         document.getElementById(divOld).style.display = 'block';
 
                         document.getElementById('iptNewTitle').value = newData.Title;
+                        document.getElementById('lblTopicTitle').innerHTML = newData.Title;
                         document.getElementById('imgNewPrevia').src = newData.ImgUrl;
+                        document.getElementById('imgTopic').src = newData.ImgUrl;
                         document.getElementById('iptNewDescription').value = newData.Description;
+                        document.getElementById('pTopicDescription').innerHTML = newData.Description;
+
                     }
                 },
 
