@@ -1,6 +1,20 @@
 ﻿@{
     Nimbus.Plumbing.NimbusUser user = (Context.User.Identity as Nimbus.Plumbing.NimbusUser);
-
+    string trendingClass = "BTrTop";
+    string topClass = "BTop";
+    string searchClass = "BSearch";
+    var path = Context.Request.Path;
+    if (path.Contains("/trending")) {
+        trendingClass = "BTopBarLinkSelected";
+    }
+    else if (path.Contains("/top"))
+    {
+        topClass = "BTopBarLinkSelected"; 
+    }
+    else if (path.Contains("/search"))
+    {
+        searchClass = "BTopBarLinkSelected";
+    }
 }
 
 <!DOCTYPE html>
@@ -11,12 +25,16 @@
 
 </head>
 <body>
+    <script type="text/javascript">
+        cssOldLink = '';
+        oldNameLink = '';
+    </script>
     @* não esquecer de minificar =) *@
     @Scripts.Render(("~/Scripts/modal.js"))
     @Styles.Render(("~/Styles/modal.css"))
     @Scripts.Render(("~/Scripts/ScriptsShared.js"))
     @Scripts.Render(("~/Scripts/jquery-2.0.3.js"))
-
+ 
     <div id="wrap">
         <header id="header">
             <div class="container">
@@ -30,9 +48,9 @@
 
                 <nav class="center">
                     <ul class="sbs">
-                        <li class="BSearch" id="aOpenDivSearch" onclick="openDivSearch();">Search</li>
-                        <li class="BTrTop" onclick="window.location.href = '/trending';">Trending</li>
-                        <li class="BTop" onclick="window.location.href = '/top';">Top</li>
+                        <li class=@searchClass id="aOpenDivSearch" onclick="openDivSearch();">Search</li>
+                        <li class=@trendingClass id="linkTrending" onclick="window.location.href = '/trending';">Trending</li>
+                        <li class=@topClass id="linkTop" onclick="window.location.href = '/top';">Top</li>
                        @* <li class="BNews" onclick="window.location.href='/news' ;">News</li>*@
                     </ul>
                 </nav>

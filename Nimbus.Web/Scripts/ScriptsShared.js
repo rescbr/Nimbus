@@ -336,8 +336,11 @@ function ajaxHiddeMsg(div)
 }
 
 function openDivSearch()
-{
+{  
     document.getElementById('divBarSearch').style.display = 'block';
+    document.getElementById('aOpenDivSearch').className = "BTopBarLinkSelected";
+    document.getElementById('linkTop').className = "BTop";
+    document.getElementById('linkTrending').className = "BTrTop";
 }
 
 function ajaxSearch(campo)

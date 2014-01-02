@@ -9,7 +9,7 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
 	padding:            0;
 	border:             0;
 	font-size:          1em;
-	font:               inherit;
+	/*font:               inherit;*/
 	vertical-align:     baseline;
 }
 /* HTML5 display-role reset for older browsers */
@@ -138,7 +138,7 @@ nav.center {
 .center li{
     border-left:        1px solid #4b4b4b;
 	width:              100px;
-    height:             48px;
+    height:             43px;
     color:              #FFFFFF;
     font-weight:        normal;
 }
@@ -147,11 +147,17 @@ nav.center {
     border-right:       1px solid #4b4b4b;
 }
 
-.center li:active, .center li:hover {
+ .center li:hover{
     background:         #2b2d2e;
     border-bottom:      5px solid #87c240;
     height:             43px;
     cursor:             pointer;
+}
+
+.BTopBarLinkSelected {
+    background:         #2b2d2e;
+    border-bottom:      5px solid #87c240;
+    height:             43px;
 }
 
 nav.right {
@@ -170,12 +176,14 @@ div.userpic {
     border-radius:      100%;*/
     background-color:   #FFFFFF;
     float:              left;
+    cursor:             pointer;
 }
 
 h2.userName{
     font-size:          1.1em;
     color:              #828282;
     font-weight:        normal;
+    cursor:             pointer;
 }
 
 /*
@@ -203,10 +211,19 @@ div.exitbutton {
 	line-height:        15px;   
     color:              #87c240;
 }
-.exit:hover{
-	font-weight:        bold; 
-    color:              #87c240;
+
+.exit:hover {
+     font-weight: bold;
+     color: #87c240;
+    }
+
+.BTopBarLinkSelected
+{
+    background:         #2b2d2e;
+    border-bottom:      5px solid #87c240;
+    height:             38px; 
 }
+
 
 /*------------------ fim header --------------------*/
 
