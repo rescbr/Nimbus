@@ -14,8 +14,8 @@
 
 
 <div id="divBarSearchPage">
-    <input id="txtFieldSearch" style="width:350px;" value="@Model.Text" type="text" />
-    <select id="slcFilterSearch">
+    <input id="txtFieldSearchContent" style="width:350px;" value="@Model.Text" type="text" />
+    <select id="slcFilterSearchContent">
         @if(Model.FieldType == 0)
         { 
         <option value="0" selected>Todos</option>
@@ -30,21 +30,25 @@
         else{
         <option value="1">Canal</option>
         }
-        @if(Model.FieldType == 2){
-            <option selected value="2">Tópico</option>
+        @if (Model.FieldType == 2)
+        {
+            <option value="2" selected>Tópico</option>
         }
-        else { 
+        else
+        {
              <option value="2">Tópico</option>
         }
-        @if (Model.FieldType == 3) { 
-        <option selected value="3">Usuário</option>
+        @if (Model.FieldType == 3)
+        {
+            <option value="3" selected>Usuário</option>
         }
-        else { 
+        else
+        {
         <option value="3">Usuário</option>
         }
         
     </select>
-    <img src="/images/utils/search.png" title="Buscar" class="cpointer" alt="Buscar" onclick="ajaxSearch();" />
+    <img src="/images/utils/search.png" title="Buscar" class="cpointer" alt="Buscar" onclick="ajaxSearch('Content');" />
 </div>
 
 <div>

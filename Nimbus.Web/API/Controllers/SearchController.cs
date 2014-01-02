@@ -83,10 +83,9 @@ namespace Nimbus.Web.API.Controllers
                 int idOrg = NimbusOrganization.Id;
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    List<int> idChannelTopic = new List<int>();
                     //restringe a busca para o conteudo da organizacao
-                    idChannelTopic = db.SelectParam<Channel>(ch => ch.Visible == true && ch.OrganizationId == idOrg).Select(ch => ch.Id).ToList();
-
+                    IEnumerable<int> idChannelTopic = db.Where<Channel>(ch => ch.Visible == true && ch.OrganizationId == idOrg).Select(ch => ch.Id);
+                    
                     //verificar se é tag
                     if (q.StartsWith("#"))
                     {
@@ -115,14 +114,14 @@ namespace Nimbus.Web.API.Controllers
                             //restringe a busca para o conteudo da organizacao MAS com a categoria
                             idChannelTopic = db.SelectParam<Channel>(ch => ch.CategoryId == idCat && ch.Visible == true && ch.OrganizationId == idOrg).Select(ch => ch.Id).ToList();
 
-                            topics = db.SelectParam<Topic>(tp => (tp.Text.Contains(q) ||
+                            topics = db.Where<Topic>(tp => (tp.Text.Contains(q) ||
                                                                  tp.Title.Contains(q) ||
                                                                  tp.Description.Contains(q))
                                                                  && tp.Visibility == true && idChannelTopic.Contains(tp.ChannelId));
                         }
                         else
                         {
-                            topics = db.SelectParam<Topic>(tp => (tp.Text.Contains(q) ||
+                            topics = db.Where<Topic>(tp => (tp.Text.Contains(q) ||
                                                                  tp.Title.Contains(q) ||
                                                                  tp.Description.Contains(q))
                                                                  && tp.Visibility == true && idChannelTopic.Contains(tp.ChannelId));
@@ -228,7 +227,7 @@ namespace Nimbus.Web.API.Controllers
         /// <param name="q"></param>
         /// <returns></returns>
         [HttpGet]
-        public List<SearchBag> SearchAll(string q)
+        public List<SearchBag> SearchAll(string q )
         {
             List<SearchBag> listUser = SearchUser(q);
             List<SearchBag> listTopic = SearchTopic(q);
