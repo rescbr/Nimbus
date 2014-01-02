@@ -162,8 +162,7 @@ namespace Nimbus.Web.API.Controllers
             if (!string.IsNullOrEmpty(q))
             {
                 int idOrg = NimbusOrganization.Id;
-                try
-                {
+              
                     using (var db = DatabaseFactory.OpenDbConnection())
                     {
                         //verificar se é tag
@@ -207,12 +206,7 @@ namespace Nimbus.Web.API.Controllers
                             bag.ItemPageUrl = "channel";
                             channelsFound.Add(bag);
                         }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
-                }
+                    }                
             }
             else
             {
