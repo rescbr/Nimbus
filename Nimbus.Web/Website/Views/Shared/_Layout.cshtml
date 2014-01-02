@@ -3,17 +3,20 @@
     string trendingClass = "BTrTop";
     string topClass = "BTop";
     string searchClass = "BSearch";
-    var path = Context.Request.Path;
-    if (path.Contains("/trending")) {
-        trendingClass = "BTopBarLinkSelected";
-    }
-    else if (path.Contains("/top"))
-    {
-        topClass = "BTopBarLinkSelected"; 
-    }
-    else if (path.Contains("/search"))
-    {
-        searchClass = "BTopBarLinkSelected";
+    var segments = Context.Request.Url.Segments;
+    if (segments.Length > 1) {
+        var path = segments[1].ToLower().Trim('/');
+        if (path == "trending") {
+            trendingClass = "BTopBarLinkSelected";
+        }
+        else if (path == "top")
+        {
+            topClass = "BTopBarLinkSelected"; 
+        }
+        else if (path == "search")
+        {
+            searchClass = "BTopBarLinkSelected";
+        }
     }
 }
 

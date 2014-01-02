@@ -1,7 +1,7 @@
 ﻿@model Nimbus.Web.Website.Models.TopicModel
 
 <div id="divCurrent_@Model.CurrentTopic.TopicType">
-    @*//Renato: Verificar Html.Raw*@
+    @*//Renato: Verificar Html.Raw -- OK: passou pelo HtmlSanitizer *@
     <div id="pTopicText">
         @(new HtmlString(Model.CurrentTopic.Text))
     </div>
