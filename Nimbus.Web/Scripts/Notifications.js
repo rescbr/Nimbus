@@ -4,6 +4,48 @@
     return auxDiv.firstElementChild;
 }
 
+function AcceptOrNotBeModerator(id, accepted, notifGuid) {
+    var ajaxMessage = {};
+    
+    $.ajax({
+        url: "/api/channel/AcceptOrNotBeModerator/" + id + "?accepted=" + accepted + "&guid=" + notifGuid,
+        data: JSON.stringify(ajaxMessage),
+        type: "POST",
+        contentType: "application/json;charset=utf-8",
+        statusCode: {
+            200: function (newData) {
+                try {
+                    var notif = document.getElementById("notifModerator_" + notifGuid)
+                    var notifBtn = notif.getElementsByClassName("attChoice")[0];
+                    if (newData == true) {
+                        notifBtn.innerHTML = "<div class='btnAccept'>Aceito</div>";
+                    }
+                    else if (newData == false) {
+                        notifBtn.innerHTML = "<div class='btnAccept'>Recusado</div>";
+                    }
+                } catch (e) { }
+            },
+
+            500: function () {
+                //erro
+                window.alert("Não foi possível aceitar ou recusar o pedido de moderação. Tente novamente mais tarde.");
+            }
+        }
+    });
+}
+
+function newModeratorNotification(msg) {
+    try {
+        var divNotif = document.getElementById("divNotificationWrapper");
+        if (divNotif.children.length == 0) {
+            divNotif.innerHTML = msg.Html;
+        } else {
+            divNotif.insertBefore(makeElementFromHtml(msg.Html), divNotif.children[0]);
+        }
+
+    } catch (e) { }
+}
+
 function newMessageNotification(msg) {
     try {
         var divNotif = document.getElementById("divNotificationWrapper");
@@ -177,6 +219,7 @@ $(function () {
       
     nimbusHub.client.newMessageNotification = newMessageNotification;
     nimbusHub.client.newTopicCommentNotification = newTopicCommentNotification;
+    nimbusHub.client.newModeratorNotification = newModeratorNotification;
     // Start the connection
     $.connection.hub.start().done(function () {;
         //requisicoes de registro

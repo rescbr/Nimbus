@@ -852,111 +852,108 @@ namespace Nimbus.Web.API.Controllers
         {
             //TODO: notificação
             UserBag bag = new UserBag();
-            try
+            using (var db = DatabaseFactory.OpenDbConnection())
             {
-                using(var db = DatabaseFactory.OpenDbConnection())
+                using (var trans = db.OpenTransaction(System.Data.IsolationLevel.ReadCommitted))
                 {
-                    using(var trans = db.OpenTransaction(System.Data.IsolationLevel.ReadCommitted))
+                    try
                     {
-                        try
+                        bool prox = false;
+                        bool allow = db.SelectParam<Role>(role => role.UserId == NimbusUser.UserId && role.ChannelId == userModerator.ChannelId)
+                                                                            .Exists(role => role.IsOwner == true || role.ModeratorManager == true);
+
+
+                        int countModerator = db.SelectParam<Role>(mdr => mdr.ChannelId == userModerator.ChannelId &&
+                                                                                  (mdr.ModeratorManager == true || mdr.MessageManager == true
+                                                                                   || mdr.ChannelMagager == true || mdr.TopicManager == true
+                                                                                   || mdr.UserManager == true)).Count();
+
+                        var channel = db.Where<Channel>(ch => ch.Id == userModerator.ChannelId).FirstOrDefault();
+                        //organizationId == 0 => nimbus, portanto free
+                        int orgID = channel.OrganizationId;
+
+                        if (allow == true)
                         {
-                            bool prox = false;
-                            bool allow = db.SelectParam<Role>(role => role.UserId == NimbusUser.UserId && role.ChannelId == userModerator.ChannelId)
-                                                                                .Exists (role => role.IsOwner == true || role.ModeratorManager == true);
-
-
-                            int countModerator = db.SelectParam<Role>(mdr => mdr.ChannelId == userModerator.ChannelId &&
-                                                                                      (mdr.ModeratorManager == true || mdr.MessageManager == true
-                                                                                       || mdr.ChannelMagager == true || mdr.TopicManager == true 
-                                                                                       || mdr.UserManager == true)).Count();
-
-                            //organizationId == 0 => nimbus, portanto free
-                            int orgID = db.SelectParam<Channel>(ch => ch.Id == userModerator.ChannelId).Select(ch => ch.OrganizationId).FirstOrDefault();
-
-                            if (allow == true)
+                            if (orgID == 1) //canais free, portanto permite apenas 5 moderadores
                             {
-                                if (orgID == 1) //canais free, portanto permite apenas 5 moderadores
-                                {
-                                    if (countModerator < 5)
-                                        prox = true;
-                                    else
-                                        prox = false;
-                                }
-                                else if (orgID != 1)
-                                {
+                                if (countModerator < 5)
                                     prox = true;
-                                }
-                            }
-                            else
-                            {
-                                prox = false;
-                            }
-                            
-                            if (prox == true)
-                            {
-                                Role role = db.SelectParam<Role>(r => r.ChannelId == userModerator.ChannelId && r.UserId == userModerator.UserId).FirstOrDefault();
-                                User user = db.SelectParam<User>(u => u.Id == userModerator.UserId).FirstOrDefault();
-                                
-                                //verifica se já existe e havia sido 'deletado'
-                                if (role != null)
-                                {
-                                    role.ChannelMagager = userModerator.ChannelMagager;
-                                    role.MessageManager = userModerator.MessageManager;
-                                    role.ModeratorManager = userModerator.ModeratorManager;
-                                    role.TopicManager = userModerator.TopicManager;
-                                    role.UserManager = userModerator.UserManager;
-
-                                    db.Update<Role>(role);                                   
-                                }
                                 else
-                                {
-                                    role.Accepted = null; //o usuário não aceitou ainda = pendente
-                                    db.Insert(userModerator);
-                                    //TODO: enviar notificação e aceitar/recusar
-                                }
+                                    prox = false;
+                            }
+                            else if (orgID != 1)
+                            {
+                                prox = true;
+                            }
+                        }
+                        else
+                        {
+                            prox = false;
+                        }
 
-                                bag.Id = user.Id;
-                                bag.FirstName = user.FirstName;
-                                bag.LastName = user.LastName;
-                                bag.AvatarUrl = user.AvatarUrl;                                   
+                        if (prox == true)
+                        {
+                            Role role = db.SelectParam<Role>(r => r.ChannelId == userModerator.ChannelId && r.UserId == userModerator.UserId).FirstOrDefault();
+                            User user = db.SelectParam<User>(u => u.Id == userModerator.UserId).FirstOrDefault();
 
-                                if (userModerator.ChannelMagager)
-                                    bag.RoleInChannel = "";
+                            //verifica se já existe e havia sido 'deletado'
+                            if (role != null)
+                            {
+                                role.ChannelMagager = userModerator.ChannelMagager;
+                                role.MessageManager = userModerator.MessageManager;
+                                role.ModeratorManager = userModerator.ModeratorManager;
+                                role.TopicManager = userModerator.TopicManager;
+                                role.UserManager = userModerator.UserManager;
 
-                                if (userModerator.MessageManager)
-                                    bag.RoleInChannel = "Moderar mensagens";
-
-                                if (userModerator.ModeratorManager)
-                                    bag.RoleInChannel = "Moderar moderadores";
-
-                                if (userModerator.TopicManager)
-                                    bag.RoleInChannel = "Moderar tópicos";
-
-                                if (userModerator.UserManager)
-                                    bag.RoleInChannel = "Moderar usuários";
-
-                                if (userModerator.ChannelMagager == true && userModerator.MessageManager == true && userModerator.ModeratorManager == true
-                                    && userModerator.TopicManager == true && userModerator.UserManager == true)
-                                    bag.RoleInChannel = "Todas";
-                                    
+                                db.Update<Role>(role);
                             }
                             else
                             {
-                                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotAcceptable, "limite de moderador completo"));
+                                userModerator.Accepted = null; //o usuário não aceitou ainda = pendente
+                                db.Insert<Role>(userModerator);
+                                var modNotif = new Notifications.ModeratorNotification();
+                                var currentUser = db.Where<User>(u=>u.Id == NimbusUser.UserId).FirstOrDefault();
+                                modNotif.CreateModeratorInvite(channel, currentUser, user);
+
                             }
-                            trans.Commit();
+
+                            bag.Id = user.Id;
+                            bag.FirstName = user.FirstName;
+                            bag.LastName = user.LastName;
+                            bag.AvatarUrl = user.AvatarUrl;
+
+                            if (userModerator.ChannelMagager)
+                                bag.RoleInChannel = "";
+
+                            if (userModerator.MessageManager)
+                                bag.RoleInChannel = "Moderar mensagens";
+
+                            if (userModerator.ModeratorManager)
+                                bag.RoleInChannel = "Moderar moderadores";
+
+                            if (userModerator.TopicManager)
+                                bag.RoleInChannel = "Moderar tópicos";
+
+                            if (userModerator.UserManager)
+                                bag.RoleInChannel = "Moderar usuários";
+
+                            if (userModerator.ChannelMagager == true && userModerator.MessageManager == true && userModerator.ModeratorManager == true
+                                && userModerator.TopicManager == true && userModerator.UserManager == true)
+                                bag.RoleInChannel = "Todas";
+
                         }
-                        catch (Exception ex)
+                        else
                         {
-                            trans.Rollback();
-                            throw ;
+                            throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotAcceptable, "limite de moderador completo"));
                         }
+                        trans.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        trans.Rollback();
+                        throw;
                     }
                 }
-            }
-            catch (Exception)
-            {
-                throw;
             }
             return bag;
         }
@@ -964,32 +961,38 @@ namespace Nimbus.Web.API.Controllers
         /// <summary>
         /// Método de aceitar/recusar ser moderador de um canal, retorna o sucesso da operação = finalizada ou interrompida
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">ChannelId</param>
         /// <param name="accepted"></param>
+        /// <param name="guid">Guid da notificação</param>
         /// <returns></returns>
-        [HttpPut]
-        public bool AcceptOrNotBeModerator(int id, bool accepted)
+        [HttpPost]
+        public bool AcceptOrNotBeModerator(int id, bool accepted, Guid guid)
         {
-            bool isOk = false;
-            using(var db = DatabaseFactory.OpenDbConnection())
+            using (var db = DatabaseFactory.OpenDbConnection())
             {
-                
+                using (var trans = db.OpenTransaction(System.Data.IsolationLevel.ReadCommitted))
+                {
                     Role roleUser = db.Where<Role>(c => c.ChannelId == id && c.UserId == NimbusUser.UserId).FirstOrDefault();
                     if (roleUser != null)
                     {
-                        if (accepted == true)
-                        {
-                            roleUser.Accepted = true;
-                        }
-                        else
-                        {
-                            roleUser.Accepted = false;
-                        }
-                        db.Update<Role>(roleUser);
-                        isOk = true;
+                        roleUser.Accepted = accepted;   
                     }
+
+                    Notification<string> not = db.Where<Notification<string>>(n => n.Id == guid).FirstOrDefault();
+                    try
+                    {
+                        db.Update<Role>(roleUser);
+                        db.Delete<Notification<string>>(not);
+                        trans.Commit();
+                    }
+                    catch
+                    {
+                        trans.Rollback();
+                        throw;
+                    }
+                }
             }
-            return isOk;
+            return accepted;
         }
 
         /// <summary>

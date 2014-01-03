@@ -1,24 +1,25 @@
-﻿<div class="divNotification" style="display:block;">
+﻿@model Nimbus.Web.Notifications.ModeratorNotificationModel
+<div class="divNotification" style="display:block;" id="notifModerator_@Model.Guid">
     @*para cada item da lista que ele recber//TODO*@
-    <div>
-        <img id="imgNotification" src="#" />
+    <div class="imgNotificationCrop">
+        <img class="imgNotification" src="@Model.SenderAvatarUrl" />
     </div>
-    <div id="attChoice">
+    <div class="attChoice">
         @*<button id="btnAccept" onclick="">Aceitar</button>*@
-        <div id="btnAccept">
+        <div class="btnAccept" onclick="AcceptOrNotBeModerator(@Model.ChannelId, true, '@Model.Guid');">
             <p>Aceitar</p>
         </div>
 
         @*<button id="btnDecline" onclick="">Recusar</button>*@
-        <div id="btnAccept">
+        <div class="btnAccept" onclick="AcceptOrNotBeModerator(@Model.ChannelId, false, '@Model.Guid');">
             <p>Recusar</p>
         </div>
     </div>
-    <p id="timeNotification">
+    <p class="timeNotification">
         @*hora x     data x*@
-        00:00 - 12:12
+        @Model.Time - @Model.Date
     </p>
-    <p id="txtNotification">
-        texto generico
+    <p class="txtNotification">
+        @Model.SenderName convidou você para ser moderador do canal <a href="/channel/index/@Model.ChannelId">@Model.ChannelName</a>.
     </p>
 </div>

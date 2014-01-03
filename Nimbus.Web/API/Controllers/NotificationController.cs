@@ -125,6 +125,15 @@ namespace Nimbus.Web.API.Controllers
                         razor.ParseRazorTemplate<TopicNotificationModel>
                             ("~/Website/Views/NotificationPartials/NewTopic.cshtml", model));
                 }
+                else if (notification.Type == Model.NotificationTypeEnum.moderatorinvite)
+                {
+                    ModeratorNotificationModel model = TypeSerializer.DeserializeFromString
+                        <ModeratorNotificationModel>(notification.NotificationObject);
+
+                    sbuilder.Append(
+                        razor.ParseRazorTemplate<ModeratorNotificationModel>
+                            ("~/Website/Views/NotificationPartials/Accept.cshtml", model));
+                }
             }//);
 
             return new NotificationWrapper()
