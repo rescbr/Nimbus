@@ -54,27 +54,16 @@ function SaveEditProfile(lblError)
     var interest = document.getElementById('txtInterest').value;
     var experience = document.getElementById('txtExperience').value;
     var about = document.getElementById('txtAbout').value;
-    var stringFields = ''; var countError = 0;
+    var stringFields = [];
     var lblAviso = document.getElementById(lblError);
 
     if (firstName == "")
-    {
-        countError = 1;
-        stringFields = "Nome ";
-    }
-    if(lastName == "")
-    {
-        if (countError > 0) {
-            stringFields = stringFields + " e Sobrenome ";
-            countError++;
-        }
-        else {
-            countError = 1;
-            stringFields = "Sobrenome ";
-        }
-    }
+        stringFields.push("Nome");
 
-    if (countError == 0) {
+    if(lastName == "")
+        stringFields.push("Sobrenome ");
+
+    if (stringFields.length == 0) {
         var ajaxData = {};
         ajaxData['FirstName'] = firstName;
         ajaxData['LastName'] = lastName;
@@ -135,12 +124,7 @@ function SaveEditProfile(lblError)
     }
     else
     {
-        if(countError > 1)
-            lblAviso.innerHTML = "Os campos " + stringFields + "não podem ser vazios.";
-        else if(countError == 1)
-            lblAviso.innerHTML = "O campo " + stringFields + "não pode ser vazio.";
-
-        lblAviso.style.display = "block";
+        showMsgError(lblError, stringFields, "field");
     }
     
 }
@@ -219,3 +203,24 @@ function setDisplayBtnEditAvatar(visible)
     document.getElementById("divBtnEditAvatar").style.display = visible;
 }
 
+function showMsgError(lblName, fields, typeError)
+{
+    var lblAviso = document.getElementById(lblName);
+    var stringMsg = "";
+
+    if (typeError == 'field')
+    {
+        if (fields.length > 1) {
+            for (var i = 0; i < fields.length; i++) {
+                if (i < fields.length - 1)
+                    stringMsg += fields[i]+ ", ";
+                else
+                    stringMsg += fields[i]+ ";";
+            }
+            lblAviso.innerHTML = "Os campos: " + stringMsg + "não podem ser vazios.";
+        }
+        else if (fields.length == 1)
+            lblAviso.innerHTML = "O campo: " + fields[0] + " não pode ser vazio.";
+    }
+    lblAviso.style.display = "block";
+}
