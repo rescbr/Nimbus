@@ -478,28 +478,7 @@ function addAutocompleteToSearch() {
     });
 }
 
-function AcceptOrNotBeModerator(id, accepted) {    
-    $.ajax({
-        url: "/api/channel/AcceptOrNotBeModerator/" + id + "?accepted=" + accepted,
-        data: JSON.stringify(ajaxMessage),
-        type: "POST",
-        contentType: "application/json;charset=utf-8",
-        statusCode: {
-            200: function (newData) {
-                if (newData == true) {
-                    //TODO COLOCAR O Q ACONTECE NA NOTIFICAÇAO
-                }
-                else if (newData == false)
-                { }
-            },
-
-            500: function () {
-                //erro
-                window.alert("Não foi possível enviar sua mensagem. Tente novamente mais tarde.");
-            }
-        }
-    });
-}
+//function AcceptOrNotBeModerator foi para a Notifications.js
 
 function ajaxNewModerator()
 {

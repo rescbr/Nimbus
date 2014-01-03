@@ -12,6 +12,7 @@ namespace Nimbus.Model
         newtopic,
         edittopic,
         deletetopic,
+        moderatorinvite,
 
     }
     public class Notification<T>

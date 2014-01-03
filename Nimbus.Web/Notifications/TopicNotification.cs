@@ -111,7 +111,7 @@ namespace Nimbus.Web.Notifications
                     IsRead = false,
                     NotificationObject = nt,
                     Timestamp = nt.Timestamp,
-                    Type = Model.NotificationTypeEnum.newtopic
+                    Type = nt.NotificationType
                 };
                 db.Insert<Model.ORM.Notification<TopicNotificationModel>>(dbNotif);
 
@@ -130,7 +130,7 @@ namespace Nimbus.Web.Notifications
                     IsRead = false,
                     NotificationObject = nt,
                     Timestamp = nt.Timestamp,
-                    Type = Model.NotificationTypeEnum.newtopic
+                    Type = nt.NotificationType
                 };
                 db.Insert<Model.ORM.Notification<TopicNotificationModel>>(dbNotif);
 

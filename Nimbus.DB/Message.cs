@@ -27,10 +27,11 @@ namespace Nimbus.Model
     [DataContract]
     public class Receiver
     {
+        [DataMember]
         public virtual int UserId { get; set; }
-
+        [DataMember]
         public string Name { get; set; }
-
+        [DataMember]
         public bool IsOwner { get; set; }
 
         /// <summary>
