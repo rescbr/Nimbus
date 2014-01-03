@@ -80,12 +80,10 @@
         <h2>Número de Likes</h2>
         <div id="divCountLikes">
             <p class="favTopic">
-                @*colocar icone de likes*@
                 <img src="/images/utils/coracheio.png" title="Likes" alt="Likes" />
                 <label id="lblLike">@Model.NumLikes</label>
             </p>
             <p class="favTopic">
-                @*colocar icone de likes*@
                 <img src="/images/utils/coravazado.png" title="Likes" alt="Likes" />
                 <label id="lblUnLike">@Model.NumUnLikes</label>
             </p>
@@ -238,22 +236,21 @@ else
         <header id="modal-label">
             Reportar Tópico
         </header>
-        <div class="modal-content">
-            <!-- The modals content -->
-            <p>Reportar: @Model.CurrentTopic.Title</p>
-            <p>
-                Justificativa:
-                <textarea id="txtJustificativa" name="txtJustificativa" rows="10" cols="60" required></textarea>
-                <label style="color:red;" id="lblAvisoJustificativa"></label>
-            </p>
-        </div>
-        <footer>
-            <!-- Footer -->
-            <div class="accRef" onclick="ajaxReportTopic(@Model.CurrentUser.UserId, @Model.CurrentTopic.AuthorId, @Model.CurrentTopic.Id);">
-                <a href="#">Enviar</a>
+        <form id="formReportTopic">
+            <div class="modal-content">
+                <!-- The modals content -->
+                <p>Reportar: @Model.CurrentTopic.Title</p>
+                <p>
+                    Justificativa:
+                    <textarea id="txtJustificativa" name="txtJustificativa" rows="10" cols="60" required></textarea>
+                </p>
             </div>
-        </footer>
-    </div>
+            <footer>
+                <!-- Footer -->
+                <input type="submit" class="inputSubmit" value="Enviar" onclick="ajaxReportTopic(@Model.CurrentUser.UserId, @Model.CurrentTopic.AuthorId, @Model.CurrentTopic.Id);" id="enviarReportTpc" />
+            </footer>
+        </form>
+</div>
     <a href="#!" id="closeModalMessage" class="modal-close" title="Close this modal" data-close="Close"
        data-dismiss="modal">×</a>
 </section>

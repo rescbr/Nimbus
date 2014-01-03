@@ -103,12 +103,6 @@
         </div>
 
         <div id="divNewTopic" style="display:none;">
-            <div class="divformNewChannel">
-                <p>
-                    Nome do Tópico
-                </p>
-                <input type="text" id="txtNameTopic" maxlength="50" min="5" required name="txtNameTopic" placeholder="Nome do Tópico" style="max-width: 384px; min-width: 384px" />
-            </div>
 
             <div class="divformNewChannel">
                 <p>
@@ -123,6 +117,14 @@
                     <label>Imagem de no máx. 5MB</label>
                     <input type="hidden" id="url" name="url" />
                 </form>
+            </div>
+
+            <form id="formCreateTopic">
+            <div class="divformNewChannel">
+                <p>
+                    Nome do Tópico
+                </p>
+                <input type="text" id="txtNameTopic" maxlength="50" min="5" required name="txtNameTopic" placeholder="Nome do Tópico" style="max-width: 384px; min-width: 384px" />
             </div>
 
             <div class="divformNewChannel">
@@ -147,7 +149,7 @@
 
             <div id="divTypeTopic" style="display:none;">
                 <div id="divVideo" style="display:none;" class="divformNewChannel">
-                    <input type="text" id="iptnamevideo" name="iptnamevideo" value="URL do vídeo" onfocus="javascript: this.value =''" onchange="getUrlVideo(this.name, 'divFrameVideo','iframeVideo');" placeholder="URL do Video" style="max-width: 384px; min-width: 384px" />
+                    <input type="text" id="iptnamevideo" required name="iptnamevideo" value="URL do vídeo" onfocus="javascript: this.value =''" onchange="getUrlVideo(this.name, 'divFrameVideo','iframeVideo');" placeholder="URL do Video" style="max-width: 384px; min-width: 384px" />
                     <label>Somente url do youtube</label><br />
                     <div id="divFrameVideo" style="display:none">                        
                             <iframe name="iframeVideo" width="420" height="345" id="iframeVideo" src=""></iframe>
@@ -170,18 +172,18 @@
                         <p>
                             Enunciado da questão
                         </p>
-                        <input id="QuestionPerg1" class="enunciado" type="text" maxlength="600" />
+                        <input id="QuestionPerg1" required class="enunciado" type="text" maxlength="600" />
                         <p>Respostas</p>
                         <div>
                             <ul id="ulPerg1">
                                 <li id="liPerg1_opt1">
                                     @*pergunta 1 _ opçao 1*@
                                     <input type="radio" class="rdbPergEditNimbus" name="radio_perg1" id="rdbPerg1_opt1" />
-                                    <input id="txtPerg1_opt1" class="resposta" type="text" onfocus="javascript: this.value = ''" value="Opção 1" />
+                                    <input id="txtPerg1_opt1" required class="resposta" type="text" onfocus="javascript: this.value = ''" value="Opção 1" />
                                 </li>
                                 <li id="liPerg1_opt2">
                                     <input type="radio" class="fakeDisable rdbPergEditNimbus" name="radio_perg1" id="rdbPerg1_opt2" />
-                                    <input id="txtPerg1_opt2" class="fakeDisable" onclick="DisableOption('2', 'divPergunta1');" type="text" value="Opção 2" />
+                                    <input id="txtPerg1_opt2" required class="fakeDisable" onclick="DisableOption('2', 'divPergunta1');" type="text" value="Opção 2" />
                                 </li>
                             </ul>
                         </div>
@@ -192,9 +194,10 @@
             </div>
 
             <div class="divBtnNewChannel">
-                <button class="divCnclNewChannel">Cancelar</button> @*Cancelar - Fazer a parte em JS*@
-                <button id="btnSalvar" onclick="SaveNewTopic(@Model.CurrentChannel.Id, false);" class="divSaveNewChannel">Criar Tópico</button>
+                <input type="button" class="divCnclNewChannel" value="Cancelar" />
+                <input type="submit" id="btnSalvar" onclick="SaveNewTopic(@Model.CurrentChannel.Id, false);" class="divSaveNewChannel" value="Criar Tópico" />
             </div>
+            </form>
         </div>
 
         <div id="divMessages" style="display:none;">
@@ -233,6 +236,7 @@
             }
         </div>
     </div>
+</div>
 <script type="text/javascript">
     $(function () {
         $('#txtaArticle').width(384);

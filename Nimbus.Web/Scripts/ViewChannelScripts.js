@@ -199,7 +199,7 @@ function ajaxSaveNewTopic(channelID)
         var listQuestion = examEdit();
     }
 
-    if (title != "" && shortDescription != "" && channelID > 0 && (text != "" || video != "" || (listQuestion.length > 0 && isChecked == true)))
+    if (document.getElementById("formCreateTopic").checkValidity() && (text != "" || video != "" || (listQuestion.length > 0 && isChecked == true)))
     {
         ajaxData["Title"] = title;
         ajaxData["ImgUrl"] = ImgUrl;
@@ -245,8 +245,7 @@ function ajaxAnswerComment(parentId,commentId, channelId, topicId, txtContent) {
     
     var ajaxData = {}
     var text = document.getElementById(txtContent).value;
-
-  
+      
     if (text != "") {
         if (parentId > 0)
             ajaxData["ParentId"] = parentId;
@@ -264,11 +263,9 @@ function ajaxAnswerComment(parentId,commentId, channelId, topicId, txtContent) {
             contentType: "application/json;charset=utf-8",
             statusCode: {
                 200: function (newData) {
-                   // var div = document.getElementById("divAnswer_" + commentId);
-                   // if (div === null)
-                   //    div.style.display = 'none';
+                    document.getElementById('divAnswerComment_' + commentId).style.display = 'none';
+                    //document.getElementById('divAnswerTopic_' + commentId).style.display = 'block';
 
-                    document.getElementById("divComment_" + commentId).style.display = 'none';
                     //liumpar campos
                     document.getElementById(txtContent).value = '';
                 },
@@ -362,7 +359,7 @@ function ajaxSendMessage(id)
     var text = $("#txtTextMsg").htmlarea('html');
     var title = document.getElementById('txtTitleMsg').value;
 
-    if (text != "") {
+    if (document.getElementById("formSendMsgChannel").checkValidity()) {
         ajaxMessage["Text"] = text;
         ajaxMessage["ChannelId"] = id;
         if (title != "")
@@ -766,86 +763,86 @@ function ajaxLoadEditInfo(id, isOwner)
 }
 
 function ajaxSaveAllEdit(id)
-{
-    //tags e novos moderadores -> são salvas assim que são criadas
-    var success = false; var caracteres = false;
-    title = document.getElementById('txtEditTitle').value;
-    description = document.getElementById('txtaDescription').value;
- 
-    //alterou somente a permissao
-    var obj = $("select[id*='newPermissionSelect_']");
+{    
+        //tags e novos moderadores -> são salvas assim que são criadas
+        var success = false; var caracteres = false;
+        title = document.getElementById('txtEditTitle').value;
+        description = document.getElementById('txtaDescription').value;
 
-    if (obj.length > 0) {
-        for (var i = 0; i < obj.length; i++) {
-            idUser = obj[i].id.replace("newPermissionSelect_", "");
+        //alterou somente a permissao
+        var obj = $("select[id*='newPermissionSelect_']");
 
-            var select = obj[i].selectedIndex;
-            var option = obj[i].options;
-            var permission = option[select].value;
-            $.ajax({
-                url: "/api/Channel/EditPermissionModerator/" + id + "?userId=" + idUser + "&permission=" + permission,
-                type: "POST",
-                contentType: "application/json;charset=utf-8",
-                statusCode: {
-                    200: function (newData) {
-                        success = true;
-                    },
+        if (obj.length > 0) {
+            for (var i = 0; i < obj.length; i++) {
+                idUser = obj[i].id.replace("newPermissionSelect_", "");
 
-                    500: function () {
-                        //erro
-                        window.alert("Não foi possível realizar esta operação. Tente novamente mais tarde.");
-                        success = false;
+                var select = obj[i].selectedIndex;
+                var option = obj[i].options;
+                var permission = option[select].value;
+                $.ajax({
+                    url: "/api/Channel/EditPermissionModerator/" + id + "?userId=" + idUser + "&permission=" + permission,
+                    type: "POST",
+                    contentType: "application/json;charset=utf-8",
+                    statusCode: {
+                        200: function (newData) {
+                            success = true;
+                        },
+
+                        500: function () {
+                            //erro
+                            window.alert("Não foi possível realizar esta operação. Tente novamente mais tarde.");
+                            success = false;
+                        }
                     }
-                }
-            });
+                });
+            }
         }
-    }
-    else {
-        success = true;
-    }
-    //salvar nome
-    if (success == true) {
-        ajaxData = {};
-        ajaxData['Name'] = title;
-        ajaxData['Id'] = id;
-        ajaxData['Description'] = description;
+        else {
+            success = true;
+        }
+        //salvar nome
+        if (success == true) {
+            ajaxData = {};
+            ajaxData['Name'] = title;
+            ajaxData['Id'] = id;
+            ajaxData['Description'] = description;
 
-        var rdb = document.getElementsByName('openComment');
-        
-        if(document.getElementsByName('openComment')[0].checked)
-            ajaxData['OpenToComments'] = true;
-        if (document.getElementsByName('openComment')[1].checked)
-            ajaxData['OpenToComments'] = false;
-        
-        var category = document.getElementById('slcCategory');
-        var select = category.selectedIndex;
-        var option = category.options;
-        var categoryId = option[select].value;
+            var rdb = document.getElementsByName('openComment');
 
-        ajaxData['CategoryId'] = categoryId;
-        if (title != null && title != "") {
-            $.ajax({
-                url: "/api/Channel/EditChannel",
-                type: "POST",
-                data: JSON.stringify(ajaxData),
-                contentType: "application/json;charset=utf-8",
-                statusCode: {
-                    200: function (newData) {
-                        document.getElementById('closeModalEdit').click();
-                        document.getElementById('hChannelName').innerHTML = newData.Name;
-                        document.getElementById('imgCapa').src = newData.ImgUrl;
-                        title.value = newData.Name;
-                    },
+            if (document.getElementsByName('openComment')[0].checked)
+                ajaxData['OpenToComments'] = true;
+            if (document.getElementsByName('openComment')[1].checked)
+                ajaxData['OpenToComments'] = false;
 
-                    500: function () {
-                        //erro
-                        window.alert("Não foi possível realizar esta operação. Tente novamente mais tarde.");
-                        success = false;
+            var category = document.getElementById('slcCategory');
+            var select = category.selectedIndex;
+            var option = category.options;
+            var categoryId = option[select].value;
+
+            ajaxData['CategoryId'] = categoryId;
+            if (document.getElementById("formEditChannel").checkValidity()) {
+                $.ajax({
+                    url: "/api/Channel/EditChannel",
+                    type: "POST",
+                    data: JSON.stringify(ajaxData),
+                    contentType: "application/json;charset=utf-8",
+                    statusCode: {
+                        200: function (newData) {
+                            document.getElementById('closeModalEdit').click();
+                            document.getElementById('hChannelName').innerHTML = newData.Name;
+                            document.getElementById('imgCapa').src = newData.ImgUrl;
+                            title.value = newData.Name;
+                        },
+
+                        500: function () {
+                            //erro
+                            window.alert("Não foi possível realizar esta operação. Tente novamente mais tarde.");
+                            success = false;
+                        }
                     }
-                }
-            });
-        }
-    }
+                });
+            }
+        }    
 }
 
 function ajaxVoteChannel(id, vote)
@@ -883,7 +880,7 @@ function ajaxReportChannel(idUserReporter, idUserReported, idChannel) {
 
     var text = document.getElementById('txtJustificativa').value;
 
-    if (text.replace(" ", "") != '' && text.length > 10) {
+    if (document.getElementById("formReportChannel").checkValidity()) {
         ajaxData = {};
         ajaxData['Justification'] = text;
         ajaxData['UserReportedId'] = idUserReported; //foi reportado
@@ -910,8 +907,5 @@ function ajaxReportChannel(idUserReporter, idUserReported, idChannel) {
             }
         });
 
-    }
-    else {
-        document.getElementById('lblAvisoJustificativa').innerHTML = "* Campo obrigatório! Verifique se sua mensagem contém pelo menos 10 caracteres.";
     }
 }

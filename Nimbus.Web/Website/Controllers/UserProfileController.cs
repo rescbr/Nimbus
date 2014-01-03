@@ -230,10 +230,11 @@ namespace Nimbus.Web.Website.Controllers
                 channel.OwnerId = NimbusUser.UserId;
                 channel.Price = 0;
                 channel.Visible = true;
+
             try
             {
 
-                channel = channelAPI.NewChannel(channel);                
+                channel = channelAPI.NewChannel(channel); 
                 return RedirectToRoute(new { controller = "channel", action = "index", id = channel.Id});
                 
             }

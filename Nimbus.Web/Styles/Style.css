@@ -1732,6 +1732,20 @@ div#footer {/*
 
 /*------------------- fim footer --------------------*/
 /*----- começo Botoes interativos / JS & JQuery ----*/
+.inputSubmit {
+    float:              right;
+    background:         #2b2d2e;
+    cursor:             pointer;
+    border:             none;
+    color:              #fff;
+    margin:             5px;
+    padding:            5px;
+}
+
+.inputSubmit:hover {
+   color:              #87c240;
+}
+
 .press {
      cursor:           pointer;
 }
@@ -1777,7 +1791,6 @@ div.accRef {
 
 
 /*------ fim Botoes interativos / JS & JQuery ------*/
-
 .fakeDisable {
     background-color: grey;
     opacity: 0.3;

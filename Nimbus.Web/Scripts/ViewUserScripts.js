@@ -6,7 +6,7 @@ function SendMessageProfile(receiverId)
     var text = $("#txtTextMsg").htmlarea('html');
     var title = document.getElementById('inpTitleMsg').value;
 
-    if (text != "")
+    if (document.getElementById("formSendMsgProfile").checkValidity()) {
     {
         ajaxMessage["Text"] = text;
         if (title != "")
@@ -43,27 +43,19 @@ function SendMessageProfile(receiverId)
     }
 }
 
-function SaveEditProfile(lblError)
+function SaveEditProfile()
 {
-    var firstName = document.getElementById('txtFirstName').value;
-    var lastName = document.getElementById('txtLastName').value;
-    var city = document.getElementById('txtCity').value;
-    var state = document.getElementById('txtState').value;
-    var country = document.getElementById('txtCountry').value;
-    var occupation = document.getElementById('txtOccupation').value;
-    var interest = document.getElementById('txtInterest').value;
-    var experience = document.getElementById('txtExperience').value;
-    var about = document.getElementById('txtAbout').value;
-    var stringFields = [];
-    var lblAviso = document.getElementById(lblError);
+    if (document.getElementById("formEditProfile").checkValidity()) {
+        var firstName = document.getElementById('txtFirstName').value;
+        var lastName = document.getElementById('txtLastName').value;
+        var city = document.getElementById('txtCity').value;
+        var state = document.getElementById('txtState').value;
+        var country = document.getElementById('txtCountry').value;
+        var occupation = document.getElementById('txtOccupation').value;
+        var interest = document.getElementById('txtInterest').value;
+        var experience = document.getElementById('txtExperience').value;
+        var about = document.getElementById('txtAbout').value;
 
-    if (firstName == "")
-        stringFields.push("Nome");
-
-    if(lastName == "")
-        stringFields.push("Sobrenome ");
-
-    if (stringFields.length == 0) {
         var ajaxData = {};
         ajaxData['FirstName'] = firstName;
         ajaxData['LastName'] = lastName;
@@ -110,9 +102,7 @@ function SaveEditProfile(lblError)
                         document.getElementById('lblCountry').value = newData.Country;
                         document.getElementById('lblInterest').value = newData.Interest;
                         document.getElementById('lblExperience').value = newData.Experience;
-                        document.getElementById('lblAbout').value = newData.de;
-
-                        lblAviso.style.display = "none";
+                        document.getElementById('lblAbout').value = newData.About;
                     }
                 },
                 500: function () {
@@ -122,11 +112,6 @@ function SaveEditProfile(lblError)
             }
         });
     }
-    else
-    {
-        showMsgError(lblError, stringFields, "field");
-    }
-    
 }
 
 function ajaxDeleteMsg(id)
@@ -164,7 +149,7 @@ function ajaxReportUser(idUserReporter, idUserReported)
 {
     var text = document.getElementById('txtJustificativa').value;
 
-    if (text.replace(" ", "") != '' && text.length > 10) {
+    if (document.getElementById("formReportUser").checkValidity()) {
         ajaxData = {};
         ajaxData['Justification'] = text;
         ajaxData['UserReportedId'] = idUserReported; //foi reportado
@@ -180,7 +165,6 @@ function ajaxReportUser(idUserReporter, idUserReported)
                     if (newData.Id > 0)
                     {
                         window.alert("Operação realizada com sucesso!");
-                        document.getElementById('txtJustificativa').value = '';
                     }
                 },
 
@@ -191,36 +175,10 @@ function ajaxReportUser(idUserReporter, idUserReported)
             }
         });
 
-    }
-    else
-    {
-        document.getElementById('lblAvisoJustificativa').innerHTML = "* Campo obrigatório! Verifique se sua mensagem contém pelo menos 10 caracteres.";
-    }
+    }   
 }
 
 function setDisplayBtnEditAvatar(visible)
 {
     document.getElementById("divBtnEditAvatar").style.display = visible;
-}
-
-function showMsgError(lblName, fields, typeError)
-{
-    var lblAviso = document.getElementById(lblName);
-    var stringMsg = "";
-
-    if (typeError == 'field')
-    {
-        if (fields.length > 1) {
-            for (var i = 0; i < fields.length; i++) {
-                if (i < fields.length - 1)
-                    stringMsg += fields[i]+ ", ";
-                else
-                    stringMsg += fields[i]+ ";";
-            }
-            lblAviso.innerHTML = "Os campos: " + stringMsg + "não podem ser vazios.";
-        }
-        else if (fields.length == 1)
-            lblAviso.innerHTML = "O campo: " + fields[0] + " não pode ser vazio.";
-    }
-    lblAviso.style.display = "block";
 }

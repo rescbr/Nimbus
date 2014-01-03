@@ -8,7 +8,9 @@
         <div class="delComment">           
             @if (Model.IsRepotable)
             {
-               <a href="#modal-reportComment"><img id="btnReportComment_@Model.Id" class="cpointer" src="/images/utils/report.png" title="Reportar comentário" alt="Reportar comentário" /></a>
+               <a href="#modal-reportComment">
+                 <img id="btnReportComment_@Model.Id" class="cpointer" src="/images/utils/report.png" title="Reportar comentário" alt="Reportar comentário" />
+               </a>
             }
             @if (Model.IsDeletable)
             {
@@ -23,7 +25,6 @@
             <label id="lblText_@Model.Id">@Model.Text</label>
         </p>
     </div>
-
 </div>
 
 @*Modal reportar um cometário*@
@@ -32,22 +33,21 @@
         <header id="modal-label">
             Reportar comentário
         </header>
-        <div class="modal-content">
+        <form id="formReportComment">
+         <div class="modal-content">
             <!-- The modals content -->
             <p>Reportar comentário realizado por: @Model.UserName</p>
             <p>Comentário reportado: " <i>@Model.Text</i> "</p> 
             <p>
                 Justificativa:
-                <textarea id="txtJustificativa" name="txtJustificativa" rows="10" cols="60" required></textarea>
-                <label style="color:red;" id="lblAvisoJustificativa"></label>
+                <textarea id="txtJustificativa" name="txtJustificativa" rows="10" cols="60" required ></textarea>
             </p>
         </div>
-        <footer>
-            <!-- Footer -->
-            <div class="accRef" onclick="ajaxReportComment(@Model.UserId, @Model.Id);">
-                <a href="#">Enviar</a>
-            </div>
-        </footer>
+         <footer>
+            <!-- Footer -->  
+             <input type="submit" class="inputSubmit" value="Enviar" onclick="ajaxReportComment(@Model.UserId, @Model.Id);" id="enviarReportCmt" />
+        </footer>    
+        </form>
     </div>
     <a href="#!" id="closeModalMessage" class="modal-close" title="Close this modal" data-close="Close"
        data-dismiss="modal">×</a>

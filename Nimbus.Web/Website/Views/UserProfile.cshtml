@@ -14,6 +14,7 @@
 @Scripts.Render("~/Scripts/UserUtilis.js")
 @Scripts.Render("~/Scripts/ViewUserScripts.js")
 @Scripts.Render("~/Scripts/ViewTopicScripts.js")
+@Scripts.Render("~/Scripts/ScriptsShared.js")
 
 
 <div class="content-top">
@@ -108,7 +109,7 @@
         {
             <a href="#modal-text" class="call-modal">
                 <div class="sendMessage">
-                    <p>Enviar Mensagem</p> <!-- clicavel -->
+                    <p>Enviar Mensagem</p> 
                 </div>
             </a>
         }
@@ -136,24 +137,27 @@
     @*Modal section - enviar msg pelo profile*@
     <section class="semantic-content" id="modal-text" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
         <div class="modal-inner">
-            <header id="modal-label"><!-- Header --></header>
-            <div class="modal-content">
-                <!-- The modals content -->
-                <p>Para: @Model.User.FirstName @Model.User.LastName</p>
-                <p>
-                    Assunto:
-                    <input id="inpTitleMsg" name="inpTitleMsg" type="text" maxlength="100" />
-                </p>
-                <p>
-                    <textarea id="txtTextMsg" name="txtTextMsg" rows="10" cols="60" required></textarea>
-                </p>
-            </div>
-            <footer>
-                <!-- Footer -->
-                <div class="accRef">
-                    <button onclick="SendMessageProfile(@Model.User.Id);">Enviar</button>
+            <header id="modal-label">
+                <!-- Header -->
+                Enviar mensagem
+            </header>
+            <form id="formSendMsgProfile">
+                <div class="modal-content">
+                    <!-- The modals content -->
+                    <p>Para: @Model.User.FirstName @Model.User.LastName</p>
+                    <p>
+                        Assunto:
+                        <input id="inpTitleMsg" name="inpTitleMsg" type="text" maxlength="100" />
+                    </p>
+                    <p>
+                        <textarea id="txtTextMsg" name="txtTextMsg" rows="10" cols="60" required></textarea>
+                    </p>
                 </div>
-            </footer>
+                <footer>
+                    <!-- Footer -->
+                    <input type="submit" class="inputSubmit" value="Enviar" onclick="SendMessageProfile(@Model.User.Id);" id="enviarMsgUsr" />
+                </footer>
+            </form>
         </div>
         <a href="#!" id="closeModalMessage" class="modal-close" title="Close this modal" data-close="Close"
            data-dismiss="modal">×</a>
@@ -165,21 +169,20 @@
         <header id="modal-label">
             Reportar usuário
         </header>
-        <div class="modal-content">
-            <!-- The modals content -->
-            <p>Reportar: @Model.User.FirstName @Model.User.LastName</p>            
-            <p>
-                Justificativa:
-                <textarea id="txtJustificativa" name="txtJustificativa" rows="10" cols="60" required></textarea>
-                <label style="color:red;" id="lblAvisoJustificativa"></label>
-            </p>
-        </div>
-        <footer>
-            <!-- Footer -->
-            <div class="accRef" onclick="ajaxReportUser(@Model.User.Id, @Model.CurrentUser.UserId);">
-                <a href="#">Enviar</a>
+        <form id="formReportUser">
+            <div class="modal-content">
+                <!-- The modals content -->
+                <p>Reportar: @Model.User.FirstName @Model.User.LastName</p>
+                <p>
+                    Justificativa:
+                    <textarea  id="txtJustificativa" name="txtJustificativa" rows="10" cols="60" required></textarea>
+                </p>
             </div>
-        </footer>
+            <footer>
+                <!-- Footer -->
+                <input type="submit" class="inputSubmit" onclick="ajaxReportUser(@Model.User.Id, @Model.CurrentUser.UserId);" value="Enviar" id="enviarReportUsr" />
+            </footer>
+        </form>
     </div>
     <a href="#!" id="closeModalMessage" class="modal-close" title="Close this modal" data-close="Close"
        data-dismiss="modal">×</a>
@@ -228,23 +231,25 @@
             Editar perfil
         </header>
 
-        <div class="modal-content">
-            <!-- The modals content -->
-            <p><label style="color:black; font-weight:bold;">Nome: </label> <input id="txtFirstName" value="@Model.User.FirstName" /></p>
-            <p><label style="color: black; font-weight: bold;">Sobrenome: </label><input id="txtLastName" value="@Model.User.LastName" /></p>
-            <p><label style="color:black">Cidade: </label><input id="txtCity" value="@Model.User.City" /></p>
-            <p><label style="color:black">Estado: </label><input id="txtState" value="@Model.User.State" /></p>
-            <p><label style="color:black">País: </label><input id="txtCountry" value="@Model.User.Country" /></p>
-            <p><label style="color:black">Profissão: </label><input id="txtOccupation" value="@Model.User.Occupation" /></p>
-            <p><label style="color:black">Interesses: </label><input id="txtInterest" value="@Model.User.Interest" /></p>
-            <p><label style="color:black">Experiência: </label><input id="txtExperience" value="@Model.User.Experience" /></p>    
-            <p><label style="color:black">Outras informações: </label><input id="txtAbout" value="@Model.User.About" /></p>    
-            <p><label id="lblErroMsgEditProfile" style="display:none;"></label></p>       
-        </div>
-        <footer>
-            <!-- Footer -->
-            <button id="btnSaveEdit" onclick="SaveEditProfile('lblErroMsgEditProfile');">Salvar</button>
-        </footer>
+        <form id="formEditProfile">
+            <div class="modal-content">
+                <!-- The modals content -->
+                <p><label style="color:black;">Nome: </label> <input type="text" id="txtFirstName" required value="@Model.User.FirstName" /></p>
+                <p><label style="color: black;">Sobrenome: </label><input type="text" id="txtLastName" required value="@Model.User.LastName" /></p>
+                <p><label style="color:black">Cidade: </label><input id="txtCity" value="@Model.User.City" /></p>
+                <p><label style="color:black">Estado: </label><input id="txtState" value="@Model.User.State" /></p>
+                <p><label style="color:black">País: </label><input id="txtCountry" value="@Model.User.Country" /></p>
+                <p><label style="color:black">Profissão: </label><input id="txtOccupation" value="@Model.User.Occupation" /></p>
+                <p><label style="color:black">Interesses: </label><input id="txtInterest" value="@Model.User.Interest" /></p>
+                <p><label style="color:black">Experiência: </label><input id="txtExperience" value="@Model.User.Experience" /></p>
+                <p><label style="color:black">Outras informações: </label><input id="txtAbout" value="@Model.User.About" /></p>
+                <p><label id="lblErroMsgEditProfile" style="display:none;"></label></p>
+            </div>
+            <footer>
+                <!-- Footer -->
+                <input type="submit" id="btnSaveEdit" class="inputSubmit" onclick="SaveEditProfile();" value="Salvar"/>
+            </footer>
+        </form>
     </div>
     <a href="#!" id="closeModalEdit" class="modal-close" title="Close this modal" data-close="Close"
        data-dismiss="modal">×</a>

@@ -213,41 +213,43 @@
 
         @if (Model.CurrentChannel.OwnerId != Model.CurrentUser.UserId)
         {
-            <div class="modal-content">
+            <form id="formSendMsgChannel">
+                <div class="modal-content">
                     <!-- The modals content -->
                     <p>
                         Para:
                         <input type="text" name="txtOwnerName" value="@Model.CurrentChannel.OwnerName" disabled="disabled" />
                     </p>
-                    <p>     
+                    <p>
                         @{
-            int countMod = Model.Moderators.Count;
-            if (countMod > 0)
-            {
-                                    <text>Cc:</text>
-                for (int i = 0; i < countMod; i++)
-                {
-                    string virgula = "; ";
-                    if (i == countMod - 1) { virgula = ""; }
-                    var mod = Model.Moderators[i];
-                                        <text>@mod.FirstName @mod.LastName@virgula</text>
-                }
-            }
-                                            }
+                    int countMod = Model.Moderators.Count;
+                    if (countMod > 0)
+                    {
+                                <text>Cc:</text>
+                        for (int i = 0; i < countMod; i++)
+                        {
+                            string virgula = "; ";
+                            if (i == countMod - 1) { virgula = ""; }
+                            var mod = Model.Moderators[i];
+                                <text>@mod.FirstName @mod.LastName@virgula</text>
+                        }
+                    }
+                        }
                     </p>
                     <p>
                         Assunto:
                         <input id="txtTitleMsg" name="txtTitleMsg" type="text" maxlength="100" />
                     </p><br />
                     <p>
-                        <textarea id="txtTextMsg" name="txtTextMsg" rows="10" cols="60"></textarea>
+                        <textarea required id="txtTextMsg" name="txtTextMsg" rows="10" cols="60"></textarea>
                     </p>
-            </div>
+                </div>
 
-            <footer>
-                <!-- Footer -->
-                <button id="btnEnviar" onclick="ajaxSendMessage(@Model.CurrentChannel.Id);">Enviar</button>
-            </footer>
+                <footer>
+                    <!-- Footer -->
+                    <input type="submit" class="inputSubmit" id="btnEnviar" onclick="ajaxSendMessage(@Model.CurrentChannel.Id);" value="Enviar" />
+                </footer>
+            </form>
         }
     </div>
 
@@ -270,17 +272,17 @@
                 }
             </p>
         </header>
-
+        <form id="formEditChannel">
         @if (Model.RolesCurrentUser.Contains("channelmanager") || Model.CurrentChannel.OwnerId == Model.CurrentUser.UserId)
         {
             <div>
                 <p>Nome do canal:</p>
-                <input id="txtEditTitle" type="text" value="@Model.CurrentChannel.Name" maxlength="100" />
+                <input id="txtEditTitle" required type="text" value="@Model.CurrentChannel.Name" maxlength="100" />
                 <p>Descrição:</p>
-                <textarea id="txtaDescription" maxlength="200">@Model.CurrentChannel.Description</textarea>
+                <textarea id="txtaDescription" required maxlength="200">@Model.CurrentChannel.Description</textarea>
                 <p>
                     Categoria:
-                    <select id="slcCategory" name="slcCategory">
+                    <select id="slcCategory" required name="slcCategory">
                         @foreach (var item in Model.Category.OrderBy(c => c.Name))
                         {
                             if(item.Id == Model.CurrentChannel.CategoryId)
@@ -335,13 +337,14 @@
 
                     <footer>
                      <!-- Footer -->
-                        <button id="btnSaveAllEdit" onclick="ajaxSaveAllEdit(@Model.CurrentChannel.Id);">Salvar</button>
+                        <input type="submit" class="inputSubmit" id="btnSaveAllEdit" onclick="ajaxSaveAllEdit(@Model.CurrentChannel.Id);" value="Salvar" />
                     </footer>
         }
         else
         {
             <p>Você não permissão para realizar esta operação.</p>
         }
+        </form>
     </div>
 
     <a href="#!" id="closeModalEdit" class="modal-close" title="Close this modal" data-close="Close"
@@ -353,24 +356,24 @@
 <section class="semantic-content" id="modal-reportChannel" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
     <div class="modal-inner">
         <header id="modal-label">
-            Reportar tópico
+            Reportar canal
         </header>
-        <div class="modal-content">
-            <!-- The modals content -->
-            <p>Reportar: @Model.CurrentChannel.Name</p>
-            <p>
-                Justificativa:
-                <textarea id="txtJustificativa" name="txtJustificativa" rows="10" cols="60" required></textarea>
-                <label style="color:red;" id="lblAvisoJustificativa"></label>
-            </p>
-        </div>
-        <footer>
-            <!-- Footer -->
-            <div class="accRef" onclick="ajaxReportChannel(@Model.CurrentUser.UserId, @Model.CurrentChannel.OwnerId, @Model.CurrentChannel.Id);">
-                <a href="#">Enviar</a>
+        <form id="formReportChannel">
+            <div class="modal-content">
+                <!-- The modals content -->
+                <p>Reportar: @Model.CurrentChannel.Name</p>
+                <p>
+                    Justificativa:
+                    <textarea id="txtJustificativa" name="txtJustificativa" rows="10" cols="60" required></textarea>
+                </p>
             </div>
-        </footer>
+            <footer>
+                <!-- Footer -->
+                <input type="submit" class="inputSubmit" value="Enviar" onclick="ajaxReportChannel(@Model.CurrentUser.UserId, @Model.CurrentChannel.OwnerId, @Model.CurrentChannel.Id);" id="enviarReportChn" />
+            </footer>
+        </form>
     </div>
+
     <a href="#!" id="closeModalMessage" class="modal-close" title="Close this modal" data-close="Close"
        data-dismiss="modal">×</a>
 </section>

@@ -38,7 +38,7 @@ function ajaxEditTopic(id, topicType, divOld) {
 
     title = document.getElementById('iptNewTitle').value;
 
-    if (title != "" && id > 0 && (text != "" || video != "" || exam.length > 0)) {
+    if (document.getElementById("formEditTopic").checkValidity()) {
 
         ajaxData["Title"] = title
         ajaxData["Id"] = id;
@@ -91,7 +91,6 @@ function ajaxEditTopic(id, topicType, divOld) {
                 }
             }
         });
-
     }
 
 }
@@ -354,7 +353,7 @@ function ajaxReportTopic(idUserReporter, idUserReported, idTopic) {
 
     var text = document.getElementById('txtJustificativa').value;
 
-    if (text.replace(" ", "") != '' && text.length > 10) {
+    if (document.getElementById("formReportTopic").checkValidity()) {
         ajaxData = {};
         ajaxData['Justification'] = text;
         ajaxData['UserReportedId'] = idUserReported; //foi reportado
@@ -382,16 +381,13 @@ function ajaxReportTopic(idUserReporter, idUserReported, idTopic) {
         });
 
     }
-    else {
-        document.getElementById('lblAvisoJustificativa').innerHTML = "* Campo obrigatório! Verifique se sua mensagem contém pelo menos 10 caracteres.";
-    }
 }
 
 function ajaxReportComment(idUserReported, idCmt) {
 
     var text = document.getElementById('txtJustificativa').value;
 
-    if (text.replace(" ", "") != '' && text.length > 10) {
+    if (document.getElementById("formReportComment").checkValidity()) {
         ajaxData = {};
         ajaxData['Justification'] = text;
         ajaxData['UserReportedId'] = idUserReported; //foi reportado
@@ -417,10 +413,7 @@ function ajaxReportComment(idUserReported, idCmt) {
             }
         });
 
-    }
-    else {
-        document.getElementById('lblAvisoJustificativa').innerHTML = "* Campo obrigatório! Verifique se sua mensagem contém pelo menos 10 caracteres.";
-    }
+    }    
 }
 
 function ajaxTopicReadLater(id, readOn, read)

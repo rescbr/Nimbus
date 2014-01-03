@@ -138,13 +138,13 @@
                 
                 <div class="divformNewChannel">
                     <p>Descrição</p>
-                    <textarea id="txtaDescNewChannel" name="txtaDescNewChannel" placeholder="Descrição do Canal" style="max-width: 384px; min-width: 384px"></textarea>
+                    <textarea id="txtaDescNewChannel" name="txtaDescNewChannel" required placeholder="Descrição do Canal" style="max-width: 384px; min-width: 384px"></textarea>
                 </div>
                 
                 <div class="divformNewChannel">
                     <p>Categoria</p>
-                    <select id="slcCategory" name="slcCategory" style="max-width: 384px; min-width: 384px">
-                        <option value="0" selected>Selecionar categoria</option>
+                    <select id="slcCategory" required name="slcCategory"  style="max-width: 384px; min-width: 384px">
+                        <option value="">Selecionar categoria</option>
                         @foreach (var item in Model.Categories.OrderBy(c => c.Name))
                         {
                             <option value="@item.Id">@item.Name</option>
@@ -152,18 +152,18 @@
                     </select>
                 </div>
                 
-                <div class="divformNewChannel">
+                @*<div class="divformNewChannel">
                     <p>Este canal é um curso?</p>
                     <p>
                         <input type="radio" name="isCourse" value="true" required  /> Sim
                         <input type="radio" name="isCourse" value="false" required /> Não
                     </p>
-                </div>
+                </div>*@
                 
                 <div class="divformNewChannel">
                     <p>Aberto para comentários?</p>
                     <p>
-                        <input type="radio" name="openComment" value="true" required /> Sim
+                        <input type="radio" name="openComment" value="true" checked required /> Sim
                         <input type="radio" name="openComment" value="false" required /> Não
                     </p>
                 </div>
