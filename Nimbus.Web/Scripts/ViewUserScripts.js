@@ -43,7 +43,7 @@ function SendMessageProfile(receiverId)
     }
 }
 
-function SaveEditProfile()
+function SaveEditProfile(lblError)
 {
     var firstName = document.getElementById('txtFirstName').value;
     var lastName = document.getElementById('txtLastName').value;
@@ -54,18 +54,16 @@ function SaveEditProfile()
     var interest = document.getElementById('txtInterest').value;
     var experience = document.getElementById('txtExperience').value;
     var about = document.getElementById('txtAbout').value;
-    allow = true;
-    if(firstName == "")
-    {
-        allow = false;
-    }//colocar aviso
-    if(lastName == "")
-    {
-        allow = false;
-    }
+    var stringFields = [];
+    var lblAviso = document.getElementById(lblError);
 
-    if (allow == true)
-    {
+    if (firstName == "")
+        stringFields.push("Nome");
+
+    if(lastName == "")
+        stringFields.push("Sobrenome ");
+
+    if (stringFields.length == 0) {
         var ajaxData = {};
         ajaxData['FirstName'] = firstName;
         ajaxData['LastName'] = lastName;
@@ -100,19 +98,21 @@ function SaveEditProfile()
                         document.getElementById('lblName').value = newData.FirstName + " " + newData.LastName;
 
                         var place = "";
-                        if(newData.City != "" && newData.State != "")
+                        if (newData.City != "" && newData.State != "")
                             place = newData.City + " - " + newData.State;
-                        else if(newData.City != "" && newData.State == "")
+                        else if (newData.City != "" && newData.State == "")
                             place = newData.City
-                        else if(newData.City == "" && newData.State != "")
+                        else if (newData.City == "" && newData.State != "")
                             place = newData.State
                         document.getElementById('lblCity').value = place;
-                        
+
                         document.getElementById('lblOccupation').value = newData.Occupation;
                         document.getElementById('lblCountry').value = newData.Country;
                         document.getElementById('lblInterest').value = newData.Interest;
                         document.getElementById('lblExperience').value = newData.Experience;
                         document.getElementById('lblAbout').value = newData.de;
+
+                        lblAviso.style.display = "none";
                     }
                 },
                 500: function () {
@@ -121,6 +121,10 @@ function SaveEditProfile()
                 }
             }
         });
+    }
+    else
+    {
+        showMsgError(lblError, stringFields, "field");
     }
     
 }
@@ -192,4 +196,31 @@ function ajaxReportUser(idUserReporter, idUserReported)
     {
         document.getElementById('lblAvisoJustificativa').innerHTML = "* Campo obrigatório! Verifique se sua mensagem contém pelo menos 10 caracteres.";
     }
+}
+
+function setDisplayBtnEditAvatar(visible)
+{
+    document.getElementById("divBtnEditAvatar").style.display = visible;
+}
+
+function showMsgError(lblName, fields, typeError)
+{
+    var lblAviso = document.getElementById(lblName);
+    var stringMsg = "";
+
+    if (typeError == 'field')
+    {
+        if (fields.length > 1) {
+            for (var i = 0; i < fields.length; i++) {
+                if (i < fields.length - 1)
+                    stringMsg += fields[i]+ ", ";
+                else
+                    stringMsg += fields[i]+ ";";
+            }
+            lblAviso.innerHTML = "Os campos: " + stringMsg + "não podem ser vazios.";
+        }
+        else if (fields.length == 1)
+            lblAviso.innerHTML = "O campo: " + fields[0] + " não pode ser vazio.";
+    }
+    lblAviso.style.display = "block";
 }
