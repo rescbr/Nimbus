@@ -43,7 +43,7 @@ function SendMessageProfile(receiverId)
     }
 }
 
-function SaveEditProfile()
+function SaveEditProfile(lblError)
 {
     var firstName = document.getElementById('txtFirstName').value;
     var lastName = document.getElementById('txtLastName').value;
@@ -54,18 +54,27 @@ function SaveEditProfile()
     var interest = document.getElementById('txtInterest').value;
     var experience = document.getElementById('txtExperience').value;
     var about = document.getElementById('txtAbout').value;
-    allow = true;
-    if(firstName == "")
+    var stringFields = ''; var countError = 0;
+    var lblAviso = document.getElementById(lblError);
+
+    if (firstName == "")
     {
-        allow = false;
-    }//colocar aviso
+        countError = 1;
+        stringFields = "Nome ";
+    }
     if(lastName == "")
     {
-        allow = false;
+        if (countError > 0) {
+            stringFields = stringFields + " e Sobrenome ";
+            countError++;
+        }
+        else {
+            countError = 1;
+            stringFields = "Sobrenome ";
+        }
     }
 
-    if (allow == true)
-    {
+    if (countError == 0) {
         var ajaxData = {};
         ajaxData['FirstName'] = firstName;
         ajaxData['LastName'] = lastName;
@@ -100,19 +109,21 @@ function SaveEditProfile()
                         document.getElementById('lblName').value = newData.FirstName + " " + newData.LastName;
 
                         var place = "";
-                        if(newData.City != "" && newData.State != "")
+                        if (newData.City != "" && newData.State != "")
                             place = newData.City + " - " + newData.State;
-                        else if(newData.City != "" && newData.State == "")
+                        else if (newData.City != "" && newData.State == "")
                             place = newData.City
-                        else if(newData.City == "" && newData.State != "")
+                        else if (newData.City == "" && newData.State != "")
                             place = newData.State
                         document.getElementById('lblCity').value = place;
-                        
+
                         document.getElementById('lblOccupation').value = newData.Occupation;
                         document.getElementById('lblCountry').value = newData.Country;
                         document.getElementById('lblInterest').value = newData.Interest;
                         document.getElementById('lblExperience').value = newData.Experience;
                         document.getElementById('lblAbout').value = newData.de;
+
+                        lblAviso.style.display = "none";
                     }
                 },
                 500: function () {
@@ -121,6 +132,15 @@ function SaveEditProfile()
                 }
             }
         });
+    }
+    else
+    {
+        if(countError > 1)
+            lblAviso.innerHTML = "Os campos " + stringFields + "não podem ser vazios.";
+        else if(countError == 1)
+            lblAviso.innerHTML = "O campo " + stringFields + "não pode ser vazio.";
+
+        lblAviso.style.display = "block";
     }
     
 }
@@ -198,3 +218,4 @@ function setDisplayBtnEditAvatar(visible)
 {
     document.getElementById("divBtnEditAvatar").style.display = visible;
 }
+
