@@ -193,3 +193,8 @@ function ajaxReportUser(idUserReporter, idUserReported)
         document.getElementById('lblAvisoJustificativa').innerHTML = "* Campo obrigatório! Verifique se sua mensagem contém pelo menos 10 caracteres.";
     }
 }
+
+function setDisplayBtnEditAvatar(visible)
+{
+    document.getElementById("divBtnEditAvatar").style.display = visible;
+}

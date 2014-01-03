@@ -40,22 +40,34 @@
 </div>
 
     <div class="proBar">
-        <div class="profileImg">
+       
             @if (Model.User.Id == Model.CurrentUser.UserId)
-            {
-                <a href="#modal-img" class="call-modal"><img src="@Model.CurrentUser.AvatarUrl" alt="Avatar" title="Editar Avatar" id="useravatar" /></a>
+            { 
+                  <div class="profileImg" onmouseout="setDisplayBtnEditAvatar('none');" onmouseover="setDisplayBtnEditAvatar('block');">
+                    <img src="@Model.CurrentUser.AvatarUrl" alt="Avatar" title="Editar Avatar" id="useravatar" />
+
+                    <a href="#modal-img" class="call-modal">
+                        <div id="divBtnEditAvatar" class="editAvatar" style="display:none;">
+                            Editar avatar
+                        </div>
+                    </a>
+                  </div>
             }
-            else
-            {
-                <img src="@Model.User.AvatarUrl" alt="@Model.User.FirstName" title="Avatar" id="useravatar" />
+            else{
+                <div class="profileImg">     
+                    <img src="@Model.User.AvatarUrl" alt="@Model.User.FirstName" title="Avatar" id="useravatar" />    
+                </div>
             }
-        </div>
 
         @*Se for o usuário do perfil*@
         @if (Model.User.Id == Model.CurrentUser.UserId)
             {
-                <a href="#modal-editProfile" class="call-modal">Editar</a>
-            }
+                <a href="#modal-editProfile" class="call-modal">
+                  <div class="editProfile">
+                    Editar perfil
+                  </div>
+                </a>
+        }
       
 
         <div class="aboutUser">
