@@ -22,7 +22,7 @@
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head>
+<head id="header">
     <link rel="stylesheet" type="text/css" href="/Styles/Style.css" />
     <title>@ViewBag.Title - Nimbus</title>
 
@@ -38,17 +38,21 @@
     @Scripts.Render(("~/Scripts/ScriptsShared.js"))
     @Scripts.Render(("~/Scripts/jquery-2.0.3.js"))
  
-    <div id="wrap">
-        <header id="header">
+   
+    <header id="header">
             <div class="container">
                 <nav class="logo">
                     <ul class="sbs">
-                        <li><div class="userlogo"></div></li>
+                        <li>
+                            <div class="userlogo">
+                            </div>
+                        </li>
                         <!-- <img src="userlogo.png"> -->
                         <li><h1>Logo</h1></li>
                     </ul>
                 </nav>
-
+        @if (User.Identity.IsAuthenticated)
+            {
                 <nav class="center">
                     <ul class="sbs">
                         <li class=@searchClass id="aOpenDivSearch" onclick="openDivSearch();">Search</li>
@@ -57,7 +61,8 @@
                        @* <li class="BNews" onclick="window.location.href='/news' ;">News</li>*@
                     </ul>
                 </nav>
-                @if (user != null)
+            
+                if (user != null)
                 {
                     <nav class="right">
                         <ul class="sbs">
@@ -67,30 +72,31 @@
                         </ul>
                     </nav>
                 }
+            }
             </div>       
-        </header>
+    </header>
 
-        <div class="wrapper">
-            <div id="divBarSearch" style="display:none;">               
-                        <input id="txtFieldSearchLayout" style="width:350px;" type="text" value="Busque por canais, tópicos ou pessoas" onclick="this.value=''" />
-                        <select id="slcFilterSearchLayout">
-                                <option value="0">Todos</option>
-                                <option value="1">Canal</option>
-                                <option value="2">Tópico</option>
-                                <option value="3">Usuário</option>
-                            </select>
-                       <img src="/images/utils/search.png" title="Buscar" class="cpointer" alt="Buscar" onclick="ajaxSearch('Layout');" />
+    <div class="container-body">
+            <div id="divBarSearch" style="display:none;">
+                <input id="txtFieldSearchLayout" style="width:350px;" type="text" value="Busque por canais, tópicos ou pessoas" onclick="this.value=''" />
+                <select id="slcFilterSearchLayout">
+                    <option value="0">Todos</option>
+                    <option value="1">Canal</option>
+                    <option value="2">Tópico</option>
+                    <option value="3">Usuário</option>
+                </select>
+                <img src="/images/utils/search.png" title="Buscar" class="cpointer" alt="Buscar" onclick="ajaxSearch('Layout');" />
             </div>
             <div class="container-body">
                 <div class="middle-body">
                     @RenderBody()
                 </div>
             </div>
-        </div>
-        <div id="footer">
-            <!-- blablablabla-->
-        </div>
     </div>
+
+    <div class="footer"></div>
+
+    
     @if (User.Identity.IsAuthenticated)
     {
         @Scripts.Render("~/Scripts/jquery.signalR-2.0.0.js")
