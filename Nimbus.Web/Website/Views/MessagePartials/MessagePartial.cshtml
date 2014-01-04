@@ -1,6 +1,8 @@
 ﻿
 @model Nimbus.Model.Bags.MessageBag
 
+@Scripts.Render("~/Scripts/ViewUserScripts.js")
+
 <div id="messages">
     @{
         string readStat;
@@ -25,14 +27,14 @@
                 <nav class="postHeaderLeft_m">
                     <ul class="sbs">
                         <li><a href="userprofile/index/@Model.SenderId">@Model.UserName</a></li>
-                        <li>@Model.Title</li>
+                        <li onclick="ajaxSeeMsg(@Model.Id,'divMesg_');" class="cpointer">@Model.Title</li>
                     </ul>
                 </nav>
                 <nav class="postHeaderRight_m">
                     <ul class="sbs">
                         <li>@string.Format("{0:d/M/yyyy}", Model.Date)</li>
                         <li>@string.Format("{0:HH:mm}", Model.Date)</li>
-                        <li><img src="/images/utils/delete.png" id="deleteMsg_@Model.Id" onclick="ajaxDeleteMsg(this.id);" /></li>
+                        <li><img src="/images/utils/delete.png" class="cpointer" id="deleteMsg_@Model.Id" onclick="ajaxDeleteMsg(this.id);" /></li>
                     </ul>
                 </nav>
             </div>

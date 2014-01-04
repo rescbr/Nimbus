@@ -904,7 +904,7 @@ input[type=submit].divSaveNewChannel:hover, button.divSaveNewChannel:hover {
 }
 
 /*Novo Tópico*/
-label#lblVideo, label#lblText, label#lblDiscussion, label#lblExam {
+label#lblVideo, label#lblText, label#lblDiscussion, label#lblExam , label#lblFile{
     padding:            4px;
     background:         #d1d3d4;
     color:              #2b2d2e;
