@@ -246,11 +246,12 @@ function viewMessages(global, viewBy, typeBtn, typeClick) {
     }
 
     var btn = document.getElementById('btn_moreMessages');
-
-    if (typeBtn == 'send')
-        btn.onclick = function(){ viewMessages('skipMessageSend', 'messageSend', 'send','seeMore');}
-    else
-        btn.onclick = function () { viewMessages('skipMessageReceived', 'messageReceived', '', 'seeMore'); }
+    if (btn != null) {
+        if (typeBtn == 'send')
+            btn.onclick = function () { viewMessages('skipMessageSend', 'messageSend', 'send', 'seeMore'); }
+        else
+            btn.onclick = function () { viewMessages('skipMessageReceived', 'messageReceived', '', 'seeMore'); }
+    }
 
     if (typeClick == 'seeMore' || typeClick == 'firstGetSend') {
         $.ajax({
@@ -293,11 +294,12 @@ function viewMessages(global, viewBy, typeBtn, typeClick) {
             }
         });
     }
-    else if(typeClick == 'back')
-    {
+    else if (typeClick == 'back') {
         document.getElementById(divB).style.display = 'block';
         document.getElementById(divN).style.display = 'none';
-        btn.style.display = btnStyle;
+        if (btn != null) {
+            btn.style.display = btnStyle;
+        }
     }
 }
 

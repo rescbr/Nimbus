@@ -122,7 +122,7 @@ namespace Nimbus.Web.API.Controllers
                                                                    .Select(c => c.IsOwner).FirstOrDefault();
                         sender.UserId = NimbusUser.UserId;
                         sender.Name = NimbusUser.FirstName + " " + NimbusUser.LastName;
-                        sender.AvatarUrl = NimbusUser.AvatarUrl;
+                        sender.AvatarUrl = NimbusUser.AvatarUrl;                        
                         listReceiver.Add(sender);
 
                         //add a  msg                                                 
@@ -153,6 +153,7 @@ namespace Nimbus.Web.API.Controllers
                                     UserId = item.UserId,
                                     NameUser = item.Name,
                                     UserReadStatus = true,
+                                    Visible = true,
                                     Status = Nimbus.Model.Enums.MessageType.send
                                 });
                             }
@@ -165,6 +166,7 @@ namespace Nimbus.Web.API.Controllers
                                     UserId = item.UserId,
                                     NameUser = item.Name,
                                     UserReadStatus = false,
+                                    Visible = true,
                                     Status = Nimbus.Model.Enums.MessageType.received
                                 });
                             }
