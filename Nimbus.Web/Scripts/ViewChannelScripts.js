@@ -170,25 +170,25 @@ function SaveNewTopic(channelID, isEdit)
 
 function ajaxSaveNewTopic(channelID)
 {
-    var video; 
+    var url; 
     var text; var exam;
+    
     var enumTopicType;
     var ajaxData = {}
     var title = document.getElementById("txtNameTopic").value;
     var ImgUrl = document.getElementById("url").value;
     var shortDescription = document.getElementById("txtaDescription").value;
 
+    if (divTipoTopic == "divText") {
+        text = $("#txtaArticle").htmlarea('html');
+        enumTopicType = 0; /*ordem da class enums topictype*/
+    }
     if (divTipoTopic == "divVideo")
     {
-        video = document.getElementById('iframeVideo').src;
+        url = document.getElementById('iframeVideo').src;
         enumTopicType = 1;
 
-    }
-    if (divTipoTopic == "divText")
-    {
-        text = $("#txtaArticle").htmlarea('html');
-        enumTopicType = 0;
-    }
+    }  
     if (divTipoTopic == "divDiscussion")
     {
         text = $("#txtaTextMsg").htmlarea('html');
@@ -198,8 +198,13 @@ function ajaxSaveNewTopic(channelID)
         enumTopicType = 3;
         var listQuestion = examEdit();
     }
+    if (divTipoTopic == "divFile")
+    {
+        file = document.getElementById("inptUrlFile").value;
+        enumTopicType = 4;
+    }
 
-    if (document.getElementById("formCreateTopic").checkValidity() && (text != "" || video != "" || (listQuestion.length > 0 && isChecked == true)))
+    if (document.getElementById("formCreateTopic").checkValidity() && (text != "" || url != "" || (listQuestion.length > 0 && isChecked == true)))
     {
         ajaxData["Title"] = title;
         ajaxData["ImgUrl"] = ImgUrl;
@@ -207,9 +212,8 @@ function ajaxSaveNewTopic(channelID)
         ajaxData["ChannelId"] = channelID;
         ajaxData["TopicType"] = enumTopicType;
         ajaxData["Text"] = text;
-        ajaxData["UrlVideo"] = video;
+        ajaxData["UrlVideo"] = url;
         ajaxData["Question"] = listQuestion;
-
         $.ajax({
             url: "/api/topic/NewTopic",
             data: JSON.stringify(ajaxData),
