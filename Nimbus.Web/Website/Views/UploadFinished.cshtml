@@ -10,9 +10,19 @@
     {
         <img src="@Model.Url" width="@Model.ReturnPreviewWidth" height="@Model.ReturnPreviewHeight" />
     }
+    else if (Model.PreviewType == UploadController.UploadModel.PreviewTypeEnum.office)
+    {
+        string urlFile = "https://view.officeapps.live.com/op/embed.aspx?src=" + Model.Url + "&wdAr=1.3333333333333333";
+        <iframe src="@urlFile" width="@Model.ReturnPreviewWidth" height="@Model.ReturnPreviewHeight" frameborder='0'>
+             This is an embedded
+            <a target='_blank' href='http://office.com'>Microsoft Office</a>
+             presentation, powered by 
+            <a target='_blank' href='http://office.com/webapps'>Office Web Apps</a>.
+        </iframe>
+    }
 
     <script type="text/javascript">
-        var origDoc = window.parent;
+        var origDoc = window.parent.document;
         if (origDoc) {
             origDoc.getElementById("@Model.ReturnUploadField").value = "@Model.Url";
         }
