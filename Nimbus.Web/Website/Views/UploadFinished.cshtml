@@ -1,0 +1,22 @@
+﻿@using Nimbus.Web.Website.Controllers
+@model Nimbus.Web.Website.Controllers.UploadController.UploadModel
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+<body style="margin:0; padding:0">
+    @if (Model.PreviewType == UploadController.UploadModel.PreviewTypeEnum.image)
+    {
+        <img src="@Model.Url" width="@Model.ReturnPreviewWidth" height="@Model.ReturnPreviewHeight" />
+    }
+
+    <script type="text/javascript">
+        var origDoc = window.parent;
+        if (origDoc) {
+            origDoc.getElementById("@Model.ReturnUploadField").value = "@Model.Url";
+        }
+
+    </script>
+</body>
+</html>

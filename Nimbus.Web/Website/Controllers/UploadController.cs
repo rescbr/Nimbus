@@ -14,32 +14,65 @@ namespace Nimbus.Web.Website.Controllers
     [Authorize]
     public class UploadController : NimbusWebController
     {
+        readonly string[] imageExtensions = { ".jpg", ".jpeg", ".png", ".gif" };
+        readonly string[] officeExtensions = { ".docx", ".xls", ".xlsx", ".pptx", ".ppt", ".pps", ".ppsx" };
+        readonly string[] pdfExtensions = { ".pdf" };
+
         [HttpGet]
-        public ActionResult Index()
+        public ActionResult Index(string type = "", string field = "", bool popup = false, int w = 300, int h = 200)
         {
-            return View("Upload");
+            var model = new UploadModel();
+            if (type == "office")
+                model.UploadAction = "upload";
+            //else ifs de imagem, etc.
+            else
+                model.UploadAction = "upload";
+
+            model.ReturnPreviewWidth = w;
+            model.ReturnPreviewHeight = h;
+            model.ReturnUploadField = field;
+            model.isPopUp = popup;
+            return View("Upload", model);
         }
 
         [HttpPost]
-        public ActionResult Upload()
+        public ActionResult Upload(string field = "", bool popup = false, int w = 300, int h = 200)
         {
-            if (Request.Files.Count != 1)
+            if (Request.Files.Count != 1 || Request.Files[0].ContentLength == 0)
             {
-                Response.StatusCode = (int)System.Net.HttpStatusCode.BadRequest;
-                return Json(new { error = "Bad Request" });
+                var errorModel = new UploadModel(){
+                    UploadAction = "upload",
+                    ReturnUploadField = field,
+                    ReturnPreviewWidth = w,
+                    ReturnPreviewHeight = h,
+                    isPopUp = popup,
+                    isFatalError = true,
+                    ErrorMessage = "Arquivo não enviado."
+                };
+
+                return View("Upload", errorModel);
             }
 
             var file = Request.Files[0];
-
-            if (file.ContentLength == 0 || file.ContentLength > 5 * 1024 * 1024) // 5MB
+            if (file.ContentLength > 5 * 1024 * 1024) // 5MB
             {
-                Response.StatusCode = (int)System.Net.HttpStatusCode.RequestEntityTooLarge;
-                return Json(new { error = "Too Large" });
+                var errorModel = new UploadModel()
+                {
+                    UploadAction = "upload",
+                    ReturnUploadField = field,
+                    ReturnPreviewWidth = w,
+                    ReturnPreviewHeight = h,
+                    isPopUp = popup,
+                    isFatalError = true,
+                    ErrorMessage = "O tamanho do arquivo não pode ser superior a 5MB."
+                };
+
+                return View("Upload", errorModel);
             }
             
             //nome do arquivo: /container/userid/md5(timestamp + nome arquivo).extensao
             var filename = Path.GetFileNameWithoutExtension(file.FileName);
-            var extension = Path.GetExtension(file.FileName);
+            var extension = Path.GetExtension(file.FileName).ToLower();
             var timeFileName = DateTime.UtcNow.ToFileTimeUtc().ToString() + filename;
 
             HMACMD5 md5 = new HMACMD5(NimbusConfig.GeneralHMACKey);
@@ -51,12 +84,49 @@ namespace Nimbus.Web.Website.Controllers
 
             var pathFinal = blob.BlockBlob.Uri.AbsoluteUri.Replace("https://", "http://");
 
-            //pega o nome do arquivo
-            //nome final = onde vai ser armazendo
-            //pega o caminho da pasta que vai ser gravado o arquivo e sava
-            //retorna a img JA salva  para o json colocar na tela 
+            var previewModel = new UploadModel()
+            {
+                Url = pathFinal,
+                UploadAction = "upload",
+                ReturnUploadField = field,
+                ReturnPreviewWidth = w,
+                ReturnPreviewHeight = h,
+                isPopUp = popup,
+                isFatalError = false,
+                ErrorMessage = null
+            };
 
-            return Json(new { url = pathFinal });
-        }      
+            if (imageExtensions.Contains(extension))
+                previewModel.PreviewType = UploadModel.PreviewTypeEnum.image;
+            else if (officeExtensions.Contains(extension))
+                previewModel.PreviewType = UploadModel.PreviewTypeEnum.office;
+            else if (pdfExtensions.Contains(extension))
+                previewModel.PreviewType = UploadModel.PreviewTypeEnum.pdf;
+            else
+                previewModel.PreviewType = UploadModel.PreviewTypeEnum.other;
+
+
+            return View("UploadFinished", previewModel);
+        }
+
+        public class UploadModel
+        {
+            public enum PreviewTypeEnum
+            {
+                image,
+                office,
+                pdf,
+                other
+            }
+            public string UploadAction { get; set; }
+            public string ReturnUploadField { get; set; }
+            public int ReturnPreviewWidth { get; set; }
+            public int ReturnPreviewHeight { get; set; }
+            public bool isPopUp { get; set; }
+            public bool isFatalError { get; set; }
+            public string ErrorMessage { get; set; }
+            public PreviewTypeEnum PreviewType { get; set; }
+            public string Url { get; set; }
+        }
     }
 }
