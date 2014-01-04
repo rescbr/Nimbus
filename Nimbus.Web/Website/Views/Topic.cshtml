@@ -152,6 +152,10 @@
         @*Topico em formato de video*@
         @RenderPage("~/Website/Views/TopicVideo.cshtml")
     }
+    else if(Model.CurrentTopic.TopicType == Nimbus.Model.Enums.TopicType.file)
+    {
+         @RenderPage("~/Website/Views/TopicFile.cshtml")
+    }
     else
     {
         @*Topico avaliacao*@

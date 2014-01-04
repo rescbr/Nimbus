@@ -14,6 +14,7 @@ namespace Nimbus.Model
             video,
             discussion,
             exam,
+            file,
             ads
         }
 

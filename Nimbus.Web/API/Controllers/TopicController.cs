@@ -304,7 +304,8 @@ namespace Nimbus.Web.API.Controllers
                             #endregion
                         }
                         if (topic.TopicType == Nimbus.Model.Enums.TopicType.video)
-                        {                           
+                        {
+                            #region video
                             string url = topic.UrlVideo;
                             //garantir que mesmo que o vídeo tenha sido salvo com string padrao diferente, irá retornar o param certo
                             if (url.Length >= 11)
@@ -333,8 +334,7 @@ namespace Nimbus.Web.API.Controllers
                                     topic.UrlVideo = param + "?wmode=transparent";
                                 }
                             }
-                           
-
+                            #endregion                          
                         }
                     }
                 }

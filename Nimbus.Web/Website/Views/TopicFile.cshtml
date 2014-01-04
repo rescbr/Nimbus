@@ -1,0 +1,34 @@
+﻿@model Nimbus.Web.Website.Models.TopicModel
+
+<div id="divCurrent_@Model.CurrentTopic.TopicType">
+    @{
+        var height = "285px";
+        var width = "350px";
+        string urlFile = "https://view.officeapps.live.com/op/embed.aspx?src=" + Model.CurrentTopic.UrlVideo + "&wdAr=1.3333333333333333";
+        
+    if (Model.CurrentTopic.UrlVideo.EndsWith(".pdf"))
+    {
+    }
+    else
+    {
+        if (Model.CurrentTopic.UrlVideo.EndsWith(".docx"))
+        {
+            width = "550px";
+            height = "586px";
+        }
+         <iframe src=@urlFile width=@width height=@height frameborder='0'>
+             This is an embedded
+            <a target='_blank' href='http://office.com'>Microsoft Office</a>
+             presentation, powered by 
+            <a target='_blank' href='http://office.com/webapps'>Office Web Apps</a>.
+        </iframe>
+    }
+    
+   
+    }
+</div>
+
+
+<div id="divRenderEdit" style="display:none;">
+    @RenderPage("~/Website/Views/InfoToEditTopic.cshtml")
+</div>

@@ -398,6 +398,7 @@
     <Content Include="Website\Views\SearchContent.cshtml" />
     <Content Include="Website\Views\TopTopics.cshtml" />
     <Content Include="Website\Views\Upload.cshtml" />
+    <Content Include="Website\Views\TopicFile.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\Controllers\DatabaseController.cs" />
