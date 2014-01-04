@@ -306,6 +306,7 @@
     <Content Include="images\Utils\delete.png" />
     <Content Include="images\Utils\edit.png" />
     <Content Include="images\Utils\report.png" />
+    <Content Include="images\Utils\ringload.gif" />
     <Content Include="images\Utils\search.png" />
     <Content Include="images\Utils\Jcrop.gif" />
     <Content Include="images\Utils\loading.gif" />
@@ -386,6 +387,7 @@
     <Content Include="Website\Views\NotificationPartials\ChannelTopic.cshtml" />
     <Content Include="Website\Views\SearchContent.cshtml" />
     <Content Include="Website\Views\TopTopics.cshtml" />
+    <Content Include="Website\Views\Upload.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\Controllers\DatabaseController.cs" />
@@ -425,6 +427,7 @@
     <Compile Include="Website\Controllers\TopController.cs" />
     <Compile Include="Website\Controllers\TopicController.cs" />
     <Compile Include="Website\Controllers\TrendingController.cs" />
+    <Compile Include="Website\Controllers\UploadController.cs" />
     <Compile Include="Website\Models\NewsModel.cs" />
     <Compile Include="Website\Models\SearchModel.cs" />
     <Compile Include="Website\Models\TopicModel.cs" />

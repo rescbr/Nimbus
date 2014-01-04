@@ -77,6 +77,7 @@
     <Compile Include="Role.cs" />
     <Compile Include="RoleOrganization.cs" />
     <Compile Include="RoleTopic.cs" />
+    <Compile Include="StorageUpload.cs" />
     <Compile Include="Tag.cs" />
     <Compile Include="TagChannel.cs" />
     <Compile Include="TagTopic.cs" />

@@ -58,7 +58,7 @@ namespace Nimbus.Web
                         db.CreateTable(false, typeof(ViewByTopic));
                         db.CreateTable(false, typeof(VoteChannel));
                         db.CreateTable(false, typeof(Notification<object>));
-                        
+                        db.CreateTable(false, typeof(StorageUpload));
 
                         var nimbusorg = new Nimbus.Model.ORM.Organization()
                         {

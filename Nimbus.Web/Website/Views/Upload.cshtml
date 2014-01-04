@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+<body>
+    <form action="/upload/upload" method="post" id="formUpload" enctype="multipart/form-data">
+        <input type="file" name="file" id="file"/>
+        <span id="divLoadingImage" style="display:none"><img src="/images/utils/ringload.gif" /></span>
+        <br />
+        <input type="submit" value="Enviar" />
+    </form>
+    
+
+    <script type="text/javascript">
+        function dgi(el) { return document.getElementById(el); }
+        
+        dgi("formUpload").onsubmit = function () {
+            var fupload = dgi("file"); 
+            if (fupload.files.length == 0) {
+                alert("Selecione um arquivo para enviar.");
+                return false;
+            }
+
+            dgi("divLoadingImage").style.display = "block";
+        };
+    </script>
+</body>
+</html>
