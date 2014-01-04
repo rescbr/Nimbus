@@ -17,59 +17,59 @@
 @Scripts.Render("~/Scripts/ScriptsShared.js")
 
 
-<div class="content-top">
-    <div class="cont-left">
-    @if (Model.User.Id != Model.CurrentUser.UserId)
+    <div class="content-top">
+        <div class="cont-left">
+            @if (Model.User.Id != Model.CurrentUser.UserId)
         {
-            <p>
-                <h1 class="userNProfBar">@Model.User.FirstName @Model.User.LastName</h1>               
-            </p>
+                <p>
+                    <h1 class="userNProfBar">@Model.User.FirstName @Model.User.LastName</h1>
+                </p>
         }
         else
         {
-         <h1 class="userNProfBar">@Model.CurrentUser.FirstName @Model.CurrentUser.LastName</h1>        
+                <h1 class="userNProfBar">@Model.CurrentUser.FirstName @Model.CurrentUser.LastName</h1>
         }
-    </div>
-    @if (Model.User.Id != Model.CurrentUser.UserId)
+        </div>
+        @if (Model.User.Id != Model.CurrentUser.UserId)
        {
-             <a href="#modal-reportUser" class="call-modal">
+            <a href="#modal-reportUser" class="call-modal">
                 <div id="divReportUser" class="reportUser">
-                        <p>Reportar usuário</p>  
+                    <p>Reportar usuário</p>
                 </div>
             </a>
        }
-</div>
+    </div>
 
     <div class="proBar">
-       
-            @if (Model.User.Id == Model.CurrentUser.UserId)
-            { 
-                  <div class="profileImg" onmouseout="setDisplayBtnEditAvatar('none');" onmouseover="setDisplayBtnEditAvatar('block');">
-                    <img src="@Model.CurrentUser.AvatarUrl" alt="Avatar" title="Editar Avatar" id="useravatar" />
 
-                    <a href="#modal-img" class="call-modal">
-                        <div id="divBtnEditAvatar" class="editAvatar" style="display:none;">
-                            Editar avatar
-                        </div>
-                    </a>
-                  </div>
+        @if (Model.User.Id == Model.CurrentUser.UserId)
+            {
+            <div class="profileImg" onmouseout="setDisplayBtnEditAvatar('none');" onmouseover="setDisplayBtnEditAvatar('block');">
+                <img src="@Model.CurrentUser.AvatarUrl" alt="Avatar" title="Editar Avatar" id="useravatar" />
+
+                <a href="#modal-img" class="call-modal">
+                    <div id="divBtnEditAvatar" class="editAvatar" style="display:none;">
+                        Editar avatar
+                    </div>
+                </a>
+            </div>
             }
             else{
-                <div class="profileImg">     
-                    <img src="@Model.User.AvatarUrl" alt="@Model.User.FirstName" title="Avatar" id="useravatar" />    
-                </div>
+            <div class="profileImg">
+                <img src="@Model.User.AvatarUrl" alt="@Model.User.FirstName" title="Avatar" id="useravatar" />
+            </div>
             }
 
         @*Se for o usuário do perfil*@
         @if (Model.User.Id == Model.CurrentUser.UserId)
             {
-                <a href="#modal-editProfile" class="call-modal">
-                  <div class="editProfile">
+            <a href="#modal-editProfile" class="call-modal">
+                <div class="editProfile">
                     Editar perfil
-                  </div>
-                </a>
+                </div>
+            </a>
         }
-      
+
 
         <div class="aboutUser">
             <h1><label id="lblName">@Model.User.FirstName @Model.User.LastName</label></h1>
@@ -80,7 +80,7 @@
             }
             @if (!string.IsNullOrEmpty(Model.User.Country))
             {
-                <p><label id="lblCountry">@Model.User.Country</label></p> 
+                <p><label id="lblCountry">@Model.User.Country</label></p>
             }
             @if (!string.IsNullOrEmpty(Model.User.Occupation))
             {
@@ -99,8 +99,8 @@
                 <p>Outras informações: </p>
                 <p class="AboutUser-other"><label id="lblAbout"> @Model.User.About</label></p>
             }
-            
-          
+
+
 
         </div>
 
@@ -109,7 +109,7 @@
         {
             <a href="#modal-text" class="call-modal">
                 <div class="sendMessage">
-                    <p>Enviar Mensagem</p> 
+                    <p>Enviar Mensagem</p>
                 </div>
             </a>
         }
@@ -120,19 +120,20 @@
                 <p>@Model.User.Interaction pontos</p>
             </div>
         }
-       @* <div class="chanPaid">
-            <h1>Canais Pagos</h1>
-            <div class="channels">
-                @foreach (var item in Model.ChannelPaid)
-                {
-                    <div class="chanPaidImg">
-                        <img src="@item.ImgUrl" alt="@item.Name" width="40" height="40" /><!--title="blabla-->
-                    </div>
-                }
-            </div>
-        </div>*@
+        @* <div class="chanPaid">
+                <h1>Canais Pagos</h1>
+                <div class="channels">
+                    @foreach (var item in Model.ChannelPaid)
+                    {
+                        <div class="chanPaidImg">
+                            <img src="@item.ImgUrl" alt="@item.Name" width="40" height="40" /><!--title="blabla-->
+                        </div>
+                    }
+                </div>
+            </div>*@
 
     </div>
+
 
     @*Modal section - enviar msg pelo profile*@
     <section class="semantic-content" id="modal-text" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
