@@ -1,22 +1,26 @@
-﻿<!DOCTYPE html>
+﻿@model Nimbus.Web.Website.Controllers.UploadController.UploadModel
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title></title>
+    <title>Nimbus Upload</title>
 </head>
-<body>
-    <form action="/upload/upload" method="post" id="formUpload" enctype="multipart/form-data">
-        <input type="file" name="file" id="file"/>
+<body style="margin:0; padding:0">
+    <form action="/upload/@Model.UploadAction" method="post" id="formUpload" enctype="multipart/form-data">
+        <input type="file" name="file" id="file" />
+        <input type="hidden" name="field" value="@Model.ReturnUploadField" />
+        <input type="hidden" name="w" value="@Model.ReturnPreviewWidth" />
+        <input type="hidden" name="h" value="@Model.ReturnPreviewHeight" />
+        <input type="hidden" name="popup" value="@Model.isPopUp" />
         <span id="divLoadingImage" style="display:none"><img src="/images/utils/ringload.gif" /></span>
         <br />
         <input type="submit" value="Enviar" />
     </form>
-    
 
     <script type="text/javascript">
         function dgi(el) { return document.getElementById(el); }
-        
+
         dgi("formUpload").onsubmit = function () {
-            var fupload = dgi("file"); 
+            var fupload = dgi("file");
             if (fupload.files.length == 0) {
                 alert("Selecione um arquivo para enviar.");
                 return false;
@@ -24,6 +28,15 @@
 
             dgi("divLoadingImage").style.display = "block";
         };
+
     </script>
+
+    @if (Model.isFatalError)
+    {
+        <script type="text/javascript">
+            alert("@Model.ErrorMessage");
+        </script>
+    }
 </body>
+
 </html>
