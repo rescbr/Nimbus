@@ -204,7 +204,7 @@
 </div>
 
 @*Modal para enviar msg*@
-<section class="semantic-content" id="modal-text" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
+<section class="semantic-content" id="modal-text" style="height:700px;" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
     <div class="modal-inner">
         <header id="modal-label">
             <!-- Header -->
@@ -213,7 +213,7 @@
 
         @if (Model.CurrentChannel.OwnerId != Model.CurrentUser.UserId)
         {
-            <form id="formSendMsgChannel">
+            <form id="formSendMsgChannel" onsubmit="return false;">
                 <div class="modal-content">
                     <!-- The modals content -->
                     <p>
@@ -238,10 +238,10 @@
                     </p>
                     <p>
                         Assunto:
-                        <input id="txtTitleMsg" name="txtTitleMsg" type="text" maxlength="100" />
+                        <input required id="txtTitleMsg" name="txtTitleMsg" type="text" maxlength="100" />
                     </p><br />
                     <p>
-                        <textarea required id="txtTextMsg" name="txtTextMsg" rows="10" cols="60"></textarea>
+                        <textarea id="txtTextMsg" name="txtTextMsg" rows="100" cols="60"></textarea>
                     </p>
                 </div>
 
@@ -382,7 +382,7 @@
 <script type="text/javascript">
     $(function () {
         $('#txtTextMsg').width(400);
-        $('#txtTextMsg').height(100);
+        $('#txtTextMsg').height(500);
         $('#txtTextMsg').htmlarea();
     });
 </script>

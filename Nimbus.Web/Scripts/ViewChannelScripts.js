@@ -378,7 +378,7 @@ function ajaxSendMessage(id)
             ajaxMessage["Title"] = "Sem assunto";
 
         $.ajax({
-            url: "/api/Message/SendMessageChannel/" + id, 
+            url: "/api/Message/SendMessageChannel/" + id,
             data: JSON.stringify(ajaxMessage),
             type: "POST",
             contentType: "application/json;charset=utf-8",
