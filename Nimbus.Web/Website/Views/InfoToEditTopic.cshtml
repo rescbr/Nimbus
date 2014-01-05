@@ -39,6 +39,15 @@
             </div>
 
         }
+        else if (Model.CurrentTopic.TopicType == Nimbus.Model.Enums.TopicType.file)
+        {
+            <div id="divNewFile" class="divformNewChannel">
+                    <label>Upload de arquivo (máx. 5MB):</label><br />
+                    <label>(docx, pdf, pptx, ppt, ppsx, pps, xlsx, xls)</label>
+                    <iframe width="300" height="200" src="/upload?type=office&w=300&h=200&field=inptUrlEditFile" frameborder="0"></iframe>
+                    <input type="hidden" id="inptUrlEditFile" />                
+            </div>
+        }
         else if (Model.CurrentTopic.TopicType == Nimbus.Model.Enums.TopicType.text ||
                  Model.CurrentTopic.TopicType == Nimbus.Model.Enums.TopicType.discussion)
         {

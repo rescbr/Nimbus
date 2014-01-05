@@ -19,12 +19,16 @@ function clickEditTopic(id, topicType)
 }
 
 function ajaxEditTopic(id, topicType, divOld) {
-    var video; 
+    var url; 
     var text; var exam = [];
     var ajaxData = {}  
 
     if (topicType == 'video') {
-        video = document.getElementById('iframeNewVideo').src;
+        url = document.getElementById('iframeNewVideo').src;
+    }
+    if (topicType == 'file')
+    {
+        url = document.getElementById("inptUrlEditFile").src;
     }
     if (topicType == 'text') {
         text = $("#txtaArticle").htmlarea('html');
@@ -47,7 +51,7 @@ function ajaxEditTopic(id, topicType, divOld) {
         ajaxData["Description"] = document.getElementById('iptNewDescription').value;
         ajaxData["TopicType"] = topicType;
         ajaxData["Text"] = text;
-        ajaxData["UrlVideo"] = video;
+        ajaxData["UrlVideo"] = url;
         ajaxData["Question"] = exam;
 
         $.ajax({
@@ -64,13 +68,16 @@ function ajaxEditTopic(id, topicType, divOld) {
                         {
                             document.getElementById('iFrameVideo').src = newData.UrlVideo;
                         }
-                        else if (newData.TopicType == 0 || newData.TopicType == 2)
+                        else if (newData.topicType == 4)
                         {
+                            document.getElementById("inptUrlFile").src = newData.UrlVideo;
+                        }
+                        else if (newData.TopicType == 0 || newData.TopicType == 2) {
                             document.getElementById('pTopicText').innerHTML = newData.Text;
                         }
                         else if (newData.TopicType == 3) {
                             updateFieldsEcam(newData);
-                        }                                             
+                        }
 
                         document.getElementById('divRenderEdit').style.display = 'none';
                         document.getElementById(divOld).style.display = 'block';

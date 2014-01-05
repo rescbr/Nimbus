@@ -28,11 +28,11 @@
 <div class="wrapperChannel">
     <nav class="chanTopBar">
         <ul class="sbs">
-            <li class="press"><a name="divNotifications" onclick="EnableDiv(this.name, 'currentDiv');" class="linkTopChanBar"><p>Atualizações</p></a></li>
-            <li class="press"><a name="divPopularTopics" onclick="EnableDiv(this.name, 'currentDiv');" class="linkTopChanBar"><p>Mais vistos</p></a></li>
-            <li class="press"><a name="divAllTopics" onclick="EnableDiv(this.name, 'currentDiv');" class="linkTopChanBar"><p>Todos</p></a></li>
-            <li class="press"><a name="divNewTopic" onclick="EnableDiv(this.name, 'currentDiv');" class="linkTopChanBar"><p>Novo tópico</p></a></li>
-            <li class="press"><a name="divMessages" onclick="EnableDiv(this.name, 'currentDiv');" class="linkTopChanBar"><p>Mensagens</p></a></li>
+            <li class="press"><a name="divNotifications" onclick="EnableDiv(this.name, 'currentDiv', '');" class="linkTopChanBar"><p>Atualizações</p></a></li>
+            <li class="press"><a name="divPopularTopics" onclick="EnableDiv(this.name, 'currentDiv', '');" class="linkTopChanBar"><p>Mais vistos</p></a></li>
+            <li class="press"><a name="divAllTopics" onclick="EnableDiv(this.name, 'currentDiv', '');" class="linkTopChanBar"><p>Todos</p></a></li>
+            <li class="press"><a name="divNewTopic" onclick="EnableDiv(this.name, 'currentDiv', '');" class="linkTopChanBar"><p>Novo tópico</p></a></li>
+            <li class="press"><a name="divMessages" onclick="EnableDiv(this.name, 'currentDiv', '');" class="linkTopChanBar"><p>Mensagens</p></a></li>
         </ul>
     </nav>
 
@@ -119,92 +119,92 @@
                 </form>
             </div>
 
-            <form id="formCreateTopic">
-            <div class="divformNewChannel">
-                <p>
-                    Nome do Tópico
-                </p>
-                <input type="text" id="txtNameTopic" maxlength="50" min="5" required name="txtNameTopic" placeholder="Nome do Tópico" style="max-width: 384px; min-width: 384px" />
-            </div>
-
-            <div class="divformNewChannel">
-                <p>
-                    Descricao
-                </p>
-                <textarea cols="30" rows="5" id="txtaDescription" maxlength="150" required name="txtaDescription" placeholder="Descrição do Tópico" style="max-width: 384px; min-width: 384px; background: #ffffff;" ></textarea>                
-            </div>
-
-            <div class="divformNewChannel">
-                <p>
-                    Tipo do Tópico
-                </p>
-                <div>
-                    <label id="lblFile" onclick="EnableTwoDiv('divFile', 'divTipoTopic', 'divTypeTopic');">Arquivos</label>
-                    <label id="lblVideo" onclick="EnableTwoDiv('divVideo', 'divTipoTopic', 'divTypeTopic');">Vídeo</label>
-                    <label id="lblText" onclick="EnableTwoDiv('divText', 'divTipoTopic', 'divTypeTopic');">Artigo</label>
-                    <label id="lblDiscussion" onclick="EnableTwoDiv('divDiscussion', 'divTipoTopic', 'divTypeTopic');">Discussão</label>
-                    <label id="lblExam" onclick="EnableTwoDiv('divExam', 'divTipoTopic', 'divTypeTopic');">Avaliação</label>
-                </div>
-            </div>
-
-
-            <div id="divTypeTopic" style="display:none;">
-                <div id="divFile" style="display:none;" class="divformNewChannel">
-                    <label>Upload de arquivo (máx. 5MB):</label><br />
-                    <label>(docx, pdf, pptx, ppt, ppsx, pps, xlsx, xls)</label>
-                    <iframe width="300" height="200" src="/upload?type=office&w=300&h=200&field=inptUrlFile" frameborder="0" ></iframe>
-                    <input type="hidden" id="inptUrlFile"/>
+            <form id="formCreateTopic" onsubmit="SaveNewTopic(@Model.CurrentChannel.Id, false);">
+                <div class="divformNewChannel">
+                    <p>
+                        Nome do Tópico
+                    </p>
+                    <input type="text" id="txtNameTopic" maxlength="50" min="5" required name="txtNameTopic" placeholder="Nome do Tópico" style="max-width: 384px; min-width: 384px" />
                 </div>
 
-                <div id="divVideo" style="display:none;" class="divformNewChannel">
-                    <input type="text" id="iptnamevideo" required name="iptnamevideo" value="URL do vídeo" onfocus="javascript: this.value =''" onchange="getUrlVideo(this.name, 'divFrameVideo','iframeVideo');" placeholder="URL do Video" style="max-width: 384px; min-width: 384px" />
-                    <label>Somente url do youtube</label><br />
-                    <div id="divFrameVideo" style="display:none">                        
-                            <iframe name="iframeVideo" width="420" height="345" id="iframeVideo" src=""></iframe>
+                <div class="divformNewChannel">
+                    <p>
+                        Descricao
+                    </p>
+                    <textarea cols="30" rows="5" id="txtaDescription" maxlength="150" required name="txtaDescription" placeholder="Descrição do Tópico" style="max-width: 384px; min-width: 384px; background: #ffffff;"></textarea>
+                </div>
+
+                <div class="divformNewChannel">
+                    <p>
+                        Tipo do Tópico
+                    </p>
+                    <div>
+                        <label id="lblFile" onclick="EnableTwoDiv('divFile', 'divTipoTopic', 'divTypeTopic','');">Arquivo</label>
+                        <label id="lblVideo" onclick="EnableTwoDiv('divVideo', 'divTipoTopic', 'divTypeTopic','inptVideo');">Vídeo</label>
+                        <label id="lblText" onclick="EnableTwoDiv('divText', 'divTipoTopic', 'divTypeTopic','txtaArticle');">Artigo</label>
+                        <label id="lblDiscussion" onclick="EnableTwoDiv('divDiscussion', 'divTipoTopic', 'divTypeTopic','txtaTextMsg');">Discussão</label>
+                        <label id="lblExam" onclick="EnableTwoDiv('divExam', 'divTipoTopic', 'divTypeTopic','');">Avaliação</label>
                     </div>
                 </div>
 
-                <div id="divText" style="display:none;" class="divformNewChannel">
-                    <textarea id="txtaArticle" placeholder="Escreva Aqui" style="max-width: 384px; min-width: 384px; background: #ffffff;"></textarea>
-                </div>
 
-                <div id="divDiscussion" style="display:none;" class="divformNewChannel">
-                    <p>
-                        Questão em debate
-                   </p>
-                    <textarea id="txtaTextMsg" placeholder="Escreva Aqui" style="max-width: 384px; min-width: 384px; background: #ffffff;"></textarea>
-                </div>
+                <div id="divTypeTopic" style="display:none;">
+                    <div id="divFile" style="display:none;" class="divformNewChannel">
+                        <label>Upload de arquivo (máx. 5MB):</label><br />
+                        <label>(docx, pdf, pptx, ppt, ppsx, pps, xlsx, xls)</label>
+                        <iframe width="300" height="200" src="/upload?type=office&w=300&h=200&field=inptUrlFile" frameborder="0"></iframe>
+                        <input type="hidden" id="inptUrlFile" />
+                    </div>
 
-                <div id="divExam" style="display:none;" class="divformNewChannel">
-                    <div id="divPergunta1" class="divPergEditarNimbus">
-                        <p>
-                            Enunciado da questão
-                        </p>
-                        <input id="QuestionPerg1" required class="enunciado" type="text" maxlength="600" />
-                        <p>Respostas</p>
-                        <div>
-                            <ul id="ulPerg1">
-                                <li id="liPerg1_opt1">
-                                    @*pergunta 1 _ opçao 1*@
-                                    <input type="radio" class="rdbPergEditNimbus" name="radio_perg1" id="rdbPerg1_opt1" />
-                                    <input id="txtPerg1_opt1" required class="resposta" type="text" onfocus="javascript: this.value = ''" value="Opção 1" />
-                                </li>
-                                <li id="liPerg1_opt2">
-                                    <input type="radio" class="fakeDisable rdbPergEditNimbus" name="radio_perg1" id="rdbPerg1_opt2" />
-                                    <input id="txtPerg1_opt2" required class="fakeDisable" onclick="DisableOption('2', 'divPergunta1');" type="text" value="Opção 2" />
-                                </li>
-                            </ul>
+                    <div id="divVideo" style="display:none;" class="divformNewChannel">
+                        <input type="text" id="inptVideo" name="iptnamevideo" value="URL do vídeo" onfocus="javascript: this.value =''" onchange="getUrlVideo(this.name, 'divFrameVideo','iframeVideo');" placeholder="URL do Video" style="max-width: 384px; min-width: 384px" />
+                        <label>Somente url do youtube</label><br />
+                        <div id="divFrameVideo" style="display:none">
+                            <iframe name="iframeVideo" width="420" height="345" id="iframeVideo" src=""></iframe>
                         </div>
                     </div>
-                    <button id="bntAddItem" onclick="CreatedDivQuestion();">Add item</button> @*Do jeito que tá, o botão de ADD fica entre as perguntas DDD: // E se tirar dessa div, ele aparece em todas as outras opções*@
-                </div>
-                
-            </div>
 
-            <div class="divBtnNewChannel">
-                <input type="button" class="divCnclNewChannel" value="Cancelar" />
-                <input type="submit" id="btnSalvar" onclick="SaveNewTopic(@Model.CurrentChannel.Id, false);" class="divSaveNewChannel" value="Criar Tópico" />
-            </div>
+                    <div id="divText" style="display:none;" class="divformNewChannel">
+                        <textarea id="txtaArticle" placeholder="Escreva Aqui" style="max-width: 384px; min-width: 384px; background: #ffffff;"></textarea>
+                    </div>
+
+                    <div id="divDiscussion" style="display:none;" class="divformNewChannel">
+                        <p>
+                            Questão em debate
+                        </p>
+                        <textarea id="txtaTextMsg" placeholder="Escreva Aqui" style="max-width: 384px; min-width: 384px; background: #ffffff;"></textarea>
+                    </div>
+
+                    <div id="divExam" style="display:none;" class="divformNewChannel">
+                        <div id="divPergunta1" class="divPergEditarNimbus">
+                            <p>
+                                Enunciado da questão
+                            </p>
+                            <input id="QuestionPerg1" class="enunciado" type="text" maxlength="600" />
+                            <p>Respostas</p>
+                            <div>
+                                <ul id="ulPerg1">
+                                    <li id="liPerg1_opt1">
+                                        @*pergunta 1 _ opçao 1*@
+                                        <input type="radio" class="rdbPergEditNimbus" name="radio_perg1" id="rdbPerg1_opt1" />
+                                        <input id="txtPerg1_opt1" class="resposta" type="text" onfocus="javascript: this.value = ''" value="Opção 1" />
+                                    </li>
+                                    <li id="liPerg1_opt2">
+                                        <input type="radio" class="fakeDisable rdbPergEditNimbus" name="radio_perg1" id="rdbPerg1_opt2" />
+                                        <input id="txtPerg1_opt2" class="fakeDisable" onclick="DisableOption('2', 'divPergunta1');" type="text" value="Opção 2" />
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <button id="bntAddItem" onclick="CreatedDivQuestion();">Add item</button> @*Do jeito que tá, o botão de ADD fica entre as perguntas DDD: // E se tirar dessa div, ele aparece em todas as outras opções*@
+                    </div>
+
+                </div>
+
+                <div class="divBtnNewChannel">
+                    <input type="button" class="divCnclNewChannel" onclick="cancelNewTopic(@Model.CurrentChannel.Id);" value="Cancelar" />
+                    <input type="submit" id="btnSalvar" class="divSaveNewChannel" value="Criar Tópico" />
+                </div>
             </form>
         </div>
 

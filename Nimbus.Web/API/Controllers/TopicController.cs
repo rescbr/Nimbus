@@ -199,13 +199,7 @@ namespace Nimbus.Web.API.Controllers
                                 
                                 if (topic.TopicType == Model.Enums.TopicType.exam)
                                 {
-                                    //Renato: comentado devido processo de remoção de htmlencode
-                                    //foreach (var item in topic.Question)
-                                    //{
-                                    //    item.TextQuestion = HttpUtility.HtmlEncode(item.TextQuestion);
-                                    //    //colocar encode nas opçoes
-                                    //}
-                                    tpc.Question = topic.Question;
+                                   tpc.Question = topic.Question;
                                 }
 
                                 tpc.Title = topic.Title;

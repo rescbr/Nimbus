@@ -166,6 +166,12 @@ function SaveNewTopic(channelID, isEdit)
     {
         ajaxEditTopic(channelID);
     }
+    return false;
+}
+
+function cancelNewTopic(idChannel)
+{
+    window.location.href = "/channel/index/" + idChannel;
 }
 
 function ajaxSaveNewTopic(channelID)
