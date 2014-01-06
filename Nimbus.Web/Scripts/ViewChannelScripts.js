@@ -274,7 +274,7 @@ function ajaxAnswerComment(parentId,commentId, channelId, topicId, txtContent) {
             statusCode: {
                 200: function (newData) {
                     document.getElementById('divAnswerComment_' + commentId).style.display = 'none';
-                    //document.getElementById('divAnswerTopic_' + commentId).style.display = 'block';
+                    document.getElementById('bntAnswer_' + commentId).style.display = 'block';
 
                     //liumpar campos
                     document.getElementById(txtContent).value = '';
@@ -337,14 +337,14 @@ function ajaxDeleteComment(commentId, divName)
                 200: function (newData) {
                     if (newData.ParentId > 0)
                     {
-                        document.getElementById("lblText_"+ commentId).value = "Comentário removido";
-                        document.getElementById("lblPostedOn_" + commentId).value = newData.PostedOn;
+                        document.getElementById("lblText_"+ commentId).innerHTML = "Comentário removido";
                         document.getElementById("imgTopic_"+ commentId).src = newData.AvatarUrl;
                         document.getElementById("lblUserName_" + commentId).value = newData.UserName;
                         document.getElementById("btnDelete_" + commentId).style.display = 'none';
 
-                        document.getElementById("btnReportComment_" + commentId).style.display = 'none';
-                        document.getElementById("btnDelete_" + commentId).style.display = 'none';
+                        var report = document.getElementById("btnReportComment_" + commentId);
+                        if(report != null)
+                            report.style.display = 'none';
                     }
                     else
                     {
@@ -354,7 +354,7 @@ function ajaxDeleteComment(commentId, divName)
 
                 500: function () {
                     //erro
-                    window.alert("Não foi possível enviar seu comentário. Tente novamente mais tarde.");
+                    window.alert("Não foi possível deletar seu comentário. Tente novamente mais tarde.");
                 }
             }
         });

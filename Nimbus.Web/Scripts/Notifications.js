@@ -168,8 +168,8 @@ function getNotifications(after) {
 
 function newTopicCommentNotification(notif) {
     
-    var parentDiv = document.getElementById("divContentComment_" + notif.parentId);
-    //var parentDiv = document.getElementById("divAllCommentChild_" + notif.parentId);
+    //var parentDiv = document.getElementById("divContentComment_" + notif.parentId);
+    var parentDiv = document.getElementById("divAllCommentChild_" + notif.parentId);
     if (parentDiv !== null) {
         //existe comentario pai
         $.ajax({
@@ -179,7 +179,7 @@ function newTopicCommentNotification(notif) {
             statusCode: {
                 200: function (cw) {
                     var recvElement = makeElementFromHtml(cw.Html);
-                    parentDiv.insertBefore(recvElement, document.getElementById("divAnswerTopic_" + notif.parentId));
+                    parentDiv.insertBefore(recvElement, document.getElementById("btn_skipCommentsChild_" + notif.parentId));
                 }
             }
         });
