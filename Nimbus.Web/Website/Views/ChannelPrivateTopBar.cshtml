@@ -215,31 +215,8 @@
                 { 
                     foreach (var item in Model.Messages)
                     {
-                            <div class="post_m">
-                                <div class="postHeImg_m">
-                                    <a href="userprofile/@item.SenderId">
-                                        @{ string mediumAvatarUrl = item.AvatarUrl.Replace("/av130x130/", "/av60x60/"); }
-                                        <img src="@mediumAvatarUrl"  style="height:60px; width:60px;" alt="Avatar" title="@item.UserName">
-                                    </a>
-                                </div>
-                                <div class="post_Right_m">
-                                    <nav class="postHeaderLeft_m">
-                                        <ul class="sbs">
-                                            <li><a href="userprofile/@item.SenderId">@item.UserName</a></li>                                                                                    
-                                            <li>@item.Title</li>
-                                        </ul>
-                                            </nav>
-                                            <nav class="postHeaderRight_m">
-                                                <ul class="sbs">
-                                                    <li>@string.Format("{0:d/M/yyyy}", item.Date)</li>
-                                                        <li>@string.Format("{0:HH:mm}", item.Date)</li>
-                                                        </ul>
-                                                    </nav>
-                                                    <div class="postContent_m">
-                                                        <p>@item.Text </p>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                        //partial
+                        Html.RenderPartial("~/Website/Views/MessagePartials/MessagePartial.cshtml", item);
                     }
                 }
             }
