@@ -171,22 +171,24 @@ function newTopicCommentNotification(notif) {
     //var parentDiv = document.getElementById("divContentComment_" + notif.parentId);
     var parentDiv = document.getElementById("divAllCommentChild_" + notif.parentId);
     if (parentDiv !== null) {
-        //existe comentario pai
+        //existe comentario pai, entao renderiza um comentario filho
         $.ajax({
             url: "/api/comment/commentshtml/" + notif.commentId + "?type=onechild",
             type: "GET",
             contentType: "text/html;charset=utf-8",
             statusCode: {
                 200: function (cw) {
-                    var recvElement = makeElementFromHtml(cw.Html);
-                    parentDiv.insertBefore(recvElement, document.getElementById("btn_skipCommentsChild_" + notif.parentId));
+                    parentDiv.innerHTML += cw.Html;
+                    //var recvElement = makeElementFromHtml(cw.Html);
+                    //parentDiv.insertBefore(recvElement, document.getElementById("btn_skipCommentsChild_" + notif.parentId));
                 }
             }
         });
     } else if (document.getElementById("divNoComments") !== null) {
+        //foi enviado um comentario filho, mas o pai nao existe. condição de erro, recarregar tudo
         //renderiza todos os comentarios
         $.ajax({
-            url: "/api/comment/commentshtml/" + notif.topicId + "?type=topic",
+            url: "/api/comment/commentshtml/" + notif.topicId + "?type=notificationtopic",
             type: "GET",
             contentType: "text/html;charset=utf-8",
             statusCode: {
@@ -196,6 +198,7 @@ function newTopicCommentNotification(notif) {
             }
         });
     } else {
+        //foi enviado um comentario pai
         //insere comentario pai
         $.ajax({
             url: "/api/comment/commentshtml/" + notif.commentId + "?type=oneparent",

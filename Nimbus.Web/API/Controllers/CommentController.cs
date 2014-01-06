@@ -356,6 +356,11 @@ namespace Nimbus.Web.API.Controllers
                 comments = ShowChannelComment(id, skip);
             else if (type == "topic")
                 comments = ShowTopicComment(id, skip);
+            else if (type == "notificationtopic")
+            {
+                comments = ShowTopicComment(id, skip);
+                partial = "~/Website/Views/CommentPartials/PartialTopicComment.cshtml";
+            }
             else if (type == "child")
                 comments = ShowMoreCommentChild(id, skip);
             else if (type == "oneparent")
