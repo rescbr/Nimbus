@@ -1,9 +1,9 @@
 ﻿@model Nimbus.Model.Bags.MessageBag
-
+@{ string mediumAvatarUrl = Model.AvatarUrl.Replace("/av130x130/", "/av60x60/"); }
 <div id="divMesgExpand_@Model.Id" style="margin-top:30px; background-color:red;" >
     <a href='/userprofile/index/@Model.Id'>
         <div class="postHeImg_m">
-            <img src="@Model.AvatarUrl" width="60px;" height="60px;">
+            <img src="@mediumAvatarUrl" width="60px;" height="60px;">
         </div>
     </a>
     <div onclick="ajaxHiddeMsg('divMesgExpand_@Model.Id');">

@@ -302,6 +302,7 @@
                 dataType: 'json',
                 success: function (data) {
                     //jcrop.destroy();
+                    var small = data.url.replace("/av130x130/", "/av35x35/");
                     $("#useravatar").attr("src", data.url);
                     $("#smallavatar").attr("src", data.url);
                     //document.getElementById("useravatar").src = data.url;

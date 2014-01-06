@@ -1,8 +1,9 @@
 ﻿@model Nimbus.Web.Notifications.ModeratorNotificationModel
+@{ string mediumAvatarUrl = Model.SenderAvatarUrl.Replace("/av130x130/", "/av60x60/"); }
 <div class="divNotification" style="display:block;" id="notifModerator_@Model.Guid">
     @*para cada item da lista que ele recber//TODO*@
     <div class="imgNotificationCrop">
-        <img class="imgNotification" src="@Model.SenderAvatarUrl" />
+        <img class="imgNotification" src="@mediumAvatarUrl" />
     </div>
     <div class="attChoice">
         @*<button id="btnAccept" onclick="">Aceitar</button>*@

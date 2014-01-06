@@ -1,7 +1,8 @@
 ﻿@model Nimbus.Web.Notifications.MessageNotificationModel
+@{ string mediumAvatarUrl = Model.SenderAvatarUrl.Replace("/av130x130/", "/av60x60/"); }
 <div class="divNotification" style="display:block;">
     <div class="imgNotificationCrop">
-        <img class="imgNotification" src="@Model.SenderAvatarUrl" />
+        <img class="imgNotification" src="@mediumAvatarUrl" />
     </div>
     <p class="timeNotification">
         @*hora x     data x*@

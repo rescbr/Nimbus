@@ -1,6 +1,6 @@
 ﻿
 @model Nimbus.Model.Bags.MessageBag
-
+@{ string mediumAvatarUrl = Model.AvatarUrl.Replace("/av130x130/", "/av60x60/"); }
 <div class="messages">
     @{
         string readStat;
@@ -17,7 +17,7 @@
         <div class="post_m" id="divMesg_@Model.Id" style="@readStat">
             <a href="/userprofile/index/@Model.SenderId">
                 <div class="postHeImg_m">
-                    <img src=@Model.AvatarUrl width="60px;" height="60px;">
+                    <img src="@mediumAvatarUrl" width="60" height="60">
                 </div>
             </a>
 

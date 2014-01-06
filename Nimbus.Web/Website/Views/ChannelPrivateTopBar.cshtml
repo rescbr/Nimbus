@@ -218,7 +218,8 @@
                             <div class="post_m">
                                 <div class="postHeImg_m">
                                     <a href="userprofile/@item.SenderId">
-                                        <img src=@item.AvatarUrl  style="height:60px; width:60px;" alt="Avatar" title="@item.UserName">
+                                        @{ string mediumAvatarUrl = item.AvatarUrl.Replace("/av130x130/", "/av60x60/"); }
+                                        <img src="@mediumAvatarUrl"  style="height:60px; width:60px;" alt="Avatar" title="@item.UserName">
                                     </a>
                                 </div>
                                 <div class="post_Right_m">

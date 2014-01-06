@@ -81,6 +81,45 @@ namespace Nimbus.Web.Utils
             img = outImage;
         }
 
+        public void FitSize(int newWidth, int newHeight)
+        {
+            //http://www.dweebd.com/ruby/resizing-and-cropping-images-to-fixed-dimensions/
+            // Create "blank" image for drawing new image
+            Bitmap outImage = new Bitmap(newWidth, newHeight);
+            Graphics outGraphics = Graphics.FromImage(outImage);
+            outGraphics.CompositingQuality = CompositingQuality.HighQuality;
+            outGraphics.SmoothingMode = SmoothingMode.HighQuality;
+            outGraphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+
+            float fW = (float)img.Width;
+            float fH = (float)img.Height;
+            float fNewW = (float)newWidth;
+            float fNewH = (float)newHeight;
+
+            int resultantW, resultantH;
+
+            if ((fW / fNewW) < (fH / fNewH))
+            {
+                resultantW = newWidth;                 //150
+                resultantH = (int)(fH * (fNewW / fW)); //112
+                // aplica scale para newWidth x ?
+            }
+            else
+            {
+                resultantW = (int)(fW * (fNewH / fH));
+                resultantH = newHeight;
+                //aplica scale para ? x newHeight
+            }
+
+            //crop central
+            var posCentral = new Rectangle((newWidth - resultantW)/2, (newHeight - resultantH)/2, resultantW, resultantH);
+
+            outGraphics.DrawImage(img, posCentral, new Rectangle(0, 0, img.Width, img.Height), GraphicsUnit.Pixel);
+
+            img.Dispose();
+            img = outImage;
+        }
+
         public Stream SaveToJpeg(long quality = 90L)
         {
             ImageCodecInfo iciJpeg = GetEncoderInfo("image/jpeg");

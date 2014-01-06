@@ -169,6 +169,7 @@ function getNotifications(after) {
 function newTopicCommentNotification(notif) {
     
     var parentDiv = document.getElementById("divContentComment_" + notif.parentId);
+    //var parentDiv = document.getElementById("divAllCommentChild_" + notif.parentId);
     if (parentDiv !== null) {
         //existe comentario pai
         $.ajax({

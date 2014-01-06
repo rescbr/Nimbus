@@ -1,5 +1,10 @@
 ﻿@{
     Nimbus.Plumbing.NimbusUser user = (Context.User.Identity as Nimbus.Plumbing.NimbusUser);
+    string smallAvatarUrl = null;
+    if (user != null) { 
+        smallAvatarUrl = user.AvatarUrl.Replace("/av130x130/", "/av35x35/");
+    }
+    
     string trendingClass = "BTrTop";
     string topClass = "BTop";
     string searchClass = "BSearch";
@@ -66,7 +71,7 @@
                 {
                     <nav class="right">
                         <ul class="sbs">
-                                <li><div class="userpic" onclick="window.location.href = '/';"><img src="@user.AvatarUrl" width="35" height="35" id="smallavatar" /></div></li>
+                                <li><div class="userpic" onclick="window.location.href = '/';"><img src="@smallAvatarUrl" width="35" height="35" id="smallavatar" /></div></li>
                                 <li><h2 class="userName" onclick="window.location.href = '/';">@user.FirstName</h2></li>
                                 <li><div class="press exitbutton"><a class="exit" href="/login/logout">Sair</a></div></li>
                         </ul>

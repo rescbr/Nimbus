@@ -540,9 +540,10 @@ div.proBar {
     width:              100px;
     text-align:         center;
     height:             25px;
-    margin-top:         150px;
+    margin-top:         -50px;
     margin-left:        50px;
     margin-right:       50px;
+    position:           absolute;
 }
 
 div.profileImg {

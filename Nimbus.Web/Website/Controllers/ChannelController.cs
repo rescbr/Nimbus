@@ -12,6 +12,7 @@ using Nimbus.Web.Security;
 using Nimbus.Web.Utils;
 using Nimbus.Model.ORM;
 using Nimbus.Model.Bags;
+using System.IO;
 
 namespace Nimbus.Web.Website.Controllers
 {
@@ -64,10 +65,9 @@ namespace Nimbus.Web.Website.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<ActionResult> Upload()
+        public ActionResult Upload()
         {
-            //se alterar aqui nao esqueça de mudar no metodo Crop()
-            const int dimensaoMax = 150;
+            //tamanho da imagem: 150x100, olhe a chamada para o metodo image.FitSize().
 
             if (Request.Files.Count != 1)
             {
@@ -75,50 +75,40 @@ namespace Nimbus.Web.Website.Controllers
                 return Json(new { error = "Bad Request" });
             }
 
-            if (Request.Files[0].ContentLength > 5 * 1024 * 1024) // 5MB
+            var file = Request.Files[0];
+            if (file.ContentLength > 5 * 1024 * 1024) // 5MB
             {
                 Response.StatusCode = (int)System.Net.HttpStatusCode.RequestEntityTooLarge;
                 return Json(new { error = "Too Large" });
             }
 
-            //gera um nome obfuscado mas previsivel
-            var nomeFinal = "fullsize-" + NimbusUser.UserId;
+            //nome do arquivo: /container/tp150x100/md5(timestamp + nome arquivo).jpg
+            var filename = Path.GetFileNameWithoutExtension(file.FileName);
+            var timeFileName = DateTime.UtcNow.ToFileTimeUtc().ToString() + filename;
 
             HMACMD5 md5 = new HMACMD5(NimbusConfig.GeneralHMACKey);
-            md5.ComputeHash(Encoding.Unicode.GetBytes(nomeFinal));
-            nomeFinal = Base32.ToString(md5.Hash).ToLower() + ".jpg";
+            md5.ComputeHash(Encoding.Unicode.GetBytes(timeFileName));
+            var fileHash = Base32.ToString(md5.Hash).ToLower() + ".jpg";
+            var uploadFileName150x100 = "tp150x100/" + fileHash;
+            var uploadFileName60x60 = "tp60x60/" + fileHash;
 
-            //3x o tamanho máximo
             var image = new ImageManipulation(Request.Files[0].InputStream);
-            if (image.Width <= dimensaoMax && image.Height <= dimensaoMax)
-            {
-                //aumenta a imagem, mesmo perdendo definição
-                image.Resize(dimensaoMax, dimensaoMax);
-            }
-            else if (image.Width <= 600 && image.Height <= 450)
-            {
-                //mantém a imagem no tamanho original
-            }
-            else
-            {
-                //reduz a imagem
-                image.Resize(600, 450);
-            }
-
+            
+            //faz upload da imagem 150x100
+            image.FitSize(150, 100);
             var imageStream = image.SaveToJpeg();
-
-            var blob = new AzureBlob(Const.Azure.TopicContainer, nomeFinal);
+            var blob = new AzureBlob(Const.Azure.TopicContainer, uploadFileName150x100);
             blob.UploadStreamToAzure(imageStream);
 
+            image.FitSize(60, 60);
+            var image60x60Stream = image.SaveToJpeg();
+            var blob60x60 = new AzureBlob(Const.Azure.TopicContainer, uploadFileName60x60);
+            blob60x60.UploadStreamToAzure(image60x60Stream);
+
+
             var pathFinal = blob.BlockBlob.Uri.AbsoluteUri.Replace("https://", "http://");
-            //adiciona query string para atrapalhar o cache =)
-            pathFinal += "?x=" + DateTime.Now.ToFileTime().ToString();
 
-            //pega o nome do arquivo
-            //nome final = onde vai ser armazendo
-            //pega o caminho da pasta que vai ser gravado o arquivo e sava
-            //retorna a img JA salva  para o json colocar na tela 
-
+            //retorna apenas a 150x100.
             return Json(new { url = pathFinal });
         }
 

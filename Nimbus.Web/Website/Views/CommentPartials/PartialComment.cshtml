@@ -1,8 +1,15 @@
 ﻿@model Nimbus.Model.Bags.CommentBag
-
+@{ string mediumAvatarUrl = Model.AvatarUrl.Replace("/av130x130/", "/av60x60/"); }
+@if (Model.IsParent)
+{
+    //precisa do <text> pq a tag nao fecha =P
+    <text><div class="firstBlockComment"></text>
+} else {
+    <text><div id="divChildComment_@Model.Id" class="divChildComment"></text>
+}
 <div id="divComment_@Model.Id">
     <div style="float:left">
-        <img src="@Model.AvatarUrl" id="imgTopic_@Model.Id" height="48" alt="" width="48" />
+        <img src="@mediumAvatarUrl" id="imgTopic_@Model.Id" height="48" alt="" width="48" />
     </div>
     <div class="divCommentContent">
         <div class="delComment">           
@@ -52,3 +59,5 @@
     <a href="#!" id="closeModalMessage" class="modal-close" title="Close this modal" data-close="Close"
        data-dismiss="modal">×</a>
 </section>
+
+</div> @* essa tag fecha a div do primeiro if*@

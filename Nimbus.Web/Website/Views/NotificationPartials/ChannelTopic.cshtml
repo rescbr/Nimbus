@@ -1,8 +1,13 @@
 ﻿@using Nimbus.Model
 @model Nimbus.Web.Notifications.TopicNotificationModel
+@{
+    //arruma arquivo do topic image =p
+    string img60x60 = Model.TopicImage.Replace("/tp150x100/", "/tp60x60/");
+}
+
 <div class="divNotification" style="display:block;">
     <div class="imgNotificationCrop">
-        <img class="imgNotification" src="@Model.TopicImage" />
+        <img class="imgNotification" src="@img60x60" />
     </div>
     <p class="timeNotification">
         @*hora x     data x*@

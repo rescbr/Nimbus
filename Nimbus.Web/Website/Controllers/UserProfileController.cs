@@ -161,22 +161,34 @@ namespace Nimbus.Web.Website.Controllers
             Stream imgResize = null;
             var origBlob = new AzureBlob(Const.Azure.AvatarContainer, nomeImagemOriginal);
 
-            using (var streamImgOrig = origBlob.DownloadToMemoryStream())
-            {
-                var img = new ImageManipulation(streamImgOrig);
-                img.Crop(x1, y1, x2, y2);
-                img.Resize(dimensaoMax, dimensaoMax);
-                imgResize = img.SaveToJpeg();
-            }
+            var streamImgOrig = origBlob.DownloadToMemoryStream();
+
+            var img = new ImageManipulation(streamImgOrig);
+            img.Crop(x1, y1, x2, y2);
+            img.Resize(dimensaoMax, dimensaoMax);
+            imgResize = img.SaveToJpeg();
+            
 
             origBlob.Delete();
 
             var nomeImgAvatar = "avatar-" + NimbusUser.UserId;
             md5.ComputeHash(Encoding.Unicode.GetBytes(nomeImgAvatar));
-            nomeImgAvatar = Base32.ToString(md5.Hash).ToLower() + ".jpg";
+            var nomeHashExt = Base32.ToString(md5.Hash).ToLower() + ".jpg";
+            nomeImgAvatar = "av130x130/" + nomeHashExt;
+            var nomeImgAvatar35x35 = "av35x35/" + nomeHashExt;
+            var nomeImgAvatar60x60 = "av60x60/" + nomeHashExt;
 
             var blob = new AzureBlob(Const.Azure.AvatarContainer, nomeImgAvatar);
             blob.UploadStreamToAzure(imgResize);
+
+            //envia as imagens redimensionadas
+            img.FitSize(60, 60);
+            var blob60x60 = new AzureBlob(Const.Azure.AvatarContainer, nomeImgAvatar60x60);
+            blob60x60.UploadStreamToAzure(img.SaveToJpeg());
+
+            img.FitSize(35, 35);
+            var blob35x35 = new AzureBlob(Const.Azure.AvatarContainer, nomeImgAvatar35x35);
+            blob35x35.UploadStreamToAzure(img.SaveToJpeg());
 
             var pathFinal = blob.BlockBlob.Uri.AbsoluteUri.Replace("https://", "http://");
 
