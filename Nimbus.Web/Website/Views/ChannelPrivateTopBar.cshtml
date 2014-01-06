@@ -119,7 +119,7 @@
                 </form>
             </div>
 
-            <form id="formCreateTopic" onsubmit="SaveNewTopic(@Model.CurrentChannel.Id, false);">
+            <form id="formCreateTopic" onsubmit="return false;">
                 <div class="divformNewChannel">
                     <p>
                         Nome do Tópico
@@ -203,7 +203,7 @@
 
                 <div class="divBtnNewChannel">
                     <input type="button" class="divCnclNewChannel" onclick="cancelNewTopic(@Model.CurrentChannel.Id);" value="Cancelar" />
-                    <input type="submit" id="btnSalvar" class="divSaveNewChannel" value="Criar Tópico" />
+                    <input type="submit" id="btnSalvar" class="divSaveNewChannel" value="Criar Tópico" onclick="SaveNewTopic(@Model.CurrentChannel.Id, false);" />
                 </div>
             </form>
         </div>
