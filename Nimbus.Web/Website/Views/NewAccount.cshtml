@@ -1,36 +1,83 @@
 ﻿@model Nimbus.Web.Website.Models.NewAccountModel
-<h1>NewAccount</h1>
 
-<form id="form1" method="post" action="/newaccount"
-    enctype="application/x-www-form-urlencoded">
+@{
+    ViewBag.Title = "Criar Conta";
+    Layout = "~/Website/Views/Shared/_LayoutPublic.cshtml";
+}
 
-    <label for="FirstName">FirstName</label>
-    <input name="FirstName" type="text" required /> <br />
+<div class="divPageNewAccount">
+    <h1>Criar Conta</h1>
 
-    <label for="LastName">LastName</label>
-    <input name="LastName" type="text" required /><br />
+    <form id="form1" method="post" action="/newaccount"
+          enctype="application/x-www-form-urlencoded">
 
-    <label for="BirthDate">BirthDate</label>
-    <input name="BirthDate" type="date" required /><br />
+        <div class="divformNewAccount">
+            <p>
+                <label for="FirstName">Nome</label>
+            </p>
+            <input name="FirstName" type="text" placeholder="Primeiro" style="max-width: 180px; min-width: 172px; float:left; padding: 4px;" required />
+            <input name="LastName" type="text" placeholder="Último" style="max-width: 180px; min-width: 172px; margin-left: 24px; padding: 4px;" required />
+        </div>
+        @*
+            <div class="divformNewAccount">
+                <p>
+                    <label for="LastName">Sobrenome</label>
+                </p>
+                <input name="LastName" type="text" />
+            </div>
+        *@
+        <div class="divformNewAccount">
+            <p>
+                <label for="BirthDate">Data de Nascimento</label>
+            </p>
+            <input name="BirthDate" type="text" placeholder="14/02/2014" style="max-width: 384px; min-width: 384px; padding: 4px;" required />
+        </div>
 
-    <label for="Country">Country</label>
-    <input name="Country" type="text" /><br />
+        <div class="divformNewAccount">
+            <p>
+                <label for="Country">País</label>
+            </p>
+            <input name="Country" type="text" placeholder="País" style="max-width: 384px; min-width: 384px; padding: 4px;" required />
+        </div>
 
-    <label for="City">City</label>
-    <input name="City" type="text" /><br />
+        <div class="divformNewAccount">
+            <p>
+                <label for="State">Estado</label>
+            </p>
+            <input name="State" type="text" placeholder="País" style="max-width: 384px; min-width: 384px; padding: 4px;" required />
+        </div>
 
-    <label for="State">State</label>
-    <input name="State" type="text" /><br />
+        <div class="divformNewAccount">
+            <p>
+                <label for="City">Cidade</label>
+            </p>
+            <input name="City" type="text" placeholder="Cidade" style="max-width: 384px; min-width: 384px; padding: 4px;" required />
+        </div>
 
-    <label for="Email">Email</label>
-    <input name="Email" type="email" required /><br />
+        <div class="divformNewAccount">
+            <p>
+                <label for="Email">Email</label>
+            </p>
+            <input name="Email" type="text" placeholder="exemplo@nimbus.com" style="max-width: 384px; min-width: 384px; padding: 4px;" required />
+        </div>
 
-    <label for="Password">Password</label>
-    <input name="Password" type="password"  required/><br />
+        <div class="divformNewAccount">
+            <p>
+                <label for="Password">Senha</label>
+            </p>
+            <input name="Password" type="text" placeholder="Senha" style="max-width: 384px; min-width: 384px; padding: 4px;" required />
+        </div>
 
-    <label for="ConfirmPassword">ConfirmPassword</label>
-    <input name="ConfirmPassword" type="password" required/><br />
+        <div class="divformNewAccount">
+            <p>
+                <label for="ConfirmPassword">Confirmar a Senha</label>
+            </p>
+            <input name="ConfirmPassword" type="text" placeholder="Confirmar a Senha" style="max-width: 384px; min-width: 384px; padding: 4px;" required />
+        </div>
 
-    <input type="submit" value="Submit" />
-
-</form>
+        <div class="divBtnNewAccount">
+            <input type="submit" value="Criar Conta" id="salvar" class="divSaveNewAccount" />
+        </div>
+    </form>
+    <p class="pNewAccount">Voltar para a <a href="/Login" title="Inscreva-se">Página Inicial</a></p>
+</div>

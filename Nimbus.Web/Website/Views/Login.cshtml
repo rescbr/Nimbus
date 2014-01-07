@@ -1,42 +1,39 @@
 ﻿@model Nimbus.Web.Website.Models.LoginModel
 @{
     ViewBag.Title = "Login";
-    Layout = "~/Website/Views/Shared/_Layout.cshtml";
+    Layout = "~/Website/Views/Shared/_LayoutPublic.cshtml";
 }
 
-<div id="divPageLogin">
-    <div id="divLoginLeft">
-        <div>
+<div class="divPageLogin">
+    <h1>Login</h1>
 
+    <form id="loginForm" method="post" action="/login"
+          enctype="application/x-www-form-urlencoded" >
+
+        @if (Model.ErrorMessage != null)
+        {
+                <p class="pErrorLogin">@Model.ErrorMessage</p>
+        }
+
+        <div class="divformLogin">
+            <p>
+                <label for="Email">E-mail</label>
+            </p>
+            <input name="Email" type="text" value="@Model.Email" placeholder="exemplo@nimbus.com" class="inputLogin" required />
+        </div>
+        
+        <div class="divformLogin">
+            <p>
+                <label for="Password">Password</label>
+            </p>
+            <input name="Password" type="password" placeholder="Senha" class="inputLogin" required />
+        </div>
+        <input name="RedirectURL" type="hidden" value="@Model.RedirectURL" />
+
+        <div class="divBtnLogin">
+            <input type="submit" value="Entrar" class="divBtnSubmit"/>
         </div>
 
-    </div>
-
-    <div id="divLogin">
-        <h2>Login</h2>
-
-        <form id="loginForm" method="post" action="/login"
-              enctype="application/x-www-form-urlencoded">
-
-
-            @if (Model.ErrorMessage != null)
-    {
-                <div><h3>@Model.ErrorMessage</h3></div>
-    }
-
-            <label for="Email">E-mail</label>
-            <input name="Email" type="email" value="@Model.Email" required /> <br />
-
-            <label for="Password">Password</label>
-            <input name="Password" type="password" required /><br />
-
-            <input name="RedirectURL" type="hidden" value="@Model.RedirectURL" />
-
-
-            <input type="submit" value="Submit" />
-
-        </form>
-
-    </div>
-
+    </form>
+    <p class="pLogin">Não possui uma conta no Nimbus? <a href="/NewAccount" title="Inscreva-se">Inscreva-se já</a></p>
 </div>
