@@ -38,10 +38,10 @@
         </p>
     </div>
 
-    <h1 class="favTopic">
-        <img src="/images/utils/starv.png" />
-        <label id="lblCountFavorite"> @Model.NumFavorites</label>
-    </h1>
+    <p class="numberTopic">
+        <img class="starFavTopic" src="/images/utils/starv.png" />
+        <label id="lblCountFavorite" class="numIcoTopic"> @Model.NumFavorites</label>
+    </p>
 
     @if (Model.RolesCurrentUser.Contains("channelmanager") || Model.RolesCurrentUser.Contains("topicmanager") ||
         Model.CurrentChannel.OwnerId == Model.CurrentUser.UserId)
@@ -79,47 +79,47 @@
     <div class="infoTitleChannel">
         <h2>Número de Likes</h2>
         <div id="divCountLikes">
-            <p class="favTopic">
-                <img src="/images/utils/coracheio.png" title="Likes" alt="Likes" />
+            <p class="likeFavTopic">
+                <img class="heartFavTopic" src="/images/utils/coracheio.png" title="Likes" alt="Likes" />
                 <label id="lblLike">@Model.NumLikes</label>
             </p>
-            <p class="favTopic">
-                <img src="/images/utils/coravazado.png" title="Likes" alt="Likes" />
+            <p class="likeFavTopic">
+                <img class="heartFavTopic" src="/images/utils/coravazado.png" title="Likes" alt="Likes" />
                 <label id="lblUnLike">@Model.NumUnLikes</label>
             </p>
         </div>
-        <div id="divLikesEvents">
+        <div id="divLikesEvents" style="margin-bottom:120px;">
             @if (Model.UserLike == null)
             {
-                <p id="linkLike" onclick="ajaxLikeUnLike(@Model.CurrentTopic.Id, 'like', 'null');">
+                <p id="linkLike" class="likeLinkTopic cpointer" onclick="ajaxLikeUnLike(@Model.CurrentTopic.Id, 'like', 'null');">
                     <img src="/images/utils/coracheio.png" title="Gostei" alt="Gostei" />
                     Gostei
                 </p>
-                <p id="linkUnLike" onclick="ajaxLikeUnLike(@Model.CurrentTopic.Id, 'unlike','null');">
+                <p id="linkUnLike" class="likeLinkTopic cpointer" onclick="ajaxLikeUnLike(@Model.CurrentTopic.Id, 'unlike','null');">
                     <img src="/images/utils/coravazado.png" title="Não gostei" alt="Não gostei" />
                     Não gostei
                 </p>
             }
             else if (Model.UserLike == true)
             {
-                <p id="linkLike">
+                <p class="likeLinkTopic likeChoiceTopic" id="linkLike">
                     <img src="/images/utils/coracheio.png" title="Gostei" alt="Gostei" />
                     Gostei
                 </p>
-                <p id="linkUnLike" onclick="ajaxLikeUnLike(@Model.CurrentTopic.Id, 'unlike','deuunlike');">
+                <p id="linkUnLike" class="likeLinkTopic cpointer" onclick="ajaxLikeUnLike(@Model.CurrentTopic.Id, 'unlike','deuunlike');">
                     <img src="/images/utils/coravazado.png" title="Não gostei" alt="Não gostei" />
                     Não gostei
                 </p>
             }
             else if (Model.UserLike == false)
             {
-                <p id="linkLike" onclick="ajaxLikeUnLike(@Model.CurrentTopic.Id, 'like','deulike');">
+                <p id="linkLike" class="likeLinkTopic cpointer" onclick="ajaxLikeUnLike(@Model.CurrentTopic.Id, 'like','deulike');">
                     <img src="/images/utils/coracheio.png" title="Gostei" alt="Gostei" /> Gostei
                 </p>
-                <p id="linkUnLike">
-                    <img src="/images/utils/coravazado.png" title="Não gostei" alt="Não gostei" />
-                    Não gostei
-                </p>
+               <p class="likeLinkTopic likeChoiceTopic" id="linkUnLike">
+                   <img src="/images/utils/coravazado.png" title="Não gostei" alt="Não gostei" />
+                   Não gostei
+               </p>
             }
         </div>
 

@@ -124,14 +124,14 @@
                     <p>
                         Nome do Tópico
                     </p>
-                    <input type="text" id="txtNameTopic" maxlength="50" min="5" required name="txtNameTopic" placeholder="Nome do Tópico" style="max-width: 384px; min-width: 384px" />
+                    <input type="text" id="txtNameTopic" maxlength="50" min="5" required name="txtNameTopic" placeholder="Nome do Tópico" class="textBoxFormat" />
                 </div>
 
                 <div class="divformNewChannel">
                     <p>
                         Descricao
                     </p>
-                    <textarea cols="30" rows="5" id="txtaDescription" maxlength="150" required name="txtaDescription" placeholder="Descrição do Tópico" style="max-width: 384px; min-width: 384px; background: #ffffff;"></textarea>
+                    <textarea cols="30" rows="5" id="txtaDescription" maxlength="150" required name="txtaDescription" placeholder="Descrição do Tópico" class="textAreaFormat"></textarea>
                 </div>
 
                 <div class="divformNewChannel">
@@ -165,14 +165,14 @@
                     </div>
 
                     <div id="divText" style="display:none;" class="divformNewChannel">
-                        <textarea id="txtaArticle" placeholder="Escreva Aqui" style="max-width: 384px; min-width: 384px; background: #ffffff;"></textarea>
+                        <textarea id="txtaArticle" placeholder="Escreva Aqui" class="textAreaFormat"></textarea>
                     </div>
 
                     <div id="divDiscussion" style="display:none;" class="divformNewChannel">
                         <p>
                             Questão em debate
                         </p>
-                        <textarea id="txtaTextMsg" placeholder="Escreva Aqui" style="max-width: 384px; min-width: 384px; background: #ffffff;"></textarea>
+                        <textarea id="txtaTextMsg" placeholder="Escreva Aqui" class="textAreaFormat"></textarea>
                     </div>
 
                     <div id="divExam" style="display:none;" class="divformNewChannel">
@@ -202,7 +202,7 @@
                 </div>
 
                 <div class="divBtnNewChannel">
-                    <input type="button" class="divCnclNewChannel" onclick="cancelNewTopic(@Model.CurrentChannel.Id);" value="Cancelar" />
+                    <input type="button" class="btnCancel" onclick="cancelNewTopic(@Model.CurrentChannel.Id);" value="Cancelar" />
                     <input type="submit" id="btnSalvar" class="divSaveNewChannel" value="Criar Tópico" onclick="SaveNewTopic(@Model.CurrentChannel.Id, false);" />
                 </div>
             </form>

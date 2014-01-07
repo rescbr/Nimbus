@@ -893,13 +893,13 @@ from (
                     success = userLike.Visible;
                 }
                 else //atualizar
-                {
+                {                    
                     user.LikedOn = DateTime.Now;
                     if (type == "like")
                         user.Visible = true;
                     else
                         user.Visible = false;
-                    db.Update<UserLikeTopic>(user);
+                    db.Update<UserLikeTopic>(user, u => u.TopicId == user.TopicId && u.UserId == user.UserId);
 
                     success = user.Visible;
 
