@@ -756,7 +756,7 @@ function ajaxSaveAllEdit(id)
         //tags e novos moderadores -> são salvas assim que são criadas
         var success = false; var caracteres = false;
         title = document.getElementById('txtEditTitle').value;
-        description = document.getElementById('txtaDescription').value;
+        description =  document.getElementById('txtaDescription')[0].value;
 
         //alterou somente a permissao
         var obj = $("select[id*='newPermissionSelect_']");
@@ -817,10 +817,12 @@ function ajaxSaveAllEdit(id)
                     contentType: "application/json;charset=utf-8",
                     statusCode: {
                         200: function (newData) {
-                            document.getElementById('closeModalEdit').click();
                             document.getElementById('hChannelName').innerHTML = newData.Name;
                             document.getElementById('imgCapa').src = newData.ImgUrl;
                             title.value = newData.Name;
+
+                            document.getElementById('closeModalEdit').click();
+
                         },
 
                         500: function () {

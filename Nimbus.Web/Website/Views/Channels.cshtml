@@ -272,14 +272,14 @@
                 }
             </p>
         </header>
-        <form id="formEditChannel">
+        <form id="formEditChannel" onsubmit="return false;">
         @if (Model.RolesCurrentUser.Contains("channelmanager") || Model.CurrentChannel.OwnerId == Model.CurrentUser.UserId)
         {
             <div>
                 <p>Nome do canal:</p>
                 <input id="txtEditTitle" required type="text" value="@Model.CurrentChannel.Name" maxlength="100" />
                 <p>Descrição:</p>
-                <textarea id="txtaDescription" required maxlength="200">@Model.CurrentChannel.Description</textarea>
+                <textarea id="txtaDescription" name="txtaDescriptionEdit" maxlength="200">@Model.CurrentChannel.Description</textarea>
                 <p>
                     Categoria:
                     <select id="slcCategory" required name="slcCategory">

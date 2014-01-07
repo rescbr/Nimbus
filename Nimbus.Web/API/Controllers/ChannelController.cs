@@ -1400,8 +1400,6 @@ namespace Nimbus.Web.API.Controllers
         public Channel EditChannel(Channel editChannel)
         {
             Channel channel = new Channel();
-            try
-            {
                 using(var db = DatabaseFactory.OpenDbConnection())
                 {
                     bool isOwner = IsOwner (editChannel.Id);
@@ -1410,34 +1408,50 @@ namespace Nimbus.Web.API.Controllers
                                                                        
                     if (isOwner == true || isManager == true)
                     {
-                        channel = db.SelectParam<Channel>(chn => chn.Id == editChannel.Id && chn.Visible == true).FirstOrDefault();
+                        using (var trans = db.OpenTransaction(System.Data.IsolationLevel.ReadCommitted))
+                        {
+                            try
+                            {
+                                channel = db.SelectParam<Channel>(chn => chn.Id == editChannel.Id && chn.Visible == true).FirstOrDefault();
 
-                        channel.Name = !string.IsNullOrEmpty(editChannel.Name) ? editChannel.Name.Substring(0,100) : channel.Name;
-                        channel.CategoryId = editChannel.CategoryId > 0? editChannel.CategoryId : channel.CategoryId;
-                        channel.Description = !string.IsNullOrEmpty(editChannel.Description)? editChannel.Description.Substring(0,200): channel.Description;
-                        channel.ImgUrl = db.SelectParam<Category>(c => c.Id == editChannel.CategoryId).Select(c => c.ImageUrl).FirstOrDefault();
-                        channel.ImgUrl = channel.ImgUrl.ToLower().Replace("category", "capachannel");
-                        channel.IsCourse = editChannel.IsCourse ;
-                        channel.IsPrivate = editChannel.IsPrivate;
-                        channel.LastModification = DateTime.Now;
-                        channel.OpenToComments = editChannel.OpenToComments;
-                        channel.Price = editChannel.Price != -1? editChannel.Price : 0;
-                        channel.Visible = channel.Visible;
-                        
-                        db.Update<Channel>(channel);
-                        //TODO: Notificação
+                                string titleChn = !string.IsNullOrEmpty(editChannel.Name) ? editChannel.Name : channel.Name;
+                                string description = !string.IsNullOrEmpty(editChannel.Description) ? editChannel.Description : channel.Description;
+                                string chnImgUrl = db.SelectParam<Category>(c => c.Id == editChannel.CategoryId).Select(c => c.ImageUrl).FirstOrDefault();
+
+                                channel.Name = titleChn.Length > 100 ? titleChn.Substring(0, 100) : titleChn;
+                                channel.CategoryId = editChannel.CategoryId > 0 ? editChannel.CategoryId : channel.CategoryId;
+                                channel.Description = description.Length > 200 ? description.Substring(0, 200) : description;                                
+                                channel.ImgUrl = chnImgUrl.ToLower().Replace("category", "capachannel");
+                                channel.IsCourse = editChannel.IsCourse;
+                                channel.IsPrivate = editChannel.IsPrivate;
+                                channel.LastModification = DateTime.Now;
+                                channel.OpenToComments = editChannel.OpenToComments;
+                                channel.Price = editChannel.Price != -1 ? editChannel.Price : 0;
+                                channel.Visible = channel.Visible;
+
+                                db.Update<Channel>(channel);
+
+                                List<Topic> tpcs = db.Where<Topic>(t => t.ChannelId == channel.Id);
+                                foreach (var item in tpcs)
+                                {
+                                    item.ImgUrl = chnImgUrl;
+                                    db.Update<Topic>(item, i => i.Id == item.Id);
+                                }
+                                trans.Commit();
+                            }
+                            catch(Exception ex)
+                            {
+                                trans.Rollback();
+                                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+                            }
+                        }
                     }
                     else 
                     {
                         throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotAcceptable, "sem permissao"));
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
-            }
-
+           
             return channel;
         }
 

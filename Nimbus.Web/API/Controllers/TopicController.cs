@@ -114,8 +114,9 @@ namespace Nimbus.Web.API.Controllers
                             topic.AuthorId = NimbusUser.UserId;
                             if (string.IsNullOrEmpty(topic.ImgUrl))
                             {
-                                int idCtg = db.SelectParam<Channel>(ch => ch.Id == topic.ChannelId).Select(ch => ch.CategoryId).FirstOrDefault();
-                                topic.ImgUrl = db.SelectParam<Category>(ct => ct.Id == 1).Select(ct => ct.ImageUrl).FirstOrDefault();
+                               // int idCtg = db.SelectParam<Channel>(ch => ch.Id == topic.ChannelId).Select(ch => ch.CategoryId).FirstOrDefault();
+                               // topic.ImgUrl = db.SelectParam<Category>(ct => ct.Id == 1).Select(ct => ct.ImageUrl).FirstOrDefault();
+                                topic.ImgUrl = null;
                             }
                             topic.CreatedOn = DateTime.Now;
                             topic.LastModified = DateTime.Now;
