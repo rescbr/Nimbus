@@ -9,6 +9,7 @@ using Nimbus.Model.ORM;
 using Nimbus.Model.Bags;
 using System.Web;
 using System.Diagnostics;
+using Mandrill;
 
 namespace Nimbus.Web.API.Controllers
 {
@@ -278,7 +279,35 @@ WHERE ([tUser].[test] IS NOT NULL) AND
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
             }
         }
+
+        #region password
+        [HttpGet]
+        public bool ResetPassword()
+        {
+            MandrillApi apiMandrill = new MandrillApi("***REMOVED***");
+            EmailMessage mensagem = new EmailMessage();
+            mensagem.from_email = "resetPassword@portalnimbus.com.br";
+            mensagem.from_name = "Portal Nimbus";
+            mensagem.subject = "Redefinição de senha ";
+            List<EmailAddress> address = new List<EmailAddress> ();
+            address.Add(new EmailAddress("***REMOVED***"));
+            mensagem.to = address;
+
+            mensagem.text = "Teste nimbus";
+
+            var result = apiMandrill.SendMessage(mensagem);
+            if (result[0].Status == EmailResultStatus.Sent)
+            {
+                return true;
+            }
+            else
+                return false;
+            
+        }
+
+        #endregion
     }
+
 
 
 
