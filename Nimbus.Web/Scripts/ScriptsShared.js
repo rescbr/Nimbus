@@ -389,10 +389,20 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
 
     function openDivSearch()
     {  
-        document.getElementById('divBarSearch').style.display = 'block';
-        document.getElementById('aOpenDivSearch').className = "BTopBarLinkSelected";
+        var divSearch = document.getElementById('divBarSearch');
+        if (divSearch.style.display == 'block')
+        {
+            divSearch.style.display = 'none';
+            document.getElementById('aOpenDivSearch').className = "BSearch";
+        }
+        else
+        {
+            divSearch.style.display = 'block';
+            document.getElementById('aOpenDivSearch').className = "BTopBarLinkSelected";
+        }
         document.getElementById('linkTop').className = "BTop";
         document.getElementById('linkTrending').className = "BTrTop";
+       
     }
 
     function ajaxSearch(campo)
