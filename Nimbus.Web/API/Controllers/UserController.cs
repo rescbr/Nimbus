@@ -292,8 +292,20 @@ WHERE ([tUser].[test] IS NOT NULL) AND
             List<EmailAddress> address = new List<EmailAddress> ();
             address.Add(new EmailAddress("***REMOVED***"));
             mensagem.to = address;
-
             mensagem.text = "Teste nimbus";
+
+            mensagem.html=" <body style=\"width:80p0x; background-color:#ffffff;\">" +
+                                "<div>"+
+                                    "<img src=\"https://***REMOVED***/imgnimbus/topBar.png\" style=\"width:800px;\" />"+
+                                "</div>"+
+                                "<div style=\"margin:30px 10% 40px; height:250px;\">" +
+                                     mensagem.text +
+                                "</div>"+
+                                "<div>"+
+                                    "<img src=\"https://***REMOVED***/imgnimbus/bottomBar.png\" style=\"width:800px;\" />" +
+                                "</div>"+
+                            "</body>";
+                            
 
             var result = apiMandrill.SendMessage(mensagem);
             if (result[0].Status == EmailResultStatus.Sent)
