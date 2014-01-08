@@ -315,6 +315,7 @@
     <Content Include="images\Utils\coravazado.png" />
     <Content Include="images\Utils\delete.png" />
     <Content Include="images\Utils\edit.png" />
+    <Content Include="images\Utils\iconeLogo.png" />
     <Content Include="images\Utils\report.png" />
     <Content Include="images\Utils\ringload.gif" />
     <Content Include="images\Utils\search.png" />

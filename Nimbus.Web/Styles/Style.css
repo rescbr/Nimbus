@@ -126,11 +126,15 @@ div.userlogo {
 	margin-top:         5px;
 	margin-left:        30px;
 	margin-right:       10px;
-    height:             35px;
-    width:              35px;
-    border-radius:      100%;
-    background-color:   #87c240;
+    height:             37px;
+    width:              37px;
     float:              left;
+}
+
+.imgLogo {
+    border-radius:      100%;
+    background-color:   #FFFFFF;
+    padding:            1px;
 }
 
 .logo h1.userlogotext {
