@@ -245,6 +245,18 @@
                 <p><label style="color:black">Experiência: </label><input id="txtExperience" value="@Model.User.Experience" /></p>
                 <p><label style="color:black">Outras informações: </label><input id="txtAbout" value="@Model.User.About" /></p>
                 <p><label id="lblErroMsgEditProfile" style="display:none;"></label></p>
+                <p onclick="EnableDiv('divResetPass', '', '');">Redefinir senha</p>
+                <br />
+                <div id="divResetPass">
+                    <p>
+                        Nova senha:
+                        <input id="txtNewPassProfile" type="password" min="6" required />
+                    </p>
+                    <p>
+                        Confirmar senha:
+                        <input id="txtConfirPassProfile" type="password" min="6" required />
+                    </p>
+                </div>
             </div>
             <footer>
                 <!-- Footer -->

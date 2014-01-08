@@ -292,13 +292,24 @@ WHERE ([tUser].[test] IS NOT NULL) AND
             {
                 Guid tokenGuid;
                 NSCInfo info;
-                if (Token.VerifyToken(reset.Token, out tokenGuid, out info))
+                bool valid = false;
+                if (reset.Token == "logado")
+                {
+                    valid = true;
+                    idUser = NimbusUser.UserId;
+                }
+                else
+                {
+                    valid = Token.VerifyToken(reset.Token, out tokenGuid, out info);
+                    idUser = info.UserId * -1; //vem negativo * -1 = positivo
+                }
+
+                if (valid == true)
                 {                   
                     if (reset.NewPassord == reset.ConfirmPassword)
                     {
                         using (var db = DatabaseFactory.OpenDbConnection())
-                        {
-                            idUser = info.UserId * -1; //vem negativo * -1 = positivo
+                        {                           
                             User user = db.Where<User>(u => u.Id == idUser).FirstOrDefault();
                             if (user != null)
                             {
@@ -328,7 +339,7 @@ WHERE ([tUser].[test] IS NOT NULL) AND
             mensagem.from_name = "Portal Nimbus";
             mensagem.subject = "Redefinição de senha ";
             List<EmailAddress> address = new List<EmailAddress> ();
-            address.Add(new EmailAddress("***REMOVED***"));
+            address.Add(new EmailAddress(NimbusUser.Email));
             mensagem.to = address;
             
             NSCInfo infoToken = new NSCInfo 
@@ -348,7 +359,9 @@ WHERE ([tUser].[test] IS NOT NULL) AND
                                 "<div style=\"margin:30px 10% 40px; height:250px;\">" +
                                      "Olá " + NimbusUser.FirstName + " " + NimbusUser.LastName + ", <br/>"+
                                      "para redefinir sua senha, acesse: " +
-                                     "<a href=\"http://localhost:50011/resetpassword?reset=" + Uri.EscapeDataString(tokeString) + "\">Redefinir senha</a>" +
+                                     "<a href=\"http://localhost:50011/resetpassword?reset=" + Uri.EscapeDataString(tokeString) + "\">Redefinir senha</a><br/>" +
+                                     "*Esse link é válido no período de 1 (um) dia. <br/><br/>" +
+
                                 "</div>"+
                                 "<div>"+
                                     "<img src=\"https://***REMOVED***/imgnimbus/bottomBar.png\" style=\"width:800px;\" />" +

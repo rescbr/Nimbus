@@ -54,61 +54,103 @@ function SendMessageProfile(receiverId) {
             var experience = document.getElementById('txtExperience').value;
             var about = document.getElementById('txtAbout').value;
 
-            var ajaxData = {};
-            ajaxData['FirstName'] = firstName;
-            ajaxData['LastName'] = lastName;
-            ajaxData['City'] = city;
-            ajaxData['State'] = state;
-            ajaxData['Country'] = country;
-            ajaxData['Occupation'] = occupation;
-            ajaxData['Interest'] = interest;
-            ajaxData['Experience'] = experience;
-            ajaxData['About'] = about;
+            var pass = document.getElementById("txtNewPassProfile").value;
+            var conf = document.getElementById("txtConfirPassProfile").value;
+            var hasPass = true;
 
-            $.ajax({
-                url: "/api/user/EditProfile",
-                data: JSON.stringify(ajaxData),
-                type: "POST",
-                contentType: "application/json;charset=utf-8",
-                statusCode: {
-                    200: function (newData) {
+            if (pass != null && conf != null)
+            {
+                if (pass == conf) {
+                    //chamar função de salvar nova senha               
+                    ajaxPass = {};
+                    ajaxPass['NewPassord'] = document.getElementById(newPass).value;
+                    ajaxPass['ConfirmPassword'] = document.getElementById(confirmPass).value;
+                    ajaxPass['Token'] = "logado";
 
-                        if (newData.Id > 0) {
-                            //fechar modal
-                            document.getElementById('closeModalEdit').click();
-                            //limpar campos
-                            firstName.value = "";
-                            lastName.value = "";
-                            city.value = "";
-                            state.value = "";
-                            country.value = "";
-                            occupation.value = "";
-                            interest.value = "";
-                            experience.value = "";
-                            document.getElementById('lblName').value = newData.FirstName + " " + newData.LastName;
+                    $.ajax({
+                        url: "/api/user/resetpassword/",
+                        data: JSON.stringify(ajaxData),
+                        type: "POST",
+                        contentType: "application/json;charset=utf-8",
+                        statusCode: {
+                            200: function (newData) {
+                                if (newData > 0) {
+                                    haspass = true;
+                                }
+                            },
 
-                            var place = "";
-                            if (newData.City != "" && newData.State != "")
-                                place = newData.City + " - " + newData.State;
-                            else if (newData.City != "" && newData.State == "")
-                                place = newData.City
-                            else if (newData.City == "" && newData.State != "")
-                                place = newData.State
-                            document.getElementById('lblCity').value = place;
-
-                            document.getElementById('lblOccupation').value = newData.Occupation;
-                            document.getElementById('lblCountry').value = newData.Country;
-                            document.getElementById('lblInterest').value = newData.Interest;
-                            document.getElementById('lblExperience').value = newData.Experience;
-                            document.getElementById('lblAbout').value = newData.About;
+                            500: function () {
+                                //erro
+                                haspass = false;
+                                window.alert("Não foi possível alterar sua senha. Tente novamente mais tarde.");
+                            }
                         }
-                    },
-                    500: function () {
-                        //erro
-                        window.alert("Não foi possível alterar seu perfil. Tente novamente mais tarde.");
-                    }
+                    });
                 }
-            });
+                else
+                {
+                    window.alert("Os campos 'Nova senha' e 'Confirmar senha' devem ser iguais.");
+                    hasPass = false;
+                }
+            }
+            
+            if (hasPass == true) {
+                var ajaxData = {};
+                ajaxData['FirstName'] = firstName;
+                ajaxData['LastName'] = lastName;
+                ajaxData['City'] = city;
+                ajaxData['State'] = state;
+                ajaxData['Country'] = country;
+                ajaxData['Occupation'] = occupation;
+                ajaxData['Interest'] = interest;
+                ajaxData['Experience'] = experience;
+                ajaxData['About'] = about;
+
+                $.ajax({
+                    url: "/api/user/EditProfile",
+                    data: JSON.stringify(ajaxData),
+                    type: "POST",
+                    contentType: "application/json;charset=utf-8",
+                    statusCode: {
+                        200: function (newData) {
+
+                            if (newData.Id > 0) {
+                                //fechar modal
+                                document.getElementById('closeModalEdit').click();
+                                //limpar campos
+                                firstName.value = "";
+                                lastName.value = "";
+                                city.value = "";
+                                state.value = "";
+                                country.value = "";
+                                occupation.value = "";
+                                interest.value = "";
+                                experience.value = "";
+                                document.getElementById('lblName').value = newData.FirstName + " " + newData.LastName;
+
+                                var place = "";
+                                if (newData.City != "" && newData.State != "")
+                                    place = newData.City + " - " + newData.State;
+                                else if (newData.City != "" && newData.State == "")
+                                    place = newData.City
+                                else if (newData.City == "" && newData.State != "")
+                                    place = newData.State
+                                document.getElementById('lblCity').value = place;
+
+                                document.getElementById('lblOccupation').value = newData.Occupation;
+                                document.getElementById('lblCountry').value = newData.Country;
+                                document.getElementById('lblInterest').value = newData.Interest;
+                                document.getElementById('lblExperience').value = newData.Experience;
+                                document.getElementById('lblAbout').value = newData.About;
+                            }
+                        },
+                        500: function () {
+                            //erro
+                            window.alert("Não foi possível alterar seu perfil. Tente novamente mais tarde.");
+                        }
+                    }
+                });
+            }
         }
     }
 

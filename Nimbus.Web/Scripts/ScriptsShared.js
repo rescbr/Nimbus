@@ -483,7 +483,7 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
 
                     500: function () {
                         //erro
-                        window.alert("Não foi possível deletar sua mensagem. Tente novamente mais tarde.");
+                        window.alert("Não foi possível alterar sua senha. Tente novamente mais tarde.");
                     }
                 }
             });
