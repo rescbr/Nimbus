@@ -113,33 +113,40 @@ function SendMessageProfile(receiverId) {
     }
 
     function ajaxDeleteMsg(id) {
-        ajaxData = [];
-        ajaxData.push(id.replace('deleteMsg_', ''));
+        decisao = confirm("Você deseja deletar esta mensagem?");
+        if (decisao) {
+            ajaxData = [];
+            ajaxData.push(id.replace('deleteMsg_', ''));
 
-        $.ajax({
-            url: "/api/Message/DeleteMessages/",
-            data: JSON.stringify(ajaxData),
-            type: "DELETE",
-            contentType: "application/json;charset=utf-8",
-            statusCode: {
-                200: function (newData) {
+            $.ajax({
+                url: "/api/Message/DeleteMessages/",
+                data: JSON.stringify(ajaxData),
+                type: "DELETE",
+                contentType: "application/json;charset=utf-8",
+                statusCode: {
+                    200: function (newData) {
 
-                    if (newData.length > 0) {
-                        for (i = 0; i < newData.length; i++) {
-                            document.getElementById('divMesg_' + newData[i]).style.display = 'none';
-                            var divExpand = document.getElementById('divMesgExpand_' + newData[i]);
-                            if (divExpand != null)
-                                divExpand.style.display = 'none';
+                        if (newData.length > 0) {
+                            for (i = 0; i < newData.length; i++) {
+                                document.getElementById('divMesg_' + newData[i]).style.display = 'none';
+                                var divExpand = document.getElementById('divMesgExpand_' + newData[i]);
+                                if (divExpand != null)
+                                    divExpand.style.display = 'none';
+                            }
                         }
-                    }
-                },
+                    },
 
-                500: function () {
-                    //erro
-                    window.alert("Não foi possível deletar sua mensagem. Tente novamente mais tarde.");
+                    500: function () {
+                        //erro
+                        window.alert("Não foi possível deletar sua mensagem. Tente novamente mais tarde.");
+                    }
                 }
-            }
-        });
+            });
+        }
+        else
+        {
+            return false;
+        }
     }
 
     function ajaxReportUser(idUserReporter, idUserReported) {

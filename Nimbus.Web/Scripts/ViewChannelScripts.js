@@ -98,32 +98,39 @@ function CreatedDivQuestion()
 
 function ajaxDeleteChannel(id, idUser)
 {
-    $.ajax({
-        url: "/api/channel/DeleteChannel/" + id,
-        type: "DELETE",
-        contentType: "application/json;charset=utf-8",
-        statusCode: {
-            200: function (newData) {
-                if (newData.indexOf('userprofile') > 0)
-                {
-                    window.location.href = newData;
-                }
-                else if (newData.indexOf('transferido') > 0) {
-                    window.alert(newData);
-                    window.location.href = "/userprofile/index/"+ idUser;
-                }               
-                else {
-                    //avisar que nao tem permissao
-                    window.alert("Você não possui permissão para deletar este canal.");
-                }
-            },
+    decisao = confirm("Você deseja deletar este canal?");
+    if(decisao){
+        $.ajax({
+            url: "/api/channel/DeleteChannel/" + id,
+            type: "DELETE",
+            contentType: "application/json;charset=utf-8",
+            statusCode: {
+                200: function (newData) {
+                    if (newData.indexOf('userprofile') > 0)
+                    {
+                        window.location.href = newData;
+                    }
+                    else if (newData.indexOf('transferido') > 0) {
+                        window.alert(newData);
+                        window.location.href = "/userprofile/index/"+ idUser;
+                    }               
+                    else {
+                        //avisar que nao tem permissao
+                        window.alert("Você não possui permissão para deletar este canal.");
+                    }
+                },
 
-            500: function () {
-                //erro
-                window.alert("Erro ao tentar deletar este canal. Tente novamente mais tarde.");
+                500: function () {
+                    //erro
+                    window.alert("Erro ao tentar deletar este canal. Tente novamente mais tarde.");
+                }
             }
-        }
-    });
+        });
+    }
+    else
+    {
+        document.getElementById("closeModalEdit").click();
+    }
 }
 
 function DisableOption(currentOpt, nameDiv)
@@ -324,40 +331,45 @@ function ajaxSaveNewComment(topicId, channelId, txtContent)
 
 function ajaxDeleteComment(commentId, divName)
 {
-    var ajaxData = {}
+    decisao = confirm("Você deseja deletar este comentário?");
+    if (decisao) {
+        var ajaxData = {}
 
-    if (commentId != 0) {
-        ajaxData["Id"] = commentId;
-        $.ajax({
-            url: "/api/comment/DeleteComment",
-            data: JSON.stringify(ajaxData),
-            type: "DELETE",
-            contentType: "application/json;charset=utf-8",
-            statusCode: {
-                200: function (newData) {
-                    if (newData.ParentId > 0)
-                    {
-                        document.getElementById("lblText_"+ commentId).innerHTML = "Comentário removido";
-                        document.getElementById("imgTopic_"+ commentId).src = newData.AvatarUrl;
-                        document.getElementById("lblUserName_" + commentId).value = newData.UserName;
-                        document.getElementById("btnDelete_" + commentId).style.display = 'none';
+        if (commentId != 0) {
+            ajaxData["Id"] = commentId;
+            $.ajax({
+                url: "/api/comment/DeleteComment",
+                data: JSON.stringify(ajaxData),
+                type: "DELETE",
+                contentType: "application/json;charset=utf-8",
+                statusCode: {
+                    200: function (newData) {
+                        if (newData.ParentId > 0) {
+                            document.getElementById("lblText_" + commentId).innerHTML = "Comentário removido";
+                            document.getElementById("imgTopic_" + commentId).src = newData.AvatarUrl;
+                            document.getElementById("lblUserName_" + commentId).value = newData.UserName;
+                            document.getElementById("btnDelete_" + commentId).style.display = 'none';
 
-                        var report = document.getElementById("btnReportComment_" + commentId);
-                        if(report != null)
-                            report.style.display = 'none';
+                            var report = document.getElementById("btnReportComment_" + commentId);
+                            if (report != null)
+                                report.style.display = 'none';
+                        }
+                        else {
+                            document.getElementById("divContentComment_" + commentId).style.display = 'none';
+                        }
+                    },
+
+                    500: function () {
+                        //erro
+                        window.alert("Não foi possível deletar seu comentário. Tente novamente mais tarde.");
                     }
-                    else
-                    {
-                        document.getElementById("divContentComment_" + commentId).style.display = 'none';
-                    }
-                },
-
-                500: function () {
-                    //erro
-                    window.alert("Não foi possível deletar seu comentário. Tente novamente mais tarde.");
                 }
-            }
-        });
+            });
+        }
+    }
+    else
+    {
+        return false;
     }
 
 }
