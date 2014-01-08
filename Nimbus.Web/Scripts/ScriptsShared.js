@@ -84,22 +84,34 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
 
     }
 
-    //Mudar de Lista pra Grade e Grade pra lista
-    function ChangeTo(tipoPost, tipoAtual)
-    {
-        if (tipoPost == tipoAtual) {
-            //nao faz nada
-        }
-        else if (tipoPost == 'post_lista') {
-            document.getElementById("lista").attr("class-antiga","class-nova");
+    ////Mudar de Lista pra Grade e Grade pra lista
+    //function ChangeTo(tipoPost, tipoAtual)
+    //{
+    //    if (tipoPost == tipoAtual) {
+    //        //nao faz nada
+    //    }
+    //    else if (tipoPost == 'post_lista') {
+    //        var item;
+    //        var div = document.getElementsByClassName('divTopic-grade');
+    //        for (item = 0; item < div.length; item++) {
+    //            div[item].setAttribute('class', 'divTopic-lista');
+    //        }
+    //        document.getElementByClass("headerTopic-grade").setAttribute("class", "headerTopic-lista");
+    //        document.getElementByClass("imgTopic-grade").setAttribute("class", "imgTopic-lista");
+    //        document.getElementByClass("contentTopic-grade").setAttribute("class", "contentTopic-lista");
+    //        document.getElementByClass("footerTopic-grade").setAttribute("class", "footerTopic-lista");
+    //        document.getElementByclass("btnLeftTopic-grade").setAttribute("class", "btnLeftTopic-lista");
+    //        document.getElementByclass("btnRightTopic-grade").setAttribute("class", "btnRightTopic-lista");
+    //    }
+    //    else {
 
-        }
-        else {
+    //    }
+    //    else {
 
-        }
+    //    }
     
 
-    }
+    //}
 
     //método que busca os tópicos de um canal
     function verMaisTopics(id, orderBy, category, global)
@@ -309,34 +321,64 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
         }
     }
 
-    function ajaxSeeMsg(id, starNameDiv)
+    function ajaxSeeMsg(tipoMess)
     {
-        var divNew = document.getElementById('divMesgExpand_' + id);
-        var divOld = document.getElementById('divMesg_' + id).style.background = "rgb(190, 30, 45)";
-        if (divNew != null)
-        {
-            divNew.style.display = 'block';
+        if (tipoMess == 'normal') {
+            //muda pra expand
+            var item;
+            var div = document.getElementsByClassName('post_m');
+            //for (item = 0; item < div.length; item++) {
+            div[item].setAttribute('class', 'post_m_exp');
+            //}
+
+            var p = document.getElementsByClassName('postContent_m');
+            //for (item = 0; item < div.length; item++) {
+            p[item].setAttribute('class', 'postContent_m_exp');
+            //}
         }
         else {
-            $.ajax({
-                url: "/api/message/MessageExpandHtml/" + id,
-                type: "GET",
-                contentType: "application/json;charset=utf-8",
-                statusCode: {
-                    200: function (newData) {
-                        var div = document.getElementById(starNameDiv + id);
+            //volta ao normal
+            var item;
+            var div = document.getElementsByClassName('post_m_exp');
+            //for (item = 0; item < div.length; item++) {
+            div[item].setAttribute('class', 'post_m');
+            //}
 
-                        div.parentElement.innerHTML += newData.Html;
-                    },
-
-                    500: function () {
-                        //erro
-                        window.alert("Erro abrir sua mensagem. Tente novamente mais tarde.");
-                    }
-                }
-            });
+            var p = document.getElementsByClassName('postContent_m_exp');
+            //for (item = 0; item < div.length; item++) {
+            p[item].setAttribute('class', 'postContent_m');
+            //}
         }
     }
+
+    //function ajaxSeeMsg(id, starNameDiv)
+    //{
+    //    var divNew = document.getElementById('divMesgExpand_' + id);
+    //    var divOld = document.getElementById('divMesg_' + id).style.background = "rgb(190, 30, 45)";
+    //    if (divNew != null)
+    //    {
+    //        divNew.style.display = 'block';
+    //    }
+    //    else {
+    //        $.ajax({
+    //            url: "/api/message/MessageExpandHtml/" + id,
+    //            type: "GET",
+    //            contentType: "application/json;charset=utf-8",
+    //            statusCode: {
+    //                200: function (newData) {
+    //                    var div = document.getElementById(starNameDiv + id);
+
+    //                    div.parentElement.innerHTML += newData.Html;
+    //                },
+
+    //                500: function () {
+    //                    //erro
+    //                    window.alert("Erro abrir sua mensagem. Tente novamente mais tarde.");
+    //                }
+    //            }
+    //        });
+    //    }
+    //}
 
     function ajaxHiddeMsg(div)
     {

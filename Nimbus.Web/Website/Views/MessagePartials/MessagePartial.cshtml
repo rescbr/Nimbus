@@ -1,17 +1,22 @@
 ﻿
 @model Nimbus.Model.Bags.MessageBag
 @{ string mediumAvatarUrl = Model.AvatarUrl.Replace("/av130x130/", "/av60x60/"); }
+
+<script type="text/javascript">
+    tipoMessAtual = 'normal';
+</script>
+
 <div class="messages">
     @{
         string readStat;
 
         if (Model.UserReadStatus == true)
         {
-            readStat = "background: #BE1E2D";
+            readStat = "background: #d1d3d4";
         }
         else
         {
-            readStat = "background: #AAAAAA";
+            readStat = "background: #bcbec0";
         }
 
         <div class="post_m" id="divMesg_@Model.Id" style="@readStat">
@@ -35,15 +40,18 @@
                         <li><img src="/images/utils/delete.png" class="cpointer" id="deleteMsg_@Model.Id" onclick="ajaxDeleteMsg(this.id);" /></li>
                     </ul>
                 </nav>
+                <p onclick="ajaxSeeMsg(tipoMessAtual);" class="postContent_m">
+                    @Model.Text
+                </p>
             </div>
           
-            <div onclick="ajaxSeeMsg(@Model.Id,'divMesg_');">
+            @*<div onclick="ajaxSeeMsg(@Model.Id,'divMesg_');">
                     <div class="postContent_m">
-                        <p>@Model.Text </p>
+                        <p>@Model.Text</p>
                     </div>
-                </div>
+                </div>*@
        </div>
-       
+
     }
 
 </div>

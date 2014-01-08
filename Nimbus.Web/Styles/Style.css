@@ -252,7 +252,7 @@ div#divBarSearch {
 	width:              960px;
 	margin:             0 auto;
 	clear:              both;
-    min-height:         450px;
+    min-height:         100%;
 	line-height:        2em;/*
     float:              left;*/
 }
@@ -845,6 +845,26 @@ div.tabContent {
 }
 
 /*------------------ Private Profile - Messages --------------------*/
+nav.messagesTab{
+    width:              100%;
+    clear:              both;
+}
+
+nav.messagesTab ul.sbs {
+    margin: 12px 0 12px 190px;
+}
+
+li#liMsgReceived, li#liMsgSend{
+    width:              120px;
+    border-right:       1px solid #d1d3d4;
+    background:         #bcbec0;
+}
+
+li#liMsgReceived:hover, li#liMsgSend:hover{
+    background:         #87c240;
+    cursor:             pointer;
+}
+
 nav.topMess {
     margin:             0 auto;
     width:              300px;
@@ -855,29 +875,30 @@ nav.topMess {
 
 div.messContent {
     margin:             0 auto;
+    clear:              both;
 }
 
 /*Content*/
 div.post_m {
-    margin-bottom:      30px;
-    width:              456px;
-    height:             60px;
-    border:             1px solid #BE1E2D;
-}
-
-div.post_Right_m {
-    margin-left:        60px;
-    width:              396px;
-    height:             60px;
-    position:           absolute;
-    float:              left;
+    margin:             0 0 30px 24px;
+    width:              590px;
+    height:             70px;
+    border-bottom:      2px solid #87c240;
 }
 
 div.postHeImg_m {
-    background:         url();
+    background:         #bcbec0;
     width:              60px;
     height:             60px;
-    border:             1px solid #BE1E2D;
+    float:              left;
+    margin:             5px;
+}
+
+div.post_Right_m {
+    margin-left:        70px;
+    width:              520px;
+    height:             70px;
+    position:           absolute;
     float:              left;
 }
 
@@ -885,6 +906,26 @@ nav.postHeaderLeft_m {
     width:              auto;
     height:             24px;
     float:              left;
+}
+
+nav.postHeaderLeft_m ul.sbs li a, nav.postHeaderLeft_m ul.sbs li a:hover, nav.postHeaderLeft_m ul.sbs li a:active,
+nav.postHeaderLeft_m ul.sbs li {
+    font-weight:        bold;
+    color:              #000000;
+    padding-left:       10px;
+    padding-right:      10px;
+}
+
+nav.postHeaderRight_m ul.sbs li {
+    font-size:          x-small;
+    font-weight:        normal;
+    color:              #000000;
+    padding-left:       10px;
+    padding-right:      10px;
+}
+
+nav.postHeaderRight_m ul.sbs li:last-child {
+    margin-top:         4px;
 }
 
 nav.postHeaderRight_m {
@@ -895,28 +936,36 @@ nav.postHeaderRight_m {
     float:              right;
 }
 
-.postHeaderRight_m li, .postHeaderLeft_m li {
-    padding-left:       10px;
-    padding-right:      10px;
-    font-size:          small;
-    font-weight:        bold;
-}
-
-div.postContent_m {
+p.postContent_m {
     margin-top:         40px;
     margin-right:       5px;
     margin-left:        10px;
-    height:             1em;
-    width:              200px;
+    height:             1.5em;
+    width:              450px;
     overflow:           hidden; /* Temporário. Fazer caber X caracteres ali D: */
-}
-
-.postContent_m p {
     text-align:         left;
     font-size:          small;
     line-height:        normal;
 }
+/*expand*/
+div.post_m_exp {
+    margin:             0 0 30px 24px;
+    width:              590px;
+    height:             130px;
+    border-bottom:      2px solid #87c240;
+}
 
+p.postContent_m_exp {
+    margin-top:         40px;
+    margin-right:       5px;
+    margin-left:        10px;
+    height:             60px;
+    width:              450px;
+    overflow:           scroll;
+    text-align:         left;
+    font-size:          small;
+    line-height:        normal;
+}
 /*------------------ Private Profile - Att --------------------*/
 
 .divNotification {
@@ -1892,6 +1941,7 @@ p#txtPartChannel {
 /*----------------- começo footer -------------------*/
 
 .footer {    
+    margin:             24px 0 0 0;
     min-height:         80px;
     background:         #2b2d2e;
     width:              100%;
