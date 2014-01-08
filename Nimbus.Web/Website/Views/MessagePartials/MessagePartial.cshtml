@@ -4,6 +4,7 @@
 
 <script type="text/javascript">
     tipoMessAtual = 'normal';
+    idMsgExpand = 0;
 </script>
 
 <div class="messages">
@@ -30,7 +31,7 @@
                 <nav class="postHeaderLeft_m">
                     <ul class="sbs">
                         <li><a href="userprofile/index/@Model.SenderId">@Model.UserName</a></li>
-                        <li onclick="ajaxSeeMsg(@Model.Id,'divMesg_');" class="cpointer">@Model.Title</li>
+                        <li onclick="setOnClickSeeMesg(@Model.Id,'divMesg_');" class="cpointer">@Model.Title</li>
                     </ul>
                 </nav>
                 <nav class="postHeaderRight_m">
@@ -40,7 +41,7 @@
                         <li><img src="/images/utils/delete.png" class="cpointer" id="deleteMsg_@Model.Id" onclick="ajaxDeleteMsg(this.id);" /></li>
                     </ul>
                 </nav>
-                <p onclick="ajaxSeeMsg(tipoMessAtual);" class="postContent_m">
+                <p id="pClickMsg_@Model.Id" onclick="setOnClickSeeMesg(@Model.Id, 'divMesg_');" class="postContent_m">
                     @Model.Text
                 </p>
             </div>

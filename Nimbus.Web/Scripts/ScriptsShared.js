@@ -301,6 +301,7 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
                             btn.style.display = "none";
                         }
                         else {
+                            if(btn != null)
                             btn.style.display = "block";
                         }
                     },
@@ -321,64 +322,65 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
         }
     }
 
-    function ajaxSeeMsg(tipoMess)
+    function setOnClickSeeMesg(id, starNameDiv)
     {
-        if (tipoMess == 'normal') {
-            //muda pra expand
-            var item;
-            var div = document.getElementsByClassName('post_m');
-            //for (item = 0; item < div.length; item++) {
-            div[item].setAttribute('class', 'post_m_exp');
-            //}
-
-            var p = document.getElementsByClassName('postContent_m');
-            //for (item = 0; item < div.length; item++) {
-            p[item].setAttribute('class', 'postContent_m_exp');
-            //}
+        var pClicl = document.getElementById("pClickMsg_" + id);
+        if (tipoMessAtual == 'normal') {
+            tipoMessAtual = "expandido";
+            idMsgExpand = id;
+            ajaxSeeMsg(id, starNameDiv);
         }
-        else {
-            //volta ao normal
-            var item;
-            var div = document.getElementsByClassName('post_m_exp');
-            //for (item = 0; item < div.length; item++) {
-            div[item].setAttribute('class', 'post_m');
-            //}
+        else if (tipoMessAtual == "expandido")
+        {
+            tipoMessAtual = 'normal';
 
-            var p = document.getElementsByClassName('postContent_m_exp');
-            //for (item = 0; item < div.length; item++) {
-            p[item].setAttribute('class', 'postContent_m');
-            //}
+            if (idMsgExpand == id) { //minimiza
+                document.getElementById('divMesg_' + id).className = 'post_m';
+                document.getElementById('divMesgExpand_' + id).style.display = 'none';
+                idMsgExpand = 0; //global que controla qm está expandido
+            }
+            else //minimiza a q está aberta e abre a nova
+            {
+                document.getElementById('divMesg_' + idMsgExpand).className = 'post_m';
+                document.getElementById("divMesgExpand_" + idMsgExpand).style.display = 'none';
+                return setOnClickSeeMesg(id, starNameDiv);
+            }
         }
     }
 
-    //function ajaxSeeMsg(id, starNameDiv)
-    //{
-    //    var divNew = document.getElementById('divMesgExpand_' + id);
-    //    var divOld = document.getElementById('divMesg_' + id).style.background = "rgb(190, 30, 45)";
-    //    if (divNew != null)
-    //    {
-    //        divNew.style.display = 'block';
-    //    }
-    //    else {
-    //        $.ajax({
-    //            url: "/api/message/MessageExpandHtml/" + id,
-    //            type: "GET",
-    //            contentType: "application/json;charset=utf-8",
-    //            statusCode: {
-    //                200: function (newData) {
-    //                    var div = document.getElementById(starNameDiv + id);
+    function ajaxSeeMsg(id, starNameDiv)
+    {
+        var divNew = document.getElementById('divMesgExpand_' + id);
+        var divOld = document.getElementById('divMesg_' + id).style.background = "rgb(190, 30, 45)";
 
-    //                    div.parentElement.innerHTML += newData.Html;
-    //                },
+        if (divNew != null) {
+            //muda pra expand
+            tipoMessAtual = "expandido";
+            divNew.className = 'post_m_exp';
+            divNew.style.display = 'block';
+        }
+        else {
+            $.ajax({
+                url: "/api/message/MessageExpandHtml/" + id,
+                type: "GET",
+                contentType: "application/json;charset=utf-8",
+                statusCode: {
+                    200: function (newData) {
+                        var div = document.getElementById(starNameDiv + id);
+                        div.parentElement.innerHTML += newData.Html;
+                        //muda pra expand
+                        tipoMessAtual = "expandido";
+                        div.style.display = 'block';
+                    },
 
-    //                500: function () {
-    //                    //erro
-    //                    window.alert("Erro abrir sua mensagem. Tente novamente mais tarde.");
-    //                }
-    //            }
-    //        });
-    //    }
-    //}
+                    500: function () {
+                        //erro
+                        window.alert("Erro abrir sua mensagem. Tente novamente mais tarde.");
+                    }
+                }
+            });
+        }
+    }
 
     function ajaxHiddeMsg(div)
     {
