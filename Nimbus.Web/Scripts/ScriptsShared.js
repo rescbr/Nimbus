@@ -459,3 +459,34 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
         }
 
     }
+
+
+    function ajaxResetPassword(newPass, confirmPass) {
+        if (document.getElementById("formResetPass").checkValidity()) {
+
+            ajaxData = {};
+            ajaxData['NewPassord'] = document.getElementById(newPass).value;
+            ajaxData['ConfirmPassword'] = document.getElementById(confirmPass).value;
+            ajaxData['Token'] = document.getElementById('hdnToken').value;
+         
+            $.ajax({
+                url: "/api/user/resetpassword/",
+                data: JSON.stringify(ajaxData),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                statusCode: {
+                    200: function (newData) {
+                        if (newData > 0) {
+                            window.location.href = "/login";
+                        }
+                    },
+
+                    500: function () {
+                        //erro
+                        window.alert("Não foi possível deletar sua mensagem. Tente novamente mais tarde.");
+                    }
+                }
+            });
+        }
+
+    }

@@ -10,6 +10,8 @@ using Nimbus.Model.Bags;
 using System.Web;
 using System.Diagnostics;
 using Mandrill;
+using Nimbus.Web.Security;
+using Nimbus.Web.Website.Models;
 
 namespace Nimbus.Web.API.Controllers
 {
@@ -281,8 +283,44 @@ WHERE ([tUser].[test] IS NOT NULL) AND
         }
 
         #region password
+        [HttpPost]
+        [AllowAnonymous]
+        public int ResetPassword(ResetPasswordModel reset)
+        {
+            int idUser = 0;
+            if (reset.Token != null)
+            {
+                Guid tokenGuid;
+                NSCInfo info;
+                if (Token.VerifyToken(reset.Token, out tokenGuid, out info))
+                {                   
+                    if (reset.NewPassord == reset.ConfirmPassword)
+                    {
+                        using (var db = DatabaseFactory.OpenDbConnection())
+                        {
+                            idUser = info.UserId * -1; //vem negativo * -1 = positivo
+                            User user = db.Where<User>(u => u.Id == idUser).FirstOrDefault();
+                            if (user != null)
+                            {
+                                string passwordHash = new Security.PlaintextPassword(reset.NewPassord).Hash;
+                                user.Password = passwordHash;
+
+                                db.Update<User>(user, u => u.Id == idUser);
+                            }
+                        }
+                    }
+                }
+                else
+                {//token invalido
+                }
+              
+
+            }
+            return idUser;
+        }
+
         [HttpGet]
-        public bool ResetPassword()
+        public bool sendTokenResetPassword()
         {
             MandrillApi apiMandrill = new MandrillApi("***REMOVED***");
             EmailMessage mensagem = new EmailMessage();
@@ -292,14 +330,25 @@ WHERE ([tUser].[test] IS NOT NULL) AND
             List<EmailAddress> address = new List<EmailAddress> ();
             address.Add(new EmailAddress("***REMOVED***"));
             mensagem.to = address;
-            mensagem.text = "Teste nimbus";
+            
+            NSCInfo infoToken = new NSCInfo 
+            {
+                TokenGenerationDate = DateTime.Now,
+                TokenExpirationDate =  DateTime.Now.AddDays(1),
+                UserId = -1 * NimbusUser.UserId
+            };
+
+            Guid token;
+            string tokeString = Token.GenerateToken(infoToken, out token);
 
             mensagem.html=" <body style=\"width:80p0x; background-color:#ffffff;\">" +
                                 "<div>"+
                                     "<img src=\"https://***REMOVED***/imgnimbus/topBar.png\" style=\"width:800px;\" />"+
                                 "</div>"+
                                 "<div style=\"margin:30px 10% 40px; height:250px;\">" +
-                                     mensagem.text +
+                                     "Olá " + NimbusUser.FirstName + " " + NimbusUser.LastName + ", <br/>"+
+                                     "para redefinir sua senha, acesse: " +
+                                     "<a href=\"http://localhost:50011/resetpassword?reset=" + Uri.EscapeDataString(tokeString) + "\">Redefinir senha</a>" +
                                 "</div>"+
                                 "<div>"+
                                     "<img src=\"https://***REMOVED***/imgnimbus/bottomBar.png\" style=\"width:800px;\" />" +

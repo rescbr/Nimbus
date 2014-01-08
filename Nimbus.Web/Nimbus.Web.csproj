@@ -411,9 +411,7 @@
     <Content Include="Website\Views\Upload.cshtml" />
     <Content Include="Website\Views\UploadFinished.cshtml" />
     <Content Include="Website\Views\TopicFile.cshtml" />
-    <Content Include="images\PaginaTeste.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Website\Views\ResetPassword.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\Controllers\DatabaseController.cs" />
@@ -449,12 +447,14 @@
     <Compile Include="Utils\RemoveHTMLString.cs" />
     <Compile Include="Website\Controllers\ChannelController.cs" />
     <Compile Include="Website\Controllers\NotificationController.cs" />
+    <Compile Include="Website\Controllers\ResetPasswordController.cs" />
     <Compile Include="Website\Controllers\SearchController.cs" />
     <Compile Include="Website\Controllers\TopController.cs" />
     <Compile Include="Website\Controllers\TopicController.cs" />
     <Compile Include="Website\Controllers\TrendingController.cs" />
     <Compile Include="Website\Controllers\UploadController.cs" />
     <Compile Include="Website\Models\NewsModel.cs" />
+    <Compile Include="Website\Models\ResetPasswordModel.cs" />
     <Compile Include="Website\Models\SearchModel.cs" />
     <Compile Include="Website\Models\TopicModel.cs" />
     <Compile Include="Website\Models\ChannelModel.cs" />
