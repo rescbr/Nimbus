@@ -362,6 +362,7 @@
     </Content>
     <Content Include="Website\Views\ChannelPartials\TopicPartial.cshtml" />
     <Content Include="Website\Views\ChannelPartials\ChannelPartial.cshtml" />
+    <Content Include="Website\Views\ChannelPartials\ChannelRelatedPartial.cshtml" />
     <None Include="Website\Views\CommentPartials\PartialComment.cshtml" />
     <Content Include="Website\Views\Home.cshtml" />
     <Content Include="Website\Views\TrendingTopics.cshtml" />

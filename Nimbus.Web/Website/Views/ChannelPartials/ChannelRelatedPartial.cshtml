@@ -1,0 +1,10 @@
+﻿
+@model Nimbus.Model.ORM.Channel
+<nav id="relatedChannel">
+    <a href="/channel/index/@Model.Id" title="@Model.Name">
+        <ul>
+            <li><img src="@Model.ImgUrl" id="imgRelChannel" alt="Canal" title="@Model.Name"></li>
+            <li>@Model.Name</li>
+        </ul>
+    </a>
+</nav>

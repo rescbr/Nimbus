@@ -776,7 +776,7 @@ div.chanPaid {
 }
 
 div.channels {
-    margin:             0 auto;
+    margin:             20px;
 }
 
 div.chanPaidImg {
@@ -787,7 +787,23 @@ div.chanPaidImg {
     margin:             10px;
     float:              left;
 }
+/*related*/
+nav#relatedChannel {
+    clear:              both;
+}
 
+nav#relatedChannel ul li {
+    margin:             4px 10px 4px 0px;
+    float:              left;
+    font-size:          small;
+    color:              #2b2d2e;
+    font-weight:        bold;
+}
+
+img#imgRelChannel{
+    height:             24px;
+    width:              24px;
+}
 /*------------------ Private Profile - Top Bar --------------------*/
 
 nav.profTopBar {
