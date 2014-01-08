@@ -377,7 +377,7 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
     function ajaxSeeMsg(id, starNameDiv)
     {
         var divNew = document.getElementById('divMesgExpand_' + id);
-        var divOld = document.getElementById('divMesg_' + id).style.background = "rgb(190, 30, 45)";
+        var divOld = document.getElementById('divMesg_' + id).style.background = "#d1d3d4";
 
         if (divNew != null) {
             //muda pra expand

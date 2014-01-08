@@ -326,7 +326,7 @@ namespace Nimbus.Web.API.Controllers
                             msgBag.Visible = msg.Visible;
                             msgBag.UserName = user.FirstName + " " + user.LastName;
                             msgBag.AvatarUrl = user.AvatarUrl;
-                            msgBag.UserReadStatus = message.UserReadStatus;
+                            msgBag.UserReadStatus = true;
 
                         }
 
@@ -432,7 +432,8 @@ namespace Nimbus.Web.API.Controllers
                             Title = item.Title,
                             Visible = item.Visible,
                             UserName = user.FirstName + " " + user.LastName,
-                            AvatarUrl = user.AvatarUrl
+                            AvatarUrl = user.AvatarUrl,
+                            UserReadStatus = true
                         };
                         listMessage.Add(msg);
                     }
