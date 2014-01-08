@@ -224,6 +224,13 @@ a.exit:hover, div.exitbutton:hover {
     height:             38px; 
 }
 
+/*---------------------- Search ---------------------*/
+div#divBarSearch {
+    padding:            4px;
+    margin:             0 0 0 190px;
+    background:         #d1d3d4;
+    width:              460px;
+}
 
 /*------------------ fim header --------------------*/
 
