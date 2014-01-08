@@ -324,26 +324,52 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
 
     function setOnClickSeeMesg(id, starNameDiv)
     {
-        var pClicl = document.getElementById("pClickMsg_" + id);
-        if (tipoMessAtual == 'normal') {
-            tipoMessAtual = "expandido";
-            idMsgExpand = id;
-            ajaxSeeMsg(id, starNameDiv);
-        }
-        else if (tipoMessAtual == "expandido")
-        {
-            tipoMessAtual = 'normal';
+        countClick++;
+        var ok = false;
+        var divM = document.getElementById('divMesg_' + idMsgExpand);
+        var divE = document.getElementById("divMesgExpand_" + idMsgExpand);
 
-            if (idMsgExpand == id) { //minimiza
-                document.getElementById('divMesg_' + id).className = 'post_m';
-                document.getElementById('divMesgExpand_' + id).style.display = 'none';
-                idMsgExpand = 0; //global que controla qm está expandido
+        if (idMsgExpand == id) {
+            if (countClick <= 1 && countClick > 0) {
+                ok = true;
             }
-            else //minimiza a q está aberta e abre a nova
-            {
-                document.getElementById('divMesg_' + idMsgExpand).className = 'post_m';
-                document.getElementById("divMesgExpand_" + idMsgExpand).style.display = 'none';
-                return setOnClickSeeMesg(id, starNameDiv);
+            else {
+                ok = false;                
+                if (divE && divM != null) {
+                    divE.style.display = 'none';
+                    divM.className = 'post_m';
+                    countClick = 0;
+                    tipoMessAtual = 'normal';
+                }
+            }
+        }
+        else
+            ok = true;
+
+        if (ok == true) {
+            if (tipoMessAtual == 'normal') {
+                tipoMessAtual = "expandido";
+                idMsgExpand = id;
+                ajaxSeeMsg(id, starNameDiv);
+            }
+            else if (tipoMessAtual == "expandido") {
+                tipoMessAtual = 'normal';
+
+                if (idMsgExpand == id) { //minimiza
+                    document.getElementById('divMesg_' + id).className = 'post_m';
+                    document.getElementById('divMesgExpand_' + id).style.display = 'none';
+                    idMsgExpand = 0; //global que controla qm está expandido
+                    countClick = 0;
+                }
+                else //minimiza a q está aberta e abre a nova
+                {                   
+                    if (divE && divM != null) {
+                        divE.style.display = 'none';
+                        divM.className = 'post_m';
+                        countClick = 0;
+                    }
+                    return setOnClickSeeMesg(id, starNameDiv);
+                }
             }
         }
     }
@@ -371,10 +397,12 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
                         //muda pra expand
                         tipoMessAtual = "expandido";
                         div.style.display = 'block';
+                        countClick = 0;
                     },
 
                     500: function () {
                         //erro
+                        countClick = 0;
                         window.alert("Erro abrir sua mensagem. Tente novamente mais tarde.");
                     }
                 }

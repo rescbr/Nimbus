@@ -5,6 +5,7 @@
 <script type="text/javascript">
     tipoMessAtual = 'normal';
     idMsgExpand = 0;
+    countClick = 0;
 </script>
 
 <div class="messages">
@@ -31,7 +32,7 @@
                 <nav class="postHeaderLeft_m">
                     <ul class="sbs">
                         <li><a href="userprofile/index/@Model.SenderId">@Model.UserName</a></li>
-                        <li onclick="setOnClickSeeMesg(@Model.Id,'divMesg_');" class="cpointer">@Model.Title</li>
+                        <li id="liClick_@Model.Id" onclick="setOnClickSeeMesg(@Model.Id,'divMesg_');" class="cpointer">@Model.Title</li>
                     </ul>
                 </nav>
                 <nav class="postHeaderRight_m">
