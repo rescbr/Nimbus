@@ -756,7 +756,7 @@ p.aboutUser-other {
 .reportUser {
     float:right;
     cursor:pointer;
-    margin-right:42px;
+    margin: -2px 42px 0 0;
     width:120px;
     height:30px;
     line-height: 2em;
@@ -994,7 +994,6 @@ p.postContent_m {
 /*expand*/
 div.post_m_exp {
     margin:             0 0 30px 24px;
-    padding-bottom:     30px;
     width:              590px;
     border-bottom:      2px solid #87c240;
 }
@@ -1010,6 +1009,24 @@ p.messExpandTxt {
     font-size:          small;
     line-height:        normal;*/
     margin:             0 10px 0 10px;
+}
+
+div.divReplyMess {
+    margin:             5px 0 5px 460px;
+}
+
+button.btnReplyMess {
+    background:         #87c240;
+    width:              120px;
+    height:             26px;
+    cursor:             pointer;
+    border:             none;
+    color:              #FFFFFF;
+}
+
+button.btnReplyMess:hover {
+    color:              #2b2d2e;
+    cursor:             pointer;
 }
 /*------------------ Private Profile - Att --------------------*/
 
