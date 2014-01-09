@@ -482,6 +482,71 @@ from (
             }
         }
 
+        [HttpGet]
+        public List<TopicBag> TopTopicsToLogin()
+        {
+            int skip = 0;
+            int take = 4;
+            /************************************************************************
+             *                      CONFIDENCE SORT TÓPICO                          * 
+             *            para ordenar TOP tópicos de acordo com a votação          *
+             * query baseada em:                                                    *
+             * https://github.com/reddit/reddit/blob/master/r2/r2/lib/db/_sorts.pyx *
+             * http://www.evanmiller.org/how-not-to-sort-by-average-rating.html     *
+             ************************************************************************/
+
+            List<TopicBag> tpcList = new List<TopicBag>();
+            using (var db = DatabaseFactory.OpenDbConnection())
+            {
+
+                var top = db.Query<Topic>(
+                #region queryzinha 2, o retorno
+                    //este SQL utiliza o metodo de skip/take do sql server 2012 (que funciona no sql azure tbm).
+                    //não irá funcionar em versoes antigas.
+@"
+select [Id], [ImgUrl], [Title], [TopicType], [Description], [LastModified]
+from (
+	select [Topic].[Id], [Topic].[ImgUrl], [Topic].[Title], [Topic].[TopicType], [Topic].[Description], [Topic].[LastModified],
+	 (select ((([positive] + 1.9208) / ([positive] + [negative]) - 
+			  1.96 * SQRT(([positive] * [negative]) / ([positive] + [negative]) + 0.9604) / 
+			  ([positive] + [negative])) / (1 + 3.8416 / ([positive] + [negative]))) as [confidence_score]
+			from (
+				select 
+					(select count([Visible]) from [UserLikeTopic] where [UserLikeTopic].[Visible] = 1 and [UserLikeTopic].[TopicId] = [Topic].[Id]) as [positive], 
+					(select count([Visible]) from [UserLikeTopic] where [UserLikeTopic].[Visible] = 0 and [UserLikeTopic].[TopicId] = [Topic].[Id]) as [negative]
+				) tmpCount
+			where [positive] + [negative] > 0) as [score]
+	from [Topic]
+	order by score desc
+    offset @skip rows fetch next @take rows only
+) tmpScoreSort",
+                #endregion
+                new { skip = skip * take, take = take });
+
+                if (top.Count > 0)
+                {
+                    foreach (var item in top)
+                    {
+                        int count = db.SelectParam<ViewByTopic>(vt => vt.TopicId == item.Id).Select(vt => vt.CountView).FirstOrDefault();
+                        TopicBag bag = new TopicBag()
+                        {
+                            Id = item.Id,
+                            Description = item.Description,
+                            Title = item.Title,
+                            TopicType = item.TopicType,
+                            ImgUrl = item.ImgUrl,
+                            LastModified = item.LastModified,
+                            Count = count,
+                            UserFavorited = false
+                        };
+                        tpcList.Add(bag);
+                    }
+                }
+
+                return tpcList;
+            }
+        }
+
         public class TopicHtmlWrapper
         {
             public int Count {get;set;}

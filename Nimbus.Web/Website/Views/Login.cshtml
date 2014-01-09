@@ -4,51 +4,82 @@
     Layout = "~/Website/Views/Shared/_LayoutPublic.cshtml";
 }
 
-<div id="divNewAccountLogin" style="float: left; width: 500px; background:rgb(241, 242, 242); margin-top:24px;">
-    @{
-        Nimbus.Web.Website.Models.NewAccountModel account = new Nimbus.Web.Website.Models.NewAccountModel (); 
-        
+<div style="width: 900px; height: 450px;">
+    <div id="divNewAccountLogin" style="float: left; width: 500px; background:rgb(241, 242, 242); margin-top:24px;">
+        @{
+        Nimbus.Web.Website.Models.NewAccountModel account = new Nimbus.Web.Website.Models.NewAccountModel ();
+
         Html.RenderPartial("~/Website/Views/NewAccount.cshtml", account);
-    }
-</div>
+        }
+    </div>
 
-<div class="divPageLogin" >
-   
-    <form id="loginForm" method="post" action="/login"
-          enctype="application/x-www-form-urlencoded" >
+    <div class="divPageLogin">
 
-        @if (Model.ErrorMessage != null)
+        <form id="loginForm" method="post" action="/login"
+              enctype="application/x-www-form-urlencoded">
+
+            @if (Model.ErrorMessage != null)
         {
                 <p class="pErrorLogin">@Model.ErrorMessage</p>
         }
 
-        <div class="divformLogin">
-            <h1>Login</h1><br />
-            <p>
-                <label for="Email">E-mail</label>
-            </p>
-            <input name="Email" type="text" value="@Model.Email" placeholder="exemplo@nimbus.com" class="inputLogin" required />
-        </div>
-        
-        <div class="divformLogin">
-            <p>
-                <label for="Password">Password</label>
-            </p>
-            <input name="Password" type="password" placeholder="Senha" class="inputLogin" required />
-        </div>
-        <input name="RedirectURL" type="hidden" value="@Model.RedirectURL" />
+            <div class="divformLogin">
+                <h1>Login</h1><br />
+                <p>
+                    <label for="Email">E-mail</label>
+                </p>
+                <input name="Email" type="text" value="@Model.Email" placeholder="exemplo@nimbus.com" class="inputLogin" required />
+            </div>
 
-        <div class="divBtnLogin">
-            <input type="submit" value="Entrar" class="divBtnSubmit"/>
-        </div>
+            <div class="divformLogin">
+                <p>
+                    <label for="Password">Password</label>
+                </p>
+                <input name="Password" type="password" placeholder="Senha" class="inputLogin" required />
+            </div>
+            <input name="RedirectURL" type="hidden" value="@Model.RedirectURL" />
 
-    </form>
-    @*<p class="pLogin">Não possui uma conta no Nimbus? <a href="/NewAccount" title="Inscreva-se">Inscreva-se já</a></p>*@
-    <p class="pLogin"><a href="/api/user/sendTokenResetPassword" title="Esqueci minha senha"><u>Esqueci minha senha</u></a></p>
-    <div class="btnFacebook">
-        <img class="imgBtnFacebook" src="/images/utils/facebook24x24.png"/>
-        <div class="btnTextFaceebok">
-            Logar com <b>Facebook</b>
+            <div class="divBtnLogin">
+                <input type="submit" value="Entrar" class="divBtnSubmit" />
+            </div>
+
+        </form>
+        @*<p class="pLogin">Não possui uma conta no Nimbus? <a href="/NewAccount" title="Inscreva-se">Inscreva-se já</a></p>*@
+        <p class="pLogin"><a href="/api/user/sendTokenResetPassword" title="Esqueci minha senha"><u>Esqueci minha senha</u></a></p>
+        <div class="btnFacebook">
+            <img class="imgBtnFacebook" src="/images/utils/facebook24x24.png" />
+            <div class="btnTextFaceebok">
+                Logar com <b>Facebook</b>
+            </div>
         </div>
     </div>
+        
+</div>
+
+<div id="divTrending" style="width: 900px; height: 100%;">
+    @{        
+        Nimbus.Web.API.Controllers.TopicController topicApi = new Nimbus.Web.API.Controllers.TopicController();
+        List<Nimbus.Model.Bags.TopicBag> topics = topicApi.TopTopicsToLogin();        
+        
+        foreach (var item in topics )
+        {
+              <div class="divTopic-grade">
+            <a href="/topic/index/@item.Id">
+                <div class="headerTopic-grade">
+                    <h1>@item.Title</h1>
+                    <img src="@item.ImgUrl" alt="@item.TopicType.ToString()" title="@item.Title" width="180" height="100">
+                </div>
+
+                <p class="contentTopic-grade">
+                    @item.Description
+                </p>
+            </a>
+            <div class="footerTopic-grade">
+              
+            </div>
+        </div>
+        }
+    }
+    
+    
 </div>
