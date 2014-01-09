@@ -322,6 +322,8 @@
     <Content Include="images\Utils\coravazado.png" />
     <Content Include="images\Utils\delete.png" />
     <Content Include="images\Utils\edit.png" />
+    <Content Include="images\Utils\facebook-icon.png" />
+    <Content Include="images\Utils\facebook24x24.png" />
     <Content Include="images\Utils\iconeLogo.png" />
     <Content Include="images\Utils\logoName.png" />
     <Content Include="images\Utils\report.png" />

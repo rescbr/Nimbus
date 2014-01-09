@@ -1,22 +1,14 @@
 ﻿@model Nimbus.Web.Website.Models.NewAccountModel
 
-@{
-    ViewBag.Title = "Criar Conta";
-    Layout = "~/Website/Views/Shared/_LayoutPublic.cshtml";
-}
-
 <div class="divPageNewAccount">
-    <h1>Criar Conta</h1>
 
     <form id="form1" method="post" action="/newaccount"
           enctype="application/x-www-form-urlencoded">
 
         <div class="divformNewAccount">
-            <p>
-                <label for="FirstName">Nome</label>
-            </p>
-            <input name="FirstName" type="text" placeholder="Primeiro" style="max-width: 180px; min-width: 172px; float:left; padding: 4px;" required />
-            <input name="LastName" type="text" placeholder="Último" style="max-width: 180px; min-width: 172px; margin-left: 24px; padding: 4px;" required />
+            <p><h1>Cadastre-se já</h1></p><br />
+            <input name="FirstName" type="text" placeholder="Nome" style="max-width: 180px; min-width: 172px; float:left; padding: 4px;" required />
+            <input name="LastName" type="text" placeholder="Último nome" style="max-width: 180px; min-width: 172px; margin-left: 24px; padding: 4px;" required />
         </div>
         @*
             <div class="divformNewAccount">
@@ -27,20 +19,17 @@
             </div>
         *@
         <div class="divformNewAccount">
-            <p>
-                <label for="BirthDate">Data de Nascimento</label>
-            </p>
-            <input name="BirthDate" type="text" placeholder="14/02/2014" style="max-width: 384px; min-width: 384px; padding: 4px;" required />
+            <input name="BirthDate" type="date"  placeholder="Data nascimento (dd/mm/aaaa)" style="max-width: 384px; min-width: 384px; padding: 4px;" required />
         </div>
 
-        <div class="divformNewAccount">
+        @*<div class="divformNewAccount">
             <p>
                 <label for="Country">País</label>
             </p>
             <input name="Country" type="text" placeholder="País" style="max-width: 384px; min-width: 384px; padding: 4px;" required />
-        </div>
+        </div>*@
 
-        <div class="divformNewAccount">
+        @*<div class="divformNewAccount">
             <p>
                 <label for="State">Estado</label>
             </p>
@@ -52,32 +41,24 @@
                 <label for="City">Cidade</label>
             </p>
             <input name="City" type="text" placeholder="Cidade" style="max-width: 384px; min-width: 384px; padding: 4px;" required />
+        </div>*@
+
+        <div class="divformNewAccount">
+            <input name="Email" type="email" placeholder="E-mail (exemplo@nimbus.com)" style="max-width: 384px; min-width: 384px; padding: 4px;" required />
         </div>
 
         <div class="divformNewAccount">
-            <p>
-                <label for="Email">Email</label>
-            </p>
-            <input name="Email" type="text" placeholder="exemplo@nimbus.com" style="max-width: 384px; min-width: 384px; padding: 4px;" required />
+            <input name="Password" type="password" placeholder="Senha" style="max-width: 384px; min-width: 384px; padding: 4px;" required />
         </div>
 
         <div class="divformNewAccount">
-            <p>
-                <label for="Password">Senha</label>
-            </p>
-            <input name="Password" type="text" placeholder="Senha" style="max-width: 384px; min-width: 384px; padding: 4px;" required />
-        </div>
-
-        <div class="divformNewAccount">
-            <p>
-                <label for="ConfirmPassword">Confirmar a Senha</label>
-            </p>
-            <input name="ConfirmPassword" type="text" placeholder="Confirmar a Senha" style="max-width: 384px; min-width: 384px; padding: 4px;" required />
+            
+            <input name="ConfirmPassword" type="password" placeholder="Confirmar a Senha" style="max-width: 384px; min-width: 384px; padding: 4px;" required />
         </div>
 
         <div class="divBtnNewAccount">
             <input type="submit" value="Criar Conta" id="salvar" class="divSaveNewAccount" />
         </div>
     </form>
-    <p class="pNewAccount">Voltar para a <a href="/Login" title="Inscreva-se">Página Inicial</a></p>
+    @*<p class="pNewAccount">Voltar para a <a href="/Login" title="Inscreva-se">Página Inicial</a></p>*@
 </div>

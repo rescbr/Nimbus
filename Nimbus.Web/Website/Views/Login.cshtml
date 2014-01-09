@@ -4,9 +4,16 @@
     Layout = "~/Website/Views/Shared/_LayoutPublic.cshtml";
 }
 
-<div class="divPageLogin">
-    <h1>Login</h1>
+<div id="divNewAccountLogin" style="float:left; width:500px;">
+    @{
+        Nimbus.Web.Website.Models.NewAccountModel account = new Nimbus.Web.Website.Models.NewAccountModel (); 
+        
+        Html.RenderPartial("~/Website/Views/NewAccount.cshtml", account);
+    }
+</div>
 
+<div class="divPageLogin" style="float: right; background: rgb(241, 242, 242);">
+   
     <form id="loginForm" method="post" action="/login"
           enctype="application/x-www-form-urlencoded" >
 
@@ -16,6 +23,7 @@
         }
 
         <div class="divformLogin">
+            <h1>Login</h1><br />
             <p>
                 <label for="Email">E-mail</label>
             </p>
@@ -35,6 +43,12 @@
         </div>
 
     </form>
-    <p class="pLogin">Não possui uma conta no Nimbus? <a href="/NewAccount" title="Inscreva-se">Inscreva-se já</a></p>
+    @*<p class="pLogin">Não possui uma conta no Nimbus? <a href="/NewAccount" title="Inscreva-se">Inscreva-se já</a></p>*@
     <p class="pLogin"><a href="/api/user/sendTokenResetPassword" title="Esqueci minha senha"><u>Esqueci minha senha</u></a></p>
+    <div class="btnFacebook">
+        <img class="imgBtnFacebook" src="/images/utils/facebook24x24.png"/>
+        <div class="btnTextFaceebok">
+            Logar com <b>Facebook</b>
+        </div>
+    </div>
 </div>
