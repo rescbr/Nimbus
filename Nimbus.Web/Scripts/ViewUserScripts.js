@@ -53,6 +53,7 @@ function SendMessageProfile(receiverId) {
             var interest = document.getElementById('txtInterest').value;
             var experience = document.getElementById('txtExperience').value;
             var about = document.getElementById('txtAbout').value;
+            var birth = document.getElementById('txtBirthDateEdit').value;
 
             var pass = document.getElementById("txtNewPassProfile").value;
             var conf = document.getElementById("txtConfirPassProfile").value;
@@ -105,6 +106,7 @@ function SendMessageProfile(receiverId) {
                 ajaxData['Interest'] = interest;
                 ajaxData['Experience'] = experience;
                 ajaxData['About'] = about;
+                ajaxData['BirthDate'] = birth;
 
                 $.ajax({
                     url: "/api/user/EditProfile",

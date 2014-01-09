@@ -58,29 +58,33 @@
 
 <div id="divTrending" style="width: 900px; height: 100%;">
     <h1>Acesse os Top Tópicos e veja como é ser um usuário nimbus:</h1>
-    @{        
-        Nimbus.Web.API.Controllers.TopicController topicApi = new Nimbus.Web.API.Controllers.TopicController();
-        List<Nimbus.Model.Bags.TopicBag> topics = topicApi.TopTopicsToLogin();        
-        
-        foreach (var item in topics )
-        {
-              <div class="divTopic-grade">
-            <a href="/topicdemo/index/@item.Id">
-                <div class="headerTopic-grade">
-                    <h1>@item.Title</h1>
-                    <img src="@item.ImgUrl" alt="@item.TopicType.ToString()" title="@item.Title" width="180" height="100">
-                </div>
+    @{
+         Nimbus.Web.API.Controllers.TopicController topicApi = new Nimbus.Web.API.Controllers.TopicController();
+         List<Nimbus.Model.Bags.TopicBag> topics = topicApi.TopTopicsToLogin();
 
-                <p class="contentTopic-grade">
-                    @item.Description
-                </p>
+         foreach (var item in topics)
+         {
+             <a href="/topicdemo/index/@item.Id">
+                <div class="divTopic-grade">
+                    <div class="headerTopic-grade">
+                        <h1>@item.Title</h1>
+                        <img src="@item.ImgUrl" alt="@item.TopicType.ToString()" title="@item.Title" width="180" height="100">
+                    </div>
+
+                    <p class="contentTopic-grade">
+                        @item.Description
+                    </p>
+                    <div class="footerTopic-grade">
+                        <div title="Você precisa estar logado." class="btnLeftTopic-grade">
+                            <p>Ler mais tarde</p>
+                        </div>
+                        <div title="Você precisa estar logado." class="btnRightTopic-grade">
+                            <p><img src="/images/utils/starc.png" /></p> @*adicionar aos favoritos*@
+                        </div>
+                    </div>
+                </div>
             </a>
-            <div class="footerTopic-grade">
-              
-            </div>
-        </div>
-        }
-    }
-    
+         }
+    }  
     
 </div>
