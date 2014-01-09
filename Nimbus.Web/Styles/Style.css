@@ -994,13 +994,13 @@ p.postContent_m {
 /*expand*/
 div.post_m_exp {
     margin:             0 0 30px 24px;
+    padding-bottom:     30px;
     width:              590px;
-    height:             130px;
     border-bottom:      2px solid #87c240;
 }
 
-p.postContent_m_exp {
-    margin-top:         40px;
+p.messExpandTxt {
+    /*margin-top:         40px;
     margin-right:       5px;
     margin-left:        10px;
     height:             60px;
@@ -1008,7 +1008,8 @@ p.postContent_m_exp {
     overflow:           scroll;
     text-align:         left;
     font-size:          small;
-    line-height:        normal;
+    line-height:        normal;*/
+    margin:             0 10px 0 10px;
 }
 /*------------------ Private Profile - Att --------------------*/
 
