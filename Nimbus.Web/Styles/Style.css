@@ -145,9 +145,11 @@ div.userlogo {
 }
 
 .imgLogo {
-    border-radius:      100%;
-    background-color:   #FFFFFF;
-    padding:            1px;
+    margin-top: 2px;
+}
+
+.textColorNimbus {
+    color:            rgb(133, 170, 75);
 }
 
 .logo h1.userlogotext {
