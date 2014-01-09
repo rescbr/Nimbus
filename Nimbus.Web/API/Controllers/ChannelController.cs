@@ -468,7 +468,56 @@ namespace Nimbus.Web.API.Controllers
             }
             return showChannel;
         }
-               
+
+        /// <summary>
+        /// carregar informações basicas de um canal para exibir na login page
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public ChannelBag InfoChannelToLoginPage(int id = 0)
+        {
+            ChannelBag showChannel = new ChannelBag();
+            try
+            {
+
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {
+                    AlertChannelPay alert = new AlertChannelPay();
+                    bool allow = false;
+                    bool accepted = false;
+                    Channel channel = db.SelectParam<Channel>(ch => ch.Visible == true && ch.Id == id).FirstOrDefault();
+
+                    #region verifica permissão
+                    if (channel != null)
+                    {
+                        if (channel.Price == 0 || channel.IsPrivate == false)
+                        {
+                            allow = true;
+                        }
+                        else
+                        {
+                            allow = false;
+                        }
+                    }
+                    #endregion
+
+                    if (allow == true)
+                    {                                                               
+                        showChannel.Name = channel.Name;
+                        showChannel.Description = channel.Description;
+                        showChannel.CategoryId = channel.CategoryId;
+                        showChannel.countFollowers = db.Where<ChannelUser>(c => c.ChannelId == id && c.Follow == true && c.Visible == true).Count().ToString(); 
+                        showChannel.CountVotes = db.SelectParam<VoteChannel>(vt => vt.ChannelId == id).Select(vt => vt.Score).FirstOrDefault();
+                    }
+                }
+            }
+
+            catch (Exception ex)
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+            }
+            return showChannel;
+        }
 
         public class ChannelHtmlWrapper
         {

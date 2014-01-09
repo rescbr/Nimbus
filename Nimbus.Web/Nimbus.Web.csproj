@@ -414,6 +414,7 @@
     <Content Include="Website\Views\UploadFinished.cshtml" />
     <Content Include="Website\Views\TopicFile.cshtml" />
     <Content Include="Website\Views\ResetPassword.cshtml" />
+    <Content Include="Website\Views\TopicDemo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\Controllers\DatabaseController.cs" />
@@ -453,6 +454,7 @@
     <Compile Include="Website\Controllers\SearchController.cs" />
     <Compile Include="Website\Controllers\TopController.cs" />
     <Compile Include="Website\Controllers\TopicController.cs" />
+    <Compile Include="Website\Controllers\TopicDemoController.cs" />
     <Compile Include="Website\Controllers\TrendingController.cs" />
     <Compile Include="Website\Controllers\UploadController.cs" />
     <Compile Include="Website\Models\NewsModel.cs" />

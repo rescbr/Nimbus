@@ -341,6 +341,63 @@ namespace Nimbus.Web.API.Controllers
             return topic;
         }
 
+        /// <summary>
+        /// carregar informações gerais de um tópico exposto na login page
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [AllowAnonymous]
+        public Topic ShowTopicToLoginPage(int id)
+        {
+            Topic topic = new Topic();
+            try
+            {
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {
+                    topic = db.SelectParam<Topic>(tp => tp.Id == id).FirstOrDefault();
+
+                    if (topic.TopicType == Nimbus.Model.Enums.TopicType.video)
+                    {
+                        #region video
+                        string url = topic.UrlVideo;
+                        //garantir que mesmo que o vídeo tenha sido salvo com string padrao diferente, irá retornar o param certo
+                        if (url.Length >= 11)
+                        {
+                            string param = "";
+                            if (url.IndexOf("/embed") <= 0)
+                            {
+                                if (url.IndexOf("youtube.be/") > 0)
+                                {
+                                    int posicao = url.IndexOf(".be/") + 4;
+                                    param = url.Substring(posicao);
+                                }
+                                else if (url.IndexOf("youtube.com") > 0)
+                                {
+                                    string querystring = new Uri(topic.UrlVideo).Query;
+                                    var q = HttpUtility.ParseQueryString(querystring);
+                                    param = q["v"];
+                                }
+                                topic.UrlVideo = "//www.youtube.com/embed/" + param + "?wmode=transparent";
+                            }
+                            else
+                            {
+                                //já foi salvo da forma correta
+                                int posicao = url.IndexOf("http:") + 5;
+                                param = url.Substring(posicao);
+                                topic.UrlVideo = param + "?wmode=transparent";
+                            }
+                        }
+                        #endregion
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+            }
+            return topic;
+        }
+
         #endregion
 
         /// <summary>
@@ -856,6 +913,7 @@ from (
         /// <param name="topicID"></param>
         /// <returns></returns>
         [HttpGet]
+        [AllowAnonymous]
         public int CountFavorite(int id)
         {
             int count = 0;
@@ -879,6 +937,7 @@ from (
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet]
+        [AllowAnonymous]
         public int CountLikes(int id)
         {
             int count = 0;
@@ -902,6 +961,7 @@ from (
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet]
+        [AllowAnonymous]
         public int CountUnLikes(int id)
         {
             int count = 0;
@@ -980,6 +1040,7 @@ from (
         /// <param name="channelID"></param>
         /// <returns></returns>
         [HttpGet]
+        [AllowAnonymous]
         public CategoryBag CategoryTopic(int id)
         {
             CategoryBag category = new CategoryBag();
@@ -994,7 +1055,7 @@ from (
                         //category.ColorCode = ctg.ColorCode;
                         category.Id = ctg.Id;
                         category.ImageUrl = ctg.ImageUrl;
-                        category.ImgTopChannel = db.SelectParam<ImgTopChannel>(c => c.CategoryId == ctg.Id).Select(c => c.UrlImg).FirstOrDefault();
+                        category.ImgTopChannel = ctg.ImageUrl.ToLower().Replace("category", "capachannel");
                         category.LocalizedName = ctg.LocalizedName;
                         category.Name = ctg.Name;
                     }
