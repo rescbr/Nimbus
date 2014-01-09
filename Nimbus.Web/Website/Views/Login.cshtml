@@ -4,7 +4,7 @@
     Layout = "~/Website/Views/Shared/_LayoutPublic.cshtml";
 }
 
-<div id="divNewAccountLogin" style="float:left; width:500px;">
+<div id="divNewAccountLogin" style="float: left; width: 500px; background:rgb(241, 242, 242); margin-top:24px;">
     @{
         Nimbus.Web.Website.Models.NewAccountModel account = new Nimbus.Web.Website.Models.NewAccountModel (); 
         
@@ -12,7 +12,7 @@
     }
 </div>
 
-<div class="divPageLogin" style="float: right; background: rgb(241, 242, 242);">
+<div class="divPageLogin" >
    
     <form id="loginForm" method="post" action="/login"
           enctype="application/x-www-form-urlencoded" >
