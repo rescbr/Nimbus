@@ -60,6 +60,7 @@ namespace Nimbus.Web.Website
                 }
                 else
                 {
+                    if (User.Identity.IsAuthenticated == false) return null;
                     if (User.Identity.AuthenticationType == "NimbusUser")
                     {
                         return ((User.Identity) as NimbusUser);
@@ -99,6 +100,8 @@ namespace Nimbus.Web.Website
             }
         }
 
+        
+
         /// <summary>
         /// Clona o contexto da requisição atual e cria uma nova instância da ApiController T.
         /// Utilize para efetuar chamadas à API sem realizar RPC.
@@ -115,6 +118,35 @@ namespace Nimbus.Web.Website
             instance.NimbusOrganization = this.NimbusOrganization;
 
             return instance;
+        }
+
+        private HttpSessionStateBase _session = null;
+        public new HttpSessionStateBase Session { 
+            get
+            { 
+                if (_session == null) 
+                    return base.Session; 
+                else return _session; 
+            }
+            set
+            {
+                _session = value;
+            }
+        }
+
+        private HttpResponseBase _response = null;
+        public new HttpResponseBase Response
+        {
+            get
+            {
+                if (_response == null)
+                    return base.Response;
+                else return _response;
+            }
+            set
+            {
+                _response = value;
+            }
         }
 
         protected internal new ViewResult View()

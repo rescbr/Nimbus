@@ -248,6 +248,7 @@ WHERE ([tUser].[test] IS NOT NULL) AND
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
                     db.Insert(user);
+                    user.Id = (int)db.GetLastInsertId();
                 }
 
                 return user;

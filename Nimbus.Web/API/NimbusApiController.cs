@@ -58,6 +58,7 @@ namespace Nimbus.Web.API
                 }
                 else
                 {
+                    if (User.Identity.IsAuthenticated == false) return null;
                     if (User.Identity.AuthenticationType == "NimbusUser")
                     {
                         return ((User.Identity) as NimbusUser);

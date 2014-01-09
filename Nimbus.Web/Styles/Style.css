@@ -835,7 +835,7 @@ img#imgRelChannel{
 /*------------------ Private Profile - Top Bar --------------------*/
 
 nav.profTopBar {
-    margin-top:         24px;
+    /*margin-top:         24px;*/
     width:              644px;
     height:             39px;
     background:         #2b2d2e;

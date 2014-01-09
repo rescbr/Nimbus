@@ -32,6 +32,11 @@ namespace Nimbus.Web.Website.Controllers
        
                     /* Quando for usar uma API internamente, faça o clone antes. */
                     var userapi = ClonedContextInstance<API.Controllers.UserController>();
+                    var login = new LoginController();
+                    login.NimbusOrganization = this.NimbusOrganization;
+                    login.Session = this.Session;
+                    login.Response = this.Response;
+
                     var newUser = new Nimbus.Model.ORM.User()
                     {
                         City = newAccount.City,
@@ -42,20 +47,19 @@ namespace Nimbus.Web.Website.Controllers
                         Password = newAccount.Password,
                         State = newAccount.State,
                         AvatarUrl = "/images/Utils/person_icon.png",
-                        BirthDate = DateTime.Now
+                        BirthDate = newAccount.BirthDate != null ? newAccount.BirthDate : DateTime.Now
                     };
-                    userapi.CreateProfile(newUser);
-                    
+                     userapi.CreateProfile(newUser);
                     //aqui deveria redirecionar
-                    return View("NewAccount", new NewAccountModel());
-                }
+                     return login.Post(new LoginModel() { Email = newAccount.Email, Password = newAccount.Password, RedirectURL = "/" });
+                    }
                 else //senha confirmada está incorreta.
                 {
                     //aqui deveria passar mensagem de erro
                 }
             }
 
-            return View("NewAccount", null); //null => model de errro
+            return Redirect("/login"); //null => model de errro
         }
     }
 }
