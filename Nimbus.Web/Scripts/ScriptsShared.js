@@ -21,6 +21,14 @@ function EnableDiv(newDiv, tipoGlobal, fieldRequired) {
     document.getElementById(newDiv).style.display = 'block';
 }
 
+function EnableDivResetPass(newDiv,fieldRequired, confirFieldRequired) {
+
+    SetFieldRequired(fieldRequired);
+    SetFieldRequired(confirFieldRequired);
+    document.getElementById(newDiv).style.display = 'block';
+}
+
+
 function EnableTwoDiv(newDiv, tipoGlobal, divTwo, fieldRequired)
 {
     document.getElementById(divTwo).style.display = 'block';

@@ -78,6 +78,10 @@
             {
                 <p><label id="lblCity">@Model.User.City - @Model.User.State</label></p>
             }
+            else if (!string.IsNullOrEmpty(Model.User.City) || !string.IsNullOrEmpty(Model.User.State))
+            {
+             <p><label id="lblCity">@Model.User.City@Model.User.State</label></p>    
+            }
             @if (!string.IsNullOrEmpty(Model.User.Country))
             {
                 <p><label id="lblCountry">@Model.User.Country</label></p>
@@ -250,17 +254,14 @@
                     <p>Nome</p>
                     <input type="text" id="txtFirstName" required value="@Model.User.FirstName" />
                 </div>
-                <div class="divformModal">
-                    <p>Sobrenome</p>
-                    <input type="text" id="txtLastName" required value="@Model.User.LastName" />
-                </div>
+                
                 <div class="divformModal">
                     <p>Sobrenome</p>
                     <input type="text" id="txtLastName" required value="@Model.User.LastName" />
                 </div>
                 <div class="divformModal">
                     <p>Data de Nascimento</p>
-                    <input type="date" id="txtBirthDateEdit" pattern="^(0[1-9]|[12][0-9]|[3][0-1])[/](0[1-9]|[1][0-2])[/](19[3-9][0-9]|20[0-1][1-4])$" value="@Model.User.BirthDate" />
+                    <input type="date" id="txtBirthDateEdit" required pattern="^(0[1-9]|[12][0-9]|[3][0-1])[/](0[1-9]|[1][0-2])[/](19[3-9][0-9]|20[0-1][1-4])$" value="@Model.User.BirthDate" />
                 </div>
                 <div class="divformModal">
                     <p>Cidade</p>
@@ -292,12 +293,12 @@
                     <label id="lblErroMsgEditProfile" style="display:none;"></label>
                 </div>
                 <div class="divformModal">
-                    <p onclick="EnableDiv('divResetPass', '', '');">Redefinir senha</p>
-                    <div id="divResetPass">
+                    <p onclick="EnableDivResetPass('divResetPass', 'txtNewPassProfile', 'txtConfirPassProfile');">Redefinir senha</p>
+                    <div id="divResetPass" style="display:none;">
                         <p>Nova Senha</p>
-                        <input id="txtNewPassProfile" type="password" min="6" required />
+                        <input id="txtNewPassProfile" type="password" min="6" />
                         <p>Confirmar Senha</p>
-                        <input id="txtConfirPassProfile" type="password" min="6" required />
+                        <input id="txtConfirPassProfile" type="password" min="6" />
                     </div>
                 </div>
             </div>

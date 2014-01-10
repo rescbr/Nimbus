@@ -60,13 +60,13 @@ function SendMessageProfile(receiverId) {
             var conf = document.getElementById("txtConfirPassProfile").value;
             var hasPass = true;
 
-            if (pass != null && conf != null)
+            if (pass != null  && pass.length >= 6 && conf != null && conf.length >=6 )
             {
                 if (pass == conf) {
                     //chamar função de salvar nova senha               
                     ajaxPass = {};
-                    ajaxPass['NewPassord'] = document.getElementById(newPass).value;
-                    ajaxPass['ConfirmPassword'] = document.getElementById(confirmPass).value;
+                    ajaxPass['NewPassord'] = pass
+                    ajaxPass['ConfirmPassword'] = conf;
                     ajaxPass['Token'] = "logado";
 
                     $.ajax({
