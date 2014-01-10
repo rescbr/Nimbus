@@ -1092,7 +1092,7 @@ div.btnAccept:hover, div.btnAccept:hover p {
 }
 
 /*------------------ PrivateProfileTopBar New Channel & ChannelPrivateTopBar New Topic ----------------*/
-div#divNewChannel, div#divNewTopic {
+div#divNewChannel, div#divNewTopic, div#divInfos {
     margin:             24px;
     width:              596px;
 }
@@ -1112,22 +1112,23 @@ div#divNewChannel, div#divNewTopic {
     cursor:             pointer;
 }
 
-div.divformNewChannel, div.divformNewTopic {
+div.divformNewChannel, div.divformNewTopic, div.divformInfos {
     background:         #f1f2f2;
-    width:              408px;
+    width:              508px;
     padding:            12px;
     border-bottom:      1px solid #d1d3d4;
     clear:              both;
 }
 
-div.divBtnNewChannel {
-    margin-left:        192px;
+div.divBtnNewChannel, div.divBtnInfos {
+    margin-left:        292px;
     width:              288px;
     height:             26px;
     clear:              both;
 }
 
-input[type=submit].divCnclNewChannel, button.divCnclNewChannel, input[type=submit].divSaveNewChannel, button.divSaveNewChannel {
+input[type=submit].divCnclNewChannel, button.divCnclNewChannel, input[type=submit].divSaveNewChannel, button.divSaveNewChannel,
+input[type=submit].divCnclInfos, button.divCnclInfos,  input[type=submit].divSaveInfos, button.divSaveInfos {
     float:              left;
     background:         #2b2d2e;
     width:              120px;
@@ -1137,16 +1138,19 @@ input[type=submit].divCnclNewChannel, button.divCnclNewChannel, input[type=submi
     color:              #FFFFFF;
 }
 
-input[type=submit].divSaveNewChannel, button.divSaveNewChannel {
+input[type=submit].divSaveNewChannel, button.divSaveNewChannel,
+input[type=submit].divSaveInfos, button.divSaveInfos {
     background:         #87c240;
 }
 
-input[type=submit].divCnclNewChannel:hover, button.divCnclNewChannel:hover {
+input[type=submit].divCnclNewChannel:hover, button.divCnclNewChannel:hover,
+input[type=submit].divCnclInfos:hover, button.divCnclInfos:hover {
     color:              #87c240;
     cursor:             pointer;
 }
 
-input[type=submit].divSaveNewChannel:hover, button.divSaveNewChannel:hover {
+input[type=submit].divSaveNewChannel:hover, button.divSaveNewChannel:hover,
+input[type=submit].divSaveInfos:hover, button.divSaveInfos:hover {
     color:              #2b2d2e;
     cursor:             pointer;
 }
@@ -2170,7 +2174,7 @@ p.modalUser {
     font-weight:        bold;
 }
 /*Editar Canal*/
-a.aChanDel {/*
+a.aChanDel, a.aInfosDel {/*
     background:         #87c240;
     padding:            4px 8px 2px 8px;*/
     margin:             0 0 0 24px;
@@ -2178,6 +2182,11 @@ a.aChanDel {/*
     font-size:          small;
     color:              #87c240;
     display:            inline-block;
+}
+
+a.aInfosDel {
+
+    margin: 0;
 }
 
 img.imgChanDel {
