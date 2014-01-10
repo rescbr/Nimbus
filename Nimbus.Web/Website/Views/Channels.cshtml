@@ -280,7 +280,7 @@
                             </div>
                             <div class="divformModal">
                                 <p>Descrição</p>
-                                <textarea id="txtaDescription" name="txtaDescriptionEdit" maxlength="200">@Model.CurrentChannel.Description</textarea>
+                                <textarea id="txtaEditDescription" name="txtaEditDescription" maxlength="200">@Model.CurrentChannel.Description</textarea>
                                     </div>
                                     <div class="divformModal">
                                         <p>Categoria</p>
@@ -362,7 +362,7 @@
         <header id="modal-label">
             Reportar canal
         </header>
-        <form id="formReportChannel">
+        <form id="formReportChannel" onsubmit="return false;">
             <div class="modal-content">
                 <!-- The modals content -->
                 <div class="divformModal">

@@ -768,7 +768,7 @@ function ajaxSaveAllEdit(id)
         //tags e novos moderadores -> são salvas assim que são criadas
         var success = false; var caracteres = false;
         title = document.getElementById('txtEditTitle').value;
-        description =  document.getElementById('txtaDescription')[0].value;
+        description =  document.getElementById('txtaEditDescription').value;
 
         //alterou somente a permissao
         var obj = $("select[id*='newPermissionSelect_']");
