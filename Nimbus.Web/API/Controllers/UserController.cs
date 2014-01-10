@@ -142,7 +142,7 @@ namespace Nimbus.Web.API.Controllers
 @"
 SELECT [tUser].[Id], [tUser].[FirstName], [tUser].[LastName], [tUser].[AvatarUrl]
 FROM [ChannelUser]
-INNER JOIN [Role] ON [ChannelUser].[ChannelId] = [Role].[ChannelId]
+INNER JOIN [Role] ON [ChannelUser].[ChannelId] = [Role].[ChannelId] AND [ChannelUser].[UserId] = [Role].[UserId]
 OUTER APPLY (
 
     SELECT TOP (1) 1 AS [test], [User].[Id], [User].[Occupation], [User].[Interest], [User].[FirstName], [User].[LastName], [User].[AvatarUrl]
