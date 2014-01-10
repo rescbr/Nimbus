@@ -134,11 +134,11 @@ html {
 .semantic-content .modal-close:after, ._modal .modal-close:after {
   content: '\00d7';
   position: absolute;
-  top: 25px;
+  top: 52px;
   left: 50%;
   z-index: 20;
-  margin-left: 285px;
-  background: #fff;
+  margin-left: 295px;
+  background: #2b2d2e;
   border-radius: 2px;
   padding: 2px 8px;
   font-size: 1.2em;

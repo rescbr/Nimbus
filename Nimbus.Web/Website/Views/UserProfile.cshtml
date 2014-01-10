@@ -173,20 +173,25 @@
         <form id="formReportUser">
             <div class="modal-content">
                 <!-- The modals content -->
-                <p>Reportar: @Model.User.FirstName @Model.User.LastName</p>
-                <p>
-                    Justificativa:
-                    <textarea  id="txtJustificativa" name="txtJustificativa" rows="10" cols="60" required></textarea>
-                </p>
+                <div class="divformModal">
+                    <p>Reportar</p>
+                    <p class="modalRepUser">@Model.User.FirstName @Model.User.LastName</p>
+                </div>
+                <div class="divformModal">
+                    <p>Justificativa</p>
+                    <textarea id="txtJustificativa" name="txtJustificativa" rows="10" cols="60" required></textarea>
+                 </div>
             </div>
-            <footer>
+            <footer class="fooModal">
                 <!-- Footer -->
                 <input type="submit" class="inputSubmit" onclick="ajaxReportUser(@Model.User.Id, @Model.CurrentUser.UserId);" value="Enviar" id="enviarReportUsr" />
             </footer>
         </form>
     </div>
     <a href="#!" id="closeModalMessage" class="modal-close" title="Close this modal" data-close="Close"
-       data-dismiss="modal">×</a>
+       data-dismiss="modal">
+        "x"
+    </a>
 </section>
 
 <!-- Modal de editar avatar -->

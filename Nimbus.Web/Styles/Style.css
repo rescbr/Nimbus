@@ -2070,10 +2070,65 @@ div.accRef {
     color: #FFFFFF;
  }
 
-
-
 /*------ fim Botoes interativos / JS & JQuery ------*/
 .fakeDisable {
     background-color: grey;
     opacity: 0.3;
 }
+
+/*----------------Começo Modal --------------------*/
+/*Enviar Mensagem*/
+header#modal-label {
+    color:              #000000;
+    padding:            4px 0 4px 20px;
+    font-size:          medium;
+    font-weight:        bold;
+}
+
+.modal-content p {
+    margin:             0 0 4px 0;
+}
+
+form#formReportUser div.modal-content {
+    padding:            0 10px 0 10px;
+    background:         #f1f2f2;
+}
+
+div.divformModal {
+    width:              580px;
+    padding:            12px;
+    border-bottom:      1px solid #d1d3d4;
+    clear:              both;
+}
+
+div.divformModal:last-child {
+    border: none;
+}
+
+form#formReportUser footer.fooModal {
+    background:         #FFFFFF;
+    padding-bottom:     0;
+}
+
+form#formReportUser footer.fooModal input.inputSubmit {
+    float:              none;
+    margin-left:        580px;
+    background:         #87c240;
+}
+
+form#formReportUser footer.fooModal input.inputSubmit:hover {
+    color:              #2b2d2e;
+}
+
+a.modal-close{
+    color:              #FFFFFF;
+}
+
+a.modal-close:hover {
+    color:              #87c240;
+}
+/*Reportar Usuário*/
+p.modalRepUser {
+    font-weight:        bold;
+}
+/*-----------------Fim Modal ----------------------*/
