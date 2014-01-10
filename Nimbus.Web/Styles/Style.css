@@ -263,18 +263,20 @@ div#divBarSearch {
     padding-bottom:     200px;
 }
 
-.container-body {
+div.container-body {
 	width:              960px;
 	margin:             0 auto;
+	line-height:        2em;/*
 	clear:              both;
     height:             auto !important;
     min-height:         100%;
-	line-height:        2em;/*
+    display:            block;
     float:              left;*/
 }
 
-.middle-body {
-/*	margin:             24px;*/
+div.middle-body {
+    float:left;
+    width:100%;
 }
 
 /*-------------------------- Login ---------------------------*/
@@ -400,6 +402,7 @@ input[type=submit].divSaveNewAccount:hover, button.divSaveNewAccount:hover {
 	margin-top:         72px;
     margin-bottom:      4px;
 	height:             24px;
+    clear:              both;
 }
 
 .cont-left {
@@ -2044,12 +2047,11 @@ p#txtPartChannel {
 
 div.footerMainPage {    
     border-top:         4px solid #87c240;
-    margin:             24px 0 0 0;
     min-height:         80px;
     background:         #2b2d2e;
     width:              100%;
     clear:              both;
-    margin-top:         70px;
+    display:            block;
 }
 
 nav.navFooMainPage {
