@@ -288,7 +288,7 @@ namespace Nimbus.Web.API.Controllers
 
             }
 
-            return listMessage.OrderBy(d => d.Date).ToList();
+            return listMessage.OrderByDescending(d => d.Date).ToList();
         }
 
         /// <summary>
@@ -440,7 +440,24 @@ namespace Nimbus.Web.API.Controllers
                 }
 
             }
-            return listMessage.OrderBy(d => d.Date).ToList();
+            return listMessage.OrderByDescending(d => d.Date).ToList();
+        }
+        
+        /// <summary>
+        /// Método que retorna o count das msg enviadas pelo usuario
+        /// </summary>
+        /// <param name="skip"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public int CountSentMessages(int skip)
+        {
+            int count = 0;
+            using (var db = DatabaseFactory.OpenDbConnection())
+            {
+                count = db.Where<ReceiverMessage>(r => r.UserId == NimbusUser.UserId && r.Status == Model.Enums.MessageType.send && r.Visible == true)
+                                                     .Skip(15 * skip).Take(15).Count();
+            }
+            return count;
         }
 
         /// <summary>

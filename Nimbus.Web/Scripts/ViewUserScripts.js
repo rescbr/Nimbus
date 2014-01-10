@@ -20,7 +20,7 @@ function SendMessageProfile(receiverId) {
                 contentType: "application/json;charset=utf-8",
                 statusCode: {
                     200: function (newData) {
-
+                        
                         if (newData.Id > 0) {
                             //fechar modal
                             document.getElementById('closeModalMessage').click();
@@ -34,6 +34,7 @@ function SendMessageProfile(receiverId) {
 
                     500: function () {
                         //erro
+                        document.getElementById('closeModalMessage').click();
                         window.alert("Não foi possível enviar sua mensagem. Tente novamente mais tarde.");
                     }
                 }

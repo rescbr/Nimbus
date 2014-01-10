@@ -33,6 +33,7 @@ namespace Nimbus.Web.Website.Controllers
             var taskMyChannels = Task.Run(() => channelApi.MyChannel(id , 0));
             var taskReadLater = Task.Run(() => topicApi.showReadLaterTopic(NimbusOrganization.Id, 0));
             var taskMessages = Task.Run(() => msgApi.ReceivedMessages(0));
+            var taskCountMsgSend = Task.Run(() => msgApi.CountSentMessages(0));
             var taskCategories = Task.Run(() => categoryApi.showAllCategory());
             var taskChannelManager = Task.Run(()=>channelApi.ModeratorChannel(id));
 
@@ -47,6 +48,7 @@ namespace Nimbus.Web.Website.Controllers
                 MyChannels =  taskMyChannels.Result,
                 ReadLater = taskReadLater.Result,
                 Messages = taskMessages.Result,
+                CountMessageSend = taskCountMsgSend.Result,
                 Categories = taskCategories.Result,
                 ChannelMannager = taskChannelManager.Result
             };
