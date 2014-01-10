@@ -43,12 +43,15 @@
                 @foreach (var item in Model.AllTopics.OrderByDescending(m => m.Count))
                 {
                     Html.RenderPartial("~/Website/Views/ChannelPartials/TopicPartial.cshtml", item);
-                }
+                } 
+              
             </div>
-            @if(Model.AllTopics.Count() == 15)
-            { 
-                <button id="btn_skipPopular" onclick="verMaisTopics(@Model.CurrentChannel.Id, 'popular', 0, 'skipPopular');">Ver mais</button>
-            }
+            @if (Model.AllTopics.Count() == 15)
+              {
+                <div class="seeMoreContent">
+                 <div class="seeMoreButton" id="btn_skipPopular" onclick="verMaisTopics(@Model.CurrentChannel.Id, 'popular', 0, 'skipPopular');"><p>Ver mais</p></div>                  
+                </div>
+              }                         
         </div>
 
         <div id="divAllTopics" style="display:none;">
@@ -58,11 +61,13 @@
                     Html.RenderPartial("~/Website/Views/ChannelPartials/TopicPartial.cshtml", item);
                 }
             </div>
-            @if(Model.AllTopics.Count() == 15)
-            {
-                 <button id="btn_skipAll" onclick="verMaisTopics(@Model.CurrentChannel.Id, 'alltpc', 0, 'skipAll');">Ver mais</button>
-            }
-        </div>
+            @if (Model.AllTopics.Count() == 15)
+               {
+                   <div class="seeMoreContent">
+                       <div id="btn_skipAll" class="seeMoreButton" onclick="verMaisTopics(@Model.CurrentChannel.Id, 'alltpc', 0, 'skipAll');"><p>Ver mais</p></div>
+                   </div>
+               }
+         </div>
     
         <div id="divNotifications">
             <div id="divNotification">
