@@ -228,9 +228,9 @@ a.exit, div.exitbutton {
 }
 
 a.exit:hover, div.exitbutton:hover {
-     color: #87c240;
+    color: #87c240;
     cursor:            pointer;
-    }
+}
 
 .BTopBarLinkSelected
 {
