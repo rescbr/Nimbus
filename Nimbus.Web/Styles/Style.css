@@ -107,10 +107,6 @@ b, strong {
 }
 /*------------------ começo header --------------------*/
 
-#wrap {
-    min-height:         100%;
-}
-
 #header {
     background:         #2b2d2e;
 	width:              100%;
@@ -271,6 +267,7 @@ div#divBarSearch {
 	width:              960px;
 	margin:             0 auto;
 	clear:              both;
+    height:             auto !important;
     min-height:         100%;
 	line-height:        2em;/*
     float:              left;*/
@@ -1374,7 +1371,7 @@ div.followChannelPage{
 
 div#nameChannelPage {
     position:           absolute;
-    top:                150px;
+    top:                190px;
     margin-left:        68px;
     z-index:            999;
 }
@@ -2025,7 +2022,8 @@ p#txtPartChannel {
 
 /*----------------- começo footer -------------------*/
 
-.footer {    
+div.footerMainPage {    
+    border-top:         4px solid #87c240;
     margin:             24px 0 0 0;
     min-height:         80px;
     background:         #2b2d2e;
@@ -2034,7 +2032,19 @@ p#txtPartChannel {
     margin-top:         70px;
 }
 
+nav.navFooMainPage {
+    width: 100%;
+}
 
+ul.ulFooPage {
+    width: 566px;
+    margin: 0 auto;
+}
+.navFooMainPage li {
+    color: #87c240;
+    padding: 24px;
+    float: left;
+}
 /*------------------- fim footer --------------------*/
 /*----- começo Botoes interativos / JS & JQuery ----*/
 .inputSubmit {
