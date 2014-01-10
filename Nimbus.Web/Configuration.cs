@@ -1,5 +1,5 @@
 ﻿using Microsoft.WindowsAzure;
-using Microsoft.WindowsAzure.ServiceRuntime;
+//using Microsoft.WindowsAzure.ServiceRuntime;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -68,9 +68,9 @@ namespace Nimbus.Web
 
         private static string GetSetting(string key)
         {
-            if (RoleEnvironment.IsAvailable)
-                return CloudConfigurationManager.GetSetting(key);
-            else
+            //if (RoleEnvironment.IsAvailable)
+            //    return CloudConfigurationManager.GetSetting(key);
+            //else
                 return WebConfigurationManager.AppSettings[key];
         }
     }
