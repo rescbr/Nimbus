@@ -365,13 +365,16 @@
         <form id="formReportChannel">
             <div class="modal-content">
                 <!-- The modals content -->
-                <p>Reportar: @Model.CurrentChannel.Name</p>
-                <p>
-                    Justificativa:
+                <div class="divformModal">
+                    <p>Reportar</p>
+                    <p class="modalUser">@Model.CurrentChannel.Name</p>
+                </div>
+                <div class="divformModal">
+                    <p>Justificativa</p>
                     <textarea id="txtJustificativa" name="txtJustificativa" rows="10" cols="60" required></textarea>
-                </p>
+                </div>
             </div>
-            <footer>
+            <footer class="fooModal">
                 <!-- Footer -->
                 <input type="submit" class="inputSubmit" value="Enviar" onclick="ajaxReportChannel(@Model.CurrentUser.UserId, @Model.CurrentChannel.OwnerId, @Model.CurrentChannel.Id);" id="enviarReportChn" />
             </footer>

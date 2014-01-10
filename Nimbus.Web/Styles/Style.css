@@ -2094,7 +2094,8 @@ form#formSendMsgProfile div.modal-content,
 form#formEditProfile div.modal-content,
 div#formChangeAvt div.modal-content,
 form#formSendMsgChannel div.modal-content,
-form#formEditChannel div.modal-content {
+form#formEditChannel div.modal-content,
+form#formReportChannel div.modal-content {
     padding:            0 10px 0 10px;
     background:         #f1f2f2;
 }
@@ -2115,7 +2116,8 @@ form#formSendMsgProfile footer.fooModal,
 form#formEditProfile footer.fooModal,
 div#formChangeAvt footer.fooModal,
 form#formSendMsgChannel footer.fooModal,
-form#formEditChannel footer.fooModal {
+form#formEditChannel footer.fooModal,
+form#formReportChannel footer.fooModal {
     background:         #FFFFFF;
     padding-bottom:     0;
 }
@@ -2125,7 +2127,8 @@ form#formSendMsgProfile footer.fooModal input.inputSubmit,
 form#formEditProfile footer.fooModal input.inputSubmit,
 div#formChangeAvt footer.fooModal input.inputSubmit,
 form#formSendMsgChannel footer.fooModal input.inputSubmit,
-form#formEditChannel footer.fooModal input.inputSubmit {
+form#formEditChannel footer.fooModal input.inputSubmit,
+form#formReportChannel footer.fooModal input.inputSubmit {
     width:              80px;
     float:              none;
     margin-left:        540px;
@@ -2137,7 +2140,8 @@ form#formSendMsgProfile footer.fooModal input.inputSubmit:hover,
 form#formEditProfile footer.fooModal input.inputSubmit:hover,
 div#formChangeAvt footer.fooModal input.inputSubmit:hover,
 form#formSendMsgChannel footer.fooModal input.inputSubmit:hover,
-form#formEditChannel footer.fooModal input.inputSubmit:hover {
+form#formEditChannel footer.fooModal input.inputSubmit:hover,
+form#formReportChannel footer.fooModal input.inputSubmit:hover {
     color:              #2b2d2e;
 }
 
