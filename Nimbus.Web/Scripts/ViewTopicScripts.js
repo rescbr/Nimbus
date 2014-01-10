@@ -250,7 +250,7 @@ function ajaxDeleteTopic(id, idChn)
 
             500: function () {
                 //erro
-                window.alert("Não foi possível enviar seu comentário. Tente novamente mais tarde.");
+                window.alert("Não foi possível realizar esta operação. Tente novamente mais tarde.");
             }
         });
     }
@@ -364,7 +364,7 @@ function ajaxLikeUnLike(id, type, userCondition)
 
 function ajaxReportTopic(idUserReporter, idUserReported, idTopic) {
 
-    var text = document.getElementById('txtJustificativa').value;
+    var text = document.getElementById('txtJustfReportTopic').value;
 
     if (document.getElementById("formReportTopic").checkValidity()) {
         ajaxData = {};
@@ -383,6 +383,7 @@ function ajaxReportTopic(idUserReporter, idUserReported, idTopic) {
                     if (newData.Id > 0) {
                         window.alert("Operação realizada com sucesso!");
                         document.getElementById('txtJustificativa').value = '';
+                        document.getElementById("closeModalRerportTopic").click();
                     }
                 },
 
@@ -415,6 +416,7 @@ function ajaxReportComment(idUserReported, idCmt) {
                 200: function (newData) {
                     if (newData.Id > 0) {
                         window.alert("Operação realizada com sucesso!");
+                        document.getElementById("closeModalReportCmt").click();
                         document.getElementById('txtJustificativa').value = '';
                     }
                 },
