@@ -145,18 +145,22 @@
             <form id="formSendMsgProfile">
                 <div class="modal-content">
                     <!-- The modals content -->
-                    <p>Para: @Model.User.FirstName @Model.User.LastName</p>
-                    <p>
-                        Assunto:
+                    <div class="divformModal">
+                        <p>Para</p>
+                        <p class="modalUser">@Model.User.FirstName @Model.User.LastName</p>
+                    </div>
+                    <div class="divformModal">
+                        <p>Assunto</p>
                         <input id="inpTitleMsg" name="inpTitleMsg" type="text" maxlength="100" />
-                    </p>
-                    <p>
+                    </div>
+                    <div class="divformModal">
+                        <p>Mensagem</p>
                         <textarea id="txtTextMsg" name="txtTextMsg" rows="10" cols="60" required></textarea>
-                    </p>
+                    </div>
                 </div>
-                <footer>
-                    <!-- Footer -->
-                    <input type="submit" class="inputSubmit" value="Enviar" onclick="SendMessageProfile(@Model.User.Id);" id="enviarMsgUsr" />
+                <footer class="fooModal">
+                        <!-- Footer -->
+                        <input type="submit" class="inputSubmit" value="Enviar" onclick="SendMessageProfile(@Model.User.Id);" id="enviarMsgUsr" />
                 </footer>
             </form>
         </div>
@@ -175,7 +179,7 @@
                 <!-- The modals content -->
                 <div class="divformModal">
                     <p>Reportar</p>
-                    <p class="modalRepUser">@Model.User.FirstName @Model.User.LastName</p>
+                    <p class="modalUser">@Model.User.FirstName @Model.User.LastName</p>
                 </div>
                 <div class="divformModal">
                     <p>Justificativa</p>
@@ -201,30 +205,32 @@
                 <!-- Header -->
                 Editar avatar
             </header>
-            <div class="modal-content">
-                <!-- The modals content -->
-                <div id="divUpload">
-                    <form action='/userprofile/upload' method="post" enctype="multipart/form-data" name="imagem_original">
-                        <input type="file" name="imagem" />
-                        <input type="submit" value="Carregar" class="hidden" id="upload" />
-                    </form>
+            <div id="formChangeAvt">
+                <div class="modal-content">
+                    <!-- The modals content -->
+                    <div id="divUpload">
+                        <form action='/userprofile/upload' method="post" enctype="multipart/form-data" name="imagem_original">
+                            <input type="file" name="imagem" />
+                            <input type="submit" value="Carregar" class="hidden" id="upload" />
+                        </form>
+                    </div>
+                    <div id="divCropImg" style="display:none">
+                        <form action='/userprofile/crop' method="post" enctype="multipart/form-data" name="crop">
+                            <input type="hidden" name="url" />
+                            <input type="hidden" name="x1" id="x1" />
+                            <input type="hidden" name="x2" id="x2" />
+                            <input type="hidden" name="y1" id="y1" />
+                            <input type="hidden" name="y2" id="y2" />
+                            <input type="submit" value="Recortar" class="hidden" id="recortar" />
+                        </form>
+                        <img src="" class="hidden" id="imagem_crop" />
+                    </div>
                 </div>
-                <div id="divCropImg" style="display:none">
-                    <form action='/userprofile/crop' method="post" enctype="multipart/form-data" name="crop">
-                        <input type="hidden" name="url" />
-                        <input type="hidden" name="x1" id="x1" />
-                        <input type="hidden" name="x2" id="x2" />
-                        <input type="hidden" name="y1" id="y1" />
-                        <input type="hidden" name="y2" id="y2" />
-                        <input type="submit" value="Recortar" class="hidden" id="recortar" />
-                    </form>
-                    <img src="" class="hidden" id="imagem_crop" />
+                <footer>
+                    <!-- Footer -->
+                </footer>
                 </div>
-            </div>
-            <footer>
-                <!-- Footer -->
-            </footer>
-        </div>
+</div>
         <a href="#!" id="closeModalAvatar" class="modal-close" title="Close this modal" data-close="Close"
            data-dismiss="modal">×</a>
     </section>
@@ -240,31 +246,62 @@
         <form id="formEditProfile">
             <div class="modal-content">
                 <!-- The modals content -->
-                <p><label style="color:black;">Nome: </label> <input type="text" id="txtFirstName" required value="@Model.User.FirstName" /></p>
-                <p><label style="color: black;">Sobrenome: </label><input type="text" id="txtLastName" required value="@Model.User.LastName" /></p>
-                <p><label style="color:black;">Data nascimento:<input type="date" id="txtBirthDateEdit" pattern="^(0[1-9]|[12][0-9]|[3][0-1])[/](0[1-9]|[1][0-2])[/](19[3-9][0-9]|20[0-1][1-4])$" value="@Model.User.BirthDate" /></label></p>
-                <p><label style="color:black">Cidade: </label><input id="txtCity" value="@Model.User.City" /></p>
-                <p><label style="color:black">Estado: </label><input id="txtState" value="@Model.User.State" /></p>
-                <p><label style="color:black">País: </label><input id="txtCountry" value="@Model.User.Country" /></p>
-                <p><label style="color:black">Profissão: </label><input id="txtOccupation" value="@Model.User.Occupation" /></p>
-                <p><label style="color:black">Interesses: </label><input id="txtInterest" value="@Model.User.Interest" /></p>
-                <p><label style="color:black">Experiência: </label><input id="txtExperience" value="@Model.User.Experience" /></p>
-                <p><label style="color:black">Outras informações: </label><input id="txtAbout" value="@Model.User.About" /></p>
-                <p><label id="lblErroMsgEditProfile" style="display:none;"></label></p>
-                <p onclick="EnableDiv('divResetPass', '', '');">Redefinir senha</p>
-                <br />
-                <div id="divResetPass">
-                    <p>
-                        Nova senha:
+                <div class="divformModal">
+                    <p>Nome</p>
+                    <input type="text" id="txtFirstName" required value="@Model.User.FirstName" />
+                </div>
+                <div class="divformModal">
+                    <p>Sobrenome</p>
+                    <input type="text" id="txtLastName" required value="@Model.User.LastName" />
+                </div>
+                <div class="divformModal">
+                    <p>Sobrenome</p>
+                    <input type="text" id="txtLastName" required value="@Model.User.LastName" />
+                </div>
+                <div class="divformModal">
+                    <p>Data de Nascimento</p>
+                    <input type="date" id="txtBirthDateEdit" pattern="^(0[1-9]|[12][0-9]|[3][0-1])[/](0[1-9]|[1][0-2])[/](19[3-9][0-9]|20[0-1][1-4])$" value="@Model.User.BirthDate" />
+                </div>
+                <div class="divformModal">
+                    <p>Cidade</p>
+                    <input id="txtCity" value="@Model.User.City" />
+                </div>
+                <div class="divformModal">
+                    <p>Estado</p>
+                    <input id="txtState" value="@Model.User.State" />
+                </div>
+                <div class="divformModal">
+                    <p>País</p>
+                    <input id="txtCountry" value="@Model.User.Country" />
+                </div>
+                <div class="divformModal">
+                    <p>Profissão</p>
+                    <input id="txtOccupation" value="@Model.User.Occupation" />
+                </div>
+                <div class="divformModal">
+                    <p>Interesses</p>
+                    <input id="txtInterest" value="@Model.User.Interest" />
+                </div>
+                <div class="divformModal">
+                    <p>Experiência</p>
+                    <input id="txtExperience" value="@Model.User.Experience" />
+                </div>
+                <div class="divformModal">
+                    <p>Outras informações</p>
+                    <input id="txtAbout" value="@Model.User.About" />
+                    <label id="lblErroMsgEditProfile" style="display:none;"></label>
+                </div>
+                <div class="divformModal">
+                    <p onclick="EnableDiv('divResetPass', '', '');">Redefinir senha</p>
+                    <div id="divResetPass">
+                        <p>Nova Senha</p>
                         <input id="txtNewPassProfile" type="password" min="6" required />
-                    </p>
-                    <p>
-                        Confirmar senha:
+                        <p>Confirmar Senha</p>
                         <input id="txtConfirPassProfile" type="password" min="6" required />
-                    </p>
+                    </div>
                 </div>
             </div>
-            <footer>
+            <footer class="fooModal">
                 <!-- Footer -->
                 <input type="submit" id="btnSaveEdit" class="inputSubmit" onclick="SaveEditProfile();" value="Salvar"/>
             </footer>

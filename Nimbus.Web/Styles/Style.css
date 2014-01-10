@@ -1356,7 +1356,7 @@ div.followChannelPage {
     width:              80px;
     background:         #2b2d2e;
     line-height:        2.4em;
-    z-index:            999999;
+    z-index:            20;
     cursor:             pointer;
 }
 
@@ -2077,7 +2077,7 @@ div.accRef {
 }
 
 /*----------------Começo Modal --------------------*/
-/*Enviar Mensagem*/
+/*Geral*/
 header#modal-label {
     color:              #000000;
     padding:            8px 0 8px 20px;
@@ -2089,9 +2089,18 @@ header#modal-label {
     margin:             0 0 4px 0;
 }
 
-form#formReportUser div.modal-content {
+form#formReportUser div.modal-content,
+form#formSendMsgProfile div.modal-content,
+form#formEditProfile div.modal-content,
+div#formChangeAvt div.modal-content,
+form#formSendMsgChannel div.modal-content,
+form#formEditChannel div.modal-content {
     padding:            0 10px 0 10px;
     background:         #f1f2f2;
+}
+
+form#formEditChannel {
+    overflow: scroll;
 }
 
 div.divformModal {
@@ -2105,18 +2114,34 @@ div.divformModal:last-child {
     border: none;
 }
 
-form#formReportUser footer.fooModal {
+form#formReportUser footer.fooModal,
+form#formSendMsgProfile footer.fooModal,
+form#formEditProfile footer.fooModal,
+div#formChangeAvt footer.fooModal,
+form#formSendMsgChannel footer.fooModal,
+form#formEditChannel footer.fooModal {
     background:         #FFFFFF;
     padding-bottom:     0;
 }
 
-form#formReportUser footer.fooModal input.inputSubmit {
+form#formReportUser footer.fooModal input.inputSubmit,
+form#formSendMsgProfile footer.fooModal input.inputSubmit,
+form#formEditProfile footer.fooModal input.inputSubmit,
+div#formChangeAvt footer.fooModal input.inputSubmit,
+form#formSendMsgChannel footer.fooModal input.inputSubmit,
+form#formEditChannel footer.fooModal input.inputSubmit {
+    width:              80px;
     float:              none;
-    margin-left:        580px;
+    margin-left:        540px;
     background:         #87c240;
 }
 
-form#formReportUser footer.fooModal input.inputSubmit:hover {
+form#formReportUser footer.fooModal input.inputSubmit:hover,
+form#formSendMsgProfile footer.fooModal input.inputSubmit:hover,
+form#formEditProfile footer.fooModal input.inputSubmit:hover,
+div#formChangeAvt footer.fooModal input.inputSubmit:hover,
+form#formSendMsgChannel footer.fooModal input.inputSubmit:hover,
+form#formEditChannel footer.fooModal input.inputSubmit:hover {
     color:              #2b2d2e;
 }
 
@@ -2127,8 +2152,27 @@ a.modal-close{
 a.modal-close:hover {
     color:              #87c240;
 }
+
+/*Editar Perfil*/
+div#divResetPass {
+    margin:             10px 0 0 10px;
+}
 /*Reportar Usuário*/
-p.modalRepUser {
+p.modalUser {
     font-weight:        bold;
+}
+/*Editar Canal*/
+a.aChanDel {/*
+    background:         #87c240;
+    padding:            4px 8px 2px 8px;*/
+    margin:             0 0 0 24px;
+    font-weight:        normal;
+    font-size:          small;
+    color:              #87c240;
+    display:            inline-block;
+}
+
+img.imgChanDel {
+    margin-left: 4px;
 }
 /*-----------------Fim Modal ----------------------*/
