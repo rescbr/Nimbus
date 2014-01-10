@@ -1353,7 +1353,7 @@ div#divCapa {
     height:             192px;
 }
 
-div.followChannelPage {
+div.followChannelPage{
     position:           relative;
     left:               760px;
     top:                -60px;
@@ -1370,6 +1370,8 @@ div.followChannelPage {
     font-size:          1.2em;
     color:              #FFFFFF;
 }
+
+
 div#nameChannelPage {
     position:           absolute;
     top:                150px;
@@ -1646,10 +1648,27 @@ p.txtInfTopic {
     font-size:          small;
 }
 
-button#btnEditTopic {
+/*button#btnEditTopic {
     top:                0;
     position:           relative;
     background:         #2b2d2e;
+    color:              #FFFFFF;
+}*/
+
+div#btnEditTopic {
+    position:           relative;
+    left:               760px;
+    top:                -60px;
+    width:              80px;
+    background:         #2b2d2e;
+    line-height:        2.4em;
+    z-index:            20;
+    cursor:             pointer;
+}
+
+p#pEditTopic {
+    text-align:         center;
+    font-size:          1.2em;
     color:              #FFFFFF;
 }
 
@@ -1694,7 +1713,7 @@ p.catTopic{
     margin-bottom:      20px;
 }
 
-div#btnEditTopic, div#btnFavoritedTopic, #btnReportTopic, #btnReportChannel {
+/*div#btnEditTopic,*/ div#btnFavoritedTopic, #btnReportTopic, #btnReportChannel {
     margin:             0 auto;
     background:         #2b2d2e;
     width:              80px;
@@ -1702,12 +1721,12 @@ div#btnEditTopic, div#btnFavoritedTopic, #btnReportTopic, #btnReportChannel {
     cursor:             pointer;
 }
 
-#btnEditTopic:hover, #btnEditTopic p:hover, #btnFavoritedTopic:hover, #btnFavoritedTopic p:hover,#btnReportTopic p:hover, #btnReportChannel p:hover {
+/*#btnEditTopic:hover,*/ #btnEditTopic p:hover, #btnFavoritedTopic:hover, #btnFavoritedTopic p:hover,#btnReportTopic p:hover, #btnReportChannel p:hover {
     color:              #87c240;
     cursor:             pointer;
 }
 
-#btnEditTopic p, #btnFavoritedTopic p, #btnReportTopic p, #btnReportChannel p {
+/*#btnEditTopic p,*/ #btnFavoritedTopic p, #btnReportTopic p, #btnReportChannel p {
     color:              #FFFFFF;
     text-align:         center;
     font-size:          small;
