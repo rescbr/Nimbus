@@ -2099,10 +2099,6 @@ form#formEditChannel div.modal-content {
     background:         #f1f2f2;
 }
 
-form#formEditChannel {
-    overflow: scroll;
-}
-
 div.divformModal {
     width:              580px;
     padding:            12px;
