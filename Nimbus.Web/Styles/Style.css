@@ -1938,11 +1938,11 @@ p.txtNotification a {
 }
 
 /*carregar mais*/
-div#divNotificationLoad{
+div#divNotificationLoad, div#divSeeMore{
     margin:             24px;
 }
 
-div#divNotificationLoadButton{
+div#divNotificationLoadButton, div#btn_moreMsgSend{
     margin:             0 auto;
     background:         #2b2d2e;
     width:              200px;

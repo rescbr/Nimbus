@@ -14,6 +14,7 @@
     skipMessageReceived = 1;
     countSend = @Model.CountMessageSend;
     countReceived = @Model.Messages.Count();
+    countClick = 0;
 </script>
 
 <div class="wrapperUser" id="wrapperUser">
@@ -110,25 +111,38 @@
          
       @if (Model.CurrentUser.UserId == Model.User.Id)
         {
-            <div id="divSeeMessages">
-                @foreach (var item in Model.Messages)
-                {
-                    //partial
-                    Html.RenderPartial("~/Website/Views/MessagePartials/MessagePartial.cshtml", item);
-                }
-            </div>
-           <div id="divSeeMessagesSend" style="display:none;">
-               
-            </div>
-            if (Model.Messages.Count() == 15)
-            {
-                <button id="btn_moreMessages" onclick="viewMessages('skipMessageReceived', 'messageReceived', '', 'seeMore');">Ver mais</button>
-            }
-        }
-    </div>
+         <div id ="divSeeMessages">
+             <div id="divSeeMessagesContent">
+                 @foreach (var item in Model.Messages)
+                 {
+                     //partial
+                     Html.RenderPartial("~/Website/Views/MessagePartials/MessagePartial.cshtml", item);
+                 }
+             </div>
+
+             @if (Model.Messages.Count() == 15)
+             {
+                 <button id="btn_moreMsgReceveid" onclick="viewMessages('skipMessageReceived', 'messageReceived', '', 'seeMore');">Ver mais</button>
+             }
+         </div>
+
+         <div id ="divSeeMessagesSend" style="display:none;">
+             <div id="divSeeMessagesSendContent">
+
+             </div>
+             @if (Model.CountMessageSend == 15)
+               {
+                   <div id="divSeeMore">
+                       <div  id="btn_moreMsgSend" onclick="viewMessages('skipMessageReceived', 'messageSend', '', 'seeMore');">Ver mais</div>
+                   </div>
+               }
+         </div>
+
+             }
+         </div>
 
     <div id="divNewChannel" style="display:none">
-        <form action='/userprofile/SaveNewChannel' method="post" enctype="multipart/form-data" name="saveChannel">
+        <form action='/userprofile/SaveNewChannel' method="post" onsubmit="return false;" enctype="multipart/form-data" name="saveChannel">
             @if (Model.CurrentUser.UserId == Model.User.Id)
             {
                 <div class="divformNewChannel">
@@ -169,8 +183,8 @@
                 </div>
 
                 <div class="divBtnNewChannel">
+                    <input type="reset" value="Cancelar" id="cancelar" class="btnCancel" />
                     <input type="submit" value="Salvar" id="salvar" class="divSaveNewChannel" />
-                    <input type="reset" value="Cancelar" id="cancelar" class="divCnclNewChannel" />
                 </div>
                  @**@
                 

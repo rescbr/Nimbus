@@ -210,6 +210,7 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
     function verMaisChannels(id, orderBy, category, global) {
         if (global == 'skipMyChannels')
             value = skipMyChannels;
+
         if (global == 'skipChannelsFollow')
             value = skipChannelsFollow;
 
@@ -243,27 +244,31 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
 
     //método que busca  as mensagens por paginaçao e/ou enviadas
     function viewMessages(global, viewBy, typeBtn, typeClick) {
-        var divB; var divN;
+        var divB; var divN; var nameBtn;
+
         if (global == 'skipMessageSend') {
             value = skipMessageSend;
             divB = 'divSeeMessagesSend';
             divN = 'divSeeMessages';
+            nameBtn = 'btn_moreMsgSend';
             if (countSend < 15)
                 btnStyle = 'none';
             else btnStyle = 'block';
             document.getElementById('liMsgSend').onclick = function () { viewMessages('skipMessageSend', 'messageSend', 'send', 'back'); }
         }
+
         if (global == 'skipMessageReceived') {
             value = skipMessageReceived;       
             divN = 'divSeeMessagesSend';
             divB = 'divSeeMessages';
+            nameBtn = 'btn_moreMsgReceveid';
             if (countReceived < 15)
                 btnStyle = 'none';
             else btnStyle = 'block';
             document.getElementById('liMsgReceived').onclick = function () { viewMessages('skipMessageReceived', 'messageReceived', 'received', 'back'); }
         }
 
-        var btn = document.getElementById('btn_moreMessages');
+        var btn = document.getElementById(nameBtn);
         if (btn != null) {
             if (typeBtn == 'send')
                 btn.onclick = function () { viewMessages('skipMessageSend', 'messageSend', 'send', 'seeMore'); }
@@ -295,7 +300,7 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
                         document.getElementById(divB).style.display = 'block';
                         document.getElementById(divN).style.display = 'none';
 
-                        document.getElementById(divB).innerHTML += newData.Html;
+                        document.getElementById(divB + "Content").innerHTML += newData.Html;
 
                         if (newData.Count < 15) {
                             btn.style.display = "none";
@@ -459,8 +464,7 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
         }
 
     }
-
-
+ 
     function ajaxResetPassword(newPass, confirmPass) {
         if (document.getElementById("formResetPass").checkValidity()) {
 
