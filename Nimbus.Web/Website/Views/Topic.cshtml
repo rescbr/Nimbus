@@ -243,13 +243,16 @@ else
         <form id="formReportTopic">
             <div class="modal-content">
                 <!-- The modals content -->
-                <p>Reportar: @Model.CurrentTopic.Title</p>
-                <p>
-                    Justificativa:
+                <div class="divformModal">
+                    <p>Reportar</p>
+                    <p class="modalUser">@Model.CurrentTopic.Title</p>
+                 </div>
+                <div class="divformModal">
+                    <p>Justificativa</p>
                     <textarea id="txtJustificativa" name="txtJustificativa" rows="10" cols="60" required></textarea>
-                </p>
+                 </div>
             </div>
-            <footer>
+            <footer class="fooModal">
                 <!-- Footer -->
                 <input type="submit" class="inputSubmit" value="Enviar" onclick="ajaxReportTopic(@Model.CurrentUser.UserId, @Model.CurrentTopic.AuthorId, @Model.CurrentTopic.Id);" id="enviarReportTpc" />
             </footer>

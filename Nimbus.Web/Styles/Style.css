@@ -1602,7 +1602,7 @@ div#nameChannelPage {
 
 #imgTopic {
     background:         #bcbec0;
-    top:                142px;
+    top:                190px;
     position:           absolute;
     /*z-index:            999999;*/
     float:              none;
@@ -2095,7 +2095,9 @@ form#formEditProfile div.modal-content,
 div#formChangeAvt div.modal-content,
 form#formSendMsgChannel div.modal-content,
 form#formEditChannel div.modal-content,
-form#formReportChannel div.modal-content {
+form#formReportChannel div.modal-content,
+form#formReportTopic div.modal-content,
+form#formReportComment div.modal-content {
     padding:            0 10px 0 10px;
     background:         #f1f2f2;
 }
@@ -2117,7 +2119,9 @@ form#formEditProfile footer.fooModal,
 div#formChangeAvt footer.fooModal,
 form#formSendMsgChannel footer.fooModal,
 form#formEditChannel footer.fooModal,
-form#formReportChannel footer.fooModal {
+form#formReportChannel footer.fooModal,
+form#formReportTopic footer.fooModal,
+form#formReportComment footer.fooModal  {
     background:         #FFFFFF;
     padding-bottom:     0;
 }
@@ -2128,7 +2132,9 @@ form#formEditProfile footer.fooModal input.inputSubmit,
 div#formChangeAvt footer.fooModal input.inputSubmit,
 form#formSendMsgChannel footer.fooModal input.inputSubmit,
 form#formEditChannel footer.fooModal input.inputSubmit,
-form#formReportChannel footer.fooModal input.inputSubmit {
+form#formReportChannel footer.fooModal input.inputSubmit,
+form#formReportTopic footer.fooModal input.inputSubmit,
+form#formReportComment footer.fooModal input.inputSubmit {
     width:              80px;
     float:              none;
     margin-left:        540px;
@@ -2141,7 +2147,9 @@ form#formEditProfile footer.fooModal input.inputSubmit:hover,
 div#formChangeAvt footer.fooModal input.inputSubmit:hover,
 form#formSendMsgChannel footer.fooModal input.inputSubmit:hover,
 form#formEditChannel footer.fooModal input.inputSubmit:hover,
-form#formReportChannel footer.fooModal input.inputSubmit:hover {
+form#formReportChannel footer.fooModal input.inputSubmit:hover,
+form#formReportTopic footer.fooModal input.inputSubmit:hover,
+form#formReportComment footer.fooModal input.inputSubmit:hover {
     color:              #2b2d2e;
 }
 

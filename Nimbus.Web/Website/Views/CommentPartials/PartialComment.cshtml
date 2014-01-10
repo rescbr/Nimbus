@@ -43,14 +43,20 @@
         <form id="formReportComment">
          <div class="modal-content">
             <!-- The modals content -->
-            <p>Reportar comentário realizado por: @Model.UserName</p>
-            <p>Comentário reportado: " <i>@Model.Text</i> "</p> 
-            <p>
-                Justificativa:
-                <textarea id="txtJustificativa" name="txtJustificativa" rows="10" cols="60" required ></textarea>
-            </p>
+            <div class="divformModal">
+                 <p>Reportar comentário realizado por</p>
+                 <p class="modalUser">@Model.UserName</p>
+            </div>
+             <div class="divformModal">
+                 <p>Comentário reportado</p>
+                 <p>"<i>@Model.Text</i>"</p>
+                     </div>
+             <div class="divformModal">
+                 <p>Justificativa</p>
+                 <textarea id="txtJustificativa" name="txtJustificativa" rows="10" cols="60" required></textarea>
+                     </div>
         </div>
-         <footer>
+         <footer class="fooModal">
             <!-- Footer -->  
              <input type="submit" class="inputSubmit" value="Enviar" onclick="ajaxReportComment(@Model.UserId, @Model.Id);" id="enviarReportCmt" />
         </footer>    
