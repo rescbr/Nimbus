@@ -1040,7 +1040,7 @@ from (
         /// <param name="channelID"></param>
         /// <returns></returns>
         [HttpGet]
-        [AllowAnonymous]
+        [AllowAnonymous] 
         public CategoryBag CategoryTopic(int id)
         {
             CategoryBag category = new CategoryBag();

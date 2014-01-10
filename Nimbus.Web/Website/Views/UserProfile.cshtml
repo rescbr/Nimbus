@@ -247,7 +247,7 @@
             Editar perfil
         </header>
 
-        <form id="formEditProfile">
+        <form id="formEditProfile" onsubmit="return false;">
             <div class="modal-content">
                 <!-- The modals content -->
                 <div class="divformModal">
@@ -261,7 +261,8 @@
                 </div>
                 <div class="divformModal">
                     <p>Data de Nascimento</p>
-                    <input type="date" id="txtBirthDateEdit" required pattern="^(0[1-9]|[12][0-9]|[3][0-1])[/](0[1-9]|[1][0-2])[/](19[3-9][0-9]|20[0-1][1-4])$" value="@Model.User.BirthDate" />
+                    <input type="date" id="txtBirthDateEdit" required maxlength="10"
+                           pattern="^(0[1-9]|[12][0-9]|[3][0-1])[/](0[1-9]|[1][0-2])[/](19[3-9][0-9]|20[0-1][1-4])$" value="@Model.User.BirthDate.ToShortDateString()" />
                 </div>
                 <div class="divformModal">
                     <p>Cidade</p>
@@ -293,7 +294,7 @@
                     <label id="lblErroMsgEditProfile" style="display:none;"></label>
                 </div>
                 <div class="divformModal">
-                    <p onclick="EnableDivResetPass('divResetPass', 'txtNewPassProfile', 'txtConfirPassProfile');">Redefinir senha</p>
+                    <p onclick="EnableDiv('divResetPass', '', '');">Redefinir senha</p>
                     <div id="divResetPass" style="display:none;">
                         <p>Nova Senha</p>
                         <input id="txtNewPassProfile" type="password" min="6" />
@@ -304,6 +305,7 @@
             </div>
             <footer class="fooModal">
                 <!-- Footer -->
+                <input type="button" id="btnCancelEdit" class="btnCancel" value="Cancelar" onclick="CancelEditProfile(this.form);" />
                 <input type="submit" id="btnSaveEdit" class="inputSubmit" onclick="SaveEditProfile();" value="Salvar"/>
             </footer>
         </form>

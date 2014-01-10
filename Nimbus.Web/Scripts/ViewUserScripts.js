@@ -1,6 +1,6 @@
 ﻿/*Este arquivo deve conter apenas os scripts referentes as páginas de profile*/
 
-function SendMessageProfile(receiverId) {
+    function SendMessageProfile(receiverId) {
     ajaxMessage = {};
     var text = $("#txtTextMsg").htmlarea('html');
     var title = document.getElementById('inpTitleMsg').value;
@@ -157,6 +157,18 @@ function SendMessageProfile(receiverId) {
         }
     }
 
+    function CancelEditProfile(form) {
+
+        var divPassword = document.getElementById("divResetPass");
+        if (divPassword.style.display == "block")
+        {
+            divPassword.style.display = 'none';
+        }
+        form.reset();
+        document.getElementById("closeModalEdit").click(); //fechar o modal
+
+    }
+
     function ajaxDeleteMsg(id) {
         decisao = confirm("Você deseja deletar esta mensagem?");
         if (decisao) {
@@ -228,3 +240,4 @@ function SendMessageProfile(receiverId) {
     function setDisplayBtnEditAvatar(visible) {
         document.getElementById("divBtnEditAvatar").style.display = visible;
     }
+
