@@ -82,11 +82,11 @@ function CreatedDivQuestion()
          "<ul id=\"ulPerg" + nextPerg + "\">" +
            "<li id=\"liPerg" + nextPerg + "_opt1\">" + //ex: pergunta 1 _ opçao 1
                 "<input type=\"radio\" checked class=\"rdbPergEditNimbus\" name=\"radio_perg" + nextPerg + "\" id=\"rdbPerg" + nextPerg + "_opt1\" />" +
-                "<input id=\"txtPerg" + nextPerg + "_opt1\" class=\"resposta\"  type=\"text\" onfocus=\"javascript: this.value = ''\" value=\"Opção 1\" />" +
+                "<input id=\"txtPerg" + nextPerg + "_opt1\" class=\"resposta\"  type=\"text\" onfocus=\"javascript: this.value = ''\" placeholder=\"Opção 1\" />" +
             "</li>"+
             "<li id=\"liPerg" + nextPerg + "_opt2\" >" +
-                 "<input type=\"radio\" name=\"radio_perg" + nextPerg + "\" id=\"rdbPerg" + nextPerg + "_opt2\" class=\"fakeDisable rdbPergEditNimbus\" />" +
-                 "<input id=\"txtPerg" + nextPerg + "_opt2\"  type=\"text\" class=\"fakeDisable\" onclick=\"DisableOption('2', 'divPergunta" + nextPerg + "');\" value=\"Opção 2\" />" +
+                 "<input type=\"radio\" name=\"radio_perg" + nextPerg + "\" id=\"rdbPerg" + nextPerg + "_opt2\" class=\"fakeDisableCkb rdbPergEditNimbus\" />" +
+                 "<input id=\"txtPerg" + nextPerg + "_opt2\"  type=\"text\" class=\"fakeDisable\" onclick=\"DisableOption('2', 'divPergunta" + nextPerg + "');\" placeholder=\"Opção 2\" />" +
              "</li>"+
          "</ul>"+ 
     "</div>"+
@@ -143,10 +143,10 @@ function DisableOption(currentOpt, nameDiv)
         indexActive = CurrentQuestion
 
     var rdb = document.getElementById("rdbPerg" + indexActive + "_opt" + currentOpt);//ex: rdbPerg1_opt2
-    rdb.setAttribute('class', 'rdbPergEditNimbus');
+    rdb.className = 'rdbPergEditNimbus';
     var txt = document.getElementById("txtPerg" + indexActive + "_opt" + currentOpt);
-    txt.setAttribute('class', 'resposta');
-    txt.setAttribute('onclick','');
+    txt.className='resposta';
+    txt.onclick = function(){};
     txt.value = "";
     
     var name = $("ul#ulPerg" + indexActive + " li:last-child").attr("id");
@@ -155,8 +155,8 @@ function DisableOption(currentOpt, nameDiv)
     var index = parseInt(name) + 1; //index da prox opção a ser inserida
     
     var campo = "<li id=\"liPerg" + indexActive + "_opt" + index + "\" >" +
-                      "<input type=\"radio\" name=\"radio\" id=\"rdbPerg" + indexActive + "_opt" + index + "\" class=\"fakeDisable rdbPergEditNimbus\" />" +
-                      "<input id=\"txtPerg" + indexActive + "_opt" + index + "\" onclick=\"DisableOption('" + index + "', 'divPergunta" + indexActive + "');\"  type=\"text\" class=\"fakeDisable\" value=\"Opção " + index + "\" />" +
+                      "<input type=\"radio\" name=\"radio\" id=\"rdbPerg" + indexActive + "_opt" + index + "\" class=\"fakeDisableCkb rdbPergEditNimbus\" />" +
+                      "<input id=\"txtPerg" + indexActive + "_opt" + index + "\" onclick=\"DisableOption('" + index + "', 'divPergunta" + indexActive + "');\"  type=\"text\" class=\"fakeDisable\" placeholder=\"Opção " + index + "\" />" +
                 "</li>";
     
     $("#"+ nameDiv + " ul").append(campo);

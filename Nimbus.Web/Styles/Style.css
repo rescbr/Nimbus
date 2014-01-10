@@ -1165,14 +1165,19 @@ label#lblVideo, label#lblText, label#lblDiscussion, label#lblExam , label#lblFil
 }
 
 button#bntAddItem {
-    margin-left:        250px;
-    background:         #d1d3d4;
-    color:              #2b2d2e;
+    margin-left:        179px;
+    background:         #223d98;
+    color:              #FFFFFF;
     height:             26px;
-    width:              100px;
+    width:              150px;
     border:             none;
     cursor:             pointer;
 }
+
+button#bntAddItem:hover {
+    background: #2b79a1;
+    color:      white;
+    }
 
 ul.ulPerg1 {
     margin:             0 0 0 24px;

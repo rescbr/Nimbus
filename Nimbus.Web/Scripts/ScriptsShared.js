@@ -13,6 +13,7 @@ function EnableDiv(newDiv, tipoGlobal, fieldRequired) {
         if (divTipoTopic != '')
         {
             document.getElementById(divTipoTopic).style.display = 'none';
+            if(fieldRequired != '')
             SetFieldRequired(fieldRequired);
         }
         divTipoTopic = newDiv;

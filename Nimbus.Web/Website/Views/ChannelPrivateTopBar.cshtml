@@ -167,7 +167,7 @@
 
                     <div id="divVideo" style="display:none;" class="divformNewChannel">
                         <input type="text" id="inptVideo" name="iptnamevideo" value="URL do vídeo" onfocus="javascript: this.value =''" onchange="getUrlVideo(this.name, 'divFrameVideo','iframeVideo');" placeholder="URL do Video" style="max-width: 384px; min-width: 384px" />
-                        <label>Somente url do youtube</label><br />
+                        <label><br />Somente url do youtube</label><br />
                         <div id="divFrameVideo" style="display:none">
                             <iframe name="iframeVideo" width="420" height="345" id="iframeVideo" src=""></iframe>
                         </div>
@@ -195,19 +195,20 @@
                                 <ul id="ulPerg1">
                                     <li id="liPerg1_opt1">
                                         @*pergunta 1 _ opçao 1*@
-                                        <input type="radio" class="rdbPergEditNimbus" name="radio_perg1" id="rdbPerg1_opt1" />
-                                        <input id="txtPerg1_opt1" class="resposta" type="text" onfocus="javascript: this.value = ''" value="Opção 1" />
+                                        <input type="radio" class="rdbPergEditNimbus" name="radio_perg1" id="rdbPerg1_opt1" checked />
+                                        <input id="txtPerg1_opt1" class="resposta" type="text" onfocus="javascript: this.value = ''" placeholder="Opção 1" />
                                     </li>
                                     <li id="liPerg1_opt2">
-                                        <input type="radio" class="fakeDisable rdbPergEditNimbus" name="radio_perg1" id="rdbPerg1_opt2" />
-                                        <input id="txtPerg1_opt2" class="fakeDisable" onclick="DisableOption('2', 'divPergunta1');" type="text" value="Opção 2" />
+                                        <input type="radio" class="fakeDisableCkb rdbPergEditNimbus" name="radio_perg1" id="rdbPerg1_opt2" />
+                                        <input id="txtPerg1_opt2" class="fakeDisable" onclick="DisableOption('2', 'divPergunta1');" type="text" placeholder="Opção 2" />
                                     </li>
                                 </ul>
                             </div>
-                        </div>
-                        <button id="bntAddItem" onclick="CreatedDivQuestion();">Add item</button> @*Do jeito que tá, o botão de ADD fica entre as perguntas DDD: // E se tirar dessa div, ele aparece em todas as outras opções*@
+                        </div>                      
                     </div>
-
+                    <div class="divformNewChannel">
+                        <button id="bntAddItem" onclick="CreatedDivQuestion();">Add nova questão</button>
+                    </div>
                 </div>
 
                 <div class="divBtnNewChannel">
