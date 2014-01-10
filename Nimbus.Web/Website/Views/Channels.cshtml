@@ -216,36 +216,36 @@
             <form id="formSendMsgChannel" onsubmit="return false;">
                 <div class="modal-content">
                     <!-- The modals content -->
-                    <p>
-                        Para:
+                    <div class="divformModal">
+                        <p>Para</p>
                         <input type="text" name="txtOwnerName" value="@Model.CurrentChannel.OwnerName" disabled="disabled" />
-                    </p>
-                    <p>
+                    </div>
+
+                    
                         @{
                     int countMod = Model.Moderators.Count;
                     if (countMod > 0)
                     {
-                                <text>Cc:</text>
-                        for (int i = 0; i < countMod; i++)
+                        <div class="divformModal">
+                            <p>De/CC</p>
+                        @for (int i = 0; i < countMod; i++)
                         {
                             string virgula = "; ";
                             if (i == countMod - 1) { virgula = ""; }
                             var mod = Model.Moderators[i];
-                                <text>@mod.FirstName @mod.LastName@virgula</text>
+                                <p>@mod.FirstName @mod.LastName@virgula</p>
                         }
+                        </div>
                     }
                         }
-                    </p>
-                    <p>
-                        Assunto:
+                    
+                    <div class="divformModal">
+                        <p>Assunto</p>
                         <input required id="txtTitleMsg" name="txtTitleMsg" type="text" maxlength="100" />
-                    </p><br />
-                    <p>
-                        <textarea id="txtTextMsg" name="txtTextMsg" rows="100" cols="60"></textarea>
-                    </p>
+                    </div>
                 </div>
 
-                <footer>
+                <footer class="fooModal">
                     <!-- Footer -->
                     <input type="submit" class="inputSubmit" id="btnEnviar" onclick="ajaxSendMessage(@Model.CurrentChannel.Id);" value="Enviar" />
                 </footer>
@@ -262,88 +262,92 @@
     <div class="modal-inner">
         <header id="modal-label">
             <!-- Header -->
-            <p>
-                <h1>Editar canal</h1>
+                Editar canal
                 @if (Model.RolesCurrentUser.Contains("channelmanager") || Model.CurrentUser.UserId == Model.CurrentChannel.OwnerId)
                 {
-                    <a href="#" onclick="ajaxDeleteChannel(@Model.CurrentChannel.Id, @Model.CurrentUser.UserId);">
-                        <img src="/images/utils/delete.png" alt="Deletar canal" title="Deletar canal" />Deletar
+                    <a href="#" class="aChanDel" onclick="ajaxDeleteChannel(@Model.CurrentChannel.Id, @Model.CurrentUser.UserId);">
+                        Deletar Canal <img src="/images/utils/delete.png" class="classChanDel" alt="Deletar canal" title="Deletar canal" />
                     </a>
                 }
-            </p>
         </header>
         <form id="formEditChannel" onsubmit="return false;">
-        @if (Model.RolesCurrentUser.Contains("channelmanager") || Model.CurrentChannel.OwnerId == Model.CurrentUser.UserId)
-        {
-            <div>
-                <p>Nome do canal:</p>
-                <input id="txtEditTitle" required type="text" value="@Model.CurrentChannel.Name" maxlength="100" />
-                <p>Descrição:</p>
-                <textarea id="txtaDescription" name="txtaDescriptionEdit" maxlength="200">@Model.CurrentChannel.Description</textarea>
-                <p>
-                    Categoria:
-                    <select id="slcCategory" required name="slcCategory">
-                        @foreach (var item in Model.Category.OrderBy(c => c.Name))
-                        {
-                            if(item.Id == Model.CurrentChannel.CategoryId)
-                            {
-                                <option selected value="@item.Id">@item.Name</option>
-                            }
-                            else
-                            {
-                                <option value="@item.Id">@item.Name</option>
-                            }
-                        }
-                    </select>
-                </p>
+            <div class="modal-content">
+                @if (Model.RolesCurrentUser.Contains("channelmanager") || Model.CurrentChannel.OwnerId == Model.CurrentUser.UserId)
+                {
+                            <div class="divformModal">
+                                <p>Nome do Canal</p>
+                                <input id="txtEditTitle" required type="text" value="@Model.CurrentChannel.Name" maxlength="100" />
+                            </div>
+                            <div class="divformModal">
+                                <p>Descrição</p>
+                                <textarea id="txtaDescription" name="txtaDescriptionEdit" maxlength="200">@Model.CurrentChannel.Description</textarea>
+                                    </div>
+                                    <div class="divformModal">
+                                        <p>Categoria</p>
+                                        <input id="txtEditTitle" required type="text" value="@Model.CurrentChannel.Name" maxlength="100" />
+                                        <select id="slcCategory" required name="slcCategory">
+                                            @foreach (var item in Model.Category.OrderBy(c => c.Name))
+                                            {
+                                                if (item.Id == Model.CurrentChannel.CategoryId)
+                                                {
+                                                            <option selected value="@item.Id">@item.Name</option>
+                                                }
+                                                else
+                                                {
+                                                            <option value="@item.Id">@item.Name</option>
+                                                }
+                                            }
+                                                </select>
+                                            </div>
+                                            <div class="divformModal">
+                                                <p>Aberto para comentários</p>
+                                                @if (Model.CurrentChannel.OpenToComments == true)
+                                                {
+                                                            <input type="radio" name="openComment" value="sim" checked required /><text>Sim</text>
+                                                                    <input type="radio" name="openComment" value="nao" required /><text>Não</text>
+                                                }
+                                                else
+                                                {
+                                                            <input type="radio" name="openComment" value="sim" required /><text>Sim</text>
+                                                                    <input type="radio" name="openComment" value="nao" checked required /><text>Não</text>
+                                                }
+                                                    </div>
+                }
 
-                <p>
-                    Aberto para comentários:
-                    @if(Model.CurrentChannel.OpenToComments == true)
-                    { 
-                        <input type="radio" name="openComment" value="sim" checked required /><text>Sim</text>
-                        <input type="radio" name="openComment" value="nao" required /><text>Não</text>
-                    }
-                    else
-                    {
-                        <input type="radio" name="openComment" value="sim" required /><text>Sim</text>
-                        <input type="radio" name="openComment" value="nao" checked required /><text>Não</text>
-                    }                                                                                      
-                </p>
-                
-            </div>
-        }
-
-        @if (Model.RolesCurrentUser.Contains("channelmanager") || Model.CurrentChannel.OwnerId == Model.CurrentUser.UserId
+                        @if (Model.RolesCurrentUser.Contains("channelmanager") || Model.CurrentChannel.OwnerId == Model.CurrentUser.UserId
             || Model.RolesCurrentUser.Contains("moderatormanager"))
-        {
-            <div>
-                <p>Moderadores:</p>
-                <div id="divEditModerators" class="modal-content">
-                    <!-- The modals content -->
-                    <!--Incluido por pelo js ajaxLoadTags-->
-                </div>
-            </div>
-        }
-        @if (Model.RolesCurrentUser.Contains("channelmanager") || Model.CurrentChannel.OwnerId == Model.CurrentUser.UserId)
-        {
-                   /*editar as tags*/
-                    <div>
-                        <p>Tags:</p>
-                        <div id="divTags" class="modal-content">
-                            <!--Incluido por pelo js ajaxLoadTags-->
-                        </div>
-                    </div>
-
-                    <footer>
-                     <!-- Footer -->
-                        <input type="submit" class="inputSubmit" id="btnSaveAllEdit" onclick="ajaxSaveAllEdit(@Model.CurrentChannel.Id);" value="Salvar" />
-                    </footer>
-        }
-        else
-        {
-            <p>Você não permissão para realizar esta operação.</p>
-        }
+                        {
+                                    <div class="divformModal">
+                                        <p>Moderadores</p>
+                                        <div id="divEditModerators">
+                                            <!-- The modals content -->
+                                            <!--Incluido por pelo js ajaxLoadTags-->
+                                        </div>
+                                    </div>
+                        }
+                                @if (Model.RolesCurrentUser.Contains("channelmanager") || Model.CurrentChannel.OwnerId == Model.CurrentUser.UserId)
+                                {
+                                    /*editar as tags*/
+                                            <div class="divformModal">
+                                                <p>Tags</p>
+                                                <div id="divTags" class="modal-content">
+                                                    <!--Incluido por pelo js ajaxLoadTags-->
+                                                </div>
+                                            </div>
+                                }
+                                else
+                                {
+                                            <div class="modal-content">
+                                                <div class="divformModal">
+                                                    <p>Você não permissão para realizar esta operação.</p>
+                                                </div>
+                                            </div>
+                                }
+                                    </div>
+            <footer class="fooModal">
+                <!-- Footer -->
+                <input type="submit" class="inputSubmit" id="btnSaveAllEdit" onclick="ajaxSaveAllEdit(@Model.CurrentChannel.Id);" value="Salvar" />
+            </footer>
         </form>
     </div>
 
@@ -361,13 +365,16 @@
         <form id="formReportChannel">
             <div class="modal-content">
                 <!-- The modals content -->
-                <p>Reportar: @Model.CurrentChannel.Name</p>
-                <p>
-                    Justificativa:
+                <div class="divformModal">
+                    <p>Reportar</p>
+                    <p class="modalUser">@Model.CurrentChannel.Name</p>
+                </div>
+                <div class="divformModal">
+                    <p>Justificativa</p>
                     <textarea id="txtJustificativa" name="txtJustificativa" rows="10" cols="60" required></textarea>
-                </p>
+                </div>
             </div>
-            <footer>
+            <footer class="fooModal">
                 <!-- Footer -->
                 <input type="submit" class="inputSubmit" value="Enviar" onclick="ajaxReportChannel(@Model.CurrentUser.UserId, @Model.CurrentChannel.OwnerId, @Model.CurrentChannel.Id);" id="enviarReportChn" />
             </footer>

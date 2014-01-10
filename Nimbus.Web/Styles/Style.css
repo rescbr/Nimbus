@@ -107,10 +107,6 @@ b, strong {
 }
 /*------------------ começo header --------------------*/
 
-#wrap {
-    min-height:         100%;
-}
-
 #header {
     background:         #2b2d2e;
 	width:              100%;
@@ -232,9 +228,9 @@ a.exit, div.exitbutton {
 }
 
 a.exit:hover, div.exitbutton:hover {
-     color: #87c240;
+    color: #87c240;
     cursor:            pointer;
-    }
+}
 
 .BTopBarLinkSelected
 {
@@ -271,6 +267,7 @@ div#divBarSearch {
 	width:              960px;
 	margin:             0 auto;
 	clear:              both;
+    height:             auto !important;
     min-height:         100%;
 	line-height:        2em;/*
     float:              left;*/
@@ -1092,7 +1089,7 @@ div.btnAccept:hover, div.btnAccept:hover p {
 }
 
 /*------------------ PrivateProfileTopBar New Channel & ChannelPrivateTopBar New Topic ----------------*/
-div#divNewChannel, div#divNewTopic {
+div#divNewChannel, div#divNewTopic, div#divInfos {
     margin:             24px;
     width:              596px;
 }
@@ -1112,22 +1109,23 @@ div#divNewChannel, div#divNewTopic {
     cursor:             pointer;
 }
 
-div.divformNewChannel, div.divformNewTopic {
+div.divformNewChannel, div.divformNewTopic, div.divformInfos {
     background:         #f1f2f2;
-    width:              408px;
+    width:              508px;
     padding:            12px;
     border-bottom:      1px solid #d1d3d4;
     clear:              both;
 }
 
-div.divBtnNewChannel {
-    margin-left:        192px;
+div.divBtnNewChannel, div.divBtnInfos {
+    margin-left:        292px;
     width:              288px;
     height:             26px;
     clear:              both;
 }
 
-input[type=submit].divCnclNewChannel, button.divCnclNewChannel, input[type=submit].divSaveNewChannel, button.divSaveNewChannel {
+input[type=submit].divCnclNewChannel, button.divCnclNewChannel, input[type=submit].divSaveNewChannel, button.divSaveNewChannel,
+input[type=submit].divCnclInfos, button.divCnclInfos,  input[type=submit].divSaveInfos, button.divSaveInfos {
     float:              left;
     background:         #2b2d2e;
     width:              120px;
@@ -1137,16 +1135,19 @@ input[type=submit].divCnclNewChannel, button.divCnclNewChannel, input[type=submi
     color:              #FFFFFF;
 }
 
-input[type=submit].divSaveNewChannel, button.divSaveNewChannel {
+input[type=submit].divSaveNewChannel, button.divSaveNewChannel,
+input[type=submit].divSaveInfos, button.divSaveInfos {
     background:         #87c240;
 }
 
-input[type=submit].divCnclNewChannel:hover, button.divCnclNewChannel:hover {
+input[type=submit].divCnclNewChannel:hover, button.divCnclNewChannel:hover,
+input[type=submit].divCnclInfos:hover, button.divCnclInfos:hover {
     color:              #87c240;
     cursor:             pointer;
 }
 
-input[type=submit].divSaveNewChannel:hover, button.divSaveNewChannel:hover {
+input[type=submit].divSaveNewChannel:hover, button.divSaveNewChannel:hover,
+input[type=submit].divSaveInfos:hover, button.divSaveInfos:hover {
     color:              #2b2d2e;
     cursor:             pointer;
 }
@@ -1349,14 +1350,14 @@ div#divCapa {
     height:             192px;
 }
 
-div.followChannelPage {
+div.followChannelPage{
     position:           relative;
     left:               760px;
     top:                -60px;
     width:              80px;
     background:         #2b2d2e;
     line-height:        2.4em;
-    z-index:            999999;
+    z-index:            20;
     cursor:             pointer;
 }
 
@@ -1366,9 +1367,11 @@ div.followChannelPage {
     font-size:          1.2em;
     color:              #FFFFFF;
 }
+
+
 div#nameChannelPage {
     position:           absolute;
-    top:                150px;
+    top:                190px;
     margin-left:        68px;
     z-index:            999;
 }
@@ -1602,7 +1605,7 @@ div#nameChannelPage {
 
 #imgTopic {
     background:         #bcbec0;
-    top:                142px;
+    top:                190px;
     position:           absolute;
     /*z-index:            999999;*/
     float:              none;
@@ -1642,10 +1645,27 @@ p.txtInfTopic {
     font-size:          small;
 }
 
-button#btnEditTopic {
+/*button#btnEditTopic {
     top:                0;
     position:           relative;
     background:         #2b2d2e;
+    color:              #FFFFFF;
+}*/
+
+div#btnEditTopic {
+    position:           relative;
+    left:               760px;
+    top:                -60px;
+    width:              80px;
+    background:         #2b2d2e;
+    line-height:        2.4em;
+    z-index:            20;
+    cursor:             pointer;
+}
+
+p#pEditTopic {
+    text-align:         center;
+    font-size:          1.2em;
     color:              #FFFFFF;
 }
 
@@ -1690,7 +1710,7 @@ p.catTopic{
     margin-bottom:      20px;
 }
 
-div#btnEditTopic, div#btnFavoritedTopic, #btnReportTopic, #btnReportChannel {
+/*div#btnEditTopic,*/ div#btnFavoritedTopic, #btnReportTopic, #btnReportChannel {
     margin:             0 auto;
     background:         #2b2d2e;
     width:              80px;
@@ -1698,12 +1718,12 @@ div#btnEditTopic, div#btnFavoritedTopic, #btnReportTopic, #btnReportChannel {
     cursor:             pointer;
 }
 
-#btnEditTopic:hover, #btnEditTopic p:hover, #btnFavoritedTopic:hover, #btnFavoritedTopic p:hover,#btnReportTopic p:hover, #btnReportChannel p:hover {
+/*#btnEditTopic:hover,*/ #btnEditTopic p:hover, #btnFavoritedTopic:hover, #btnFavoritedTopic p:hover,#btnReportTopic p:hover, #btnReportChannel p:hover {
     color:              #87c240;
     cursor:             pointer;
 }
 
-#btnEditTopic p, #btnFavoritedTopic p, #btnReportTopic p, #btnReportChannel p {
+/*#btnEditTopic p,*/ #btnFavoritedTopic p, #btnReportTopic p, #btnReportChannel p {
     color:              #FFFFFF;
     text-align:         center;
     font-size:          small;
@@ -2002,7 +2022,8 @@ p#txtPartChannel {
 
 /*----------------- começo footer -------------------*/
 
-.footer {    
+div.footerMainPage {    
+    border-top:         4px solid #87c240;
     margin:             24px 0 0 0;
     min-height:         80px;
     background:         #2b2d2e;
@@ -2011,7 +2032,19 @@ p#txtPartChannel {
     margin-top:         70px;
 }
 
+nav.navFooMainPage {
+    width: 100%;
+}
 
+ul.ulFooPage {
+    width: 566px;
+    margin: 0 auto;
+}
+.navFooMainPage li {
+    color: #87c240;
+    padding: 24px;
+    float: left;
+}
 /*------------------- fim footer --------------------*/
 /*----- começo Botoes interativos / JS & JQuery ----*/
 .inputSubmit {
@@ -2077,7 +2110,7 @@ div.accRef {
 }
 
 /*----------------Começo Modal --------------------*/
-/*Enviar Mensagem*/
+/*Geral*/
 header#modal-label {
     color:              #000000;
     padding:            8px 0 8px 20px;
@@ -2089,7 +2122,15 @@ header#modal-label {
     margin:             0 0 4px 0;
 }
 
-form#formReportUser div.modal-content {
+form#formReportUser div.modal-content,
+form#formSendMsgProfile div.modal-content,
+form#formEditProfile div.modal-content,
+div#formChangeAvt div.modal-content,
+form#formSendMsgChannel div.modal-content,
+form#formEditChannel div.modal-content,
+form#formReportChannel div.modal-content,
+form#formReportTopic div.modal-content,
+form#formReportComment div.modal-content {
     padding:            0 10px 0 10px;
     background:         #f1f2f2;
 }
@@ -2105,18 +2146,43 @@ div.divformModal:last-child {
     border: none;
 }
 
-form#formReportUser footer.fooModal {
+form#formReportUser footer.fooModal,
+form#formSendMsgProfile footer.fooModal,
+form#formEditProfile footer.fooModal,
+div#formChangeAvt footer.fooModal,
+form#formSendMsgChannel footer.fooModal,
+form#formEditChannel footer.fooModal,
+form#formReportChannel footer.fooModal,
+form#formReportTopic footer.fooModal,
+form#formReportComment footer.fooModal  {
     background:         #FFFFFF;
     padding-bottom:     0;
 }
 
-form#formReportUser footer.fooModal input.inputSubmit {
+form#formReportUser footer.fooModal input.inputSubmit,
+form#formSendMsgProfile footer.fooModal input.inputSubmit,
+form#formEditProfile footer.fooModal input.inputSubmit,
+div#formChangeAvt footer.fooModal input.inputSubmit,
+form#formSendMsgChannel footer.fooModal input.inputSubmit,
+form#formEditChannel footer.fooModal input.inputSubmit,
+form#formReportChannel footer.fooModal input.inputSubmit,
+form#formReportTopic footer.fooModal input.inputSubmit,
+form#formReportComment footer.fooModal input.inputSubmit {
+    width:              80px;
     float:              none;
-    margin-left:        580px;
+    margin-left:        540px;
     background:         #87c240;
 }
 
-form#formReportUser footer.fooModal input.inputSubmit:hover {
+form#formReportUser footer.fooModal input.inputSubmit:hover,
+form#formSendMsgProfile footer.fooModal input.inputSubmit:hover,
+form#formEditProfile footer.fooModal input.inputSubmit:hover,
+div#formChangeAvt footer.fooModal input.inputSubmit:hover,
+form#formSendMsgChannel footer.fooModal input.inputSubmit:hover,
+form#formEditChannel footer.fooModal input.inputSubmit:hover,
+form#formReportChannel footer.fooModal input.inputSubmit:hover,
+form#formReportTopic footer.fooModal input.inputSubmit:hover,
+form#formReportComment footer.fooModal input.inputSubmit:hover {
     color:              #2b2d2e;
 }
 
@@ -2127,8 +2193,32 @@ a.modal-close{
 a.modal-close:hover {
     color:              #87c240;
 }
+
+/*Editar Perfil*/
+div#divResetPass {
+    margin:             10px 0 0 10px;
+}
 /*Reportar Usuário*/
-p.modalRepUser {
+p.modalUser {
     font-weight:        bold;
+}
+/*Editar Canal*/
+a.aChanDel, a.aInfosDel {/*
+    background:         #87c240;
+    padding:            4px 8px 2px 8px;*/
+    margin:             0 0 0 24px;
+    font-weight:        normal;
+    font-size:          small;
+    color:              #87c240;
+    display:            inline-block;
+}
+
+a.aInfosDel {
+
+    margin: 0;
+}
+
+img.imgChanDel {
+    margin-left: 4px;
 }
 /*-----------------Fim Modal ----------------------*/

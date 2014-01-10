@@ -17,7 +17,16 @@
 </script>
 
 <div id="divCapa">
-    <img src="@Model.Category.ImgTopChannel" id="imgcapa" height="192" alt="" width="864" />   
+    <img src="@Model.Category.ImgTopChannel" id="imgcapa" height="192" alt="" width="864" />
+    @if (Model.RolesCurrentUser.Contains("channelmanager") || Model.RolesCurrentUser.Contains("topicmanager") ||
+        Model.CurrentChannel.OwnerId == Model.CurrentUser.UserId)
+{
+    <a href="#" onclick="clickEditTopic(@Model.CurrentTopic.Id, '@Model.CurrentTopic.TopicType');">
+        <div id="btnEditTopic">
+            <p id="pEditTopic">Editar</p>
+        </div>
+    </a>
+}
 </div>
 
 
@@ -46,11 +55,7 @@
     @if (Model.RolesCurrentUser.Contains("channelmanager") || Model.RolesCurrentUser.Contains("topicmanager") ||
         Model.CurrentChannel.OwnerId == Model.CurrentUser.UserId)
     { 
-        <a href="#" onclick="clickEditTopic(@Model.CurrentTopic.Id, '@Model.CurrentTopic.TopicType');">
-            <div id="btnEditTopic" >
-                <p>Editar</p>
-            </div>
-        </a>
+        /*Antigo lugar que ficava botao de editar topico*/
     }
     else
     {
@@ -243,13 +248,16 @@ else
         <form id="formReportTopic">
             <div class="modal-content">
                 <!-- The modals content -->
-                <p>Reportar: @Model.CurrentTopic.Title</p>
-                <p>
-                    Justificativa:
+                <div class="divformModal">
+                    <p>Reportar</p>
+                    <p class="modalUser">@Model.CurrentTopic.Title</p>
+                 </div>
+                <div class="divformModal">
+                    <p>Justificativa</p>
                     <textarea id="txtJustificativa" name="txtJustificativa" rows="10" cols="60" required></textarea>
-                </p>
+                 </div>
             </div>
-            <footer>
+            <footer class="fooModal">
                 <!-- Footer -->
                 <input type="submit" class="inputSubmit" value="Enviar" onclick="ajaxReportTopic(@Model.CurrentUser.UserId, @Model.CurrentTopic.AuthorId, @Model.CurrentTopic.Id);" id="enviarReportTpc" />
             </footer>
