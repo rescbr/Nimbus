@@ -53,7 +53,9 @@
 
             if (Model.MyChannels.Count() == 15)
             {
-                <button id="btn_skipMyChannels" onclick="verMaisChannels(@Model.CurrentUser.UserId, 'myChannels', 0, 'skipMyChannels');">Ver mais</button>
+                <div class="seeMoreContent">
+                    <div class="seeMoreButton" id="btn_skipMyChannels" onclick="verMaisChannels(@Model.CurrentUser.UserId, 'myChannels', 0, 'skipMyChannels');"><p>Ver mais</p></div>
+                </div>
             }
         }
     </div>
@@ -73,7 +75,10 @@
 
             if (Model.ChannelFollow.Count() == 15)
             {
-                <button id="btn_skipChannelsFollow" onclick="verMaisChannels(@Model.CurrentUser.UserId, 'channelsFollow', 0, 'skipChannelsFollow');">Ver mais</button>
+              <div class="seeMoreContent">
+                <div class="seeMoreButton" id="btn_skipChannelsFollow" onclick="verMaisChannels(@Model.CurrentUser.UserId, 'channelsFollow', 0, 'skipChannelsFollow');">
+                    <p>Ver mais</p></div>
+              </div>
             }
         }
     </div>
@@ -90,7 +95,9 @@
             </div>
             if (Model.ReadLater.Count() == 15)
             {
-                <button id="btn_skipReadLater" onclick="verMaisTopics(@Model.CurrentUser.UserId,'readLater', 0, 'skipReadLater');">Ver mais</button>
+                <div class="seeMoreContent">
+                    <div id="btn_skipReadLater" onclick="verMaisTopics(@Model.CurrentUser.UserId,'readLater', 0, 'skipReadLater');"><p>Ver mais</p></div>
+                </div>
             }
         }
     </div>

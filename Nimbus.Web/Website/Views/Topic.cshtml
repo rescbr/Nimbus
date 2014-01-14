@@ -203,7 +203,9 @@
             <div id="placeholderAfterLastComment"></div>
             if (Model.Comments.Count() == 5)
             {
-                <button id="btn_skipComments" onclick="seeMoreComments(@Model.CurrentTopic.Id, 'divAllComments', 'skipComments','topic');">Ver mais</button>
+                <div class="seeMoreContent">
+                    <div id="btn_skipComments" onclick="seeMoreComments(@Model.CurrentTopic.Id, 'divAllComments', 'skipComments','topic');"><p>Ver mais</p></div>
+                </div>
             }
        }
        else

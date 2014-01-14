@@ -41,7 +41,7 @@ html, body {
     Padding:            0;
     Margin:             0;
 }
-article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav , section{
 	display:            block;
 }
 body {
@@ -1946,8 +1946,15 @@ p.txtNotification a {
 }
 
 /*carregar mais*/
-div#divNotificationLoad, div#divSeeMore, div#divSeeMoreR{
-    margin:             24px;
+div#divNotificationLoad, div#divSeeMore, div#divSeeMoreR {
+    margin: 24px;
+}
+
+.seeMoreContent {
+    height: 26px;
+    clear: both;
+    padding-top: 2px;
+    padding-bottom: 50px;
 }
 
 div#divNotificationLoadButton, div#btn_moreMsgSend, div#btn_moreMsgReceveid{
@@ -1958,13 +1965,24 @@ div#divNotificationLoadButton, div#btn_moreMsgSend, div#btn_moreMsgReceveid{
     cursor:             pointer;
 }
 
-div#divNotificationLoadButton:hover, #divNotificationLoadButton p:hover, #divNotificationLoadButton a:hover,
-  #btn_moreMsgSend p:hover, #btn_moreMsgSend a:hover, #btn_moreMsgReceveid p:hover, #btn_moreMsgReceveid a:hover{
+.seeMoreButton{
+    margin:             0 auto;
+    margin-top:         24px;
+    background:         #2b2d2e;
+    width:              200px;
+    height:             26px;
+    cursor:             pointer;
+    clear: both;
+}
+
+div#divNotificationLoadButton:hover, #divNotificationLoadButton p:hover, #divNotificationLoadButton a:hover, .seeMoreButton a:hover, .seeMoreButton p:hover, .seeMoreButton:hover,
+div#btn_moreMsgSend:hover,  #btn_moreMsgSend p:hover, #btn_moreMsgSend a:hover, #btn_moreMsgReceveid p:hover, #btn_moreMsgReceveid a:hover
+{
     color:              #87c240;
     cursor:             pointer;
 }
 
-#divNotificationLoadButton p, #divNotificationLoadButton a, #btn_moreMsgSend p, #btn_moreMsgSend a
+#divNotificationLoadButton p, #divNotificationLoadButton a, #btn_moreMsgSend p, #btn_moreMsgSend a, .seeMoreButton p, .seeMoreButton a,
 #btn_moreMsgReceveid p, #btn_moreMsgReceveid a{
     color:              #FFFFFF;
     text-align:         center;

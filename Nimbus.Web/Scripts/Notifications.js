@@ -77,6 +77,7 @@ function newMessageNotification(msg) {
 }
 
 function getChannelNotifications(id, after) {
+
     if (typeof (after) === "undefined" || after == "") {
         after = "";
     } else {
