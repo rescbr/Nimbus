@@ -126,6 +126,8 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
             value = skipReadLater;
             type = "marcado";
         }
+        var nameLoad = "img" + global.replace("skip", "") + "Load";
+        document.getElementById(nameLoad).style.display = "block";
 
         $.ajax({
             url: "/api/topic/AbstTopicHtml/" + id +"?viewBy=" + orderBy + "&categoryID=" + category + "&skip=" +value + "&type=" + type,
@@ -154,6 +156,7 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
                 }
             }
         });
+        document.getElementById(nameLoad).style.display = "none";
     }
 
     //método que busca os comentarios de 15 em 15 e 'filhos' de 5 em 5
@@ -214,6 +217,9 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
 
         if (global == 'skipChannelsFollow')
             value = skipChannelsFollow;
+        var nameLoad = "img" + global.replace("skip", "") + "Load";
+
+        document.getElementById(nameLoad).style.display = 'block';
 
         $.ajax({
             url: "/api/channel/AbstChannelHtml/" + id + "?viewBy=" + orderBy + "&categoryID=" + category + "&skip=" + value,
@@ -240,15 +246,22 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
                 }
             }
         });
+        document.getElementById(nameLoad).style.display = 'none';
     }
 
 
     //método que busca  as mensagens por paginaçao e/ou enviadas
     function viewMessages(global, viewBy, typeBtn, typeClick) {
-        var divB; var divN; var nameBtn;
-
+        var divB; var divN; var nameBtn; var divLoad;
+        var load = document.getElementById(viewBy)
+       
         if (global == 'skipMessageSend') {
             value = skipMessageSend;
+            divLoad = "divSeeMore";            
+            if (load != null) {
+                load.style.display = 'block';
+                document.getElementById(divLoad).style.display = 'none';
+            }
             divB = 'divSeeMessagesSend';
             divN = 'divSeeMessages';
             nameBtn = 'btn_moreMsgSend';
@@ -259,6 +272,12 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
         }
 
         if (global == 'skipMessageReceived') {
+            divLoad = "divSeeMoreR";
+            if (load != null) {
+                load.style.display = 'block';
+                document.getElementById(divLoad).style.display = 'none';
+            }
+
             value = skipMessageReceived;       
             divN = 'divSeeMessagesSend';
             divB = 'divSeeMessages';
@@ -269,6 +288,7 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
             document.getElementById('liMsgReceived').onclick = function () { viewMessages('skipMessageReceived', 'messageReceived', 'received', 'back'); }
         }
 
+               
         var btn = document.getElementById(nameBtn);
         if (btn != null) {
             if (typeBtn == 'send')
@@ -289,6 +309,8 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
                             divB = "divSeeMessagesSend";
                             divN = "divSeeMessages";
                             countSend = newData.Count;
+                            if (load != null)
+                                load.style.display = 'none';
                         }
                         else
                             if (global == 'skipMessageReceived') {
@@ -296,6 +318,8 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
                                 divN = "divSeeMessagesSend";
                                 divB = "divSeeMessages";
                                 countReceived = newData.Count;
+                                if (load != null)
+                                    load.style.display = 'none';
                             }
 
                         document.getElementById(divB).style.display = 'block';
@@ -326,6 +350,8 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
                 btn.style.display = btnStyle;
             }
         }
+        if(load != null)
+        load.style.display = 'none';
     }
 
     function setOnClickSeeMesg(id, starNameDiv)
