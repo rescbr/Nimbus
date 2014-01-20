@@ -152,11 +152,11 @@
 
              </div>
              @if (Model.CountMessageSend == 15)
-               {
-                 <div style="margin: 0 auto;">
+               {               
+                   <div id="divSeeMore">                       
+                       <div style="margin: 0 auto;">
                            <img src="/images/utils/loading.gif" id="imgmessageSendLoad" style="display:none;" />
                        </div>
-                   <div id="divSeeMore">                       
                        <div  id="btn_moreMsgSend" onclick="viewMessages('skipMessageReceived', 'messageSend', '', 'seeMore');"><p>Ver mais</p></div>
                    </div>
                }

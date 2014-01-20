@@ -126,8 +126,9 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
             value = skipReadLater;
             type = "marcado";
         }
-        var nameLoad = "img" + global.replace("skip", "") + "Load";
-        document.getElementById(nameLoad).style.display = "block";
+        var divLoad = document.getElementById("img" + global.replace("skip", "") + "Load");
+        if(divLoad != null)
+           divLoad.style.display = "block";
 
         $.ajax({
             url: "/api/topic/AbstTopicHtml/" + id +"?viewBy=" + orderBy + "&categoryID=" + category + "&skip=" +value + "&type=" + type,
@@ -148,12 +149,14 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
                     if (newData.Count < 15) {
                         document.getElementById("btn_" + global).style.display = "none";
                     }
-                    document.getElementById(nameLoad).style.display = "none";
+                    if(divLoad != null)
+                        divLoad.style.display = "none";
                 },
 
                 500: function () {
                     //erro
-                    document.getElementById(nameLoad).style.display = "none";
+                    if (divLoad != null)
+                        divLoad.style.display = "none";
                     window.alert("Erro ao obter mais tópicos. Tente novamente mais tarde.");
                 }
             }
@@ -254,7 +257,7 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
 
     //método que busca  as mensagens por paginaçao e/ou enviadas
     function viewMessages(global, viewBy, typeBtn, typeClick) {
-        var divB; var divN; var nameBtn; var divLoad;
+        var divB; var divN; var nameBtn; 
         var load = document.getElementById("img" + viewBy + "Load")
        
         if (global == 'skipMessageSend') {
@@ -284,16 +287,18 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
                
         var btn = document.getElementById(nameBtn);
         if (btn != null) {
-            if (typeBtn == 'send')
-                btn.onclick = function () { viewMessages('skipMessageSend', 'messageSend', 'send', 'seeMore'); }
-            else
+            if (typeBtn == 'send') {
+                btn.onclick = function () { viewMessages('skipMessageSend', 'messageSend', 'send', 'seeMore'); }               
+            }
+            else {
                 btn.onclick = function () { viewMessages('skipMessageReceived', 'messageReceived', '', 'seeMore'); }
+            }
         }
 
         if (typeClick == 'seeMore' || typeClick == 'firstGetSend') {
             if (load != null && typeClick == 'seeMore') {
                 load.style.display = 'block';
-                document.getElementById(divLoad).style.display = 'none';
+                document.getElementById(nameBtn).style.display = 'none';
             }
             $.ajax({
                 url: "/api/message/MessagesHtml/?viewBy=" + viewBy + "&skip=" + value,
