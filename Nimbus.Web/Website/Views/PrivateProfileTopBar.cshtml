@@ -32,8 +32,8 @@
         <div id="divNotificationWrapper">
         </div>
         <div id="divNotificationLoad">
-            <div style="margin: 0 auto;">
-                <img src="/images/utils/loading.gif" id="imgNotificationLoad" />
+            <div class="divGifLoad">
+                <img src="/images/utils/loading.gif" class="imgGifLoad" id="imgNotificationLoad" />
             </div>
             <div id="divNotificationLoadButton" style="display:none;" onclick="getNotifications();"><p>Carregar mais notificações</p></div>
         </div>
@@ -54,8 +54,8 @@
             if (Model.MyChannels.Count() == 15)
             {
                 <div class="seeMoreContent">
-                    <div style="margin: 0 auto;">
-                        <img src="/images/utils/loading.gif" id="imgMyChannelsLoad" style="display:none;" />
+                    <div class="divGifLoad">
+                        <img src="/images/utils/loading.gif" class="imgGifLoad" id="imgMyChannelsLoad" style="display:none;" />
                     </div>
                     <div class="seeMoreButton" id="btn_skipMyChannels" onclick="verMaisChannels(@Model.CurrentUser.UserId, 'myChannels', 0, 'skipMyChannels');"><p>Ver mais</p></div>
                 </div>
@@ -79,8 +79,8 @@
             if (Model.ChannelFollow.Count() == 15)
             {
               <div class="seeMoreContent">
-                  <div style="margin: 0 auto;">
-                      <img src="/images/utils/loading.gif" id="imgChannelsFollowLoad" style="display:none;" />
+                  <div class="divGifLoad">
+                      <img src="/images/utils/loading.gif" id="imgChannelsFollowLoad" class="imgGifLoad" style="display:none;" />
                   </div>
                 <div class="seeMoreButton" id="btn_skipChannelsFollow" onclick="verMaisChannels(@Model.CurrentUser.UserId, 'channelsFollow', 0, 'skipChannelsFollow');">
                     <p>Ver mais</p></div>
@@ -102,8 +102,8 @@
             if (Model.ReadLater.Count() == 15)
             {
                 <div class="seeMoreContent">
-                    <div style="margin: 0 auto;">
-                        <img src="/images/utils/loading.gif" id="imgReadLaterLoad" style="display:none;" />
+                    <div class="divGifLoad">
+                        <img src="/images/utils/loading.gif" id="imgReadLaterLoad" class="imgGifLoad" style="display:none;" />
                     </div>
                     <div id="btn_skipReadLater" class="seeMoreButton" onclick="verMaisTopics(@Model.CurrentUser.UserId,'readLater', 0, 'skipReadLater');"><p>Ver mais</p></div>
                 </div>
@@ -118,8 +118,12 @@
                     <li id="liMsgReceived" class="press" onclick="viewMessages('skipMessageReceived', 'messageReceived', 'received','back');">Recebidas</li>
                     <li id="liMsgSend" class="press" onclick="viewMessages('skipMessageSend', 'messageSend', 'send','firstGetSend');">Enviadas</li>
                 </ul>
-            </nav>
+                <div class="divGifLoad">
+                    <img src="/images/utils/loading.gif" class="imgGifLoad" id="imgTopBarLoad" style="display:none;" />
+                </div>
 
+            </nav>
+            
             <div class="messContent">
                 @*PostsMessages*@
             </div>
@@ -138,8 +142,8 @@
 
              @if (Model.Messages.Count() == 15)
              {
-                 <div style="margin: 0 auto;">
-                         <img src="/images/utils/loading.gif" id="imgmessageReceivedLoad" style="display:none;" />
+                 <div class="divGifLoad">
+                         <img src="/images/utils/loading.gif" class="imgGifLoad" id="imgmessageReceivedLoad" style="display:none;" />
                  </div>
                  <div id="divSeeMoreR">                     
                     <div id="btn_moreMsgReceveid" onclick="viewMessages('skipMessageReceived', 'messageReceived', '', 'seeMore');"><p>Ver mais</p></div>
@@ -154,8 +158,8 @@
              @if (Model.CountMessageSend == 15)
                {               
                    <div id="divSeeMore">                       
-                       <div style="margin: 0 auto;">
-                           <img src="/images/utils/loading.gif" id="imgmessageSendLoad" style="display:none;" />
+                       <div class="divGifLoad">
+                           <img src="/images/utils/loading.gif" class="imgGifLoad" id="imgmessageSendLoad" style="display:none;" />
                        </div>
                        <div  id="btn_moreMsgSend" onclick="viewMessages('skipMessageReceived', 'messageSend', '', 'seeMore');"><p>Ver mais</p></div>
                    </div>

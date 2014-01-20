@@ -257,8 +257,14 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
 
     //método que busca  as mensagens por paginaçao e/ou enviadas
     function viewMessages(global, viewBy, typeBtn, typeClick) {
-        var divB; var divN; var nameBtn; 
-        var load = document.getElementById("img" + viewBy + "Load")
+        var divB; var divN; var nameBtn; var load;
+
+        if (typeClick == 'firstGetSend') {
+            load = document.getElementById("imgTopBarLoad");
+        }
+        else {
+            load = document.getElementById("img" + viewBy + "Load")
+        }
        
         if (global == 'skipMessageSend') {
             value = skipMessageSend;
@@ -296,10 +302,14 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
         }
 
         if (typeClick == 'seeMore' || typeClick == 'firstGetSend') {
-            if (load != null && typeClick == 'seeMore') {
-                load.style.display = 'block';
+            
+            if(typeClick == 'seeMore') {              
                 document.getElementById(nameBtn).style.display = 'none';
             }
+            if (load != null) {
+                load.style.display = 'block';
+            }
+            
             $.ajax({
                 url: "/api/message/MessagesHtml/?viewBy=" + viewBy + "&skip=" + value,
                 type: "GET",
@@ -351,7 +361,7 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
         }
         else if (typeClick == 'back') {
             document.getElementById(divB).style.display = 'block';
-            document.getElementById(divN).style.display = 'none';
+            document.getElementById(divN).style.display = 'none';            
             if (btn != null) {
                 btn.style.display = btnStyle;
             }
