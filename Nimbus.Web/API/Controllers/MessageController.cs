@@ -289,11 +289,10 @@ namespace Nimbus.Web.API.Controllers
             using (var db = DatabaseFactory.OpenDbConnection())
             {
 
-                var listIdMsg = db.Where<ReceiverMessage>(r => r.UserId == NimbusUser.UserId && r.Status == Model.Enums.MessageType.received && r.Visible == true)
-                                                    .Skip(15 * skip).Take(15)
+                var listIdMsg = db.Where<ReceiverMessage>(r => r.UserId == NimbusUser.UserId && r.Status == Model.Enums.MessageType.received && r.Visible == true)                                                    
                                                     .Select(r =>
                                                         db.Where<Message>(m => m.Id == r.MessageId && m.Visible == true).FirstOrDefault())
-                                                    .Where(msg => msg != null);
+                                                    .Where(msg => msg != null).OrderByDescending(d => d.Date).Skip(15 * skip).Take(15);
 
                 if (listIdMsg.Count() > 0)
                 {
@@ -319,7 +318,7 @@ namespace Nimbus.Web.API.Controllers
 
             }
 
-            return listMessage.OrderByDescending(d => d.Date).ToList();
+            return listMessage;
         }
 
         /// <summary>
@@ -396,12 +395,11 @@ namespace Nimbus.Web.API.Controllers
                 if (idsAllow == true)
                 {
                     //BUG: ReceiverMessage precisa de um datetime para poder ordenar por data.
-                    var listMsg = db.Where<ReceiverMessage>(r => r.Status == Model.Enums.MessageType.received && r.Visible == true)
-                                                          .Skip(15 * skip).Take(15)
+                    var listMsg = db.Where<ReceiverMessage>(r => r.Status == Model.Enums.MessageType.received && r.Visible == true)                                                         
                                                           .Select(r =>
                                                               db.Where<Message>(m => m.Id == r.MessageId && m.Visible == true && m.ChannelId == id)
                                                               .FirstOrDefault())
-                                                          .Where(msg => msg != null);
+                                                          .Where(msg => msg != null).OrderBy(d => d.Date).Skip(15 * skip).Take(15);
                      
                     foreach (var msg in listMsg)
                     {
@@ -426,7 +424,7 @@ namespace Nimbus.Web.API.Controllers
             }
 
             if (listMessage.Count > 0)
-                return listMessage.OrderBy(d => d.Date).ToList();
+                return listMessage;
             else
                 return null;
         }
@@ -441,11 +439,9 @@ namespace Nimbus.Web.API.Controllers
             List<MessageBag> listMessage = new List<MessageBag>();
             using (var db = DatabaseFactory.OpenDbConnection())
             {
-                var msgSend = db.Where<ReceiverMessage>(r => r.UserId == NimbusUser.UserId && r.Status == Model.Enums.MessageType.send && r.Visible == true)
-                                                     .Skip(15 * skip).Take(15)
-                                                     .Select(r =>
-                                                         db.Where<Message>(m => m.Id == r.MessageId && m.Visible == true).FirstOrDefault())
-                                                     .Where(msg => msg != null);
+                var msgSend = db.Where<ReceiverMessage>(r => r.UserId == NimbusUser.UserId && r.Status == Model.Enums.MessageType.send && r.Visible == true)                                                     
+                                                     .Select(r =>db.Where<Message>(m => m.Id == r.MessageId && m.Visible == true).FirstOrDefault())
+                                                     .Where(msg => msg != null).OrderByDescending(d => d.Date).Skip(15 * skip).Take(15);
 
                 if (msgSend.Count() > 0)
                 {
@@ -471,7 +467,7 @@ namespace Nimbus.Web.API.Controllers
                 }
 
             }
-            return listMessage.OrderByDescending(d => d.Date).ToList();
+            return listMessage;
         }
         
         /// <summary>
