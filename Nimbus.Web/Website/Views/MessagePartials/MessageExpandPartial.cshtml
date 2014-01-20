@@ -27,6 +27,20 @@
 <div id="divMesgExpand_@Model.Id" class="post_m_exp">
     <p id="pExpandMsg_@Model.Id" class="messExpandTxt">@Model.Text</p>
     <div class="divReplyMess">
-        <button class="btnReplyMess">Responder</button>
+        <a href="#modal-answerMsg" id="aClickModalAnswerMsg" style="display:none;" class="call-modal"></a>
+        @{
+            List<string> listReceivers = new List<string> ();
+            List<string> listIdReceivers = new List<string>();
+            string receivers = ""; string idReceivers = "";
+            foreach (var item in Model.Receivers)
+            {
+                listReceivers.Add(item.Name);
+                listIdReceivers.Add(item.UserId.ToString());
+            }
+            idReceivers = System.Web.Helpers.Json.Encode(listIdReceivers);
+            receivers = System.Web.Helpers.Json.Encode(listReceivers);
+        }
+        <button class="btnReplyMess" onclick="createModalAnswerMsg(@receivers, @idReceivers, '@Model.Title', '@Model.Text');">Responder</button>
     </div>
 </div>
+

@@ -241,3 +241,103 @@
         document.getElementById("divBtnEditAvatar").style.display = visible;
     }
 
+    function createModalAnswerMsg(receivers, idReceivers, title, text)
+    {
+        var nameReceivers ="";
+        for (var i = 0; i < receivers.length; i++) {
+            nameReceivers += receivers[i] + " " ;
+        }
+
+        if (document.getElementById("modal-answerMsg") != null)
+        {
+            document.getElementById("pNameReceiversAnswer").innerHTML = nameReceivers;
+            document.getElementById("inpTitleAnswerMsg").value = "RE: " + title;
+            document.getElementById("txtTextAnswerMsg").innerHTML = "\n\n\n\n---\n" + text;
+            document.getElementById("inpSendAnswerMsg").onclick = function () { SendAnswerMsg(idReceivers, 'inpTitleAnswerMsg', 'txtTextAnswerMsg'); };
+        }
+        else
+        {
+            var string = "<section class=\"semantic-content\" id=\"modal-answerMsg\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"modal-label\" aria-hidden=\"true\">" +
+                            "<div class=\"modal-inner\">" +
+                                "<header id=\"modal-label\">" +
+                                    "<!-- Header -->" +
+                                    "Enviar mensagem" +
+                                "</header>" +
+                                "<form id=\"formAnswerMsgProfile\" onsubmit=\"return false;\">" +
+                                 "<div class=\"modal-content\">" +
+                                     "<!-- The modals content -->" +
+                                     "<div class=\"divformModal\">" +
+                                         "<p>Para</p>" +
+                                         "<p class=\"modalUser\" id=\"pNameReceiversAnswer\">" + nameReceivers + "</p>" +
+                                     "</div>" +
+                                     "<div class=\"divformModal\">" +
+                                         "<p>Assunto</p>" +
+                                         "<input id=\"inpTitleAnswerMsg\" name=\"inpAnswerTitleMsg\" type=\"text\" maxlength=\"100\" value=\"RE: " + title + "\" />" +
+                                     "</div>" +
+                                     "<div class=\"divformModal\">" +
+                                         "<p>Mensagem</p>" +
+                                         "<textarea id=\"txtTextAnswerMsg\" name=\"txtTextAnswerMsg\" rows=\"10\" cols=\"60\" required>"
+                                             +"\n\n\n\n---\n"+ text +
+                                         "</textarea>" +
+                                     "</div>" +
+                                 "</div>" +
+                                    "<footer class=\"fooModal\">" +
+                                           "<!-- Footer -->" +
+                                           "<input type=\"submit\" id=\"inpSendAnswerMsg\" class=\"inputSubmit\" value=\"Enviar\" onclick=\"SendAnswerMsg('" + idReceivers + "', 'inpTitleAnswerMsg', 'txtTextAnswerMsg');\" />" +
+                                    "</footer>" +
+                                 "</form>" +
+                             "</div>" +
+                             "<a href=\"#!\" id=\"closeModalAnswerMessage\" class=\"modal-close\" title=\"Close this modal\" data-close=\"Close\" data-dismiss=\"modal\">×</a>" +
+                        "</section>";
+            //colocar no html
+            document.getElementById("divInsertModalAnswerMsg").innerHTML = string;
+        }
+        
+        //chamar a função que abre
+        document.getElementById("aClickModalAnswerMsg").click();
+
+    }
+
+    function SendAnswerMsg(listReceivers, fieldTitle, fieldText)
+    {
+        ajaxMessage = {};
+        var text = $("#"+fieldText).htmlarea('html');
+        var title = document.getElementById(fieldTitle).value;
+
+        if (document.getElementById("formAnswerMsgProfile").checkValidity()) {
+            {
+                ajaxMessage["Text"] = text;
+                if (title != "")
+                    ajaxMessage["Title"] = title;
+                else
+                    ajaxMessage["Title"] = "RE: Sem assunto";
+
+                $.ajax({
+                    url: "/api/Message/SendMessageUser/" + receiverId,
+                    data: JSON.stringify(ajaxMessage),
+                    type: "POST",
+                    contentType: "application/json;charset=utf-8",
+                    statusCode: {
+                        200: function (newData) {
+
+                            if (newData.Id > 0) {
+                                //fechar modal
+                                document.getElementById('closeModalMessage').click();
+                                //limpar campos
+                                text.value = "";
+                                title.value = "";
+                                //aviso
+                                window.alert("Mensagem enviada com sucesso.");
+                            }
+                        },
+
+                        500: function () {
+                            //erro
+                            document.getElementById('closeModalMessage').click();
+                            window.alert("Não foi possível enviar sua mensagem. Tente novamente mais tarde.");
+                        }
+                    }
+                });
+            }
+        }
+    }

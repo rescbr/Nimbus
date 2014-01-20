@@ -96,7 +96,7 @@
             if (Model.ReadLater.Count() == 15)
             {
                 <div class="seeMoreContent">
-                    <div id="btn_skipReadLater" onclick="verMaisTopics(@Model.CurrentUser.UserId,'readLater', 0, 'skipReadLater');"><p>Ver mais</p></div>
+                    <div id="btn_skipReadLater" class="seeMoreButton" onclick="verMaisTopics(@Model.CurrentUser.UserId,'readLater', 0, 'skipReadLater');"><p>Ver mais</p></div>
                 </div>
             }
         }
@@ -208,6 +208,10 @@
 
     @*Tab*@
 
+</div>
+
+<div id="divInsertModalAnswerMsg">
+ <!--Usada p/ chamada do modal by js-->
 </div>
 
 <script type="text/javascript">
