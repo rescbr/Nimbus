@@ -246,17 +246,18 @@
         var nameReceivers ="";
         for (var i = 0; i < receivers.length; i++) {
             nameReceivers += receivers[i] + " " ;
-        }
+        };
 
         if (document.getElementById("modal-answerMsg") != null)
         {
             document.getElementById("pNameReceiversAnswer").innerHTML = nameReceivers;
             document.getElementById("inpTitleAnswerMsg").value = "RE: " + title;
             document.getElementById("txtTextAnswerMsg").innerHTML = "\n\n\n\n---\n" + text;
-            document.getElementById("inpSendAnswerMsg").onclick = function () { SendAnswerMsg(idReceivers, 'inpTitleAnswerMsg', 'txtTextAnswerMsg'); };
+            document.getElementById("inpSendAnswerMsg").onclick = function () { SendAnswerMsg(idReceivers, 'inpTitleAnswerMsg'); };
         }
         else
         {
+             idReceivers = JSON.stringify(idReceivers)
             var string = "<section class=\"semantic-content\" id=\"modal-answerMsg\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"modal-label\" aria-hidden=\"true\">" +
                             "<div class=\"modal-inner\">" +
                                 "<header id=\"modal-label\">" +
@@ -283,7 +284,7 @@
                                  "</div>" +
                                     "<footer class=\"fooModal\">" +
                                            "<!-- Footer -->" +
-                                           "<input type=\"submit\" id=\"inpSendAnswerMsg\" class=\"inputSubmit\" value=\"Enviar\" onclick=\"SendAnswerMsg('" + idReceivers + "', 'inpTitleAnswerMsg', 'txtTextAnswerMsg');\" />" +
+                                           "<input type=\"submit\" id=\"inpSendAnswerMsg\" class=\"inputSubmit\" value=\"Enviar\" onclick='SendAnswerMsg(" + idReceivers + ", \"inpTitleAnswerMsg\");\' />" +
                                     "</footer>" +
                                  "</form>" +
                              "</div>" +
@@ -298,10 +299,10 @@
 
     }
 
-    function SendAnswerMsg(listReceivers, fieldTitle, fieldText)
+    function SendAnswerMsg(listIdReceivers, fieldTitle)
     {
         ajaxMessage = {};
-        var text = $("#"+fieldText).htmlarea('html');
+        var text = $("#txtTextAnswerMsg").htmlarea('html');
         var title = document.getElementById(fieldTitle).value;
 
         if (document.getElementById("formAnswerMsgProfile").checkValidity()) {
@@ -313,7 +314,7 @@
                     ajaxMessage["Title"] = "RE: Sem assunto";
 
                 $.ajax({
-                    url: "/api/Message/SendMessageUser/" + receiverId,
+                    url: "/api/Message/SendAnswerMessage/?receivers=" + encodeURIComponent(JSON.stringify(listIdReceivers)),
                     data: JSON.stringify(ajaxMessage),
                     type: "POST",
                     contentType: "application/json;charset=utf-8",
@@ -322,7 +323,7 @@
 
                             if (newData.Id > 0) {
                                 //fechar modal
-                                document.getElementById('closeModalMessage').click();
+                                document.getElementById('closeModalAnswerMessage').click();
                                 //limpar campos
                                 text.value = "";
                                 title.value = "";

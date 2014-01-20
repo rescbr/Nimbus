@@ -235,12 +235,43 @@ namespace Nimbus.Web.API.Controllers
                 {
                     Nimbus.Model.Receiver receiver = new Model.Receiver();
                     var user = db.SelectParam<User>(u => u.Id == id).FirstOrDefault();
-                    receiver.IsOwner = true; //a msg é enviada para o perfil, logo não importa esse item
-                    receiver.UserId = id;
-                    receiver.Name = user.FirstName + " " + user.LastName;
-                    receiver.AvatarUrl = user.AvatarUrl;
+                    if (user != null)
+                    {
+                        receiver.IsOwner = true; //a msg é enviada para o perfil, logo não importa esse item
+                        receiver.UserId = id;
+                        receiver.Name = user.FirstName + " " + user.LastName;
+                        receiver.AvatarUrl = user.AvatarUrl;
 
-                    listReceiver.Add(receiver);
+                        listReceiver.Add(receiver);
+                    }
+                }
+            }
+            return SendMessageToList(message, listReceiver);
+        }
+
+        public Message SendAnswerMessage(Message message, string receivers)
+        {
+            List<Nimbus.Model.Receiver> listReceiver = new List<Nimbus.Model.Receiver>();
+            if (!string.IsNullOrEmpty(receivers))
+            {
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {
+                    Nimbus.Model.Receiver receiver = new Model.Receiver();
+                    var listIds = System.Web.Helpers.Json.Decode(receivers);
+
+                    foreach (var item in listIds)
+                    {
+                        int id = Convert.ToInt32(item);
+                        var user = db.SelectParam<User>(u => u.Id == id).FirstOrDefault();
+                        if (user != null)
+                        {
+                            receiver.IsOwner = true; //a msg é enviada para o perfil, logo não importa esse item
+                            receiver.UserId = user.Id;
+                            receiver.Name = user.FirstName + " " + user.LastName;
+                            receiver.AvatarUrl = user.AvatarUrl;
+                            listReceiver.Add(receiver);
+                        }
+                    }
                 }
             }
             return SendMessageToList(message, listReceiver);
