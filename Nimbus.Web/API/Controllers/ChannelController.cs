@@ -536,7 +536,8 @@ namespace Nimbus.Web.API.Controllers
                 channels = MyChannel(id, skip);
             if(viewBy == "channelsFollow")
                 channels = FollowsChannel(idUser, skip);
-            
+            if (viewBy == "myChannelsMannager")
+                channels = ModeratorChannel(idUser, skip); 
             
             var rz = new RazorTemplate();
             string html = "";
@@ -552,7 +553,7 @@ namespace Nimbus.Web.API.Controllers
 
 
         /// <summary>
-        /// visualizar 'meus canais'
+        /// visualizar 'meus canais' = criados pelo usuário
         /// </summary>
         /// <returns></returns>        
         [HttpGet]
@@ -565,7 +566,7 @@ namespace Nimbus.Web.API.Controllers
                 {
                     id = NimbusUser.UserId;
                 }
-                var idsRole = db.Where<Role>(rl => rl.IsOwner == true && rl.UserId == id).Skip(15 * skip).Take(15).Select(rl => rl.ChannelId);
+                var idsRole = db.Where<Role>(rl => rl.IsOwner == true && rl.UserId == id).Skip(9 * skip).Take(9).Select(rl => rl.ChannelId);
 
                 listChannel = idsRole.Select(rl => db.Where<Channel>(ch => ch.Visible == true && ch.Id == rl)
                                         .FirstOrDefault()).Where(ch => ch != null).ToList();
@@ -607,7 +608,7 @@ namespace Nimbus.Web.API.Controllers
        /// </summary>
        /// <returns></returns>
         [HttpGet]
-        public List<Channel> ModeratorChannel(int? id = 0)
+        public List<Channel> ModeratorChannel(int? id = 0, int skip = 0)
         {
             List<Channel> listChannel = new List<Channel>();
             try
@@ -622,6 +623,7 @@ namespace Nimbus.Web.API.Controllers
                                                                                               rl.MessageManager == true ||
                                                                                               rl.TopicManager == true ||
                                                                                               rl.UserManager == true)&& rl.UserId == id)
+                                                                        .Skip(9 * skip).Take(9)
                                                                         .Select(rl => rl.ChannelId).ToList();
                     List<Category> listCategory = db.Select<Category>();
                     foreach (int item in idsChannel)
@@ -635,7 +637,14 @@ namespace Nimbus.Web.API.Controllers
                                            ImgUrl = listCategory.Where(c => c.Id == chn.CategoryId).Select(c => c.ImageUrl).FirstOrDefault()
                                        }).FirstOrDefault();
 
-                        listChannel.Add(channel);
+                        listChannel.Add(channel);                        
+                    }
+                    foreach (var item in listChannel)
+                    {
+                        if (item.OrganizationId == 1) // quando o cara não é org pagante, nao pode mudar a capa do channel, logo no abstract iria ficar uma 'cor solida feia'
+                        {
+                            item.ImgUrl = item.ImgUrl.ToLower().Replace("/capachannel/", "/category/");
+                        }
                     }
                 }
             }

@@ -8,6 +8,7 @@
     currentType = 'post_lista';
     nimbusRegisterMessageNotifications = true;
     skipMyChannels = 1;
+    skipMyChannelsMannager = 1;
     skipChannelsFollow = 1;
     skipReadLater = 1;
     skipMessageSend = 0;
@@ -43,24 +44,58 @@
         @if (Model.CurrentUser.UserId == Model.User.Id)
         { 
             <div id="myChannels">
-                @foreach (var item in Model.MyChannels)
-                {
-                    //partial
-                    Html.RenderPartial("~/Website/Views/ChannelPartials/ChannelPartial.cshtml", item);
+                <h1>Meus Canais</h1>
+                @if (Model.MyChannels.Count > 0) { 
+                     foreach (var item in Model.MyChannels)
+                     {
+                         //partial
+                         Html.RenderPartial("~/Website/Views/ChannelPartials/ChannelPartial.cshtml", item);
 
+                     }
+                     if (Model.MyChannels.Count() == 15)
+                     {
+                      <div class="seeMoreContent">
+                        <div class="divGifLoad">
+                            <img src="/images/utils/loading.gif" class="imgGifLoad" id="imgMyChannelsLoad" style="display:none;" />
+                        </div>
+                        <div class="seeMoreButton" id="btn_skipMyChannels" onclick="verMaisChannels(@Model.CurrentUser.UserId, 'myChannels', 0, 'skipMyChannels');"><p>Ver mais</p></div>
+                     </div>
+                     }
+                }
+                else
+                {
+                    <p>Você não criou nenhum canal até o momento. Crie seu primeiro canal e comece agora mesmo a divulgar e compartilhar seus conhecimentos.</p>
                 }
             </div>
 
-            if (Model.MyChannels.Count() == 15)
-            {
-                <div class="seeMoreContent">
-                    <div class="divGifLoad">
-                        <img src="/images/utils/loading.gif" class="imgGifLoad" id="imgMyChannelsLoad" style="display:none;" />
-                    </div>
-                    <div class="seeMoreButton" id="btn_skipMyChannels" onclick="verMaisChannels(@Model.CurrentUser.UserId, 'myChannels', 0, 'skipMyChannels');"><p>Ver mais</p></div>
-                </div>
-            }
-        }
+
+             <div id="myChannelsMannager">
+                 <h1>Meus canais moderados</h1>
+                 @if (Model.ChannelMannager.Count > 0)
+                 { 
+                     foreach (var item in Model.ChannelMannager)
+                     {
+                         //partial
+                         Html.RenderPartial("~/Website/Views/ChannelPartials/ChannelPartial.cshtml", item);
+
+                     }
+
+                     if (Model.MyChannels.Count() == 15)
+                     {
+                         <div class="seeMoreContent">
+                             <div class="divGifLoad">
+                                 <img src="/images/utils/loading.gif" class="imgGifLoad" id="imgMyChannelsMannagerLoad" style="display:none;" />
+                             </div>
+                             <div class="seeMoreButton" id="btn_skipMyChannelsMannager" onclick="verMaisChannels(@Model.CurrentUser.UserId, 'myChannelsMannager', 0, 'skipMyChannelsMannager');"><p>Ver mais</p></div>
+                         </div>
+                     }
+                 }
+                 else
+                 {
+                     <p>Nenhum canal sendo moderado até o momento.</p>
+                 }
+             </div>
+        }        
     </div>
 
     <div id="divChannelFollows" style="display:none;">

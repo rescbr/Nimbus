@@ -222,6 +222,10 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
 
         if (global == 'skipChannelsFollow')
             value = skipChannelsFollow;
+
+        if (global == 'skipMyChannelsMannager')
+            value = skipMyChannelsMannager;
+
         var nameLoad = "img" + global.replace("skip", "") + "Load";
 
         document.getElementById(nameLoad).style.display = 'block';
@@ -237,6 +241,8 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
                         skipMyChannels = skipMyChannels + 1;
                     if (global == 'skipChannelsFollow')
                         skipChannelsFollow = skipChannelsFollow + 1;
+                    if (global == 'skipMyChannelsMannager')
+                        skipMyChannelsMannager = skipMyChannelsMannager + 1;
 
                     document.getElementById(orderBy).innerHTML += newData.Html;
 
