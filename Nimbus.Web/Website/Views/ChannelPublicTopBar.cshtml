@@ -41,8 +41,8 @@
         </div>
         @if (Model.ChannelNotifications.Count > 0)
          {
-           <div id="divNotificationLoad">
-               <img src="/images/utils/loading.gif" style="display:none;" id="imgNotificationLoad" />
+           <div id="divNotificationLoad" class="divGifLoad">
+               <img src="/images/utils/loading.gif" class="imgGifLoad" style="display:none;" id="imgNotificationLoad" />
                <div id="divNotificationLoadButton" style="display:block;" onclick="getChannelNotifications(@Model.CurrentChannel.Id, '@lastNotificationGuid');">Carregar mais notificações</div>
            </div>
          }
@@ -58,6 +58,9 @@
         @if (Model.AllTopics.Count() == 15)
         {
             <div class="seeMoreContent">
+                <div class="divGifLoad">
+                    <img src="/images/utils/loading.gif" class="imgPopularLoad" id="imgNotificationLoad" />
+                </div>
                 <div class="seeMoreButton" id="btn_skipPopular" onclick="verMaisTopics(@Model.CurrentChannel.Id, 'popular', 0, 'skipPopular');"><p>Ver mais</p></div>
             </div>
         }
@@ -73,6 +76,9 @@
         @if (Model.AllTopics.Count() == 15)
         {
             <div class="seeMoreContent">
+                <div class="divGifLoad">
+                    <img src="/images/utils/loading.gif" class="imgAllLoad" id="imgNotificationLoad" />
+                </div>
                 <div class="seeMoreButton" id="btn_skipAll" onclick="verMaisTopics(@Model.CurrentChannel.Id, 'alltpc', 0, 'skipAll');"><p>Ver mais</p></div>
             </div>
         }

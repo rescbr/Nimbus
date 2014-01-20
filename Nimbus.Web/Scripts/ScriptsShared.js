@@ -126,7 +126,8 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
             value = skipReadLater;
             type = "marcado";
         }
-        var divLoad = document.getElementById("img" + global.replace("skip", "") + "Load");
+        var namediv = global.replace("skip", "");
+        var divLoad = document.getElementById("img" + namediv + "Load");
         if(divLoad != null)
            divLoad.style.display = "block";
 
