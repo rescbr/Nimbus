@@ -148,15 +148,16 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
                     if (newData.Count < 15) {
                         document.getElementById("btn_" + global).style.display = "none";
                     }
+                    document.getElementById(nameLoad).style.display = "none";
                 },
 
                 500: function () {
                     //erro
+                    document.getElementById(nameLoad).style.display = "none";
                     window.alert("Erro ao obter mais tópicos. Tente novamente mais tarde.");
                 }
             }
         });
-        document.getElementById(nameLoad).style.display = "none";
     }
 
     //método que busca os comentarios de 15 em 15 e 'filhos' de 5 em 5
@@ -238,30 +239,27 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
                     if (newData.Count < 15) {
                         document.getElementById("btn_" + global).style.display = "none";
                     }
+                    document.getElementById(nameLoad).style.display = 'none';
                 },
 
                 500: function () {
                     //erro
+                    document.getElementById(nameLoad).style.display = 'none';
                     window.alert("Erro ao obter mais canais. Tente novamente mais tarde.");
                 }
             }
         });
-        document.getElementById(nameLoad).style.display = 'none';
     }
 
 
     //método que busca  as mensagens por paginaçao e/ou enviadas
     function viewMessages(global, viewBy, typeBtn, typeClick) {
         var divB; var divN; var nameBtn; var divLoad;
-        var load = document.getElementById(viewBy)
+        var load = document.getElementById("img" + viewBy + "Load")
        
         if (global == 'skipMessageSend') {
             value = skipMessageSend;
-            divLoad = "divSeeMore";            
-            if (load != null) {
-                load.style.display = 'block';
-                document.getElementById(divLoad).style.display = 'none';
-            }
+            divLoad = "divSeeMore";           
             divB = 'divSeeMessagesSend';
             divN = 'divSeeMessages';
             nameBtn = 'btn_moreMsgSend';
@@ -272,12 +270,7 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
         }
 
         if (global == 'skipMessageReceived') {
-            divLoad = "divSeeMoreR";
-            if (load != null) {
-                load.style.display = 'block';
-                document.getElementById(divLoad).style.display = 'none';
-            }
-
+            divLoad = "divSeeMoreR";   
             value = skipMessageReceived;       
             divN = 'divSeeMessagesSend';
             divB = 'divSeeMessages';
@@ -298,6 +291,10 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
         }
 
         if (typeClick == 'seeMore' || typeClick == 'firstGetSend') {
+            if (load != null && typeClick == 'seeMore') {
+                load.style.display = 'block';
+                document.getElementById(divLoad).style.display = 'none';
+            }
             $.ajax({
                 url: "/api/message/MessagesHtml/?viewBy=" + viewBy + "&skip=" + value,
                 type: "GET",
@@ -334,10 +331,14 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
                             if(btn != null)
                             btn.style.display = "block";
                         }
+                        if (load != null)
+                            load.style.display = 'none';
                     },
 
                     500: function () {
                         //erro
+                        if (load != null)
+                            load.style.display = 'none';
                         window.alert("Erro ao processar requisição. Tente novamente mais tarde.");
                     }
                 }
@@ -349,9 +350,7 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
             if (btn != null) {
                 btn.style.display = btnStyle;
             }
-        }
-        if(load != null)
-        load.style.display = 'none';
+        }       
     }
 
     function setOnClickSeeMesg(id, starNameDiv)
