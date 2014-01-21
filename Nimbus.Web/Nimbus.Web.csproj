@@ -428,6 +428,7 @@
     <Content Include="Website\Views\ResetPassword.cshtml" />
     <Content Include="Website\Views\TopicDemo.cshtml" />
     <Content Include="Website\Views\Shared\_LayoutPublic.cshtml" />
+    <Content Include="Website\Views\FAQ.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\Controllers\DatabaseController.cs" />
@@ -462,6 +463,7 @@
     <Compile Include="Utils\RazorTemplate.cs" />
     <Compile Include="Utils\RemoveHTMLString.cs" />
     <Compile Include="Website\Controllers\ChannelController.cs" />
+    <Compile Include="Website\Controllers\NimbusController.cs" />
     <Compile Include="Website\Controllers\NotificationController.cs" />
     <Compile Include="Website\Controllers\ResetPasswordController.cs" />
     <Compile Include="Website\Controllers\SearchController.cs" />

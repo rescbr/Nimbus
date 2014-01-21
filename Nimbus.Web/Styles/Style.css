@@ -357,6 +357,58 @@ p.pErrorLogin{
 }
 
 /*-----------------------fim Login ---------------------------*/
+
+/*-----------------------Layout publica ----------------------*/
+#divLeftLayout {
+    float:left;
+    width: 15%;
+    min-height: 480px;
+}
+
+#divCenterLayout {
+    width: 70%;
+    float: left;
+}
+
+#divRightLayout {
+    float: left;
+    width: 15%;
+    min-height: 480px;
+}
+
+.sectionFaqQuestion
+{
+    padding-bottom: 20px;
+    padding-top:    20px;
+    border-color: rgb(135, 194, 64);
+    border-bottom: 3px solid rgb(135, 194, 64);
+}
+
+.sectionFaqQuestion h1 {
+    color: rgb(135, 194, 64);
+    font-size: 15px;
+    font-weight: bold;
+    line-height: 1.5em;
+    }
+/*-----------------------Fim layout publica-------------------*/
+
+/*-----------------------Paginas estáticas--------------------*/
+#divListQuestionsFaq {
+    padding-top: 30px;
+    padding-bottom: 30px;
+    border-bottom: 3px solid rgb(135, 194, 64);
+}
+
+#divListQuestionsFaq p{
+    color: #87c240;
+    text-align: justify;
+    font-size: 17px;
+    line-height: 1.4em;
+    font-weight: bold;
+    font-family: confortaa;
+}
+/*----------------------fim paginas estáticas-----------------*/
+
 /*------------------------New Account ------------------------*/
 p.pNewAccount {
     color:              #4b4b4b;
