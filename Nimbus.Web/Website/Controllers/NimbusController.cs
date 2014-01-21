@@ -28,9 +28,9 @@ namespace Nimbus.Web.Website.Controllers
         }
 
         [HttpGet]
-        public ActionResult Vemporai()
+        public ActionResult Novidades()
         {
-            return View("vemporai");
+            return View("novidades");
         }
 
         [HttpGet]

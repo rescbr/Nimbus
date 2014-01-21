@@ -390,17 +390,31 @@ p.pErrorLogin{
     font-weight: bold;
     line-height: 1.5em;
     }
+
+div.divformFaleConosco {
+    background:         #f1f2f2;
+    width:              408px;
+    padding:            12px;
+    border-bottom:      1px solid #d1d3d4;
+    clear:              both;
+}
+
 /*-----------------------Fim layout publica-------------------*/
 
 /*-----------------------Paginas estáticas--------------------*/
-#divListQuestionsFaq {
+#divListQuestionsFaq,#divAllFaleConosco {
     padding-top: 30px;
     padding-bottom: 30px;
     border-bottom: 3px solid rgb(135, 194, 64);
 }
 
-#divListQuestionsFaq p{
+#divListQuestionsFaq h1 {
+    font-family: confortaa;
     color: #87c240;
+    }
+
+#divListQuestionsFaq p{
+    color: rgb(43, 45, 46);
     text-align: justify;
     font-size: 17px;
     line-height: 1.4em;
@@ -408,6 +422,10 @@ p.pErrorLogin{
     font-family: confortaa;
     cursor:      pointer;
 }
+#divformFaleConosco p {
+    line-height:   3em;
+}
+
 /*----------------------fim paginas estáticas-----------------*/
 
 /*------------------------New Account ------------------------*/

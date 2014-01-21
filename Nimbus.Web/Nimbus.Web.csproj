@@ -429,6 +429,10 @@
     <Content Include="Website\Views\TopicDemo.cshtml" />
     <Content Include="Website\Views\Shared\_LayoutPublic.cshtml" />
     <Content Include="Website\Views\FAQ.cshtml" />
+    <Content Include="Website\Views\FaleConosco.cshtml" />
+    <Content Include="Website\Views\QuemSomos.cshtml" />
+    <Content Include="Website\Views\Novidades.cshtml" />
+    <None Include="Website\Views\TermosdeUso.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\Controllers\DatabaseController.cs" />

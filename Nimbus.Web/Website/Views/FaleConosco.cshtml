@@ -1,0 +1,36 @@
+﻿@model Nimbus.Web.Website.Controllers.NimbusController
+
+@{
+    ViewBag.Title = "Fale conosco";
+    Layout = "~/Website/Views/Shared/_LayoutPublic.cshtml";
+}
+
+<div id="divAllFaleConosco">
+    <h1>Fale Conosco</h1><br />
+    <div id="divContentFaleConosco">
+        <section>
+            <p>Olá,</p><br />
+            nossa equipe está aguardado por sua participação. envie-nos seus comentários, sugestões,
+            dúvidas ou críticas e nós ajude a melhorar cada vez mais.
+        </section>
+
+        <div id="divformFaleConosco" style="margin-left:30%; margin-right:30%;">
+            <p><input type="text" placeholder="Nome" min="10" max="50" style="width: 100%; padding: 4px;" /></p>
+            <p><input type="text" placeholder="Sobrenome" min="4" max="100" style="width: 100%; padding: 4px;" /></p>
+            <p><input type="email" placeholder="Email" style="width: 100%; padding: 4px;" /></p>
+            <p>
+                Tipo:
+                <select>
+                    <option>Sugestões</option>
+                    <option>Elogios</option>
+                    <option>Parcerias</option>
+                    <option>Críticas</option>
+                    <option>Dúvidas</option>
+                    <option>Outros</option>
+                </select>
+            </p>
+            <p>Deixe seu recado:</p>
+            <textarea id="txtaMsgFaleConosco" style="width:300px; height:100px;"></textarea>
+        </div>
+    </div>
+</div>
