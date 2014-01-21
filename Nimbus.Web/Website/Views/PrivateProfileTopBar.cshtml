@@ -8,6 +8,7 @@
     currentType = 'post_lista';
     nimbusRegisterMessageNotifications = true;
     skipMyChannels = 1;
+    skipMyChannelsMannager = 1;
     skipChannelsFollow = 1;
     skipReadLater = 1;
     skipMessageSend = 0;
@@ -32,8 +33,8 @@
         <div id="divNotificationWrapper">
         </div>
         <div id="divNotificationLoad">
-            <div style="margin: 0 auto;">
-                <img src="/images/utils/loading.gif" id="imgNotificationLoad" />
+            <div class="divGifLoad">
+                <img src="/images/utils/loading.gif" class="imgGifLoad" id="imgNotificationLoad" />
             </div>
             <div id="divNotificationLoadButton" style="display:none;" onclick="getNotifications();"><p>Carregar mais notificações</p></div>
         </div>
@@ -43,24 +44,58 @@
         @if (Model.CurrentUser.UserId == Model.User.Id)
         { 
             <div id="myChannels">
-                @foreach (var item in Model.MyChannels)
-                {
-                    //partial
-                    Html.RenderPartial("~/Website/Views/ChannelPartials/ChannelPartial.cshtml", item);
+                <h1>Meus Canais</h1>
+                @if (Model.MyChannels.Count > 0) { 
+                     foreach (var item in Model.MyChannels)
+                     {
+                         //partial
+                         Html.RenderPartial("~/Website/Views/ChannelPartials/ChannelPartial.cshtml", item);
 
+                     }
+                     if (Model.MyChannels.Count() == 15)
+                     {
+                      <div class="seeMoreContent">
+                        <div class="divGifLoad">
+                            <img src="/images/utils/loading.gif" class="imgGifLoad" id="imgMyChannelsLoad" style="display:none;" />
+                        </div>
+                        <div class="seeMoreButton" id="btn_skipMyChannels" onclick="verMaisChannels(@Model.CurrentUser.UserId, 'myChannels', 0, 'skipMyChannels');"><p>Ver mais</p></div>
+                     </div>
+                     }
+                }
+                else
+                {
+                    <p>Você não criou nenhum canal até o momento. Crie seu primeiro canal e comece agora mesmo a divulgar e compartilhar seus conhecimentos.</p>
                 }
             </div>
 
-            if (Model.MyChannels.Count() == 15)
-            {
-                <div class="seeMoreContent">
-                    <div style="margin: 0 auto;">
-                        <img src="/images/utils/loading.gif" id="imgMyChannelsLoad" style="display:none;" />
-                    </div>
-                    <div class="seeMoreButton" id="btn_skipMyChannels" onclick="verMaisChannels(@Model.CurrentUser.UserId, 'myChannels', 0, 'skipMyChannels');"><p>Ver mais</p></div>
-                </div>
-            }
-        }
+
+             <div id="myChannelsMannager">
+                 <h1>Meus canais moderados</h1>
+                 @if (Model.ChannelMannager.Count > 0)
+                 { 
+                     foreach (var item in Model.ChannelMannager)
+                     {
+                         //partial
+                         Html.RenderPartial("~/Website/Views/ChannelPartials/ChannelPartial.cshtml", item);
+
+                     }
+
+                     if (Model.MyChannels.Count() == 15)
+                     {
+                         <div class="seeMoreContent">
+                             <div class="divGifLoad">
+                                 <img src="/images/utils/loading.gif" class="imgGifLoad" id="imgMyChannelsMannagerLoad" style="display:none;" />
+                             </div>
+                             <div class="seeMoreButton" id="btn_skipMyChannelsMannager" onclick="verMaisChannels(@Model.CurrentUser.UserId, 'myChannelsMannager', 0, 'skipMyChannelsMannager');"><p>Ver mais</p></div>
+                         </div>
+                     }
+                 }
+                 else
+                 {
+                     <p>Nenhum canal sendo moderado até o momento.</p>
+                 }
+             </div>
+        }        
     </div>
 
     <div id="divChannelFollows" style="display:none;">
@@ -79,8 +114,8 @@
             if (Model.ChannelFollow.Count() == 15)
             {
               <div class="seeMoreContent">
-                  <div style="margin: 0 auto;">
-                      <img src="/images/utils/loading.gif" id="imgChannelsFollowLoad" style="display:none;" />
+                  <div class="divGifLoad">
+                      <img src="/images/utils/loading.gif" id="imgChannelsFollowLoad" class="imgGifLoad" style="display:none;" />
                   </div>
                 <div class="seeMoreButton" id="btn_skipChannelsFollow" onclick="verMaisChannels(@Model.CurrentUser.UserId, 'channelsFollow', 0, 'skipChannelsFollow');">
                     <p>Ver mais</p></div>
@@ -102,8 +137,8 @@
             if (Model.ReadLater.Count() == 15)
             {
                 <div class="seeMoreContent">
-                    <div style="margin: 0 auto;">
-                        <img src="/images/utils/loading.gif" id="imgReadLaterLoad" style="display:none;" />
+                    <div class="divGifLoad">
+                        <img src="/images/utils/loading.gif" id="imgReadLaterLoad" class="imgGifLoad" style="display:none;" />
                     </div>
                     <div id="btn_skipReadLater" class="seeMoreButton" onclick="verMaisTopics(@Model.CurrentUser.UserId,'readLater', 0, 'skipReadLater');"><p>Ver mais</p></div>
                 </div>
@@ -118,8 +153,12 @@
                     <li id="liMsgReceived" class="press" onclick="viewMessages('skipMessageReceived', 'messageReceived', 'received','back');">Recebidas</li>
                     <li id="liMsgSend" class="press" onclick="viewMessages('skipMessageSend', 'messageSend', 'send','firstGetSend');">Enviadas</li>
                 </ul>
-            </nav>
+                <div class="divGifLoad">
+                    <img src="/images/utils/loading.gif" class="imgGifLoad" id="imgTopBarLoad" style="display:none;" />
+                </div>
 
+            </nav>
+            
             <div class="messContent">
                 @*PostsMessages*@
             </div>
@@ -138,8 +177,8 @@
 
              @if (Model.Messages.Count() == 15)
              {
-                 <div style="margin: 0 auto;">
-                         <img src="/images/utils/loading.gif" id="imgmessageReceivedLoad" style="display:none;" />
+                 <div class="divGifLoad">
+                         <img src="/images/utils/loading.gif" class="imgGifLoad" id="imgmessageReceivedLoad" style="display:none;" />
                  </div>
                  <div id="divSeeMoreR">                     
                     <div id="btn_moreMsgReceveid" onclick="viewMessages('skipMessageReceived', 'messageReceived', '', 'seeMore');"><p>Ver mais</p></div>
@@ -152,11 +191,11 @@
 
              </div>
              @if (Model.CountMessageSend == 15)
-               {
-                 <div style="margin: 0 auto;">
-                           <img src="/images/utils/loading.gif" id="imgmessageSendLoad" style="display:none;" />
-                       </div>
+               {               
                    <div id="divSeeMore">                       
+                       <div class="divGifLoad">
+                           <img src="/images/utils/loading.gif" class="imgGifLoad" id="imgmessageSendLoad" style="display:none;" />
+                       </div>
                        <div  id="btn_moreMsgSend" onclick="viewMessages('skipMessageReceived', 'messageSend', '', 'seeMore');"><p>Ver mais</p></div>
                    </div>
                }

@@ -126,8 +126,10 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
             value = skipReadLater;
             type = "marcado";
         }
-        var nameLoad = "img" + global.replace("skip", "") + "Load";
-        document.getElementById(nameLoad).style.display = "block";
+        var namediv = global.replace("skip", "");
+        var divLoad = document.getElementById("img" + namediv + "Load");
+        if(divLoad != null)
+           divLoad.style.display = "block";
 
         $.ajax({
             url: "/api/topic/AbstTopicHtml/" + id +"?viewBy=" + orderBy + "&categoryID=" + category + "&skip=" +value + "&type=" + type,
@@ -148,15 +150,18 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
                     if (newData.Count < 15) {
                         document.getElementById("btn_" + global).style.display = "none";
                     }
+                    if(divLoad != null)
+                        divLoad.style.display = "none";
                 },
 
                 500: function () {
                     //erro
+                    if (divLoad != null)
+                        divLoad.style.display = "none";
                     window.alert("Erro ao obter mais tópicos. Tente novamente mais tarde.");
                 }
             }
         });
-        document.getElementById(nameLoad).style.display = "none";
     }
 
     //método que busca os comentarios de 15 em 15 e 'filhos' de 5 em 5
@@ -217,6 +222,10 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
 
         if (global == 'skipChannelsFollow')
             value = skipChannelsFollow;
+
+        if (global == 'skipMyChannelsMannager')
+            value = skipMyChannelsMannager;
+
         var nameLoad = "img" + global.replace("skip", "") + "Load";
 
         document.getElementById(nameLoad).style.display = 'block';
@@ -232,36 +241,41 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
                         skipMyChannels = skipMyChannels + 1;
                     if (global == 'skipChannelsFollow')
                         skipChannelsFollow = skipChannelsFollow + 1;
+                    if (global == 'skipMyChannelsMannager')
+                        skipMyChannelsMannager = skipMyChannelsMannager + 1;
 
                     document.getElementById(orderBy).innerHTML += newData.Html;
 
                     if (newData.Count < 15) {
                         document.getElementById("btn_" + global).style.display = "none";
                     }
+                    document.getElementById(nameLoad).style.display = 'none';
                 },
 
                 500: function () {
                     //erro
+                    document.getElementById(nameLoad).style.display = 'none';
                     window.alert("Erro ao obter mais canais. Tente novamente mais tarde.");
                 }
             }
         });
-        document.getElementById(nameLoad).style.display = 'none';
     }
 
 
     //método que busca  as mensagens por paginaçao e/ou enviadas
     function viewMessages(global, viewBy, typeBtn, typeClick) {
-        var divB; var divN; var nameBtn; var divLoad;
-        var load = document.getElementById(viewBy)
+        var divB; var divN; var nameBtn; var load;
+
+        if (typeClick == 'firstGetSend') {
+            load = document.getElementById("imgTopBarLoad");
+        }
+        else {
+            load = document.getElementById("img" + viewBy + "Load")
+        }
        
         if (global == 'skipMessageSend') {
             value = skipMessageSend;
-            divLoad = "divSeeMore";            
-            if (load != null) {
-                load.style.display = 'block';
-                document.getElementById(divLoad).style.display = 'none';
-            }
+            divLoad = "divSeeMore";           
             divB = 'divSeeMessagesSend';
             divN = 'divSeeMessages';
             nameBtn = 'btn_moreMsgSend';
@@ -272,12 +286,7 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
         }
 
         if (global == 'skipMessageReceived') {
-            divLoad = "divSeeMoreR";
-            if (load != null) {
-                load.style.display = 'block';
-                document.getElementById(divLoad).style.display = 'none';
-            }
-
+            divLoad = "divSeeMoreR";   
             value = skipMessageReceived;       
             divN = 'divSeeMessagesSend';
             divB = 'divSeeMessages';
@@ -291,13 +300,23 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
                
         var btn = document.getElementById(nameBtn);
         if (btn != null) {
-            if (typeBtn == 'send')
-                btn.onclick = function () { viewMessages('skipMessageSend', 'messageSend', 'send', 'seeMore'); }
-            else
+            if (typeBtn == 'send') {
+                btn.onclick = function () { viewMessages('skipMessageSend', 'messageSend', 'send', 'seeMore'); }               
+            }
+            else {
                 btn.onclick = function () { viewMessages('skipMessageReceived', 'messageReceived', '', 'seeMore'); }
+            }
         }
 
         if (typeClick == 'seeMore' || typeClick == 'firstGetSend') {
+            
+            if(typeClick == 'seeMore') {              
+                document.getElementById(nameBtn).style.display = 'none';
+            }
+            if (load != null) {
+                load.style.display = 'block';
+            }
+            
             $.ajax({
                 url: "/api/message/MessagesHtml/?viewBy=" + viewBy + "&skip=" + value,
                 type: "GET",
@@ -334,10 +353,14 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
                             if(btn != null)
                             btn.style.display = "block";
                         }
+                        if (load != null)
+                            load.style.display = 'none';
                     },
 
                     500: function () {
                         //erro
+                        if (load != null)
+                            load.style.display = 'none';
                         window.alert("Erro ao processar requisição. Tente novamente mais tarde.");
                     }
                 }
@@ -345,13 +368,11 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
         }
         else if (typeClick == 'back') {
             document.getElementById(divB).style.display = 'block';
-            document.getElementById(divN).style.display = 'none';
+            document.getElementById(divN).style.display = 'none';            
             if (btn != null) {
                 btn.style.display = btnStyle;
             }
-        }
-        if(load != null)
-        load.style.display = 'none';
+        }       
     }
 
     function setOnClickSeeMesg(id, starNameDiv)

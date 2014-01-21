@@ -35,7 +35,7 @@ namespace Nimbus.Web.Website.Controllers
             var taskMessages = Task.Run(() => msgApi.ReceivedMessages(0));
             var taskCountMsgSend = Task.Run(() => msgApi.CountSentMessages(0));
             var taskCategories = Task.Run(() => categoryApi.showAllCategory());
-            var taskChannelManager = Task.Run(()=>channelApi.ModeratorChannel(id));
+            var taskChannelManager = Task.Run(()=>channelApi.ModeratorChannel(id, 0));
 
             await Task.WhenAll(taskChannelPaid, taskUser, taskChannelFollow, taskMyChannels, taskReadLater, taskMessages, taskCategories, taskChannelManager);
 
