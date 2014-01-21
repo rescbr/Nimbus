@@ -37,12 +37,35 @@
         cssOldLink = '';
         oldNameLink = '';
     </script>
+
+
     @* não esquecer de minificar =) *@
+    @Scripts.Render(("~/Scripts/jquery-2.0.3.js"))
     @Scripts.Render(("~/Scripts/modal.js"))
     @Styles.Render(("~/Styles/modal.css"))
     @Scripts.Render(("~/Scripts/ScriptsShared.js"))
-    @Scripts.Render(("~/Scripts/jquery-2.0.3.js"))
- 
+   
+
+    <script type="text/javascript">
+        function PositionFooter() {
+            var $footer = $("#footer"), footerHeight = $footer.height(),
+            footerTop = ($(window).scrollTop() + $(window).height() - footerHeight) + "px";
+
+            if (($(document.body).height() + footerHeight) < $(window).height()) {
+                $footer.css({ position: "absolute", top: footerTop });
+            }
+            else { $footer.css({ position: "static" }); }
+        }
+
+        function GerenciarFooter() {
+            $(window).resize(PositionFooter)
+            PositionFooter();
+        }
+
+        $(document).ready(function () {
+            GerenciarFooter();          
+        });
+    </script>
    
     <header id="header">
             <div class="container">
@@ -82,7 +105,7 @@
             </div>       
     </header>
 
-    <div class="container-body">
+        <div class="container-body">
             <div id="divBarSearch" style="display:none;">
                 <input id="txtFieldSearchLayout" style="width:350px;" type="text" value="Busque por canais, tópicos ou pessoas" onclick="this.value=''" />
                 <select id="slcFilterSearchLayout">
@@ -93,23 +116,22 @@
                 </select>
                 <img src="/images/utils/search.png" title="Buscar" class="cpointer" alt="Buscar" onclick="ajaxSearch('Layout');" />
             </div>
-                <div class="middle-body">
-                    @RenderBody()
-                </div>
-    </div>
+            <div class="middle-body">
+                @RenderBody()
+            </div>
+        </div>
 
-    <div class="footerMainPage">
-        <nav class="navFooMainPage">
-            <ul class="ulFooPage">
-                <li>FAQ</li>
-                <li>Fale Conosco</li>
-                <li>Quem Somos</li>
-                <li>Vem por aí</li>
-                <li>Termos de uso</li>
-            </ul>
-        </nav>
-    </div>
-
+        <div id="footer" class="footerMainPage">
+            <nav class="navFooMainPage">
+                <ul class="ulFooPage">
+                    <li>FAQ</li>
+                    <li>Fale Conosco</li>
+                    <li>Quem Somos</li>
+                    <li>Vem por aí</li>
+                    <li>Termos de uso</li>
+                </ul>
+            </nav>
+        </div>  
     
     @if (User.Identity.IsAuthenticated)
     {

@@ -17,6 +17,27 @@
     @Scripts.Render(("~/Scripts/ScriptsShared.js"))
     @Scripts.Render(("~/Scripts/jquery-2.0.3.js"))
 
+    <script type="text/javascript">
+        function PositionFooter() {
+            var $footer = $("#footer"), footerHeight = $footer.height(),
+            footerTop = ($(window).scrollTop() + $(window).height() - footerHeight) + "px";
+
+            if (($(document.body).height() + footerHeight) < $(window).height()) {
+                $footer.css({ position: "absolute", top: footerTop });
+            }
+            else { $footer.css({ position: "static" }); }
+        }
+
+        function GerenciarFooter() {
+            $(window).resize(PositionFooter)
+            PositionFooter();
+        }
+
+        $(document).ready(function () {
+            GerenciarFooter();
+        });
+    </script>
+    
     <div id="wrap">
         <header id="header">
             <div class="container">
@@ -32,19 +53,34 @@
                     </ul>
                 </nav>
             </div>       
-        </header>
+        </header>            
 
-        <div class="wrapper">
-            <div class="container-body">
-                <div class="middle-body">
-                    @RenderBody()
-                </div>
-            </div>
+        <div id="divLeftLayout">
+
         </div>
-        <div id="footer">
-            <!-- blablablabla-->
+
+        <div class="middle-body" id="divCenterLayout">
+            @RenderBody()
         </div>
+
+        <div id="divRightLayout">
+
+        </div>
+
+        <div id="footer" class="footerMainPage">
+            <nav class="navFooMainPage">
+                <ul class="ulFooPage">
+                    <li>FAQ</li>
+                    <li>Fale Conosco</li>
+                    <li>Quem Somos</li>
+                    <li>Vem por aí</li>
+                    <li>Termos de uso</li>
+                </ul>
+            </nav>
+        </div> 
     </div>
+
+
     @if (User.Identity.IsAuthenticated)
     {
         @Scripts.Render("~/Scripts/jquery.signalR-2.0.0.js")
