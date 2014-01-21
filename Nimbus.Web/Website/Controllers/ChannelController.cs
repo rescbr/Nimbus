@@ -106,7 +106,7 @@ namespace Nimbus.Web.Website.Controllers
             blob60x60.UploadStreamToAzure(image60x60Stream);
 
 
-            var pathFinal = blob.BlockBlob.Uri.AbsoluteUri.Replace("https://", "http://");
+            var pathFinal = blob.BlockBlob.Uri.AbsoluteUri.Replace("https://", "http://").Replace("***REMOVED***", "storage.portalnimbus.com.br");
 
             //retorna apenas a 150x100.
             return Json(new { url = pathFinal });

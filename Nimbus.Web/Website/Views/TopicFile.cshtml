@@ -8,6 +8,11 @@
         
     if (Model.CurrentTopic.UrlVideo.EndsWith(".pdf"))
     {
+        width = "550px";
+        height = "586px";
+        <iframe src="/Scripts/pdf.js/web/viewer.html?file=@Model.CurrentTopic.UrlVideo" width="@width" height="@height" frameborder='0'>
+             Embedded pdf.js viewer
+        </iframe>
     }
     else
     {
@@ -16,7 +21,7 @@
             width = "550px";
             height = "586px";
         }
-         <iframe src=@urlFile width=@width height=@height frameborder='0'>
+         <iframe src="@urlFile" width="@width" height="@height" frameborder='0'>
              This is an embedded
             <a target='_blank' href='http://office.com'>Microsoft Office</a>
              presentation, powered by 

@@ -82,7 +82,7 @@ namespace Nimbus.Web.Website.Controllers
             var blob = new AzureBlob(Const.Azure.TopicContainer, uploadFileName);
             blob.UploadStreamToAzure(file.InputStream);
 
-            var pathFinal = blob.BlockBlob.Uri.AbsoluteUri.Replace("https://", "http://");
+            var pathFinal = blob.BlockBlob.Uri.AbsoluteUri.Replace("https://", "http://").Replace("***REMOVED***", "storage.portalnimbus.com.br");
 
             var previewModel = new UploadModel()
             {
