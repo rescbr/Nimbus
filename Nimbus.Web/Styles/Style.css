@@ -384,7 +384,7 @@ p.pErrorLogin{
     border-bottom: 3px solid rgb(135, 194, 64);
 }
 
-.sectionFaqQuestion h1 {
+.sectionFaqQuestion a {
     color: rgb(135, 194, 64);
     font-size: 15px;
     font-weight: bold;
@@ -406,6 +406,7 @@ p.pErrorLogin{
     line-height: 1.4em;
     font-weight: bold;
     font-family: confortaa;
+    cursor:      pointer;
 }
 /*----------------------fim paginas estáticas-----------------*/
 
