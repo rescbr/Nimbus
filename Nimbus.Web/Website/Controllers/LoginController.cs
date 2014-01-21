@@ -194,7 +194,7 @@ namespace Nimbus.Web.Website.Controllers
                                 var blob35x35 = new AzureBlob(Const.Azure.AvatarContainer, nomeImgAvatar35x35);
                                 blob35x35.UploadStreamToAzure(img.SaveToJpeg());
 
-                                pathAvatar = blob.BlockBlob.Uri.AbsoluteUri.Replace("https://", "http://");
+                                pathAvatar = blob.BlockBlob.Uri.AbsoluteUri.Replace("https://", "http://").Replace("***REMOVED***", "storage.portalnimbus.com.br");
                                 #endregion
                             }
 

@@ -103,7 +103,7 @@ namespace Nimbus.Web.Website.Controllers
             var blob = new AzureBlob(Const.Azure.AvatarContainer, nomeFinal);
             blob.UploadStreamToAzure(imageStream);
 
-            var pathFinal = blob.BlockBlob.Uri.AbsoluteUri.Replace("https://", "http://");
+            var pathFinal = blob.BlockBlob.Uri.AbsoluteUri.Replace("https://", "http://").Replace("***REMOVED***", "storage.portalnimbus.com.br");
             //adiciona query string para atrapalhar o cache =)
             pathFinal += "?x=" + DateTime.Now.ToFileTime().ToString();
 
@@ -192,7 +192,7 @@ namespace Nimbus.Web.Website.Controllers
             var blob35x35 = new AzureBlob(Const.Azure.AvatarContainer, nomeImgAvatar35x35);
             blob35x35.UploadStreamToAzure(img.SaveToJpeg());
 
-            var pathFinal = blob.BlockBlob.Uri.AbsoluteUri.Replace("https://", "http://");
+            var pathFinal = blob.BlockBlob.Uri.AbsoluteUri.Replace("https://", "http://").Replace("***REMOVED***", "storage.portalnimbus.com.br");
 
             using (var db = DatabaseFactory.OpenDbConnection())
             {
