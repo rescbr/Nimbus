@@ -54,12 +54,22 @@
 <div>
 @foreach (var item in Model.ItensFound)
 {
-    <a href="/@item.ItemPageUrl/index/@item.IdItem">
-        <div>
-            <img src="@item.UrlImage" title="@item.TypeSearch" alt="@item.TypeSearch" />
-            <p>@item.Title</p>
-            <p>@item.Description</p>
-        </div> 
-    </a>
+    
+    <div class="divSearch-grade">
+        <a href="/@item.ItemPageUrl/index/@item.IdItem">
+            <div class="headerSearch-grade">               
+                <h1>@item.Title</h1>
+                <img src="@item.UrlImage" title="@item.TypeSearch" alt="@item.TypeSearch" width="180" height="100"  />
+            </div>
+            <p class="contentSearch-grade">
+                @item.Description<
+            </p>
+        </a>
+        <a href="/@item.ItemPageUrl/index/@item.IdItem">
+        <div class="footerSearch-grade">
+             <p>Ver mais</p>
+        </div>  
+        </a>
+    </div>  
 }
 </div>

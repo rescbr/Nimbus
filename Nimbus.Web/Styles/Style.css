@@ -1259,7 +1259,7 @@ div#headerChannel{
     font-weight:bold;
 }
 
-div.divTopic-grade {
+div.divTopic-grade, div.divSearch-grade {
     float:             left;
     margin:            24px 0 0 24px;
     width:             180px;
@@ -1267,7 +1267,9 @@ div.divTopic-grade {
     background:        none;
 }
 
-.divTopic-grade a, .divTopic-grade a:hover, .divTopic-grade a:active, .headerTopic-grade h1 {
+.divTopic-grade a, .divTopic-grade a:hover, .divTopic-grade a:active, .headerTopic-grade h1,
+.headerSearch-grade h1
+ {
     color:            #FFFFFF;
     font-style:       none;
     line-height:      4em;
@@ -1279,7 +1281,7 @@ div.divTopic-grade {
     cursor:           pointer;
 }
 
-div.headerTopic-grade {
+div.headerTopic-grade,div.headerSearch-grade {
     width:             180px;
     height:            150px;
     background:        #2b2d2e;
@@ -1291,7 +1293,7 @@ div.headerTopic-grade {
     height:             100px;
 }
 
-p.contentTopic-grade{
+p.contentTopic-grade, p.contentSearch-grade{
     line-height:        1.1em;
     background:         #f1f2f2;
     width:              178px;
@@ -1305,6 +1307,22 @@ p.contentTopic-grade{
     width:              180px;
     height:             40px;
 }
+
+.footerSearch-grade {
+    background:         #87c240;
+    width:              180px;
+    height:             40px;
+    line-height:        3em;  
+    cursor:             pointer;  
+}
+
+.footerSearch-grade p  {
+    text-align:         center;
+    }
+.footerSearch-grade p:hover, .footerSearch-grade p:active  {
+    text-align:         center;
+    color: #FFFFFF;
+    }
 
 .btnLeftTopic-grade {
     background:         #87c240;
@@ -1630,7 +1648,7 @@ div#nameChannelPage {
 
 #imgTopic {
     background:         #bcbec0;
-    top:                190px;
+    top:                120px;
     position:           absolute;
     /*z-index:            999999;*/
     float:              none;
@@ -1710,7 +1728,7 @@ h1.favTopic {
 .likeLinkTopic {
     float:              left;
     margin-right:       10px;
-    margin-left:        10px;
+    margin-left:        5px;
     margin-top:         20px;
 }
 
