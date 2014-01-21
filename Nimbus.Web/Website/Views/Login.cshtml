@@ -46,12 +46,21 @@
         </form>
         @*<p class="pLogin">Não possui uma conta no Nimbus? <a href="/NewAccount" title="Inscreva-se">Inscreva-se já</a></p>*@
         <p class="pLogin"><a href="/api/user/sendTokenResetPassword" title="Esqueci minha senha"><u>Esqueci minha senha</u></a></p>
-        <div class="btnFacebook">
-            <img class="imgBtnFacebook" src="/images/utils/facebook24x24.png" />
-            <div class="btnTextFaceebok">
-                Logar com <b>Facebook</b>
+        @{
+            string facebookLoginUrl = "/login/facebook";
+            if (@Model.RedirectURL != null)
+            {
+                facebookLoginUrl += "?redirect=" + Uri.EscapeDataString(Model.RedirectURL);
+            }
+        }
+        <a href="@facebookLoginUrl">
+            <div class="btnFacebook">
+                <img class="imgBtnFacebook" src="/images/utils/facebook24x24.png" />
+                <div class="btnTextFaceebok">
+                    Logar com <b>Facebook</b>
+                </div>
             </div>
-        </div>
+        </a>
     </div>
         
 </div>

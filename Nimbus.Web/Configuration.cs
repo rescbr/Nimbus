@@ -66,6 +66,28 @@ namespace Nimbus.Web
             }
         }
 
+        private static string _facebookAppId = null;
+        public static string FacebookAppId
+        {
+            get
+            {
+                if (_facebookAppId == null)
+                    _facebookAppId = GetSetting("FacebookAppId");
+                return _facebookAppId;
+            }
+        }
+
+        private static string _facebookAppSecret = null;
+        public static string FacebookAppSecret
+        {
+            get
+            {
+                if (_facebookAppSecret == null)
+                    _facebookAppSecret = GetSetting("FacebookAppSecret");
+                return _facebookAppSecret;
+            }
+        }
+
         private static string GetSetting(string key)
         {
             //if (RoleEnvironment.IsAvailable)

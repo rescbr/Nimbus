@@ -120,6 +120,21 @@ namespace Nimbus.Web.Website
             return instance;
         }
 
+        [NonAction]
+        public T ClonedWebContextInstance<T>() where T : NimbusWebController, new()
+        {
+            T instance = new T();
+            //instance.ControllerContext = this.ControllerContext;
+            //instance.ControllerContext = new System.Web.Http.Controllers.HttpControllerContext();
+            instance.NimbusUser = this.NimbusUser;
+            instance.NimbusOrganization = this.NimbusOrganization;
+            instance.Session = this.Session;
+            instance.ControllerContext = this.ControllerContext;
+            instance.Response = this.Response;
+
+            return instance;
+        }
+
         private HttpSessionStateBase _session = null;
         public new HttpSessionStateBase Session { 
             get

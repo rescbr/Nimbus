@@ -9,6 +9,8 @@ namespace Nimbus.Web
     {
         public const string UserSession = "user";
 
+        public const int CookieExpiryDays = 7;
+
         public static class Azure
         {
             public const string AvatarContainer = "avatarupload";

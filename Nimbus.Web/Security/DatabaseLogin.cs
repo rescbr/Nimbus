@@ -25,6 +25,14 @@ namespace Nimbus.Web.Security
             _dbFactory = dbFactory;
         }
 
+        public enum AuthenticationResult
+        {
+            Success,
+            UserDoesNotExist,
+            InvalidPassword,
+            GenericFail
+        }
+
         /// <summary>
         /// Autentica um par (email, senha) com o banco de dados.
         /// </summary>
@@ -32,13 +40,19 @@ namespace Nimbus.Web.Security
         /// <param name="password">Senha em texto claro</param>
         /// <param name="dbUser">Usuário autenticado</param>
         /// <returns></returns>
-        public bool Authenticate(string email, string password, out NimbusPrincipal principal)
+        public bool Authenticate(string email, string password, out NimbusPrincipal principal, out AuthenticationResult authDetails)
         {
             principal = null;
+            
             using (var db = _dbFactory.OpenDbConnection())
             {
                 var dbuser = db.Where<User>(u => u.Email == email).FirstOrDefault();
-                if(dbuser == null) return false; //Usuário não existe.
+                if (dbuser == null)
+                {
+                    authDetails = AuthenticationResult.UserDoesNotExist;
+                    return false; //Usuário não existe.
+                }
+
                 NSPHash hashedPassword = new NSPHash(dbuser.Password);
                 PlaintextPassword ptPassword = new PlaintextPassword(password);
 
@@ -46,10 +60,17 @@ namespace Nimbus.Web.Security
                 {
                     //preenche o NimbusUser
                     principal = GetNimbusPrincipal(dbuser);
+                    authDetails = AuthenticationResult.InvalidPassword;
                     return true;
-                } 
+                }
+                else
+                {
+                    authDetails = AuthenticationResult.InvalidPassword;
+                    return false;
+                }
             }
 
+            authDetails = AuthenticationResult.GenericFail;
             return false;
         }
 
