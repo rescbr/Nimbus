@@ -287,6 +287,8 @@ div.container-body {
 div.middle-body {
     float:left;
     width:100%;
+    padding-bottom: 20px;
+    position:       relative;
 }
 
 /*-------------------------- Login ---------------------------*/
@@ -2079,6 +2081,7 @@ div.footerMainPage {
     width:              100%;
     clear:              both;
     display:            block;
+    bottom:             0px;
 }
 
 nav.navFooMainPage {

@@ -427,6 +427,7 @@
     <Content Include="Website\Views\TopicFile.cshtml" />
     <Content Include="Website\Views\ResetPassword.cshtml" />
     <Content Include="Website\Views\TopicDemo.cshtml" />
+    <Content Include="Website\Views\Shared\_LayoutPublic.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\Controllers\DatabaseController.cs" />
