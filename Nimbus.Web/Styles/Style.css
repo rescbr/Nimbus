@@ -399,6 +399,35 @@ div.divformFaleConosco {
     clear:              both;
 }
 
+#divBtnSendFaleConosco {
+    background:         #87c240;
+    width:              120px;
+    cursor:             pointer;
+    border:             none;
+    color:              #FFFFFF;
+    padding-bottom:     10px;
+    line-height:        1.2em;
+    margin-left: 57.1%;
+    margin-top: 10px;
+}
+
+#divBtnSendFaleConosco p {
+        text-align: center;
+        cursor:     pointer;
+        padding-top: 5px;
+    }
+
+#divBtnSendFaleConosco p:hover {
+        text-align: center;
+        color: white;
+    }
+
+#divBtnSendFaleConosco:hover{
+    color:              #2b2d2e;
+    cursor:             pointer;
+    text-align:         center;
+}
+
 /*-----------------------Fim layout publica-------------------*/
 
 /*-----------------------Paginas estáticas--------------------*/
@@ -408,7 +437,7 @@ div.divformFaleConosco {
     border-bottom: 3px solid rgb(135, 194, 64);
 }
 
-#divListQuestionsFaq h1 {
+#divListQuestionsFaq h1, #divAllFaleConosco h1 {
     font-family: confortaa;
     color: #87c240;
     }
@@ -426,6 +455,10 @@ div.divformFaleConosco {
     line-height:   3em;
 }
 
+.pGreyBold {
+   color: #2b2d2e;
+   font-weight:bold;
+}
 /*----------------------fim paginas estáticas-----------------*/
 
 /*------------------------New Account ------------------------*/
