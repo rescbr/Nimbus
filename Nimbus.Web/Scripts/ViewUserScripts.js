@@ -206,7 +206,7 @@
         }
     }
 
-    function ajaxReportUser(idUserReporter, idUserReported) {
+    function ajaxReportUser(idUserReported, idUserReporter) {
         var text = document.getElementById('txtJustificativa').value;
 
         if (document.getElementById("formReportUser").checkValidity()) {

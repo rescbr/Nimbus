@@ -15,9 +15,19 @@ namespace Nimbus.Web.Utils
         public int Height { get { return img.Height; } }
         Image img;
 
+        private object imgLock = new object();
+
         public ImageManipulation(Stream input)
         {
             img = Image.FromStream(input);
+        }
+
+        public ImageManipulation(ImageManipulation im)
+        {
+            lock (im.imgLock)
+            {
+                img = (Image)im.img.Clone();
+            }
         }
 
         public void Crop(int x1, int y1, int x2, int y2)

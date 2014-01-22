@@ -160,7 +160,6 @@ namespace Nimbus.Web.Website.Controllers
             md5.ComputeHash(Encoding.Unicode.GetBytes(nomeImagemOriginal));
             nomeImagemOriginal = Base32.ToString(md5.Hash).ToLower() + ".jpg";
 
-            Stream imgResize = null;
             var origBlob = new AzureBlob(Const.Azure.AvatarContainer, nomeImagemOriginal);
 
             var streamImgOrig = origBlob.DownloadToMemoryStream();
@@ -168,32 +167,9 @@ namespace Nimbus.Web.Website.Controllers
             var img = new ImageManipulation(streamImgOrig);
             img.Crop(x1, y1, x2, y2);
             img.Resize(dimensaoMax, dimensaoMax);
-            imgResize = img.SaveToJpeg();
             
-
-            origBlob.Delete();
-
-            var nomeImgAvatar = "avatar-" + NimbusUser.UserId;
-            md5.ComputeHash(Encoding.Unicode.GetBytes(nomeImgAvatar));
-            var nomeHashExt = Base32.ToString(md5.Hash).ToLower() + ".jpg";
-            nomeImgAvatar = "av130x130/" + nomeHashExt;
-            var nomeImgAvatar35x35 = "av35x35/" + nomeHashExt;
-            var nomeImgAvatar60x60 = "av60x60/" + nomeHashExt;
-
-            var blob = new AzureBlob(Const.Azure.AvatarContainer, nomeImgAvatar);
-            blob.UploadStreamToAzure(imgResize);
-
-            //envia as imagens redimensionadas
-            img.FitSize(60, 60);
-            var blob60x60 = new AzureBlob(Const.Azure.AvatarContainer, nomeImgAvatar60x60);
-            blob60x60.UploadStreamToAzure(img.SaveToJpeg());
-
-            img.FitSize(35, 35);
-            var blob35x35 = new AzureBlob(Const.Azure.AvatarContainer, nomeImgAvatar35x35);
-            blob35x35.UploadStreamToAzure(img.SaveToJpeg());
-
-            var pathFinal = blob.BlockBlob.Uri.AbsoluteUri.Replace("https://", "http://").Replace("***REMOVED***", "storage.portalnimbus.com.br");
-
+            string pathFinal = UploadAvatar(img, NimbusUser.UserId.ToString());
+            
             using (var db = DatabaseFactory.OpenDbConnection())
             {
                 var user = db.Where<User>(u => u.Id == NimbusUser.UserId).FirstOrDefault();
@@ -211,14 +187,14 @@ namespace Nimbus.Web.Website.Controllers
                 //}
                 user.AvatarUrl = pathFinal;
                 db.Save(user);
-
+                
                 //ATENÇÃO! Ao alterar informações presentes no NimbusUser, 
                 //lembre-se de atualizar no cache também!
                 //Session[Const.UserSession] = DatabaseLogin.GetNimbusPrincipal(user);
             }
 
             //depois que salvar no azure retorna por json p mostrar na tela a imagem final
-
+            origBlob.Delete();
             //adiciona query string para atrapalhar o cache =)
             pathFinal += "?x=" + DateTime.Now.ToFileTime().ToString();
             return Json(new { url = pathFinal });
@@ -258,7 +234,59 @@ namespace Nimbus.Web.Website.Controllers
             }
         }
 
+        public static string UploadAvatar(ImageManipulation img, string id)
+        {
+            string pathAvatar;
+            HMACMD5 md5 = new HMACMD5(NimbusConfig.GeneralHMACKey);
+            var nomeImgAvatar = "avatar-" + id;
+            md5.ComputeHash(Encoding.Unicode.GetBytes(nomeImgAvatar));
+            var nomeHashExt = Base32.ToString(md5.Hash).ToLower() + ".jpg";
+            nomeImgAvatar = "av130x130/" + nomeHashExt;
+            var nomeImgAvatar180x100 = "av180x100/" + nomeHashExt;
+            var nomeImgAvatar35x35 = "av35x35/" + nomeHashExt;
+            var nomeImgAvatar60x60 = "av60x60/" + nomeHashExt;
 
 
+            //envia as imagens redimensionadas
+            Task<string> img1 = Task.Run(() =>
+            {
+                var clone = new ImageManipulation(img);
+                clone.FitSize(200, 200); //muito embora a url é av130x130, o tamanho do avatar é 200x200.
+                var blob = new AzureBlob(Const.Azure.AvatarContainer, nomeImgAvatar);
+                blob.UploadStreamToAzure(clone.SaveToJpeg());
+                return blob.BlockBlob.Uri.AbsoluteUri.Replace("https://", "http://").Replace("***REMOVED***", "storage.portalnimbus.com.br");
+            });
+
+            Task<string> img2 = Task.Run(() =>
+            {
+                var clone = new ImageManipulation(img);
+                clone.FitSize(180, 100);
+                var blob180x100 = new AzureBlob(Const.Azure.AvatarContainer, nomeImgAvatar180x100);
+                blob180x100.UploadStreamToAzure(clone.SaveToJpeg());
+                return string.Empty;
+            });
+
+            Task<string> img3 = Task.Run(() =>
+            {
+                var clone = new ImageManipulation(img);
+                clone.FitSize(60, 60);
+                var blob60x60 = new AzureBlob(Const.Azure.AvatarContainer, nomeImgAvatar60x60);
+                blob60x60.UploadStreamToAzure(clone.SaveToJpeg());
+                return string.Empty;
+            });
+
+            Task<string> img4 = Task.Run(() =>
+            {
+                var clone = new ImageManipulation(img);
+                clone.FitSize(35, 35);
+                var blob35x35 = new AzureBlob(Const.Azure.AvatarContainer, nomeImgAvatar35x35);
+                blob35x35.UploadStreamToAzure(clone.SaveToJpeg());
+                return string.Empty;
+            });
+
+            Task.WaitAll(img1, img2, img3, img4);
+            pathAvatar = img1.Result;
+            return pathAvatar;
+        }
     }
 }

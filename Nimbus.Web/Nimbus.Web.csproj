@@ -265,6 +265,7 @@
     <Content Include="images\av130x130\person_icon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="images\av180x100\person_icon.png" />
     <Content Include="images\av35x35\person_icon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

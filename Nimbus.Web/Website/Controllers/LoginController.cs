@@ -16,6 +16,7 @@ using ServiceStack.OrmLite;
 using System.Globalization;
 using Nimbus.Web.Utils;
 using System.Net;
+using System.Threading.Tasks;
 
 
 namespace Nimbus.Web.Website.Controllers
@@ -170,32 +171,9 @@ namespace Nimbus.Web.Website.Controllers
                                 var req = HttpWebRequest.Create(fbAvatarUrl);
                                 var respStream = req.GetResponse().GetResponseStream();
                                 var img = new ImageManipulation(respStream);
+                                string thirdpartyid = fbUserInfo.third_party_id;
 
-                                #region Redimensiona avatar do FB e sobe no azure
-                                img.FitSize(200, 200); //muito embora a url é av130x130, o tamanho do avatar é 200x200.
-
-                                HMACMD5 md5 = new HMACMD5(NimbusConfig.GeneralHMACKey);
-                                var nomeImgAvatar = "avatar-" + fbUserInfo.third_party_id;
-                                md5.ComputeHash(Encoding.Unicode.GetBytes(nomeImgAvatar));
-                                var nomeHashExt = Base32.ToString(md5.Hash).ToLower() + ".jpg";
-                                nomeImgAvatar = "av130x130/" + nomeHashExt;
-                                var nomeImgAvatar35x35 = "av35x35/" + nomeHashExt;
-                                var nomeImgAvatar60x60 = "av60x60/" + nomeHashExt;
-
-                                var blob = new AzureBlob(Const.Azure.AvatarContainer, nomeImgAvatar);
-                                blob.UploadStreamToAzure(img.SaveToJpeg());
-
-                                //envia as imagens redimensionadas
-                                img.FitSize(60, 60);
-                                var blob60x60 = new AzureBlob(Const.Azure.AvatarContainer, nomeImgAvatar60x60);
-                                blob60x60.UploadStreamToAzure(img.SaveToJpeg());
-
-                                img.FitSize(35, 35);
-                                var blob35x35 = new AzureBlob(Const.Azure.AvatarContainer, nomeImgAvatar35x35);
-                                blob35x35.UploadStreamToAzure(img.SaveToJpeg());
-
-                                pathAvatar = blob.BlockBlob.Uri.AbsoluteUri.Replace("https://", "http://").Replace("***REMOVED***", "storage.portalnimbus.com.br");
-                                #endregion
+                                pathAvatar = UserProfileController.UploadAvatar(img, thirdpartyid);
                             }
 
                             var newUser = new Model.ORM.User()
@@ -204,7 +182,8 @@ namespace Nimbus.Web.Website.Controllers
                                 FirstName = fbUserInfo.first_name,
                                 LastName = fbUserInfo.last_name,
                                 BirthDate = fbBirthday,
-                                AvatarUrl = pathAvatar
+                                AvatarUrl = pathAvatar,
+                                Password = "facebook:" + fbUserInfo.id
                             };
                             db.Insert(newUser);
                             newUser.Id = (int)db.GetLastInsertId();
