@@ -88,9 +88,9 @@
 <div id="divContentTopic" style="float:left; width: 644px;">
     <div class="contentPageTopic">
         @*Topico em formato texto*@
-        @if (Model.CurrentTopic.TopicType == Nimbus.Model.Enums.TopicType.exam)
+        @if (Model.CurrentTopic.TopicType == Nimbus.Model.Enums.TopicType.text || Model.CurrentTopic.TopicType == Nimbus.Model.Enums.TopicType.discussion )
         {
-            @RenderPage("~/Website/Views/TopicAvalicao.cshtml")
+            @RenderPage("~/Website/Views/TopicText.cshtml")
         }
         else if (Model.CurrentTopic.TopicType == Nimbus.Model.Enums.TopicType.video)
         {

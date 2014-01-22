@@ -432,13 +432,34 @@ div.divformFaleConosco {
 /*-----------------------Fim layout publica-------------------*/
 
 /*-----------------------Paginas estáticas--------------------*/
-#divListQuestionsFaq,#divAllFaleConosco {
+#divListQuestionsFaq,#divAllFaleConosco, #divTermosDeUso {
     padding-top: 30px;
     padding-bottom: 30px;
     border-bottom: 3px solid rgb(135, 194, 64);
 }
 
-#divListQuestionsFaq h1, #divAllFaleConosco h1 {
+.pTitleTermosDeUso {
+    color: #2b2d2e;
+    font-weight:bold;
+    font-family: confortaa;
+    font-size: 18px;
+}
+
+.sectionTermosDeUso {
+    padding-top: 30px;
+    line-height: 1.5em;
+}
+
+a.linkFooter:hover {
+    clear: both;
+    color: #FFFFFF;
+}
+
+a.linkFooter {
+    color: #87c240;
+}
+
+#divListQuestionsFaq h1, #divAllFaleConosco h1, #divTermosDeUso h1 {
     font-family: confortaa;
     color: #87c240;
     }
