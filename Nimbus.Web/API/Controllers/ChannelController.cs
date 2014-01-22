@@ -1379,8 +1379,8 @@ namespace Nimbus.Web.API.Controllers
              
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    bool allow = false; //zero = padrao Nimbus
-                    if (channel.OrganizationId != 0)
+                    bool allow = false; //um = padrao Nimbus
+                    if (channel.OrganizationId != 1)
                     {
                         int idUser = db.SelectParam<OrganizationUser>(us => us.UserId == NimbusUser.UserId
                                                                                    && us.OrganizationId == channel.OrganizationId).Select(us => us.UserId).FirstOrDefault();

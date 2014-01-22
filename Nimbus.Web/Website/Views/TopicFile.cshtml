@@ -2,35 +2,45 @@
 
 <div id="divCurrent_@Model.CurrentTopic.TopicType">
     @{
-        var height = "285px";
-        var width = "350px";
-        string urlFile = "https://view.officeapps.live.com/op/embed.aspx?src=" + Model.CurrentTopic.UrlVideo + "&wdAr=1.3333333333333333";
-        
-    if (Model.CurrentTopic.UrlVideo.EndsWith(".pdf"))
-    {
-        width = "550px";
-        height = "586px";
-        <iframe src="/Scripts/pdf.js/web/viewer.html?file=@Model.CurrentTopic.UrlVideo" width="@width" height="@height" frameborder='0'>
-             Embedded pdf.js viewer
-        </iframe>
-    }
-    else
-    {
-        if (Model.CurrentTopic.UrlVideo.EndsWith(".docx"))
+        if (string.IsNullOrEmpty(Model.CurrentTopic.UrlVideo))
         {
-            width = "550px";
-            height = "586px";
+            <text>Ocorreu um erro ao carregar o arquivo.</text>
         }
-         <iframe src="@urlFile" width="@width" height="@height" frameborder='0'>
-             This is an embedded
-            <a target='_blank' href='http://office.com'>Microsoft Office</a>
-             presentation, powered by 
-            <a target='_blank' href='http://office.com/webapps'>Office Web Apps</a>.
-        </iframe>
-    }
-    
-   
-    }
+        else
+        {
+            string file = Model.CurrentTopic.UrlVideo;
+            var height = "285px";
+            var width = "350px";
+            string urlFile = "https://view.officeapps.live.com/op/embed.aspx?src=" + file + "&wdAr=1.3333333333333333";
+        
+            if (Model.CurrentTopic.UrlVideo.EndsWith(".pdf"))
+            {
+                width = "550px";
+                height = "586px";
+                <iframe src="/Scripts/pdf.js/web/viewer.html?file=@file" width="@width" height="@height" frameborder='0'>
+                     Embedded pdf.js viewer
+                </iframe>
+            }
+            else if (file.EndsWith(".docx") || file.EndsWith(".xls") || file.EndsWith(".xlsx") || file.EndsWith(".pptx") || file.EndsWith(".ppt") || file.EndsWith(".pps") || file.EndsWith(".ppsx"))
+            {
+                if (file.EndsWith(".docx"))
+                {
+                    width = "550px";
+                    height = "586px";
+                }
+                 <iframe src="@urlFile" width="@width" height="@height" frameborder='0'>
+                     This is an embedded
+                    <a target='_blank' href='http://office.com'>Microsoft Office</a>
+                     presentation, powered by 
+                    <a target='_blank' href='http://office.com/webapps'>Office Web Apps</a>.
+                </iframe>
+            }
+            else
+            {
+                <img src="@file" style="height:auto; width:auto; max-width:@width; max-height:@height;" />
+            }
+        }
+}
 </div>
 
 

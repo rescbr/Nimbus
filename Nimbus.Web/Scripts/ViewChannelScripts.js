@@ -213,7 +213,7 @@ function ajaxSaveNewTopic(channelID)
     }
     if (divTipoTopic == "divFile")
     {
-        file = document.getElementById("inptUrlFile").value;
+        url = document.getElementById("inptUrlFile").value;
         enumTopicType = 4;
     }
 
@@ -240,7 +240,7 @@ function ajaxSaveNewTopic(channelID)
 
                 500: function () {
                     //erro
-                    ajaxTopicCallback(newData);
+                    alert("Ocorreu um erro ao criar novo tópico, tente novamente mais tarde.")
                 }
             }
         });

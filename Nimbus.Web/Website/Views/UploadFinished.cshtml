@@ -1,24 +1,38 @@
 ﻿@using Nimbus.Web.Website.Controllers
 @model Nimbus.Web.Website.Controllers.UploadController.UploadModel
+@{
+    int prevWidth = Model.ReturnPreviewWidth - 10;
+    int prevHeight = Model.ReturnPreviewHeight - 10;
+}
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title></title>
 </head>
-<body style="margin:0; padding:0">
+<body style="margin:0; padding:0;">
     @if (Model.PreviewType == UploadController.UploadModel.PreviewTypeEnum.image)
     {
-        <img src="@Model.Url" width="@Model.ReturnPreviewWidth" height="@Model.ReturnPreviewHeight" />
+        <img src="@Model.Url" style="height:auto; width:auto; max-width:@(prevWidth)px; max-height:@(prevHeight)px;" />
     }
     else if (Model.PreviewType == UploadController.UploadModel.PreviewTypeEnum.office)
     {
         string urlFile = "https://view.officeapps.live.com/op/embed.aspx?src=" + Model.Url + "&wdAr=1.3333333333333333";
-        <iframe src="@urlFile" width="@Model.ReturnPreviewWidth" height="@Model.ReturnPreviewHeight" frameborder='0'>
+        <iframe src="@urlFile" width="@prevWidth" height="@prevHeight" frameborder='0'>
              This is an embedded
             <a target='_blank' href='http://office.com'>Microsoft Office</a>
              presentation, powered by 
             <a target='_blank' href='http://office.com/webapps'>Office Web Apps</a>.
         </iframe>
+    }
+    else if (Model.PreviewType == UploadController.UploadModel.PreviewTypeEnum.pdf)
+    {
+        <iframe src="/Scripts/pdf.js/web/viewer.html?file=@Model.Url" width="@prevWidth" height="@prevHeight" frameborder='0'>
+            Embedded pdf.js viewer
+        </iframe>
+    }
+    else
+    {
+        <text>Arquivo enviado com sucesso.<br /><a href="@Model.Url" target="_blank">Download</a></text>
     }
 
     <script type="text/javascript">

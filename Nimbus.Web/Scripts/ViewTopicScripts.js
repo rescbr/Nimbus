@@ -2,19 +2,7 @@
 
 function clickEditTopic(id, topicType)
 {
-    if (topicType == "video")
-    {
-        document.getElementById('divCurrent_'+topicType).style.display = 'none';
-    }
-    else
-        if (topicType == "text" || topicType == "discussion")
-    { 
-            document.getElementById('divCurrent_'+topicType).style.display = 'none';
-    }
-    else
-    if (topicType == "exam") {
-        document.getElementById('divCurrent_'+topicType).style.display = 'none';
-    }
+    document.getElementById('divCurrent_'+topicType).style.display = 'none';
     document.getElementById('divRenderEdit').style.display = 'block';
 }
 
@@ -28,7 +16,7 @@ function ajaxEditTopic(id, topicType, divOld) {
     }
     if (topicType == 'file')
     {
-        url = document.getElementById("inptUrlEditFile").src;
+        url = document.getElementById("inptUrlEditFile").value;
     }
     if (topicType == 'text') {
         text = $("#txtaArticle").htmlarea('html');
@@ -68,9 +56,11 @@ function ajaxEditTopic(id, topicType, divOld) {
                         {
                             document.getElementById('iFrameVideo').src = newData.UrlVideo;
                         }
-                        else if (newData.topicType == 4)
+                        else if (newData.TopicType == 4)
                         {
-                            document.getElementById("inptUrlFile").src = newData.UrlVideo;
+                            //Renato: as mudanças foram muitas, melhor reload.
+                            window.location.href = "/topic/index/" + newData.Id;
+                            //document.getElementById("inptUrlFile").src = newData.UrlVideo;
                         }
                         else if (newData.TopicType == 0 || newData.TopicType == 2) {
                             document.getElementById('pTopicText').innerHTML = newData.Text;
@@ -94,7 +84,7 @@ function ajaxEditTopic(id, topicType, divOld) {
 
                 500: function () {
                     //erro
-                    window.alert("Não foi possível enviar seu comentário. Tente novamente mais tarde.");
+                    window.alert("Não foi possível editar o tópico. Tente novamente mais tarde.");
                 }
             }
         });

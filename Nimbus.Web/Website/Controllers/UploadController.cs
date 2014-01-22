@@ -75,6 +75,31 @@ namespace Nimbus.Web.Website.Controllers
             var extension = Path.GetExtension(file.FileName).ToLower();
             var timeFileName = DateTime.UtcNow.ToFileTimeUtc().ToString() + filename;
 
+            UploadModel.PreviewTypeEnum previewType;
+
+            if (imageExtensions.Contains(extension))
+                previewType = UploadModel.PreviewTypeEnum.image;
+            else if (officeExtensions.Contains(extension))
+                previewType = UploadModel.PreviewTypeEnum.office;
+            else if (pdfExtensions.Contains(extension))
+                previewType = UploadModel.PreviewTypeEnum.pdf;
+            else
+            {
+                //nao fazer upload
+                var errorModel = new UploadModel()
+                {
+                    UploadAction = "upload",
+                    ReturnUploadField = field,
+                    ReturnPreviewWidth = w,
+                    ReturnPreviewHeight = h,
+                    isPopUp = popup,
+                    isFatalError = true,
+                    ErrorMessage = "Não é permitido o envio de arquivos com extensão " + extension + "."
+                };
+
+                return View("Upload", errorModel);
+            }
+
             HMACMD5 md5 = new HMACMD5(NimbusConfig.GeneralHMACKey);
             md5.ComputeHash(Encoding.Unicode.GetBytes(timeFileName));
             var uploadFileName = NimbusUser.UserId + "/" + Base32.ToString(md5.Hash).ToLower() + extension;
@@ -93,18 +118,9 @@ namespace Nimbus.Web.Website.Controllers
                 ReturnPreviewHeight = h,
                 isPopUp = popup,
                 isFatalError = false,
-                ErrorMessage = null
+                ErrorMessage = null,
+                PreviewType = previewType
             };
-
-            if (imageExtensions.Contains(extension))
-                previewModel.PreviewType = UploadModel.PreviewTypeEnum.image;
-            else if (officeExtensions.Contains(extension))
-                previewModel.PreviewType = UploadModel.PreviewTypeEnum.office;
-            else if (pdfExtensions.Contains(extension))
-                previewModel.PreviewType = UploadModel.PreviewTypeEnum.pdf;
-            else
-                previewModel.PreviewType = UploadModel.PreviewTypeEnum.other;
-
 
             return View("UploadFinished", previewModel);
         }

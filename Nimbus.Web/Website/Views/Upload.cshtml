@@ -13,7 +13,7 @@
         <input type="hidden" name="popup" value="@Model.isPopUp" />
         <span id="divLoadingImage" style="display:none"><img src="/images/utils/ringload.gif" /></span>
         <br />
-        <input type="submit" value="Enviar" />
+        <input type="submit" value="Enviar" id="btnSubmit"/>
     </form>
 
     <script type="text/javascript">
@@ -27,6 +27,7 @@
             }
 
             dgi("divLoadingImage").style.display = "block";
+            dgi("btnSubmit").style.display = "none";
         };
 
     </script>

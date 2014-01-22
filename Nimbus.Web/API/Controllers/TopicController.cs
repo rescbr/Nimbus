@@ -114,9 +114,8 @@ namespace Nimbus.Web.API.Controllers
                             topic.AuthorId = NimbusUser.UserId;
                             if (string.IsNullOrEmpty(topic.ImgUrl))
                             {
-                               // int idCtg = db.SelectParam<Channel>(ch => ch.Id == topic.ChannelId).Select(ch => ch.CategoryId).FirstOrDefault();
-                               // topic.ImgUrl = db.SelectParam<Category>(ct => ct.Id == 1).Select(ct => ct.ImageUrl).FirstOrDefault();
-                                topic.ImgUrl = null;
+                                int idCtg = db.SelectParam<Channel>(ch => ch.Id == topic.ChannelId).Select(ch => ch.CategoryId).FirstOrDefault();
+                                topic.ImgUrl = db.SelectParam<Category>(ct => ct.Id == 1).Select(ct => ct.ImageUrl).FirstOrDefault();
                             }
                             topic.CreatedOn = DateTime.Now;
                             topic.LastModified = DateTime.Now;
@@ -128,8 +127,16 @@ namespace Nimbus.Web.API.Controllers
                             }
 
                             topic.Description = topic.Description;
-                            topic.Text = HtmlSanitizer.SanitizeHtml(topic.Text);
+                            if(topic.Text != null)
+                                topic.Text = HtmlSanitizer.SanitizeHtml(topic.Text);
                             topic.Title = topic.Title;
+
+                            //tópicos do tipo file devem ter os arquivos armazenados apenas no nimbus.
+                            if (topic.TopicType == Model.Enums.TopicType.file &&
+                                !topic.UrlVideo.StartsWith("http://storage.portalnimbus.com.br/"))
+                            {
+                                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotAcceptable, "arquivo fora da storage"));
+                            }
                             topic.UrlVideo = topic.UrlVideo;
 
                             //Renato: comentado devido processo de remoção de htmlencode
@@ -194,10 +201,13 @@ namespace Nimbus.Web.API.Controllers
                                     int idCtg = db.SelectParam<Channel>(ch => ch.Id == tpc.ChannelId).Select(ch => ch.CategoryId).FirstOrDefault();
                                     tpc.ImgUrl =db.SelectParam<Category>(ct => ct.Id == 1).Select(ct => ct.ImageUrl).FirstOrDefault();
                                 }
-                                tpc.LastModified = DateTime.Now;      
-                          
-                                tpc.Text =  HtmlSanitizer.SanitizeHtml(topic.Text);
-                                
+                                tpc.LastModified = DateTime.Now;
+
+                                if (topic.Text != null)
+                                    tpc.Text = HtmlSanitizer.SanitizeHtml(topic.Text);
+                                else
+                                    tpc.Text = null;
+
                                 if (topic.TopicType == Model.Enums.TopicType.exam)
                                 {
                                    tpc.Question = topic.Question;
@@ -205,7 +215,16 @@ namespace Nimbus.Web.API.Controllers
 
                                 tpc.Title = topic.Title;
                                 tpc.UrlCapa = topic.UrlCapa != null ?  topic.UrlCapa : tpc.UrlCapa;
-                                tpc.UrlVideo = topic.UrlVideo;
+                                if (!string.IsNullOrEmpty(topic.UrlVideo))
+                                {
+                                    //tópicos do tipo file devem ter os arquivos armazenados apenas no nimbus.
+                                    if(tpc.TopicType == Model.Enums.TopicType.file &&
+                                        !topic.UrlVideo.StartsWith("http://storage.portalnimbus.com.br/"))
+                                    {
+                                        throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotAcceptable, "arquivo fora da storage")); 
+                                    }
+                                    tpc.UrlVideo = topic.UrlVideo;
+                                }
                                 tpc.Visibility = true;
                                 if (string.IsNullOrEmpty(topic.Price.ToString()))
                                 {

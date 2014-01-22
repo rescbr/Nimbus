@@ -205,7 +205,7 @@
          </div>
 
     <div id="divNewChannel" style="display:none">
-        <form action='/userprofile/SaveNewChannel' method="post" onsubmit="return false;" enctype="multipart/form-data" name="saveChannel">
+        <form action='/userprofile/SaveNewChannel' method="post" enctype="multipart/form-data" name="saveChannel">
             @if (Model.CurrentUser.UserId == Model.User.Id)
             {
                 <div class="divformNewChannel">
