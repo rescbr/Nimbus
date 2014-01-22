@@ -469,6 +469,15 @@
     <Content Include="Scripts\pdf.js\web\locale\vi\viewer.properties" />
     <Content Include="Scripts\pdf.js\web\locale\zh-CN\viewer.properties" />
     <Content Include="Scripts\pdf.js\web\locale\zh-TW\viewer.properties" />
+    <Content Include="Styles\comfortaa-bold.woff">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Styles\comfortaa-light.woff">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Styles\comfortaa-regular.woff">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="Website\Views\CommentPartials\PartialComment.cshtml" />
     <Content Include="Website\Views\Home.cshtml" />
     <Content Include="Website\Views\TrendingTopics.cshtml" />
