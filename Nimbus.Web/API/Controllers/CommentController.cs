@@ -178,6 +178,36 @@ namespace Nimbus.Web.API.Controllers
             return bag;
         }
 
+        [HttpPost]
+        public Comment NotIsNewComment(Comment comment)
+        {
+            Comment cmt = new Comment();
+            using (var db = DatabaseFactory.OpenDbConnection())
+            {
+                cmt = db.SelectParam<Comment>(c => c.Id == comment.Id).FirstOrDefault();
+                //pegar permissões
+                Channel channel = db.Where<Channel>(c => c.Id == cmt.ChannelId && c.Visible == true).Where(c => c != null).FirstOrDefault();
+                var rolesUser = db.Where<Role>(r => r.ChannelId == cmt.ChannelId && r.UserId == NimbusUser.UserId).Where(r => r != null).FirstOrDefault();
+
+                bool isAllow = false;
+
+                if (rolesUser != null)
+                {
+                    isAllow = rolesUser.ChannelMagager == true || rolesUser.IsOwner == true;
+                }
+
+                if (isAllow == true)
+                {
+                    using (var trans = db.OpenTransaction(System.Data.IsolationLevel.ReadCommitted))
+                    {
+                        cmt.IsNew = false;
+                        db.Update<Comment>(cmt, c => c.Id == comment.Id);
+                    }
+                }
+            }
+            return cmt;
+        }
+
         /// <summary>
         /// Pega um comentario sem filhos
         /// </summary>
@@ -209,6 +239,7 @@ namespace Nimbus.Web.API.Controllers
                     ParentId = comment.ParentId,
                     PostedOn = comment.PostedOn,
                     IsNew = comment.IsNew,
+                    IsPageChannel = false, //pq só aparece na page channel qnd for novo
                     IsAnswer = comment.IsAnswer,
                     TopicId = comment.TopicId,
                     IsParent = comment.ParentId > 0 ? false : true,
@@ -286,6 +317,7 @@ namespace Nimbus.Web.API.Controllers
                                 ParentId = comment.Comment.ParentId,
                                 PostedOn = comment.Comment.PostedOn,
                                 IsNew = comment.Comment.IsNew,
+                                IsPageChannel = false, //pq n é da page channel 
                                 IsAnswer = comment.Comment.IsAnswer,
                                 TopicId = comment.Comment.TopicId,
                                 IsParent = comment.Comment.ParentId > 0 ? false : true,
@@ -442,6 +474,7 @@ namespace Nimbus.Web.API.Controllers
                                 child.ParentId = itemChild.ParentId;
                                 child.PostedOn = itemChild.PostedOn;
                                 child.IsNew = itemChild.IsNew;
+                                child.IsPageChannel = false; //pq n eh channel page 
                                 child.IsAnswer = itemChild.IsAnswer;
                                 child.TopicId = itemChild.TopicId;
                                 child.IsParent = false;
@@ -533,6 +566,7 @@ namespace Nimbus.Web.API.Controllers
                         child.ParentId = itemChild.ParentId;
                         child.PostedOn = itemChild.PostedOn;
                         child.IsNew = itemChild.IsNew;
+                        child.IsPageChannel = false;
                         child.IsAnswer = itemChild.IsAnswer;
                         child.TopicId = itemChild.TopicId;
                         child.IsParent = false;
@@ -581,6 +615,7 @@ namespace Nimbus.Web.API.Controllers
                                         PostedOn = item.PostedOn,
                                         TopicId = item.TopicId,
                                         ChannelId = item.ChannelId,
+                                        IsPageChannel = true,
                                         TopicName = db.SelectParam<Topic>(t => t.Id == item.TopicId).Select(t => t.Title).FirstOrDefault()
                                     };
                                     listComments.Add(bag);
@@ -661,6 +696,7 @@ namespace Nimbus.Web.API.Controllers
                             child.ParentId = itemChild.ParentId;
                             child.PostedOn = itemChild.PostedOn;
                             child.IsNew = itemChild.IsNew;
+                            child.IsPageChannel = false;
                             child.IsAnswer = itemChild.IsAnswer;
                             child.TopicId = itemChild.TopicId;
                             child.IsParent = false;
@@ -748,6 +784,7 @@ namespace Nimbus.Web.API.Controllers
                     child.ParentId = comment.ParentId;
                     child.PostedOn = comment.PostedOn;
                     child.IsNew = comment.IsNew;
+                    child.IsPageChannel = false; //comentario filho nao aparece na page channel
                     child.IsAnswer = comment.IsAnswer;
                     child.TopicId = comment.TopicId;
                     child.IsParent = false;

@@ -19,6 +19,7 @@ namespace Nimbus.Model.Bags
 
         public bool IsRepotable { get; set; }
 
+        public bool IsPageChannel { get; set; }
         public List<CommentBag> CommentChild { get; set; }
     }
 }

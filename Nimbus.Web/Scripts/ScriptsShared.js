@@ -1,6 +1,23 @@
 ﻿
 /*Método para mudar divs dentro de outra div que já esta sendo alterada pela funçao changediv
   usada na pagina de channl -> novo tópico*/
+
+function PositionFooter() {
+    var $footer = $("#footer");
+    var footerHeight = $footer.height();
+    var footerTop = ($(window).scrollTop() + $(window).height() - footerHeight) + "px";
+
+    if (($(document.body).height() + footerHeight) < $(window).height()) {
+        $footer.css({ position: "absolute", top: footerTop });
+    }
+    else { $footer.css({ position: "static" }); }
+}
+
+function GerenciarFooter() {
+    $(window).resize(PositionFooter);
+    PositionFooter();
+}
+
 function EnableDiv(newDiv, tipoGlobal, fieldRequired) { 
 
     if (tipoGlobal == 'currentDiv')

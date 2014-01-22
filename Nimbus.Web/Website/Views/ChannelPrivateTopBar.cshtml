@@ -94,7 +94,9 @@
                         <div class="divGifLoad">
                              <img src="/images/utils/loading.gif" class="imgGifLoad" style="display:none;" id="imgNotificationLoad" />
                         </div>
-                        <div id="divNotificationLoadButton" style="display:block;" onclick="getChannelNotifications(@Model.CurrentChannel.Id, '@lastNotificationGuid');"><p>Carregar mais notificações</p></div>
+                        <div id="divNotificationLoadButton" style="display:block;" onclick="getChannelNotifications(@Model.CurrentChannel.Id, '@lastNotificationGuid');">
+                            <p>Carregar mais notificações</p>
+                        </div>
                     </div>
                 }
             </div>
