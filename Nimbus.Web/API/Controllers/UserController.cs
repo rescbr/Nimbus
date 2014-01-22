@@ -334,7 +334,7 @@ WHERE ([tUser].[test] IS NOT NULL) AND
         [HttpGet]
         public bool sendTokenResetPassword()
         {
-            MandrillApi apiMandrill = new MandrillApi("***REMOVED***");
+            MandrillApi apiMandrill = new MandrillApi(Const.MandrillToken);
             EmailMessage mensagem = new EmailMessage();
             mensagem.from_email = "resetPassword@portalnimbus.com.br";
             mensagem.from_name = "Portal Nimbus";
