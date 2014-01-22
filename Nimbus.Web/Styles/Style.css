@@ -1,4 +1,24 @@
-﻿/*Padrões*/
+﻿/* Fontes */
+@font-face {
+  font-family: 'Comfortaa';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Comfortaa Light'), local('Comfortaa-Light'), url(/Styles/comfortaa-light.woff) format('woff');
+}
+@font-face {
+  font-family: 'Comfortaa';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Comfortaa'), local('Comfortaa-Regular'), url(/Styles/comfortaa-regular.woff) format('woff');
+}
+@font-face {
+  font-family: 'Comfortaa';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Comfortaa Bold'), local('Comfortaa-Bold'), url(/Styles/comfortaa-bold.woff) format('woff');
+}
+
+/* Padrões */
 .cpointer {
     cursor:pointer;
 }
