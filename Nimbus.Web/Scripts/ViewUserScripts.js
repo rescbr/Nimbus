@@ -233,6 +233,7 @@
                     }
                 }
             });
+            document.getElementById("closeModalReportUser").click();
 
         }
     }

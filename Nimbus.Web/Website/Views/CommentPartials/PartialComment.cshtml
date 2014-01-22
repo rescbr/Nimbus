@@ -23,6 +23,10 @@
             {
                 <img id="btnDelete_@Model.Id" class="cpointer" title="Excluir" alt="Excluir" src="/images/utils/delete.png" onclick="ajaxDeleteComment(@Model.Id,'divComment_@Model.Id' );" />
             }
+            @if(Model.IsPageChannel == true)
+            {
+               <img id="btnNotNew_@Model.Id" class="cpointer" title="Marcar como lido" alt="Marcar como lido" src="/images/utils/delete.png" onclick="ajaxNotIsNewComment(@Model.Id,'divComment_@Model.Id' );" />
+            }
         </div>
         <p class="titleCommentContent">
             <label id="lblUserName_@Model.Id" style="color: #2b2d2e; font-weight: bold; font-size: small">@Model.UserName</label>

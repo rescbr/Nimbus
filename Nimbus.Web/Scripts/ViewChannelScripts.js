@@ -374,6 +374,30 @@ function ajaxDeleteComment(commentId, divName)
 
 }
 
+function ajaxNotIsNewComment(commentId, divName) {
+
+    var ajaxData = {};
+        if (commentId != 0) {
+            ajaxData["Id"] = commentId;
+            $.ajax({
+                url: "/api/comment/NotIsNewComment",
+                data: JSON.stringify(ajaxData),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                statusCode: {
+                    200: function (newData) {
+                         document.getElementById("divComment_" + commentId).style.display = 'none';  
+                    },
+
+                    500: function () {
+                        //erro
+                        window.alert("Não foi possível realizar esta operação. Tente novamente mais tarde.");
+                    }
+                }
+            });
+        }
+    }
+
 /*Mensagens*/
 function ajaxSendMessage(id)
 {
