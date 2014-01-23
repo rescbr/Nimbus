@@ -2,34 +2,27 @@
 /*Método para mudar divs dentro de outra div que já esta sendo alterada pela funçao changediv
   usada na pagina de channl -> novo tópico*/
 
-function PositionFooter() {
-    //var $footer = $("#footer");
-    //var footerHeight = $footer.height();
-    //var footerTop = ($(window).scrollTop() + $(window).height() - footerHeight) + "px";
-
-    //if (($(document.body).height() + footerHeight) < $(window).height()) {
-    //    $footer.css({ position: "absolute", top: footerTop });
-    //}
-    //else { $footer.css({ position: "static" }); }
-    var windowHeight = document.getElementsByTagName("html")[0].clientHeight;
-    var headerHeight = document.getElementById("header").scrollHeight;
-    var bodyHeight = document.getElementById("container-body").scrollHeight;
+function PositionFooter(evt) {
     var footer = document.getElementById("footer");
-    var footerHeight = footer.scrollHeight;
-    if ((headerHeight + bodyHeight + footerHeight) < windowHeight) {
+    var windowHeight = document.getElementsByTagName("html")[0].clientHeight; //apenas viewport
+    var headerHeight = document.getElementById("header").offsetHeight;
+    var containerHeight = document.getElementById("container-body").scrollHeight; //inclui nao visivel
+    var footerHeight = footer.offsetHeight; //inclui border
+    var footerHeightWithoutBorder = footer.scrollHeight;
+
+    var contentHeight = headerHeight + containerHeight + footerHeight;
+    if (contentHeight < windowHeight) {
         footer.style.position = "absolute";
-        footer.style.top = windowHeight - footer.scrollHeight;
+        footer.style.top = windowHeight - footerHeightWithoutBorder;
     } else {
         footer.style.position = "static";
     }
-
 }
 
 function GerenciarFooter() {
-    window.addEventListener("resize", PositionFooter)
-
-
-
+    window.addEventListener("resize", PositionFooter);
+    document.getElementById("header").addEventListener("DOMSubtreeModified", PositionFooter);
+    document.getElementById("container-body").addEventListener("DOMSubtreeModified", PositionFooter);
     PositionFooter();
 }
 
