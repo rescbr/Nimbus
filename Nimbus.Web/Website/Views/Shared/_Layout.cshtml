@@ -27,7 +27,7 @@
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head id="header">
+<head>
     <link rel="stylesheet" type="text/css" href="/Styles/Style.css" />
     <title>@ViewBag.Title - Nimbus</title>
 
@@ -83,7 +83,7 @@
             </div>       
     </header>
 
-    <div class="container-body">
+    <div class="container-body" id="container-body">
             <div id="divBarSearch" style="display:none;">
                 <input id="txtFieldSearchLayout" style="width:350px;" type="text" value="Busque por canais, tópicos ou pessoas" onclick="this.value=''" />
                 <select id="slcFilterSearchLayout">
@@ -120,7 +120,7 @@
 
     <script type="text/javascript">
         $(function () {
-            //GerenciarFooter();
+            GerenciarFooter();
         });
     </script>
 </body>

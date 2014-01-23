@@ -3,18 +3,33 @@
   usada na pagina de channl -> novo tópico*/
 
 function PositionFooter() {
-    var $footer = $("#footer");
-    var footerHeight = $footer.height();
-    var footerTop = ($(window).scrollTop() + $(window).height() - footerHeight) + "px";
+    //var $footer = $("#footer");
+    //var footerHeight = $footer.height();
+    //var footerTop = ($(window).scrollTop() + $(window).height() - footerHeight) + "px";
 
-    if (($(document.body).height() + footerHeight) < $(window).height()) {
-        $footer.css({ position: "absolute", top: footerTop });
+    //if (($(document.body).height() + footerHeight) < $(window).height()) {
+    //    $footer.css({ position: "absolute", top: footerTop });
+    //}
+    //else { $footer.css({ position: "static" }); }
+    var windowHeight = document.getElementsByTagName("html")[0].clientHeight;
+    var headerHeight = document.getElementById("header").scrollHeight;
+    var bodyHeight = document.getElementById("container-body").scrollHeight;
+    var footer = document.getElementById("footer");
+    var footerHeight = footer.scrollHeight;
+    if ((headerHeight + bodyHeight + footerHeight) < windowHeight) {
+        footer.style.position = "absolute";
+        footer.style.top = windowHeight - footer.scrollHeight;
+    } else {
+        footer.style.position = "static";
     }
-    else { $footer.css({ position: "static" }); }
+
 }
 
 function GerenciarFooter() {
-    $(window).resize(PositionFooter);
+    window.addEventListener("resize", PositionFooter)
+
+
+
     PositionFooter();
 }
 
