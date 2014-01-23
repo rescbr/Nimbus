@@ -21,12 +21,13 @@
 <div class="wrapperUser" id="wrapperUser">
     <nav class="profTopBar">
         <ul class="sbs">
-            <li class="press"><a name="divNotification" onclick="EnableDiv(this.name,'currentDiv', '');"><p>Atualizações</p></a></li>
-            <li class="press"><a name="divMyChannels" onclick="EnableDiv(this.name, 'currentDiv', '');"><p>Canais</p></a></li>
-            <li class="press"><a name="divTopicFollows" onclick="EnableDiv(this.name, 'currentDiv', '');"><p>Favoritos</p></a></li>
-            <li class="press"><a name="divReadLater" onclick="EnableDiv(this.name, 'currentDiv','');"><p>Marcados</p></a></li>
-            <li class="press"><a name="divMessages" onclick="EnableDiv(this.name, 'currentDiv', '');"><p>Mensagens</p></a></li>	
-            <li class="press"><a name="divNewChannel" onclick="EnableDiv(this.name, 'currentDiv', '');"><p>Novo Canal</p></a></li>
+            <li id="lidivNotification" class="press profTopBarActived">
+                <a name="divNotification" onclick="EnableDiv(this.name,'currentDiv', '');"><p>Atualizações</p></a></li>
+            <li id="lidivMyChannels" class="press"><a name="divMyChannels" onclick="EnableDiv(this.name, 'currentDiv', '');"><p>Canais</p></a></li>
+            <li id="lidivTopicFollows" class="press"><a name="divTopicFollows" onclick="EnableDiv(this.name, 'currentDiv', '');"><p>Favoritos</p></a></li>
+            <li id="lidivReadLater" class="press"><a name="divReadLater" onclick="EnableDiv(this.name, 'currentDiv','');"><p>Ler mais tarde</p></a></li>
+            <li id="lidivMessages" class="press"><a name="divMessages" onclick="EnableDiv(this.name, 'currentDiv', '');"><p>Mensagens</p></a></li>	
+            <li id="lidivNewChannel" class="press"><a name="divNewChannel" onclick="EnableDiv(this.name, 'currentDiv', '');"><p>Novo Canal</p></a></li>
 	    </ul>
     </nav>
     <div id="divNotification">
@@ -113,7 +114,7 @@
             </div>
             </div>
             
-            <div id="divChannelFollows" style="display:none;">
+            <div id="divChannelFollows" style="display:none; float:left;">
                 @if (Model.ChannelFollow.Count > 0)
                 {
                 <div id="channelsFollow">

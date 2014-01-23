@@ -37,6 +37,8 @@ function EnableDiv(newDiv, tipoGlobal, fieldRequired) {
 
     if (tipoGlobal == 'currentDiv')
     {
+        document.getElementById("li" + currentDiv).className = 'press';
+        document.getElementById("li" + newDiv).className = 'press profTopBarActived'
         document.getElementById(currentDiv).style.display = 'none';
         currentDiv = newDiv;
     }

@@ -1013,7 +1013,6 @@ nav.profTopBar {
     line-height:        3em;
 }
 
-
 .chanTopBar li:last-child {
     width:              109px;
 }
@@ -1038,6 +1037,21 @@ nav.profTopBar {
     color:              #87c240;
     cursor:             pointer;
 }
+
+.profTopBarActived {
+    font-weight:        normal;
+    color:              #87c240;
+    background:         #2b2d2e;
+    border-bottom:      2px solid #87c240;
+    height:             36px;
+    cursor:             pointer;
+    }
+
+.profTopBarActived p {
+    font-weight:        normal;
+    color:              #87c240;
+    }
+
 
 /*Tab*/
 div.wrapperUser {
