@@ -12,31 +12,10 @@
 </head>
 <body>
     @* não esquecer de minificar =) *@
+    @Scripts.Render(("~/Scripts/jquery-2.0.3.js"))
     @Scripts.Render(("~/Scripts/modal.js"))
     @Styles.Render(("~/Styles/modal.css"))
     @Scripts.Render(("~/Scripts/ScriptsShared.js"))
-    @Scripts.Render(("~/Scripts/jquery-2.0.3.js"))
-
-    <script type="text/javascript">
-        function PositionFooter() {
-            var $footer = $("#footer"), footerHeight = $footer.height(),
-            footerTop = ($(window).scrollTop() + $(window).height() - footerHeight) + "px";
-
-            if (($(document.body).height() + footerHeight) < $(window).height()) {
-                $footer.css({ position: "absolute", top: footerTop });
-            }
-            else { $footer.css({ position: "static" }); }
-        }
-
-        function GerenciarFooter() {
-            $(window).resize(PositionFooter)
-            PositionFooter();
-        }
-
-        $(document).ready(function () {
-            GerenciarFooter();
-        });
-    </script>
 
     <div id="wrap">
         <header id="header">
@@ -58,11 +37,11 @@
         <div id="divLeftLayout">
 
         </div>
-
-        <div class="middle-body" id="divCenterLayout">
-            @RenderBody()
+        <div id="container-body"> @* deixa essa div aqui por causa do js do footer *@
+            <div class="middle-body" id="divCenterLayout">
+                @RenderBody()
+            </div>
         </div>
-
         <div id="divRightLayout">
 
         </div>
@@ -87,6 +66,10 @@
         @Scripts.Render("~/signalr/hubs")
         @Scripts.Render("~/Scripts/Notifications.js")
     }
-
+    <script type="text/javascript">
+        $(function () {
+            GerenciarFooter();
+        });
+    </script>
 </body>
 </html>
