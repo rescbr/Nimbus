@@ -1052,7 +1052,8 @@ div.tabContent {
     margin-right:       5px;
 }
 
-/*------------------ Private Profile - Messages --------------------*/
+/*------------------ Private Profile - Messages e Bar Channel --------------------*/
+
 nav.messagesTab{
     width:              100%;
     clear:              both;
@@ -1062,13 +1063,13 @@ nav.messagesTab ul.sbs {
     margin: 12px 0 12px 190px;
 }
 
-li#liMsgReceived, li#liMsgSend{
+li#liMsgReceived, li#liMsgSend, li#liMyChannel, li#liFollowChannel{
     width:              120px;
     border-right:       1px solid #d1d3d4;
     background:         #bcbec0;
 }
 
-li#liMsgReceived:hover, li#liMsgSend:hover{
+li#liMsgReceived:hover, li#liMsgSend:hover,li#liMyChannel:hover, li#liFollowChannel:hover{
     background:         #87c240;
     cursor:             pointer;
 }

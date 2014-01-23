@@ -1,5 +1,18 @@
 ﻿/*Este arquivo deve conter apenas os scripts referentes as páginas de profile*/
 
+    function ChoiceViewChannel(divToShow, divToHidden, changeBackground, removeBackground)
+    {
+        document.getElementById(divToShow).style.display = 'block';
+        var divH = document.getElementById(divToHidden);
+        if (divH != null) //caso esteja voltando
+            divH.style.display = 'none'
+
+        document.getElementById(changeBackground).style.background = '#87c240';
+        var cssR = document.getElementById(removeBackground);
+        if(cssR != null)
+            cssR.style.background = '';
+    }
+
     function SendMessageProfile(receiverId) {
     ajaxMessage = {};
     var text = $("#txtTextMsg").htmlarea('html');

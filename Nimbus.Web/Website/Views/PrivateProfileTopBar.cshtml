@@ -22,8 +22,8 @@
     <nav class="profTopBar">
         <ul class="sbs">
             <li class="press"><a name="divNotification" onclick="EnableDiv(this.name,'currentDiv', '');"><p>Atualizações</p></a></li>
-            <li class="press"><a name="divMyChannels" onclick="EnableDiv(this.name, 'currentDiv', '');"><p>Meus Canais</p></a></li>
-            <li class="press"><a name="divChannelFollows" onclick="EnableDiv(this.name, 'currentDiv', '');"><p>Favoritos</p></a></li>
+            <li class="press"><a name="divMyChannels" onclick="EnableDiv(this.name, 'currentDiv', '');"><p>Canais</p></a></li>
+            <li class="press"><a name="divTopicFollows" onclick="EnableDiv(this.name, 'currentDiv', '');"><p>Favoritos</p></a></li>
             <li class="press"><a name="divReadLater" onclick="EnableDiv(this.name, 'currentDiv','');"><p>Marcados</p></a></li>
             <li class="press"><a name="divMessages" onclick="EnableDiv(this.name, 'currentDiv', '');"><p>Mensagens</p></a></li>	
             <li class="press"><a name="divNewChannel" onclick="EnableDiv(this.name, 'currentDiv', '');"><p>Novo Canal</p></a></li>
@@ -41,11 +41,24 @@
     </div>
 
     <div id="divMyChannels" style="display:none;">
+
+        <div id="divChangeChannels" class="tabContent">
+            <nav class="messagesTab">
+                <ul class="sbs">
+                    <li id="liMyChannel" style="background:#87c240;" onclick="ChoiceViewChannel('divChannelUsers', 'divChannelFollows', this.id, 'liFollowChannel');" 
+                        class="press">Meus canais</li>
+                    <li id="liFollowChannel" class="press" onclick="ChoiceViewChannel('divChannelFollows', 'divChannelUsers', this.id, 'liMyChannel');">Canais seguidos</li>
+                </ul>
+            </nav>
+        </div>
+
+
         @if (Model.CurrentUser.UserId == Model.User.Id)
         { 
-            <div style="width:100%; padding-bottom:30px; float:left;">
-            <h1>Meus Canais</h1>
-            <div id="myChannels">
+            <div id="divChannelUsers">
+             <div style="width:100%; padding-bottom:30px; float:left;">
+             <h1>Meus Canais</h1>
+             <div id="myChannels">
                 @if (Model.MyChannels.Count > 0) { 
                      foreach (var item in Model.MyChannels)
                      {
@@ -68,9 +81,9 @@
                     <p>Você não criou nenhum canal até o momento. <Br />Crie seu primeiro canal e comece agora mesmo a divulgar e compartilhar seus conhecimentos.</p>
                 }
             </div>
-            </div>
+             </div>
             
-            <div style="float:left; width:100%;">
+             <div style="float:left; width:100%;">
             <h1>Meus canais moderados</h1>
              <div id="myChannelsMannager">
                  @if (Model.ChannelMannager.Count > 0)
@@ -98,53 +111,76 @@
                  }
              </div>
             </div>
+            </div>
+            
+            <div id="divChannelFollows" style="display:none;">
+                @if (Model.ChannelFollow.Count > 0)
+                {
+                <div id="channelsFollow">
+                    @foreach (var item in Model.ChannelFollow)
+                    {
+                        //partial
+                        Html.RenderPartial("~/Website/Views/ChannelPartials/ChannelPartial.cshtml", item);
+
+                    }
+                </div>
+
+                if (Model.ChannelFollow.Count() == 15)
+                {
+                <div class="seeMoreContent">
+                    <div class="divGifLoad">
+                        <img src="/images/utils/loading.gif" id="imgChannelsFollowLoad" class="imgGifLoad" style="display:none;" />
+                    </div>
+                    <div class="seeMoreButton" id="btn_skipChannelsFollow" onclick="verMaisChannels(@Model.CurrentUser.UserId, 'channelsFollow', 0, 'skipChannelsFollow');">
+                        <p>Ver mais</p>
+                    </div>
+                </div>
+                }
+                }
+                else
+                {
+                <div id="channelsFollow">
+                    <p>
+                        Você não segue nenhum canal até o momento. <br />
+                        Navegue pelo Portal Nimbus e comece a descobrir agora mesmo.
+                    </p>
+                </div>
+                }
+            </div>
         }        
     </div>
 
-    <div id="divChannelFollows" style="display:none;">
+    <div id="divTopicFollows" style="display:none;">
 
-          @if (Model.CurrentUser.UserId == Model.User.Id)
-        { 
-            <div id="channelsFollow">
-                @foreach (var item in Model.ChannelFollow)
-                {
-                    //partial
-                    Html.RenderPartial("~/Website/Views/ChannelPartials/ChannelPartial.cshtml", item);
-
-                }
-            </div>
-
-            if (Model.ChannelFollow.Count() == 15)
-            {
-              <div class="seeMoreContent">
-                  <div class="divGifLoad">
-                      <img src="/images/utils/loading.gif" id="imgChannelsFollowLoad" class="imgGifLoad" style="display:none;" />
-                  </div>
-                <div class="seeMoreButton" id="btn_skipChannelsFollow" onclick="verMaisChannels(@Model.CurrentUser.UserId, 'channelsFollow', 0, 'skipChannelsFollow');">
-                    <p>Ver mais</p></div>
-              </div>
-            }
+       @if (Model.CurrentUser.UserId == Model.User.Id)
+        {
         }
     </div>
 
     <div id="divReadLater" style="display:none;">
         @if (Model.CurrentUser.UserId == Model.User.Id)
         {
-            <div id="readLater">
-                @foreach (var item in Model.ReadLater)
-                {
-                    //partial
-                    Html.RenderPartial("~/Website/Views/ChannelPartials/TopicPartial.cshtml", item);
-                }
-            </div>
-            if (Model.ReadLater.Count() == 15)
+            if (Model.ReadLater.Count > 0) { 
+             <div id="readLater">
+                 @foreach (var item in Model.ReadLater)
+                 {
+                     //partial
+                     Html.RenderPartial("~/Website/Views/ChannelPartials/TopicPartial.cshtml", item);
+                 }
+             </div>
+             if (Model.ReadLater.Count() == 15)
+             {
+                 <div class="seeMoreContent">
+                     <div class="divGifLoad">
+                         <img src="/images/utils/loading.gif" id="imgReadLaterLoad" class="imgGifLoad" style="display:none;" />
+                     </div>
+                     <div id="btn_skipReadLater" class="seeMoreButton" onclick="verMaisTopics(@Model.CurrentUser.UserId,'readLater', 0, 'skipReadLater');"><p>Ver mais</p></div>
+                 </div>
+             }
+            }
+            else
             {
-                <div class="seeMoreContent">
-                    <div class="divGifLoad">
-                        <img src="/images/utils/loading.gif" id="imgReadLaterLoad" class="imgGifLoad" style="display:none;" />
-                    </div>
-                    <div id="btn_skipReadLater" class="seeMoreButton" onclick="verMaisTopics(@Model.CurrentUser.UserId,'readLater', 0, 'skipReadLater');"><p>Ver mais</p></div>
-                </div>
+                <p>Até o momento você não possui nada marcado para ler mais tarde.</p>
             }
         }
     </div>
@@ -153,7 +189,7 @@
         <div id="divChangeMessages" class="tabContent">
             <nav class="messagesTab">
                 <ul class="sbs">
-                    <li id="liMsgReceived" class="press" onclick="viewMessages('skipMessageReceived', 'messageReceived', 'received','back');">Recebidas</li>
+                    <li id="liMsgReceived" class="press" style="background:#87c240;" onclick="viewMessages('skipMessageReceived', 'messageReceived', 'received','back');">Recebidas</li>
                     <li id="liMsgSend" class="press" onclick="viewMessages('skipMessageSend', 'messageSend', 'send','firstGetSend');">Enviadas</li>
                 </ul>
                 <div class="divGifLoad">
@@ -168,8 +204,9 @@
         </div>
          
       @if (Model.CurrentUser.UserId == Model.User.Id)
-        {
+      {
          <div id ="divSeeMessages">
+             @if (Model.Messages.Count > 0) { 
              <div id="divSeeMessagesContent">
                  @foreach (var item in Model.Messages)
                  {
@@ -178,7 +215,7 @@
                  }
              </div>
 
-             @if (Model.Messages.Count() == 15)
+             if (Model.Messages.Count() == 15)
              {
                  <div class="divGifLoad">
                          <img src="/images/utils/loading.gif" class="imgGifLoad" id="imgmessageReceivedLoad" style="display:none;" />
@@ -187,24 +224,37 @@
                     <div id="btn_moreMsgReceveid" onclick="viewMessages('skipMessageReceived', 'messageReceived', '', 'seeMore');"><p>Ver mais</p></div>
                  </div>
              }
+             }
+             else
+             {
+                 <p> Você não possui novas mensagem até o momento.</p>
+             }
          </div>
 
-         <div id ="divSeeMessagesSend" style="display:none;">
-             <div id="divSeeMessagesSendContent">
+         <div id ="divSeeMessagesSend" style="display:none;">  
+             @if(Model.CountMessageSend > 0)
+             {          
+                 <div id="divSeeMessagesSendContent">
 
-             </div>
-             @if (Model.CountMessageSend == 15)
-               {               
-                   <div id="divSeeMore">                       
+                 </div>
+                 if (Model.CountMessageSend == 15)
+                   {               
+                       <div id="divSeeMore">                       
                        <div class="divGifLoad">
                            <img src="/images/utils/loading.gif" class="imgGifLoad" id="imgmessageSendLoad" style="display:none;" />
                        </div>
                        <div  id="btn_moreMsgSend" onclick="viewMessages('skipMessageReceived', 'messageSend', '', 'seeMore');"><p>Ver mais</p></div>
                    </div>
-               }
+                   }
+             }
+             else
+             {
+                 <p>Até o momento você não enviou nenhuma mensagem.</p>
+             }
+            
          </div>
 
-             }
+       }
          </div>
 
     <div id="divNewChannel" style="display:none">

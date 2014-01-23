@@ -305,6 +305,7 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
             load = document.getElementById("img" + viewBy + "Load")
         }
        
+        //arrumando os parametros dos cliques, divs e buttons
         if (global == 'skipMessageSend') {
             value = skipMessageSend;
             divLoad = "divSeeMore";           
@@ -328,8 +329,8 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
             else btnStyle = 'block';
             document.getElementById('liMsgReceived').onclick = function () { viewMessages('skipMessageReceived', 'messageReceived', 'received', 'back'); }
         }
-
-               
+        
+        //configurando o onclick de acordo com a acao do usuario       
         var btn = document.getElementById(nameBtn);
         if (btn != null) {
             if (typeBtn == 'send') {
@@ -404,7 +405,25 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
             if (btn != null) {
                 btn.style.display = btnStyle;
             }
-        }       
+        }
+
+        //arrumando a cor do btn da top bar
+        ChangeBackgroundChoiceMessage(global, divB, divN);
+    }
+
+    function ChangeBackgroundChoiceMessage(global, divToShow, divToHidden)
+    {
+        var btnActive; var btnStayGrey;
+        if (global == 'skipMessageSend') {
+            btnActive = 'liMsgSend';
+            btnStayGrey = 'liMsgReceived';
+        }
+        else if (global == 'skipMessageReceived') {
+            btnStayGrey = 'liMsgSend';
+            btnActive = 'liMsgReceived';
+        }
+
+        ChoiceViewChannel(divToShow, divToHidden, btnActive, btnStayGrey);
     }
 
     function setOnClickSeeMesg(id, starNameDiv)
