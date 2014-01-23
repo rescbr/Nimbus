@@ -43,8 +43,9 @@
     <div id="divMyChannels" style="display:none;">
         @if (Model.CurrentUser.UserId == Model.User.Id)
         { 
+            <div style="width:100%; padding-bottom:30px; float:left;">
+            <h1>Meus Canais</h1>
             <div id="myChannels">
-                <h1>Meus Canais</h1>
                 @if (Model.MyChannels.Count > 0) { 
                      foreach (var item in Model.MyChannels)
                      {
@@ -64,13 +65,14 @@
                 }
                 else
                 {
-                    <p>Você não criou nenhum canal até o momento. Crie seu primeiro canal e comece agora mesmo a divulgar e compartilhar seus conhecimentos.</p>
+                    <p>Você não criou nenhum canal até o momento. <Br />Crie seu primeiro canal e comece agora mesmo a divulgar e compartilhar seus conhecimentos.</p>
                 }
             </div>
-
-
+            </div>
+            
+            <div style="float:left; width:100%;">
+            <h1>Meus canais moderados</h1>
              <div id="myChannelsMannager">
-                 <h1>Meus canais moderados</h1>
                  @if (Model.ChannelMannager.Count > 0)
                  { 
                      foreach (var item in Model.ChannelMannager)
@@ -95,6 +97,7 @@
                      <p>Nenhum canal sendo moderado até o momento.</p>
                  }
              </div>
+            </div>
         }        
     </div>
 
