@@ -32,6 +32,7 @@ namespace Nimbus.Web.Website.Controllers
             var taskChannelFollow = Task.Run(() => channelApi.FollowsChannel(NimbusOrganization.Id, 0));
             var taskMyChannels = Task.Run(() => channelApi.MyChannel(id , 0));
             var taskReadLater = Task.Run(() => topicApi.showReadLaterTopic(NimbusOrganization.Id, 0));
+            var taskTopicFavorite = Task.Run(() => topicApi.TopicsFavoriteUsers(NimbusOrganization.Id, 0));
             var taskMessages = Task.Run(() => msgApi.ReceivedMessages(0));
             var taskCountMsgSend = Task.Run(() => msgApi.CountSentMessages(0));
             var taskCategories = Task.Run(() => categoryApi.showAllCategory());
@@ -50,6 +51,7 @@ namespace Nimbus.Web.Website.Controllers
                 Messages = taskMessages.Result,
                 CountMessageSend = taskCountMsgSend.Result,
                 Categories = taskCategories.Result,
+                TopicsFavorite = taskTopicFavorite.Result,
                 ChannelMannager = taskChannelManager.Result
             };
             return View("UserProfile", userprofile);

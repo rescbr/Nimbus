@@ -175,8 +175,9 @@ div.userlogo {
     margin-top: 2px;
 }
 
-.textColorNimbus {
-    color:            rgb(133, 170, 75);
+.logoNimbus {
+    color:            #87c240;
+    font-family:      comfortaa;
 }
 
 .logo h1.userlogotext {

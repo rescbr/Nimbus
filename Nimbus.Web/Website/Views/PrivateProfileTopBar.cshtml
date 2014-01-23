@@ -11,6 +11,7 @@
     skipMyChannelsMannager = 1;
     skipChannelsFollow = 1;
     skipReadLater = 1;
+    skipTopicFavorite = 1;
     skipMessageSend = 0;
     skipMessageReceived = 1;
     countSend = @Model.CountMessageSend;
@@ -24,7 +25,7 @@
             <li id="lidivNotification" class="press profTopBarActived">
                 <a name="divNotification" onclick="EnableDiv(this.name,'currentDiv', '');"><p>Atualizações</p></a></li>
             <li id="lidivMyChannels" class="press"><a name="divMyChannels" onclick="EnableDiv(this.name, 'currentDiv', '');"><p>Canais</p></a></li>
-            <li id="lidivTopicFollows" class="press"><a name="divTopicFollows" onclick="EnableDiv(this.name, 'currentDiv', '');"><p>Favoritos</p></a></li>
+            <li id="lidivTopicFavorite" class="press"><a name="divTopicFavorite" onclick="EnableDiv(this.name, 'currentDiv', '');"><p>Favoritos</p></a></li>
             <li id="lidivReadLater" class="press"><a name="divReadLater" onclick="EnableDiv(this.name, 'currentDiv','');"><p>Ler mais tarde</p></a></li>
             <li id="lidivMessages" class="press"><a name="divMessages" onclick="EnableDiv(this.name, 'currentDiv', '');"><p>Mensagens</p></a></li>	
             <li id="lidivNewChannel" class="press"><a name="divNewChannel" onclick="EnableDiv(this.name, 'currentDiv', '');"><p>Novo Canal</p></a></li>
@@ -151,10 +152,32 @@
         }        
     </div>
 
-    <div id="divTopicFollows" style="display:none;">
-
-       @if (Model.CurrentUser.UserId == Model.User.Id)
+    <div id="divTopicFavorite" style="display:none;">
+        @if (Model.CurrentUser.UserId == Model.User.Id)
         {
+            if (Model.TopicsFavorite.Count > 0)
+            {
+                <div id="topicsFavorite">
+                    @foreach (var item in Model.TopicsFavorite)
+                    {
+                        //partial
+                        Html.RenderPartial("~/Website/Views/ChannelPartials/TopicPartial.cshtml", item);
+                    }
+                </div>
+                if (Model.TopicsFavorite.Count() == 15)
+                {
+                    <div class="seeMoreContent">
+                        <div class="divGifLoad">
+                            <img src="/images/utils/loading.gif" id="imgTopicFavoriteLoad" class="imgGifLoad" style="display:none;" />
+                        </div>
+                        <div id="btn_skipTopicFavorite" class="seeMoreButton" onclick="verMaisTopics(@Model.CurrentUser.UserId,'topicsFavorite', 0, 'skipTopicFavorite');"><p>Ver mais</p></div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p>Até o momento você não possui nenhum tópico favoritado.</p>
+            }
         }
     </div>
 

@@ -16,7 +16,10 @@ namespace Nimbus.Web.Website.Models
         public List<Channel> ChannelFollow { get; set; }
 
         public List<Channel> MyChannels { get; set; }
+
         public List<TopicBag> ReadLater { get; set; }
+
+        public List<TopicBag> TopicsFavorite { get; set; }
 
         public List<MessageBag> Messages { get; set; }
 

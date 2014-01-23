@@ -62,13 +62,13 @@
 
         @*Se for o usuário do perfil*@
         @if (Model.User.Id == Model.CurrentUser.UserId)
-            {
+          {
             <a href="#modal-editProfile" class="call-modal">
                 <div class="editProfile">
                     Editar perfil
                 </div>
             </a>
-        }
+          }
 
 
         <div class="aboutUser">
@@ -108,6 +108,11 @@
 
         </div>
 
+        <div class="participation">
+            <h1>Participação</h1>
+            <p>@Model.User.Interaction pontos</p>
+        </div>
+
         @*Se não for o usuário*@
         @if (Model.User.Id != Model.CurrentUser.UserId)
         {
@@ -117,13 +122,8 @@
                 </div>
             </a>
         }
-        else
-        {
-            <div class="participation">
-                <h1>Participação</h1>
-                <p>@Model.User.Interaction pontos</p>
-            </div>
-        }
+            
+        
         @* <div class="chanPaid">
                 <h1>Canais Pagos</h1>
                 <div class="channels">

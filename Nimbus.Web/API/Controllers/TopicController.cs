@@ -644,6 +644,10 @@ from (
             {
                  topics = showReadLaterTopic(id, skip);               
             }
+            else if (type == "favorited")
+            {
+                topics = TopicsFavoriteUsers(id, skip);
+            }
             foreach (var topic in topics)
             {
                 html += rz.ParseRazorTemplate<TopicBag>
@@ -782,6 +786,46 @@ from (
             {
                 return db.Where<UserTopicFavorite>(t => t.TopicId == id && t.UserId == NimbusUser.UserId).Exists(t => t.Visible == true);
             }
+        }
+
+        /// <summary>
+        /// Método que retorna todos os tópicos que o usuário favoritou
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="skip"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public List<TopicBag> TopicsFavoriteUsers(int id, int skip)
+        {
+            List<TopicBag> listTpc = new List<TopicBag>();
+
+            using (var db = DatabaseFactory.OpenDbConnection())
+            {
+
+                var listUserTpc = db.SelectParam<UserTopicFavorite>(t => t.UserId == NimbusUser.UserId && t.Visible == true)
+                                                             .Skip(15 * skip).Take(15);
+
+                var listTopic = listUserTpc.Select(r => db.Where<Topic>(t => t.Visibility == true && t.Id == r.TopicId).FirstOrDefault()).ToList();
+
+                foreach (var item in listTopic)
+                {
+                    TopicBag bag = new TopicBag 
+                    {
+                        AuthorId = item.AuthorId,
+                        ChannelId = item.ChannelId,
+                        Id = item.Id,
+                        ImgUrl = item.ImgUrl,
+                        Title = item.Title,
+                        TopicType = item.TopicType,
+                        Visibility = item.Visibility,   
+                        UserReadLater = db.Where<UserTopicReadLater>(c => c.TopicId == item.Id && c.UserId == NimbusUser.UserId).Exists(c => c.Visible == true),
+                        UserFavorited = db.Where<UserTopicFavorite>(c => c.Visible == true && c.TopicId == item.Id).Exists(c => c.UserId == NimbusUser.UserId)
+                    };
+                    listTpc.Add(bag);
+                }
+            }
+
+            return listTpc;
         }
 
         /// <summary>
