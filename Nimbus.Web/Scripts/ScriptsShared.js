@@ -26,12 +26,16 @@ function GerenciarFooter() {
     PositionFooter();
 }
 
-function EnableDiv(newDiv, tipoGlobal, fieldRequired) { 
+function EnableDiv(newDiv, tipoGlobal, fieldRequired, topBar) { 
 
     if (tipoGlobal == 'currentDiv')
     {
         document.getElementById("li" + currentDiv).className = 'press';
-        document.getElementById("li" + newDiv).className = 'press profTopBarActived'
+        if(topBar == 'profile')
+            document.getElementById("li" + newDiv).className = 'press profTopBarActived';
+        else if (topBar == 'channel')
+            document.getElementById("li" + newDiv).className = 'press chanTopBarActived';
+
         document.getElementById(currentDiv).style.display = 'none';
         currentDiv = newDiv;
     }
@@ -52,7 +56,7 @@ function EnableDiv(newDiv, tipoGlobal, fieldRequired) {
 function EnableTwoDiv(newDiv, tipoGlobal, divTwo, fieldRequired)
 {
     document.getElementById(divTwo).style.display = 'block';
-    EnableDiv(newDiv, tipoGlobal, fieldRequired);   
+    EnableDiv(newDiv, tipoGlobal, fieldRequired, '');   
     
 }
 
