@@ -3,3 +3,90 @@
     ViewBag.Title = "Quem somos";
     Layout = "~/Website/Views/Shared/_LayoutPublic.cshtml";
 }
+
+<script>
+    oldOption = ''
+</script>
+
+<div id="divQuemSomos">
+    <h1>Quem somos</h1>
+    <p class="subTitle">
+        “Somos apaixonados pelas mudanças causadas pela tecnologia.
+        Queremos contribuir para que essas mudanças colaborem para o desenvolvimento da nossa sociedade.”  - equipe Nimbus.
+    </p>
+    <p>O Portal Nimbus é uma plataforma de compartilhamento de conhecimentos criada em 2013, temos o objetivo de incentivar a troca de conhecimentos entre a comunidade,
+    através de um portal simples, gratuito, completo e de fácil uso.</p> 
+  
+    <div style="width:660px; margin-left:12%; margin-right:11%; padding-top:10px; padding-bottom:30px;">
+        <iframe width="660" height="415" src="//www.youtube.com/embed/LvpexCOW314" frameborder="0" allowfullscreen></iframe>
+    </div>
+
+    <section id="divHistoriaQuemSomos">
+        <h1>História</h1>
+        <p>
+            O Portal Nimbus surgiu quando sentimos a falta de uma plataforma onde fosse possível buscar conteúdos de forma rápida,
+            sem a necessidade de um pré-conhecimento e que pudesse ser utilizado por qualquer pessoa, valorizando todo o conhecimento de cada um.
+            Então, decidimos criar uma forma de facilitar o acesso à informação, com uma ferramenta que fosse prática, de qualidade,
+            motivadora e que fosse democrática. Com o projeto Nimbus elaborado, ganhamos o “Desafio Tecnologias que Transformam”, realizado pela
+            Fundação Telefônica Vivo.
+        </p>
+    </section>
+
+    <nav class="quemSomosTopBar">
+        <ul class="sbs">
+            <li id="liProblema" class="quemSomosTopBarActived"><a href="#" onclick="changeTabQSomos('Problema');"><p>Problema</p></a></li>
+            <li id="liMotivacao"><a href ="#" onclick="changeTabQSomos('Motivacao');"><p>Motivação</p></a></li>
+            <li id="liObjetivo"><a href="#" onclick="changeTabQSomos('Objetivo')"><p>Objetivos</p></a></li>
+        </ul>               
+    </nav>
+    
+    <section id="sctProblema">
+      <p class="subTitle">“Os usuários ficam perdidos com a quantidade de informação da web – o Google afirma que existem 30 trilhões de endereções na rede (...)”.</p>
+      <p>
+          A tecnologia pode ser uma excelente aliada para a educação, atraindo a atenção dos alunos e auxiliando o aprendizado com maneiras mais interativas.
+          No entanto, diversos conteúdos que hoje estão disponibilizados no mundo cibernético estão confusos e descentralizados, fazendo com que as pessoas
+          gastem mais tempo para achar uma informação relevante.
+      </p>
+    </section>
+    
+    <section id="sctMotivacao" style="display:none;">
+        <p class="subTitle">“Ninguém é tão grande que não possa aprender, nem tão pequeno que não possa ensinar.” – Esopo.</p>
+        <p>
+            O Portal Nimbus acredita que todos temos conhecimentos grandiosos para compartilhar com o próximo. Nós acreditamos que o conhecimento pode mudar o mundo
+            e as perspectivas das pessoas. Queremos utilizar as tecnologias a nosso favor e através da internet levar conhecimentos, culturas, tradições regionais, entre
+            diversas outras informações para o mundo. Acreditamos que quanto mais pessoas compartilharem o que sabem, mais chances temos de atingir pessoas que estão
+            precisando de ajuda, afinal, o seu jeito de ensinar é único e pode ser o jeito que faltava para alguém finalmente compreender aquele assunto.
+        </p>
+    </section>
+    
+    <section id="sctObjetivo" style="display:none;">
+        <p class="subTitle">“O acesso à informação e ao conhecimento facilitado pelas TICS (tecnologias da informação e comunicação) (...) 
+        cria também oportunidades para o desenvolvimento, a redução mais efetiva da pobreza e a preservação da paz” – Unesco</p>
+        <p>Queremos que o conhecimento chegue a todos. Queremos que nossos usuários desenvolvam o interesse e a curiosidade por 
+         várias áreas do conhecimento. Queremos ajudá-los a descobrir novos maneiras de aprender e a compartilharem entre si, trocando conhecimentos,
+         experiências e adquirindo muito aprendizado, respeitando seu tempo, espaço e interesse.</p>
+    </section>
+
+
+    <h1>Apoio:</h1>
+</div>
+
+
+<script type="text/javascript">
+
+    function changeTabQSomos(option) {
+        if (oldOption == '')
+            oldOption = "Problema";
+
+        document.getElementById("li" + option).className = 'quemSomosTopBarActived';
+        document.getElementById("li" + oldOption).className = '';
+
+        document.getElementById("sct" + oldOption).style.display = 'none';
+        document.getElementById("sct" + option).style.display = 'block';
+
+        oldOption = option;
+    } 
+</script>
+
+
+

@@ -19,5 +19,6 @@ namespace Nimbus.Model.Bags
 
         public int PontsForTopic { get; set; }
 
+        public bool IsUserFacebook { get; set; }
     }
 }

@@ -74,6 +74,7 @@ namespace Nimbus.Web.API.Controllers
                     userBag.Interest = user.Interest;
                     userBag.LastName = user.LastName;
                     userBag.Occupation = user.Occupation;
+                    userBag.IsUserFacebook = user.Password.StartsWith("nsp") ? false : true;
                     userBag.State = user.State;
                     userBag.Age = (int)Math.Floor((DateTime.Now.Subtract(user.BirthDate).Days) / 365.25);
 

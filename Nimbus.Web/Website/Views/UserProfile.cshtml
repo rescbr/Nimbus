@@ -291,6 +291,8 @@
                     <input id="txtAbout" value="@Model.User.About" />
                     <label id="lblErroMsgEditProfile" style="display:none;"></label>
                 </div>
+                @if (Model.User.IsUserFacebook == false) 
+                { 
                 <div class="divformModal">
                     <p onclick="EnableDiv('divResetPass', '', '');">Redefinir senha</p>
                     <div id="divResetPass" style="display:none;">
@@ -300,6 +302,7 @@
                         <input id="txtConfirPassProfile" type="password" min="6" />
                     </div>
                 </div>
+                }
             </div>
             <footer class="fooModal">
                 <!-- Footer -->

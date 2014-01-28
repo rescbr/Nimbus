@@ -413,6 +413,44 @@ p.pErrorLogin{
     line-height: 1.5em;
     }
 
+nav.quemSomosTopBar {
+    width:              644px;
+    height:             39px;
+    font-weight:        normal;
+}
+
+.quemSomosTopBar li {
+    width:              129px;
+    text-align:         center;
+    line-height:        3em;
+}
+
+/* Content */
+.quemSomosTopBar p {
+    text-align:         center;
+    width:              128px;
+    height:             39px;
+    font-weight: bold;
+    color: #000000;
+}
+
+.quemSomosTopBar p:hover, .quemSomosTopBarActived p {
+    text-align:         center;
+    width:              128px;
+    height:             39px;
+    font-weight: bold;
+    color: #87c240;
+}
+
+
+.quemSomosTopBar li:hover, .quemSomosTopBarActived {
+    border-bottom:      2px solid #87c240;
+    height:             36px;
+    color:              #87c240;
+    cursor:             pointer;
+}
+
+
 div.divformFaleConosco {
     background:         #f1f2f2;
     width:              408px;
@@ -454,7 +492,7 @@ div.divformFaleConosco {
 /*-----------------------Fim layout publica-------------------*/
 
 /*-----------------------Paginas estáticas--------------------*/
-#divListQuestionsFaq,#divAllFaleConosco, #divTermosDeUso {
+#divListQuestionsFaq,#divAllFaleConosco, #divTermosDeUso, #divQuemSomos {
     padding-top: 30px;
     padding-bottom: 30px;
     border-bottom: 3px solid rgb(135, 194, 64);
@@ -481,9 +519,23 @@ a.linkFooter {
     color: #87c240;
 }
 
-#divListQuestionsFaq h1, #divAllFaleConosco h1, #divTermosDeUso h1 {
+#divListQuestionsFaq h1, #divAllFaleConosco h1, #divTermosDeUso h1 , #divQuemSomos h1{
     font-family: comfortaa;
     color: #87c240;
+    }
+
+.subTitle {
+    padding-top: 10px;
+    padding-bottom: 30px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #454;
+}
+
+#divHistoriaQuemSomos p {
+    padding-bottom: 20px;
+    padding-top: 10px;
+    line-height: 1.4em;
     }
 
 #divListQuestionsFaq p{
