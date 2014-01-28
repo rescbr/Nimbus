@@ -33,8 +33,13 @@ function EnableDiv(newDiv, tipoGlobal, fieldRequired, topBar) {
         document.getElementById("li" + currentDiv).className = 'press';
         if(topBar == 'profile')
             document.getElementById("li" + newDiv).className = 'press profTopBarActived';
-        else if (topBar == 'channel')
+        else if (topBar == 'channel') {
             document.getElementById("li" + newDiv).className = 'press chanTopBarActived';
+            var nameP = currentDiv.replace("div", "p");
+            var newP = newDiv.replace("div", "p");
+            document.getElementById(nameP).style.color = "";
+            document.getElementById(newP).style.color = "#87c240";
+        }
 
         document.getElementById(currentDiv).style.display = 'none';
         currentDiv = newDiv;

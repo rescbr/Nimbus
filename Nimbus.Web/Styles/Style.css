@@ -1692,11 +1692,6 @@ nav.chanTopBar {
     font-weight: normal;
 }
 
-.chanTopBar p:hover, .chanTopBar p:active {
-    color:              #87c240;
-    cursor:             pointer;
-}
-
 .chanTopBar li:hover {
     background:         #2b2d2e;
     border-bottom:      2px solid #87c240;
@@ -1713,7 +1708,7 @@ nav.chanTopBar {
     font-weight:        normal;
 }
 
-.chanTopBarActived p, .chanTopBarActived a {
+.chanTopBarActived p {
     text-decoration:    none;
     color:              #87c240;
     }
