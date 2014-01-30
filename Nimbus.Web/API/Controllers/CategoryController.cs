@@ -52,7 +52,8 @@ namespace Nimbus.Web.API.Controllers
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
                     string url;
-                    url = db.SelectParam<ImgTopChannel>(img => img.CategoryId == id).Select(i => i.UrlImg).FirstOrDefault();
+                    url = db.SelectParam<Category>(img => img.Id == id).Select(i => i.ImageUrl).FirstOrDefault();
+                    url = url.ToLower().Replace("/category", "/capachannel");
                     return url;
                 }
             }

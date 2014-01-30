@@ -164,8 +164,8 @@
                     <div>
                         <label id="lblFile" onclick="EnableTwoDiv('divFile', 'divTipoTopic', 'divTypeTopic','');">Arquivo</label>
                         <label id="lblVideo" onclick="EnableTwoDiv('divVideo', 'divTipoTopic', 'divTypeTopic','inptVideo');">Vídeo</label>
-                        <label id="lblText" onclick="EnableTwoDiv('divText', 'divTipoTopic', 'divTypeTopic','txtaArticle');">Artigo</label>
-                        <label id="lblDiscussion" onclick="EnableTwoDiv('divDiscussion', 'divTipoTopic', 'divTypeTopic','txtaTextMsg');">Discussão</label>
+                        <label id="lblText" onclick="EnableTwoDiv('divText', 'divTipoTopic', 'divTypeTopic','');">Artigo</label>
+                        <label id="lblDiscussion" onclick="EnableTwoDiv('divDiscussion', 'divTipoTopic', 'divTypeTopic','');">Discussão</label>
                         <label id="lblExam" onclick="EnableTwoDiv('divExam', 'divTipoTopic', 'divTypeTopic','');">Avaliação</label>
                     </div>
                 </div>
@@ -175,7 +175,7 @@
                     <div id="divFile" style="display:none;" class="divformNewChannel">
                         <label>Upload de arquivo (máx. 5MB):</label><br />
                         <label>(docx, pdf, pptx, ppt, ppsx, pps, xlsx, xls)</label>
-                        <iframe width="300" height="200" src="/upload?type=office&w=300&h=200&field=inptUrlFile" frameborder="0"></iframe>
+                        <iframe width="400" height="250" src="/upload?type=office&w=300&h=200&field=inptUrlFile" frameborder="0"></iframe>
                         <input type="hidden" id="inptUrlFile" />
                     </div>
 
@@ -270,7 +270,7 @@
         $('form[name=imagem_original]').ajaxForm({
             dataType: 'json',
             success: function (data) {
-                $('input[name=url]').val(data.url);
+                document.getElementById('url').value = data.url;
                 $("#imgPrevia").attr("src", data.url);
                 $("#divImgTopico").attr("style", "display:block");
             }
