@@ -6,7 +6,8 @@
     if(Model.TopicImage != null)
     {
         //TODO: imagens 60x60
-        img60x60 = Model.TopicImage.Replace("/tp150x100/", "/tp60x60/");//.Replace("/category/", "/ca60x60/");
+        img60x60 = Model.TopicImage.ToLower().Replace("/tp150x100/", "/tp60x60/");
+        img60x60 = img60x60.Replace("/category/", "/ca60x60/");
     }
 }
 

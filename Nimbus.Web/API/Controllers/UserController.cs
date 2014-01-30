@@ -335,11 +335,11 @@ WHERE ([tUser].[test] IS NOT NULL) AND
         [HttpGet]
         public bool sendTokenResetPassword()
         {
-            MandrillApi apiMandrill = new MandrillApi(Const.MandrillToken);
+            MandrillApi apiMandrill = new MandrillApi(NimbusConfig.MandrillToken);
             EmailMessage mensagem = new EmailMessage();
-            mensagem.from_email = "resetPassword@portalnimbus.com.br";
+            mensagem.from_email = "ResetPassword@portalnimbus.com.br";
             mensagem.from_name = "Portal Nimbus";
-            mensagem.subject = "Redefinição de senha ";
+            mensagem.subject = "Redefinição de senha";
             List<EmailAddress> address = new List<EmailAddress> ();
             address.Add(new EmailAddress(NimbusUser.Email));
             mensagem.to = address;
@@ -361,7 +361,7 @@ WHERE ([tUser].[test] IS NOT NULL) AND
                                 "<div style=\"margin:30px 10% 40px; height:250px;\">" +
                                      "Olá " + NimbusUser.FirstName + " " + NimbusUser.LastName + ", <br/>"+
                                      "para redefinir sua senha, acesse: " +
-                                     "<a href=\"http://localhost:50011/resetpassword?reset=" + Uri.EscapeDataString(tokeString) + "\">Redefinir senha</a><br/>" +
+                                     "<a href=\"http://www.portalnimbus.com.br/resetpassword?reset=" + Uri.EscapeDataString(tokeString) + "\">Redefinir senha</a><br/>" +
                                      "*Esse link é válido no período de 1 (um) dia. <br/><br/>" +
 
                                 "</div>"+

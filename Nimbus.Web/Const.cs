@@ -11,8 +11,6 @@ namespace Nimbus.Web
 
         public const int CookieExpiryDays = 7;
 
-        public const string MandrillToken = "***REMOVED***";
-
         public static class Azure
         {
             public const string AvatarContainer = "avatarupload";

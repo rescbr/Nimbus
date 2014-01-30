@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 namespace Nimbus.Model.ORM
 {
     public class Role  : Nimbus.Model.Role
-    {        
-        [PrimaryKey()]
+    {
+        [PrimaryKey]
+        public Guid Id { get; set; }
         [References(typeof(User))]
         public override int UserId { get; set; }
-        [PrimaryKey()]
         [References(typeof(Channel))]
         public override int ChannelId { get; set; }
 

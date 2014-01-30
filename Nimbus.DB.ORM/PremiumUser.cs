@@ -10,10 +10,10 @@ namespace Nimbus.Model.ORM
     public class PremiumUser : Nimbus.Model.PremiumUser
     {
         [PrimaryKey]
+        public Guid Id { get; set; }
         [References(typeof(Premium))]
         public override int PremiumId { get; set; }
 
-        [PrimaryKey]
         [References(typeof(User))]
         public override int UserId { get; set; }
         

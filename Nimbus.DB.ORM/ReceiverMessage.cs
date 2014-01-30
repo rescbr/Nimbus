@@ -10,7 +10,8 @@ namespace Nimbus.Model.ORM
     public class ReceiverMessage : Nimbus.Model.ReceiverMessage
     {
         //GAMBIARRA POR CAUSA DO SERVICESTACK NOJENTO https://groups.google.com/forum/#!msg/servicestack/u81hFKRyFLw/htYx6BDW9ZgJ
-        public string Id { get { return this.UserId + ":" + this.MessageId; } }
+        [PrimaryKey]
+        public Guid Id { get; set; }
 
         [References(typeof(User))]
         public override int UserId { get; set; }

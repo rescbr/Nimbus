@@ -9,7 +9,7 @@ namespace Nimbus.Model.ORM
 {
     public class Prices : Nimbus.Model.Prices
     {
-        [References(typeof(Prices))]
+        [PrimaryKey]
         public int Id { get; set; }
     }
 }

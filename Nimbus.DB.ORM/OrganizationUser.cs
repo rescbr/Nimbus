@@ -10,10 +10,11 @@ namespace Nimbus.Model.ORM
     public class OrganizationUser  : Nimbus.Model.OrganizationUser
     {
         [PrimaryKey]
+        public Guid Id { get; set; }
+
         [References(typeof(User))]
         public override int UserId { get; set; }
         
-        [PrimaryKey]
         [References(typeof(Organization))]
         public override int OrganizationId { get; set; }
     }

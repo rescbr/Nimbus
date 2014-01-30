@@ -43,7 +43,7 @@ namespace Nimbus.Web.Website.Controllers
         [HttpPost]
         public ActionResult SendFaleConosco()                                                                                                                                                                                                                                                                                                                                                                                                                            
         {
-            MandrillApi mandril = new MandrillApi(Const.MandrillToken);
+            MandrillApi mandril = new MandrillApi(NimbusConfig.MandrillToken);
             EmailMessage mensagem = new EmailMessage();
             List<EmailAddress> address = new List<EmailAddress>();
               

@@ -48,15 +48,16 @@
     <header id="header">
             <div class="container">
                 <nav class="logo">
-                    <ul class="sbs">
-                        <li>
-                            <div class="userlogo">
-                                <img class="imgLogo" src="/images/utils/iconeLogo.png" />
-                            </div>
-                        </li>
-                        
-                        <li><h1 class="logoNimbus" style="font-family:comfortaa;">Nimbus</h1></li>
-                    </ul>
+                    <a href="/">
+                        <ul class="sbs">
+                            <li>
+                                <div class="userlogo">
+                                    <img class="imgLogo" src="/images/utils/iconeLogo.png" />
+                                </div>
+                            </li>
+                            <li><h1 class="logoNimbus" style="font-family:comfortaa;">Nimbus</h1></li>
+                        </ul>
+                    </a>
                 </nav>
         @if (User.Identity.IsAuthenticated)
             {
