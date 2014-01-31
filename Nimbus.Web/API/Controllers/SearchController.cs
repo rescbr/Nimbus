@@ -201,7 +201,7 @@ namespace Nimbus.Web.API.Controllers
                             bag.IdItem = channel.Id;
                             bag.Title = channel.Name;
                             bag.Description = channel.Description;
-                            bag.UrlImage = channel.ImgUrl;
+                            bag.UrlImage = channel.ImgUrl.ToLower().Replace("/capachannel/", "/category/");
                             bag.TypeSearch = "channel";
                             bag.ItemPageUrl = "channel";
                             channelsFound.Add(bag);
