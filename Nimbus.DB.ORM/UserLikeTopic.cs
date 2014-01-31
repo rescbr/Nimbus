@@ -11,7 +11,8 @@ namespace Nimbus.Model.ORM
     public class UserLikeTopic: Nimbus.Model.UserLikeTopic
     {
         [PrimaryKey]
-        public Guid Id { get; set; }
+        [AutoIncrement]
+        public int Id { get; set; }
 
         [References(typeof(User))]
         public override int UserId { get; set; }

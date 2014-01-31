@@ -10,7 +10,8 @@ namespace Nimbus.Model.ORM
     public class UserAds: Nimbus.Model.UserAds
     {
         [PrimaryKey]
-        public Guid Id { get; set; }
+        [AutoIncrement]
+        public int Id { get; set; }
 
         [References(typeof(User))]
         public int UserId { get; set; }

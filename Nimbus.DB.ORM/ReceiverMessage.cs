@@ -11,7 +11,8 @@ namespace Nimbus.Model.ORM
     {
         //GAMBIARRA POR CAUSA DO SERVICESTACK NOJENTO https://groups.google.com/forum/#!msg/servicestack/u81hFKRyFLw/htYx6BDW9ZgJ
         [PrimaryKey]
-        public Guid Id { get; set; }
+        [AutoIncrement]
+        public int Id { get; set; }
 
         [References(typeof(User))]
         public override int UserId { get; set; }

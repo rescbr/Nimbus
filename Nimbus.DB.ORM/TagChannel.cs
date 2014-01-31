@@ -10,7 +10,8 @@ namespace Nimbus.Model.ORM
     public class TagChannel : Nimbus.Model.TagChannel
     {
         [PrimaryKey]
-        public Guid Id { get; set; }
+        [AutoIncrement]
+        public int Id { get; set; }
         
         [References(typeof(Tag))]
         public override int TagId { get; set; }
