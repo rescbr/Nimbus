@@ -83,13 +83,13 @@ namespace Nimbus.Web.API.Controllers
                                                                                                                                   (rl.IsOwner == true || rl.ChannelMagager == true || rl.MessageManager == true
                                                                                                                                    || rl.ModeratorManager == true || rl.TopicManager == true
                                                                                                                                    || rl.UserManager == true)).FirstOrDefault()).Where(r => r != null);
-                    int pointsChn = 0;
-                    int pointsTpc = 0;
-                    int pointsCmt = 0;
+                    int pointsChn = 0; int pointsFollowers = 0;
+                    int pointsTpc = 0; int pointsFollowersBonus = 0;
+                    int pointsCmt = 0; 
                     if (roles.Count() > 0)
                     {
                          pointsChn = ((roles.Select(c => c.UserId == id && c.IsOwner == true).Count() * 50)
-                                       + (roles.Select(c => c.UserId == id && (c.ChannelMagager == true || c.MessageManager == true ||
+                                       + (roles.Select(c => c.UserId == id && c.IsOwner == false && (c.ChannelMagager == true || c.MessageManager == true ||
                                                                                c.ModeratorManager == true || c.TopicManager == true || c.UserManager == true)).Count() * 25));
 
 
@@ -99,10 +99,16 @@ namespace Nimbus.Web.API.Controllers
 
                         pointsCmt = roles.Where(r => r.UserId == id).Select(r => db.Where<Comment>(c => c.UserId == id && c.Visible == true && c.ChannelId == r.ChannelId))
                                                                         .Where(c => c != null).Count();
-                    }
-                     pointsChn = pointsChn * 30;
+
+                        pointsFollowers = db.Where<Channel>(ch => ch.OwnerId == NimbusUser.UserId && ch.Visible == true)
+                                                            .Select(c => db.Where<ChannelUser>(cs => cs.Id == c.Id && cs.Follow == true && 
+                                                                                                  cs.Accepted == true && 
+                                                                                                  cs.Visible == true).FirstOrDefault()).Where(c => c!= null).Count();
+                        
+                     }
+
                      pointsCmt = pointsCmt * 1;
-                     pointsTpc = pointsTpc * 50;
+                     pointsTpc = pointsTpc * 30;
 
                     userBag.PointsForChannel = pointsChn;
                     userBag.PointsForComment = pointsCmt;
