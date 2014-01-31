@@ -6,7 +6,11 @@ function PositionFooter(evt) {
     var footer = document.getElementById("footer");
     var windowHeight = document.getElementsByTagName("html")[0].clientHeight; //apenas viewport
     var headerHeight = document.getElementById("header").offsetHeight;
-    var containerHeight = document.getElementById("container-body").scrollHeight; //inclui nao visivel
+
+    var containerBody = document.getElementById("container-body");
+    var containerHeight = containerBody.scrollHeight; //inclui nao visivel
+    if (containerHeight == 0) containerHeight = GetElementScrollHeightByChildren(containerBody); //devido a bug webkit
+
     var footerHeight = footer.offsetHeight; //inclui border
     var footerHeightWithoutBorder = footer.scrollHeight;
 
@@ -24,6 +28,19 @@ function GerenciarFooter() {
     document.getElementById("header").addEventListener("DOMSubtreeModified", PositionFooter);
     document.getElementById("container-body").addEventListener("DOMSubtreeModified", PositionFooter);
     PositionFooter();
+}
+
+function GetElementScrollHeightByChildren(element) {
+    //função devido a bugs nao corrigidos no webkit
+    //https://bugs.webkit.org/show_bug.cgi?id=61124
+    //http://code.google.com/p/chromium/issues/detail?id=34224
+    var childrenHeights = 0;
+    var cbChildren = element.children;
+    for (var i = 0; i < cbChildren.length; i++) {
+        childrenHeights += cbChildren[i].scrollHeight;
+    }
+
+    return childrenHeights;
 }
 
 function EnableDiv(newDiv, tipoGlobal, fieldRequired, topBar) { 
