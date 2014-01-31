@@ -110,6 +110,13 @@ namespace Nimbus.Web.API.Controllers
                      pointsCmt = pointsCmt * 1;
                      pointsTpc = pointsTpc * 30;
 
+                     if (pointsFollowers >= 50)
+                         pointsFollowersBonus = 10;
+                     if (pointsFollowers >= 100)
+                         pointsFollowersBonus = pointsFollowersBonus + 100;
+
+                     pointsFollowers = pointsFollowers * 1 + pointsFollowersBonus;
+
                     userBag.PointsForChannel = pointsChn;
                     userBag.PointsForComment = pointsCmt;
                     userBag.PontsForTopic = pointsTpc;

@@ -1396,7 +1396,7 @@ label#lblVideo, label#lblText, label#lblDiscussion, label#lblExam , label#lblFil
     cursor:             pointer;
 }
 
-button#bntAddItem {
+button#bntAddItem, button#btnResetPassword {
     margin-left:        179px;
     background:         #223d98;
     color:              #FFFFFF;
@@ -2437,6 +2437,24 @@ div.divformModal {
 
 div.divformModal:last-child {
     border: none;
+}
+
+.inputWidthEditProfile
+{
+    width: 210px;
+    clear:both;
+}
+
+.pDeleteUser {
+    font-size: 10px;
+    color: #bcbec0;
+    cursor: pointer;
+}
+
+.pDeleteUser:hover {
+    font-size: 10px;
+    color: #87c240;
+    cursor: pointer;
 }
 
 form#formReportUser footer.fooModal,

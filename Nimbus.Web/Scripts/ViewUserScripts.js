@@ -64,9 +64,9 @@
             var state = document.getElementById('txtState').value;
             var country = document.getElementById('txtCountry').value;
             var occupation = document.getElementById('txtOccupation').value;
-            var interest = document.getElementById('txtInterest').value;
-            var experience = document.getElementById('txtExperience').value;
-            var about = document.getElementById('txtAbout').value;
+            var interest = document.getElementById('txtInterest').innerHTML;
+            var experience = document.getElementById('txtExperience').innerHTML;
+            var about = document.getElementById('txtAbout').innerHTML;
             var birth = document.getElementById('txtBirthDateEdit').value;
 
             var pass = document.getElementById("txtNewPassProfile").value;
@@ -354,5 +354,12 @@
                     }
                 });
             }
+        }
+    }
+
+    function DeleteUserCount()
+    {
+        decisao = confirm("Você realmente deseja deletar sua conta?");
+        if (decisao) {
         }
     }

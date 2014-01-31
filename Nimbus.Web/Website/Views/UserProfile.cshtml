@@ -243,58 +243,66 @@
         <header id="modal-label">
             <!-- Header -->
             Editar perfil
+            <p class="pDeleteUser" onclick="DeleteUserCount();">Deletar conta</p>
         </header>
 
         <form id="formEditProfile" onsubmit="return false;">
             <div class="modal-content">
                 <!-- The modals content -->
                 <div class="divformModal">
-                    <p>Nome</p>
-                    <input type="text" id="txtFirstName" required value="@Model.User.FirstName" />
+                        <div style="float:left; padding-right:20px;">
+                            <p>Nome</p>
+                            <input class="inputWidthEditProfile" type="text" id="txtFirstName" required value="@Model.User.FirstName" />
+                        </div>
+                    <div>
+                        <p>Sobrenome</p>
+                        <input class="inputWidthEditProfile" type="text" id="txtLastName" required value="@Model.User.LastName" />
+                    </div>
                 </div>
-                
-                <div class="divformModal">
-                    <p>Sobrenome</p>
-                    <input type="text" id="txtLastName" required value="@Model.User.LastName" />
-                </div>
+
                 <div class="divformModal">
                     <p>Data de Nascimento</p>
                     <input type="date" id="txtBirthDateEdit" required maxlength="10"
                            pattern="^(0[1-9]|[12][0-9]|[3][0-1])[/](0[1-9]|[1][0-2])[/](19[3-9][0-9]|20[0-1][1-4])$" value="@Model.User.BirthDate.ToShortDateString()" />
                 </div>
+
                 <div class="divformModal">
-                    <p>Cidade</p>
-                    <input id="txtCity" value="@Model.User.City" />
+                    <div style="float:left; padding-right:20px;">
+                        <p>Cidade</p>
+                        <input id="txtCity" value="@Model.User.City" />
+                    </div>
+                    <div style="float:left; padding-right:20px;">
+                        <p>Estado</p>
+                        <input style="clear:both; width:50px;" id="txtState" maxlength="2" value="@Model.User.State" />
+                    </div>    
+
+                    <div>
+                        <p>País</p>
+                        <input id="txtCountry" value="@Model.User.Country" />
+                    </div>   
                 </div>
-                <div class="divformModal">
-                    <p>Estado</p>
-                    <input id="txtState" value="@Model.User.State" />
-                </div>
-                <div class="divformModal">
-                    <p>País</p>
-                    <input id="txtCountry" value="@Model.User.Country" />
-                </div>
+
                 <div class="divformModal">
                     <p>Profissão</p>
-                    <input id="txtOccupation" value="@Model.User.Occupation" />
+                    <input id="txtOccupation" width="400" value="@Model.User.Occupation" />
                 </div>
                 <div class="divformModal">
                     <p>Interesses</p>
-                    <input id="txtInterest" value="@Model.User.Interest" />
+                    <textarea id="txtInterest" cols="50" maxlength="140">@Model.User.Interest</textarea>
                 </div>
                 <div class="divformModal">
                     <p>Experiência</p>
-                    <input id="txtExperience" value="@Model.User.Experience" />
+                    <textarea id="txtExperience" cols="50" maxlength="140">@Model.User.Experience</textarea>
                 </div>
                 <div class="divformModal">
                     <p>Outras informações</p>
-                    <input id="txtAbout" value="@Model.User.About" />
+                    <textarea id="txtAbout" cols="50" maxlength="140"> @Model.User.About </textarea>
                     <label id="lblErroMsgEditProfile" style="display:none;"></label>
                 </div>
                 @if (Model.User.IsUserFacebook == false) 
                 { 
                 <div class="divformModal">
-                    <p onclick="EnableDiv('divResetPass', '', '');">Redefinir senha</p>
+                    <button id="btnResetPassword" style="" onclick="EnableDiv('divResetPass', '', '');">Redefinir senha</button>
                     <div id="divResetPass" style="display:none;">
                         <p>Nova Senha</p>
                         <input id="txtNewPassProfile" type="password" min="6" />
