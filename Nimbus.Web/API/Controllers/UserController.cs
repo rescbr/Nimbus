@@ -88,9 +88,12 @@ namespace Nimbus.Web.API.Controllers
                     int pointsCmt = 0; 
                     if (roles.Count() > 0)
                     {
-                         pointsChn = ((roles.Select(c => c.UserId == id && c.IsOwner == true).Count() * 50)
-                                       + (roles.Select(c => c.UserId == id && c.IsOwner == false && (c.ChannelMagager == true || c.MessageManager == true ||
-                                                                               c.ModeratorManager == true || c.TopicManager == true || c.UserManager == true)).Count() * 25));
+                         pointsChn = roles.Select(c => c.UserId == id && c.IsOwner == true).Count() * 50;
+
+                        pointsChn = pointsChn + (roles.Where(c => c.IsOwner == false && c.UserId == id )
+                                                      .Select(c => c.ChannelMagager == true || c.MessageManager == true ||
+                                                                   c.ModeratorManager == true || c.TopicManager == true || c.UserManager == true)
+                                                      .Count() * 25);
 
 
                          pointsTpc = roles.Where(r => r.UserId == id).Select(r => db.Where<Topic>(t => t.AuthorId == r.UserId &&
@@ -395,9 +398,92 @@ WHERE ([tUser].[test] IS NOT NULL) AND
         }
 
         #endregion
+
+        [HttpPost]
+        public bool DeleteUserAccount() 
+        {
+            bool delete = false;
+
+            using(var db = DatabaseFactory.OpenDbConnection())
+            {
+                using (var trans = db.OpenTransaction(System.Data.IsolationLevel.ReadCommitted)) 
+                {
+                    try
+                    {
+                        #region//remover os canais + tópicos
+                        IEnumerable<int> idsChannelsOWner = db.Where<Channel>(ch => ch.OwnerId == NimbusUser.UserId && ch.Visible == true).Select(c => c.Id).ToList();
+                        if (idsChannelsOWner.Count() > 0)
+                        {
+                            ChannelController apiChn = ClonedContextInstance<ChannelController>();
+                            foreach (int item in idsChannelsOWner)
+                            {
+                                apiChn.DeleteChannel(item);
+                            }
+                        }
+                        #endregion
+
+                        #region//remover os votos dados aos canais e canais seguidos
+                        db.SqlScalar<int>(@"UPDATE [ChannelUser]
+                                                  SET [ChannelUser].[Accepted] = 0, [ChannelUser].[Follow] = 0,[ChannelUser].[Vote] = 0,
+                                                      [ChannelUser].[Visible] = 0
+                                                  WHERE [ChannelUser].[UserId] = @userId AND 
+                                                  ([ChannelUser].[Follow] = 1  OR [ChannelUser].[Accepted] = 1 OR [ChannelUser].[Vote] = 1 OR
+                                                   [ChannelUser].[Visible] = 1)", new { userId = NimbusUser.UserId });
+                        #endregion
+
+                        #region//remover da tabela moderador                      
+                        db.SqlScalar<int>(@"UPDATE [Role]
+                                                  SET [Role].[IsOwner] = 0, [Role].[MessageManager] = 0,[Role].[UserManager] = 0,
+                                                      [Role].[ModeratorManager] = 0,[Role].[Paid] = 0,[Role].[TopicManager] = 0
+                                                  WHERE [Role].[UserId] = @userId AND 
+                                                  ([Role].[Accepted] = 1  OR [Role].[ChannelMagager] = 1 OR [Role].[IsOwner] = 1 OR
+                                                   [Role].[MessageManager] = 1 OR [Role].[ModeratorManager] = 1 OR [Role].[Paid]= 1 OR
+                                                   [Role].[TopicManager] = 1 OR [Role].[UserManager] = 1)", new { userId = NimbusUser.UserId });                        
+                        #endregion
+
+                        #region//remover comentários
+                        IEnumerable<Comment> comments = db.Where<Comment>(c => c.Visible == true && c.UserId == NimbusUser.UserId).ToList();
+                        if (comments.Count() > 0) 
+                        {
+                            CommentController apiCmt = ClonedContextInstance<CommentController>();
+                            foreach (var item in comments)
+                            {
+                                apiCmt.DeleteComment(item);  
+                            }
+                        }
+                        #endregion
+
+                        #region //remover da tabela de topicos favoritos    
+                        db.SqlScalar<int>(@"UPDATE [UserTopicFavorite]
+                                                  SET [UserTopicFavorite].[Visible] = 0
+                                                  WHERE [UserTopicFavorite].[UserId] = @userId AND [UserTopicFavorite].[Visible] = 1", new { userId = NimbusUser.UserId });
+                        #endregion
+
+                        #region//removre os likes dados aos tópicos
+                        db.SqlScalar<int>(@"UPDATE [UserLikeTopic]
+                                                  SET [UserLikeTopic].[Visible] = 0
+                                                  WHERE [UserLikeTopic].[UserId] = @userId AND [UserLikeTopic].[Visible]= 1", new { userId = NimbusUser.UserId });
+                        #endregion
+
+                        #region//remover usuário
+                        var userCurrent = db.Where<User>(u => u.Id == NimbusUser.UserId).FirstOrDefault();
+                        userCurrent.Password = null;
+
+                        db.Update<User>(userCurrent, u => u.Id == NimbusUser.UserId);
+                        #endregion
+
+                        trans.Commit();
+                        delete = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        trans.Rollback();
+                        throw ;  
+                    }
+                }
+            }
+
+            return delete;
+        }
     }
-
-
-
-
 }

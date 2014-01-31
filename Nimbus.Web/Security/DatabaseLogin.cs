@@ -30,7 +30,8 @@ namespace Nimbus.Web.Security
             Success,
             UserDoesNotExist,
             InvalidPassword,
-            GenericFail
+            GenericFail,
+            UserRemoved
         }
 
         /// <summary>
@@ -51,6 +52,12 @@ namespace Nimbus.Web.Security
                 {
                     authDetails = AuthenticationResult.UserDoesNotExist;
                     return false; //Usuário não existe.
+                }
+
+                if (dbuser.Password == null)
+                {
+                    authDetails = AuthenticationResult.UserRemoved;
+                    return false;
                 }
 
                 NSPHash hashedPassword = new NSPHash(dbuser.Password);
@@ -106,6 +113,7 @@ namespace Nimbus.Web.Security
             {
                 var user = db.Where<User>(u => u.Id == userId).FirstOrDefault();
                 if (user == null) throw new Exception("Invalid User ID");
+                if (user.Password == null) throw new Exception("User doesn't exist");
                 return GetNimbusUser(user);
             }
         }

@@ -64,9 +64,9 @@
             var state = document.getElementById('txtState').value;
             var country = document.getElementById('txtCountry').value;
             var occupation = document.getElementById('txtOccupation').value;
-            var interest = document.getElementById('txtInterest').innerHTML;
-            var experience = document.getElementById('txtExperience').innerHTML;
-            var about = document.getElementById('txtAbout').innerHTML;
+            var interest = document.getElementById('txtInterest').value;
+            var experience = document.getElementById('txtExperience').value;
+            var about = document.getElementById('txtAbout').value;
             var birth = document.getElementById('txtBirthDateEdit').value;
 
             var pass = document.getElementById("txtNewPassProfile").value;
@@ -167,7 +167,8 @@
                     }
                 });
             }
-        }
+            document.getElementById('closeModalEditProfile').click();
+        }       
     }
 
     function CancelEditProfile(form) {
@@ -361,5 +362,21 @@
     {
         decisao = confirm("Você realmente deseja deletar sua conta?");
         if (decisao) {
+            $.ajax({
+                url: "/api/user/deleteuseraccount/",
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                statusCode: {
+                    200: function (newData) {
+                        if (newData == true) {
+                            window.location.href = "/login/logout";
+                        }
+                    },
+                    500: function () {
+                        //erro
+                        window.alert("Não foi possível deletar sua conta neste momento. Tente novamente mais tarde.");
+                    }
+                }
+            });
         }
     }
