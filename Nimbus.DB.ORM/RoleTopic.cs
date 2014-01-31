@@ -10,7 +10,8 @@ namespace Nimbus.Model.ORM
     public class RoleTopic  : Nimbus.Model.RoleTopic
     {
         [PrimaryKey]
-        public Guid Id { get; set; }
+        [AutoIncrement]
+        public int Id { get; set; }
         
         [References(typeof(Channel))]
         public override int ChannelId { get; set; }

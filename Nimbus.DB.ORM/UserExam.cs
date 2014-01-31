@@ -10,7 +10,8 @@ namespace Nimbus.Model.ORM
     public  class UserExam : Nimbus.Model.UserExam
     {
         [PrimaryKey]
-        public Guid Id { get; set; }
+        [AutoIncrement]
+        public int Id { get; set; }
         
         [References(typeof(User))]
         public override int UserId { get; set; }
