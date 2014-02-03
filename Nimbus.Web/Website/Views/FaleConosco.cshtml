@@ -18,17 +18,21 @@
                 <p><input type="text" name="iptNameFaleConosco" placeholder="Nome" min="10" max="50" style="width: 100%; padding: 4px;" required /></p>
                 <p><input type="text" name="iptLastNameFaleConosco" placeholder="Sobrenome" min="4" max="100" style="width: 100%; padding: 4px;" /></p>
                 <p><input type="email" name="iptEmailFaleConosco" placeholder="Email" style="width: 100%; padding: 4px;" required /></p>
-                <p class="pGreyBold">
-                    Tipo:
-                    <select name="slcFaleConosco">
-                        <option value="sugestao">Sugestões</option>
-                        <option value="elogio">Elogios</option>
-                        <option value="parceria">Parcerias</option>
-                        <option value="critica">Críticas</option>
-                        <option value="duvida">Dúvidas</option>
-                        <option value="outros">Outros</option>
-                    </select>
-                </p>
+                <div>
+                    <p class="pGreyBold">
+                        Tipo:
+                    </p>
+                        <label class="custom-select" style="margin-top:-30px; margin-left:40px;float:left;">
+                            <select name="slcFaleConosco" style="width:200px;">
+                                <option value="sugestao">Sugestões</option>
+                                <option value="elogio">Elogios</option>
+                                <option value="parceria">Parcerias</option>
+                                <option value="critica">Críticas</option>
+                                <option value="duvida">Dúvidas</option>
+                                <option value="outros">Outros</option>
+                            </select>
+                        </label>
+                </div>
                 <p class="pGreyBold">Deixe seu recado:</p>
                 <textarea name="txtaMsgFaleConosco" style="width:100%; height:100px;" required></textarea>
             </div>

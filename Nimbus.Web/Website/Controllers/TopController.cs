@@ -14,6 +14,9 @@ namespace Nimbus.Web.Website.Controllers
 
             //TODO colocar p chamar a funçao CERTA
             var topics = topicApi.TopTopics();//inicial é trazer todos os Tts sem ser filtrado por categoria
+            var lstCat = new List<string>();
+            lstCat.Add("asafs");
+            ViewBag.lstCat = lstCat;
             return View("TopTopics", topics);
         }
     }

@@ -9,6 +9,17 @@
     <div class="cont-left">
         <h1>Top Topics</h1>
     </div>
+    <div >
+        <label class="custom-select">
+            <select style="width:200px;">
+                <option>Todas as categorias</option>
+                @foreach (var item in (List<string>)ViewBag.lstCat)
+                {
+                    <option>@item</option>
+                }
+            </select>
+        </label>
+    </div>
 </div>
 
 @*Miniaturas dos topicos*@

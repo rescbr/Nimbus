@@ -133,7 +133,7 @@ namespace Nimbus.Web.API.Controllers
                             {
 
                                 cmt.Text = "Comentário removido";
-
+                                cmt.IsNew = false;
                                 db.Update<Comment>(cmt, c => c.Id == cmt.Id);
                                 db.Save(cmt);
 
@@ -152,6 +152,7 @@ namespace Nimbus.Web.API.Controllers
                                     if (ct != null)
                                     {
                                         ct.Visible = false;
+                                        ct.IsNew = false;
                                         db.Update<Comment>(ct, c => c.Id == item);
                                         db.Save(ct);
                                     }
