@@ -106,9 +106,11 @@
 
         </div>
 
-        <div class="participation">
-            <h1>Participação</h1>
-            <p>@Model.User.Interaction pontos</p>
+        <div class="participation">       
+            <a onclick="openModalParticipation(@Model.User.Id);" class="call-modal" title="Ver todos pontos">
+                <h1>Participação</h1>
+                    <p>@Model.User.Interaction pontos</p>
+            </a>
         </div>
 
         @*Se não for o usuário*@
@@ -136,6 +138,71 @@
 
     </div>
 
+@*Modal section - exibir de onde vem os pontos do usuário*@
+<section class="semantic-content" id="modal-Participation" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
+    <div class="modal-inner">
+        <header id="modal-label">
+            <!-- Header -->
+            Pontuação
+        </header>
+        <form id="formSendMsgProfile" onsubmit="return false;">
+            <div class="modal-content">
+                <!-- The modals content -->
+                    <nav class="participationTab">
+                        <ul class="sbs">
+                            <li id="liMyScore" style="background:#87c240;" onclick="ChoiceViewChannel('divMyScore', 'divHistory', this.id, 'liHistory');"
+                                class="press">Meus pontos</li>
+                            <li id="liHistory" class="press" onclick="ChoiceViewChannel('divHistory', 'divMyScore', this.id, 'liMyScore');">Histórico</li>
+                        </ul>
+                    </nav>
+                <div class="divformModal">
+                    <div id="divMyScore">
+                        <div id="divInfoScore">
+                            <div class="divformModal">
+                                <h1>Canais:</h1>
+                                <p>Canais criados:<label id="lblChnOwner"></label></p>
+                                <p>Canais moderados:<label id="lblChnManager"></label></p>
+                                <p class="pPointsSum">Pontuação:<label id="lblScoreChn"></label></p>
+                            </div>
+                            
+                            <div class="divformModal">
+                                <h1>Tópicos:</h1>
+                                <p>Tópicos criados:<label id="lblTpcAuthor"></label></p>
+                                <p class="pPointsSum">Pontuação:<label id="lblScoreTpc"></label></p>
+                            </div>
+
+                            <div class="divformModal">
+                                <h1>Comentários:</h1>
+                                <p>Comentários realizados:<label id="lblCmt"></label></p>
+                                <p class="pPointsSum">Pontuação:<label id="lblScoreCmt"></label></p>
+                            </div>
+
+                            <div class="divformModal">
+                                <h1>Bônus especiais:</h1>
+                                <p>Cadastro Nimbus:<label id="lblCadastroNimbus"> 100 pontos</label></p>
+                                <p>Um canal com 50 seguidores:<label id="lblFiftyFlw"></label></p>
+                                <p>Um canal com 100 seguidores:<label id="lblHundredFlw"></label></p>
+                                <p class="pPointsSum">Pontuação:<label id="lblScoreBonus"></label></p>
+                            </div>
+
+                            <div class="divformModal">
+                                <h1>Total geral: <label id="lblScoreTotal"></label></h1> 
+                            </div>
+                        </div>
+                    </div>
+                    <div id="divHistory" style="display:none;">
+                        <p>Histórico:</p>
+                    </div>
+                </div>
+            </div>
+            <footer class="fooModal">
+                <!-- Footer -->                
+            </footer>
+        </form>
+    </div>
+    <a href="#!" id="closeModalMessage" class="modal-close" title="Close this modal" data-close="Close"
+       data-dismiss="modal">×</a>
+</section>
 
     @*Modal section - enviar msg pelo profile*@
     <section class="semantic-content" id="modal-text" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">

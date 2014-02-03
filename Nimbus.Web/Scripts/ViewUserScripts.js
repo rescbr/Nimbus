@@ -380,3 +380,48 @@
             });
         }
     }
+
+    function openModalParticipation(id)
+    {        
+        $.ajax({
+            url: "/api/user/CountToParticipation/" + id,
+            type: "GET",
+            contentType: "application/json;charset=utf-8",
+            statusCode: {
+                200: function (newData) {
+                    if (newData != null) {
+                        
+                        var scoreOwner = Number(newData.CountChannelOwner) * 50;
+                        var scoreManager = Number(newData.CountChannelManager) * 25;
+                        var scoreCmt = Number(newData.CountComments) * 1;
+                        var scoreAuthor = Number(newData.CountTopics) * 30;
+                        var scoreBonusFiftyFwr = Number(newData.FiftyFollowers) * 50;
+                        var scoreBonusHundredFwr = Number(newData.HundredFollowers) * 100;
+
+                        document.getElementById('lblChnOwner').innerHTML = " " + newData.CountChannelOwner + " x 50 pontos";
+                        document.getElementById('lblChnManager').innerHTML = " " + newData.CountChannelManager + " x 25 pontos";
+                        document.getElementById('lblScoreChn').innerHTML = " " + Number(scoreOwner + scoreManager) + " pontos";
+
+                        document.getElementById('lblCmt').innerHTML = " " + newData.CountComments + " x 1 ponto";
+                        document.getElementById('lblScoreCmt').innerHTML = " " + scoreCmt + " pontos";
+                        
+                        document.getElementById('lblTpcAuthor').innerHTML = " " + newData.CountTopics + " x 30 pontos";
+                        document.getElementById('lblScoreTpc').innerHTML = " " + scoreAuthor + " pontos";
+
+                        document.getElementById('lblFiftyFlw').innerHTML = " " + newData.FiftyFollowers + " x 50 pontos";
+                        document.getElementById('lblHundredFlw').innerHTML = " " + newData.HundredFollowers + " x 100 pontos";
+                        document.getElementById('lblScoreBonus').innerHTML = " " + Number(scoreBonusFiftyFwr + scoreBonusHundredFwr + 100) + " pontos";
+
+                        document.getElementById('lblScoreTotal').innerHTML = " " +Number(scoreOwner + scoreManager + scoreCmt
+                                                                                 + scoreAuthor + scoreBonusHundredFwr + scoreBonusFiftyFwr + 100) + " pontos";
+                    }
+                },
+                500: function () {
+                    //erro
+                    window.alert("Não foi possível carregar todas as informações neste momento. Tente novamente mais tarde.");
+                }
+            }
+        });
+        //document.getElementById('linkOpenModal').click();
+        window.location.href = '#modal-Participation';
+    }

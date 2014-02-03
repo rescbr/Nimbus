@@ -1005,6 +1005,21 @@ div.participation {
     color:              #87c240;
 }
 
+div#divInfoScore {
+    line-height: 1.3em;
+}
+
+div#divInfoScore h1 {
+    color: #2b2d2e;
+    font-size: 18px;
+}
+
+.pPointsSum {
+    color:#87c240;
+    font-weight: bold;
+    line-height: 1em;
+}
+
 div.chanPaid {
     margin-left:        10px;
     margin-bottom:      24px;
@@ -1121,22 +1136,23 @@ div.tabContent {
 
 /*------------------ Private Profile - Messages e Bar Channel --------------------*/
 
-nav.messagesTab{
+nav.messagesTab, nav.participationTab{
     width:              100%;
     clear:              both;
 }
 
-nav.messagesTab ul.sbs {
+nav.messagesTab ul.sbs, nav.participationTab ul.sbs {
     margin: 12px 0 12px 190px;
 }
 
-li#liMsgReceived, li#liMsgSend, li#liMyChannel, li#liFollowChannel{
+li#liMsgReceived, li#liMsgSend, li#liMyChannel, li#liFollowChannel, li#liMyScore, li#liHistory{
     width:              120px;
     border-right:       1px solid #d1d3d4;
     background:         #bcbec0;
 }
 
-li#liMsgReceived:hover, li#liMsgSend:hover,li#liMyChannel:hover, li#liFollowChannel:hover{
+li#liMsgReceived:hover, li#liMsgSend:hover,li#liMyChannel:hover, li#liFollowChannel:hover
+li#liMyScore:hover, li#liHistory:hover{
     background:         #87c240;
     cursor:             pointer;
 }

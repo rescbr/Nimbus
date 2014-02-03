@@ -12,6 +12,7 @@ using System.Diagnostics;
 using Mandrill;
 using Nimbus.Web.Security;
 using Nimbus.Web.Website.Models;
+using Nimbus.Web.API.Models;
 
 namespace Nimbus.Web.API.Controllers
 {
@@ -83,8 +84,8 @@ namespace Nimbus.Web.API.Controllers
                                                                                                                                   (rl.IsOwner == true || rl.ChannelMagager == true || rl.MessageManager == true
                                                                                                                                    || rl.ModeratorManager == true || rl.TopicManager == true
                                                                                                                                    || rl.UserManager == true)).FirstOrDefault()).Where(r => r != null);
-                    int pointsChn = 0; int pointsFollowers = 0;
-                    int pointsTpc = 0; int pointsFollowersBonus = 0;
+                    int pointsChn = 0; int hundredFollowers = 0;
+                    int pointsTpc = 0; int fiftyFollowers = 0;
                     int pointsCmt = 0; 
                     if (roles.Count() > 0)
                     {
@@ -96,34 +97,44 @@ namespace Nimbus.Web.API.Controllers
                                                       .Count() * 25);
 
 
-                         pointsTpc = roles.Where(r => r.UserId == id).Select(r => db.Where<Topic>(t => t.AuthorId == r.UserId &&
-                                                                                                        t.ChannelId == r.ChannelId && t.Visibility == true))
-                                                                        .FirstOrDefault().Count();
+                         pointsTpc = roles.Select(r => db.Where<Topic>(t => t.AuthorId == r.UserId &&
+                                                                            t.ChannelId == r.ChannelId && t.Visibility == true)).Count();
 
-                        pointsCmt = roles.Where(r => r.UserId == id).Select(r => db.Where<Comment>(c => c.UserId == id && c.Visible == true && c.ChannelId == r.ChannelId))
-                                                                        .Where(c => c != null).Count();
-
-                        pointsFollowers = db.Where<Channel>(ch => ch.OwnerId == NimbusUser.UserId && ch.Visible == true)
-                                                            .Select(c => db.Where<ChannelUser>(cs => cs.Id == c.Id && cs.Follow == true && 
-                                                                                                  cs.Accepted == true && 
-                                                                                                  cs.Visible == true).FirstOrDefault()).Where(c => c!= null).Count();
-                        
+                        pointsCmt =  db.Where<Comment>(c => c.UserId == id && c.Visible == true).Count();
+                       
                      }
 
                      pointsCmt = pointsCmt * 1;
                      pointsTpc = pointsTpc * 30;
 
-                     if (pointsFollowers >= 50)
-                         pointsFollowersBonus = 10;
-                     if (pointsFollowers >= 100)
-                         pointsFollowersBonus = pointsFollowersBonus + 100;
 
-                     pointsFollowers = pointsFollowers * 1 + pointsFollowersBonus;
+                      fiftyFollowers = db.SqlScalar<int>(@"SELECT COUNT(*) AS [value]
+                                                            FROM [Channel] AS [CH]
+                                                        WHERE (((
+                                                            SELECT COUNT(*)
+                                                            FROM [ChannelUser] AS [CS]
+                                                            WHERE ([CS].[ChannelId] = [CH].[Id]) AND ([CS].[Follow] = 1) AND ([CS].[Accepted] = 1) AND ([CS].[Visible] = 1)
+                                                            )) > 50) AND ([CH].[OwnerId] = @OwnerId) AND ([CH].[Visible] = 1)", new { OwnerId = id });
 
+                      hundredFollowers = db.SqlScalar<int>(@"SELECT COUNT(*) AS [value]
+                                                            FROM [Channel] AS [CH]
+                                                        WHERE (((
+                                                            SELECT COUNT(*)
+                                                            FROM [ChannelUser] AS [CS]
+                                                            WHERE ([CS].[ChannelId] = [CH].[Id]) AND ([CS].[Follow] = 1) AND ([CS].[Accepted] = 1) AND ([CS].[Visible] = 1)
+                                                            )) > 100) AND ([CH].[OwnerId] = @OwnerId) AND ([CH].[Visible] = 1)", new { OwnerId = id });
+
+
+
+                      if (fiftyFollowers > 0)
+                          fiftyFollowers = fiftyFollowers * 50;
+                      if (hundredFollowers >0)
+                          hundredFollowers = hundredFollowers * 100;
+ 
                     userBag.PointsForChannel = pointsChn;
                     userBag.PointsForComment = pointsCmt;
                     userBag.PontsForTopic = pointsTpc;
-                    userBag.Interaction = pointsTpc + pointsCmt + pointsChn + 100; //100 = pq o usuário se cadastrou no nimbus
+                    userBag.Interaction = pointsTpc + pointsCmt + pointsChn + fiftyFollowers + hundredFollowers + 100; //100 = pq o usuário se cadastrou no nimbus
 
                     //throw http exception
                     if (userBag == null)
@@ -485,5 +496,50 @@ WHERE ([tUser].[test] IS NOT NULL) AND
 
             return delete;
         }
+
+        [HttpGet]
+        public ParticipationModel CountToParticipation(int id = 0)
+        {
+            ParticipationModel model = new ParticipationModel();
+            model.CountChannelManager = 0; model.CountChannelOwner = 0; model.CountComments = 0; model.CountTopics = 0;
+            model.HundredFollowers = 0; model.FiftyFollowers = 0;
+
+            using (var db = DatabaseFactory.OpenDbConnection())
+            {
+                if (id == 0)
+                    id = NimbusUser.UserId;
+
+                model.CountChannelOwner = db.Where<Role>(r => r.UserId == id && r.IsOwner == true).Count();
+
+                model.CountChannelManager = db.Where<Role>(r => r.IsOwner == false && r.UserId == id)
+                                              .Select(c => c.ChannelMagager == true || c.MessageManager == true ||
+                                                           c.ModeratorManager == true || c.TopicManager == true || c.UserManager == true)
+                                                      .Count();
+
+                model.CountTopics = db.Where<Topic>(t => t.Visibility == true && t.AuthorId == id).Count();
+
+                model.CountComments = db.Where<Comment>(c => c.UserId == id && c.Visible == true).Where(c => c != null).Count();
+
+                model.FiftyFollowers = db.SqlScalar<int>(@"SELECT COUNT(*) AS [value]
+                                                            FROM [Channel] AS [CH]
+                                                        WHERE (((
+                                                            SELECT COUNT(*)
+                                                            FROM [ChannelUser] AS [CS]
+                                                            WHERE ([CS].[ChannelId] = [CH].[Id]) AND ([CS].[Follow] = 1) AND ([CS].[Accepted] = 1) AND ([CS].[Visible] = 1)
+                                                            )) > 50) AND ([CH].[OwnerId] = @OwnerId) AND ([CH].[Visible] = 1)", new { OwnerId = id });
+
+                model.HundredFollowers = db.SqlScalar<int>(@"SELECT COUNT(*) AS [value]
+                                                            FROM [Channel] AS [CH]
+                                                        WHERE (((
+                                                            SELECT COUNT(*)
+                                                            FROM [ChannelUser] AS [CS]
+                                                            WHERE ([CS].[ChannelId] = [CH].[Id]) AND ([CS].[Follow] = 1) AND ([CS].[Accepted] = 1) AND ([CS].[Visible] = 1)
+                                                            )) > 100) AND ([CH].[OwnerId] = @OwnerId) AND ([CH].[Visible] = 1)", new { OwnerId = id });
+
+            }
+            return model;
+        }
+
+
     }
 }

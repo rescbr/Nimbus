@@ -515,6 +515,7 @@
     <Compile Include="API\Controllers\UserController.cs" />
     <Compile Include="API\Controllers\DataMining.cs" />
     <Compile Include="API\Models\AlertMessageModel.cs" />
+    <Compile Include="API\Models\ParticipationModel.cs" />
     <Compile Include="API\Models\ReportAPIModel.cs" />
     <Compile Include="API\NimbusApiController.cs" />
     <Compile Include="Configuration.cs" />
