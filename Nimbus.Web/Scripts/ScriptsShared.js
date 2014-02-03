@@ -69,6 +69,10 @@ function EnableDiv(newDiv, tipoGlobal, fieldRequired, topBar) {
             if(fieldRequired != '')
             SetFieldRequired(fieldRequired);
         }
+        if (newDiv == 'divExam')
+            document.getElementById('btnAddNewQuestion').style.display = 'block';
+        else
+            document.getElementById('btnAddNewQuestion').style.display = 'none';
         divTipoTopic = newDiv;
     }
     
