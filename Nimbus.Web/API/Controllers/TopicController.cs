@@ -494,7 +494,7 @@ from (
         }
 
         [HttpGet]
-        public List<TopicBag> TopTopics(int skip = 0, int take = 12)
+        public List<TopicBag> TopTopics(int skip = 0, int take = 12, int idCat = 0)
         {
             if (skip < 0) skip = 0;
             if (take <= 0) take = 12;
@@ -509,12 +509,41 @@ from (
             List<TopicBag> tpcList = new List<TopicBag>();
             using (var db = DatabaseFactory.OpenDbConnection())
             {
-                
-                var top = db.Query<Topic>(
-                #region queryzinha 2, o retorno
-                    //este SQL utiliza o metodo de skip/take do sql server 2012 (que funciona no sql azure tbm).
-                    //não irá funcionar em versoes antigas.
-@"
+                List<Topic> top = new List<Topic>();
+                if (idCat > 0)
+                {
+                    top = db.Query<Topic>(
+                    #region queryzinha 2, o retorno
+                        //este SQL utiliza o metodo de skip/take do sql server 2012 (que funciona no sql azure tbm).
+                        //não irá funcionar em versoes antigas.
+    @"
+select [Id], [ImgUrl], [Title], [TopicType], [Description], [LastModified]
+from (
+	select [Topic].[Id], [Topic].[ImgUrl], [Topic].[Title], [Topic].[TopicType], [Topic].[Description], [Topic].[LastModified],
+	 (select ((([positive] + 1.9208) / ([positive] + [negative]) - 
+			  1.96 * SQRT(([positive] * [negative]) / ([positive] + [negative]) + 0.9604) / 
+			  ([positive] + [negative])) / (1 + 3.8416 / ([positive] + [negative]))) as [confidence_score]
+			from (
+				select 
+					(select count([Visible]) from [UserLikeTopic] where [UserLikeTopic].[Visible] = 1 and [UserLikeTopic].[TopicId] = [Topic].[Id]) as [positive], 
+					(select count([Visible]) from [UserLikeTopic] where [UserLikeTopic].[Visible] = 0 and [UserLikeTopic].[TopicId] = [Topic].[Id]) as [negative]
+				) tmpCount
+			where [positive] + [negative] > 0) as [score]
+	from [Topic]
+	inner join [Channel] on [Topic].[ChannelId] = [Channel].[Id] and [Channel].[CategoryId] = @idCategory
+	order by score desc
+    offset @skip rows fetch next @take rows only
+) tmpScoreSort",
+                    #endregion
+                    new { skip = skip * take, take = take, idCategory = idCat });
+                }
+                else
+                {
+                    top = db.Query<Topic>(
+                    #region queryzinha 2, o retorno
+                        //este SQL utiliza o metodo de skip/take do sql server 2012 (que funciona no sql azure tbm).
+                        //não irá funcionar em versoes antigas.
+                       @"
 select [Id], [ImgUrl], [Title], [TopicType], [Description], [LastModified]
 from (
 	select [Topic].[Id], [Topic].[ImgUrl], [Topic].[Title], [Topic].[TopicType], [Topic].[Description], [Topic].[LastModified],
@@ -531,9 +560,9 @@ from (
 	order by score desc
     offset @skip rows fetch next @take rows only
 ) tmpScoreSort",
-                #endregion
-                new { skip = skip*take, take = take });
-
+                    #endregion
+                    new { skip = skip * take, take = take });
+                }
                 if (top.Count > 0)
                 {
                     foreach (var item in top)
@@ -648,6 +677,28 @@ from (
             {
                 topics = TopicsFavoriteUsers(id, skip);
             }
+            else if (type == "toptopic")
+            {
+                int take = id; //p/ nao ter que usar outra variavel, aproveitar a variavel id q/ é um inteiro não utilizado para mostrar os topTopics
+                topics = TopTopics(skip, take, categoryID);
+            }
+            foreach (var topic in topics)
+            {
+                html += rz.ParseRazorTemplate<TopicBag>
+                    ("~/Website/Views/ChannelPartials/TopicPartial.cshtml", topic);
+            }
+            return new TopicHtmlWrapper { Html = html, Count = topics.Count };
+        }
+
+        [HttpGet]
+        public TopicHtmlWrapper TopTopicHtml(int take = 0, int categoryID = 0, int skip = 0)
+        {
+            var rz = new RazorTemplate();
+            string html = "";
+            List<TopicBag> topics = new List<TopicBag>();
+
+            topics = TopTopics(skip, take, categoryID);
+            
             foreach (var topic in topics)
             {
                 html += rz.ParseRazorTemplate<TopicBag>

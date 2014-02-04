@@ -625,3 +625,35 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
         }
 
     }
+
+    function getTopTopics()
+    {
+        /*if (skip < 0)*/ skip = 0;
+        /*if (take <= 0)*/ take = 12;
+
+        var select = document.getElementById("slcCategoryTop").selectedIndex;
+        var option = document.getElementById("slcCategoryTop").options;
+        var category = option[select].value;
+
+        $.ajax({
+            url: "/api/topic/TopTopicHtml/" + "?take=" + take + "&categoryID=" + category + "&skip=" + skip,
+            type: "GET",
+            contentType: "application/json;charset=utf-8",
+            statusCode: {
+                200: function (newData) {
+                    if (newData.Count > 0) {
+                        document.getElementById('divTrendingTopics').innerHTML = newData.Html;
+                    }
+                    else
+                    {
+                        document.getElementById('divTrendingTopics').innerHTML = '<p>Nenhum resultado encontrado para esta categoria.</p>';
+                    }
+                },
+
+                500: function () {
+                    //erro
+                    window.alert("Não foi possível alterar sua senha. Tente novamente mais tarde.");
+                }
+            }
+        });
+    }

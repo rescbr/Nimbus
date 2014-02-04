@@ -83,8 +83,8 @@
             }
             </div>       
     </header>
-
-    <div class="container-body" id="container-body">
+    <div id="divToLoadFadein">
+        <div class="container-body" id="container-body">
             <div id="divBarSearch" style="display:none;">
                 <input id="txtFieldSearchLayout" style="width:350px;" type="text" value="Busque por canais, tópicos ou pessoas" onclick="this.value=''" />
                 <select id="slcFilterSearchLayout">
@@ -92,14 +92,14 @@
                     <option value="1">Canal</option>
                     <option value="2">Tópico</option>
                     <option value="3">Usuário</option>
-                </select>
+                </select>h
                 <img src="/images/utils/search.png" title="Buscar" class="cpointer" alt="Buscar" onclick="ajaxSearch('Layout');" />
             </div>
             <div class="middle-body">
                 @RenderBody()
             </div>
         </div>
-
+    </div>
     <div id="footer" class="footerMainPage">
         <nav class="navFooMainPage">
             <ul class="ulFooPage">
