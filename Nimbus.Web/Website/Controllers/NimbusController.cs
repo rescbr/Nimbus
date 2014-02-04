@@ -40,6 +40,13 @@ namespace Nimbus.Web.Website.Controllers
             return View("termosdeuso");
         }
 
+
+        [HttpGet]
+        public ActionResult PageError404()
+        {
+            return View("pageerror404");
+        }
+
         [HttpPost]
         public ActionResult SendFaleConosco()                                                                                                                                                                                                                                                                                                                                                                                                                            
         {

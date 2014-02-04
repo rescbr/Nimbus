@@ -314,6 +314,7 @@
     <Content Include="images\Utils\facebook24x24.png" />
     <Content Include="images\Utils\logoName.png" />
     <Content Include="images\Utils\nimbus.png" />
+    <Content Include="images\Utils\pagenotfound.png" />
     <Content Include="images\Utils\report.png" />
     <Content Include="images\Utils\ringload.gif" />
     <Content Include="images\Utils\search.png" />
@@ -500,6 +501,7 @@
     <Content Include="Website\Views\QuemSomos.cshtml" />
     <Content Include="Website\Views\Novidades.cshtml" />
     <Content Include="Website\Views\TermosDeUso.cshtml" />
+    <Content Include="Website\Views\PageError404.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\Controllers\DatabaseController.cs" />
