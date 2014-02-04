@@ -1,6 +1,8 @@
 ﻿@using System.Collections.Generic;
 @using Nimbus.Model.Bags;
+@using Nimbus.Model.ORM;
 @model List<TopicBag>
+
 @{Layout = "~/Website/Views/Shared/_Layout.cshtml";}
 
 @Scripts.Render("~/Scripts/ViewTopicScripts.js")
@@ -9,6 +11,17 @@
 	<div class="cont-left">
 		<h1>Trending Topics</h1>
 	</div>
+    <div>
+        <label class="custom-select">
+            <select id="slcCategoryTop" style="width:200px;" onchange="getTopTopics();">
+                <option value="0">Todas as categorias</option>
+                @foreach (var item in (List<Category>)ViewBag.lstCat)
+                {
+                    <option value="@item.Id">@item.Name</option>
+                }
+            </select>
+        </label>
+    </div>
 </div>
 
 @*Miniaturas dos topicos*@

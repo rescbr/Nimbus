@@ -43,6 +43,59 @@ function GetElementScrollHeightByChildren(element) {
     return childrenHeights;
 }
 
+function FadeOut(id, time)
+{
+    fade(id, time, 100, 0);
+}
+
+function FadeIn(id, time) {
+    fade(id, time, 0, 100);
+}
+
+function setAlpha(target, alpha) {
+    target.style.filter = "alpha(opacity=" + alpha + ")";
+    target.style.opacity = alpha / 100;
+}
+
+function fade(id, time, ini, fin)
+{
+    var target = document.getElementById(id);
+    var alpha = ini;
+    var inc;
+    if (fin >= ini) {
+        inc = 2;
+    } else {
+        inc = -2;
+    }
+    timer = (time * 1000) / 50;
+    var i = setInterval(
+        function () {
+            if ((inc > 0 && alpha >= fin) || (inc < 0 && alpha <= fin)) {
+                clearInterval(i);
+            }
+            setAlpha(target, alpha);
+            alpha += inc;
+        }, timer);
+}
+
+function setDivLoad(display)
+{
+    var divLoad = document.getElementById("divFadeLoad");
+    divLoad.style.position = "fixed";
+    divLoad.style.height = document.getElementsByTagName("html")[0].clientHeight + "px";
+    divLoad.style.width = document.getElementsByTagName("html")[0].clientWidth + "px";
+    divLoad.style.background = "#F2F2F2";
+    if (display == 'none') //fadeOut
+    {
+        FadeOut('divFadeLoad', 1);
+    }
+    else
+    {
+        FadeIn('divFadeLoad', 0.3);
+    }
+    divLoad.style.display = display;
+}
+
 function EnableDiv(newDiv, tipoGlobal, fieldRequired, topBar) { 
 
     if (tipoGlobal == 'currentDiv')
@@ -630,11 +683,13 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
     {
         /*if (skip < 0)*/ skip = 0;
         /*if (take <= 0)*/ take = 12;
+        setDivLoad("block");
 
         var select = document.getElementById("slcCategoryTop").selectedIndex;
         var option = document.getElementById("slcCategoryTop").options;
         var category = option[select].value;
 
+        
         $.ajax({
             url: "/api/topic/TopTopicHtml/" + "?take=" + take + "&categoryID=" + category + "&skip=" + skip,
             type: "GET",
@@ -648,6 +703,7 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
                     {
                         document.getElementById('divTrendingTopics').innerHTML = '<p>Nenhum resultado encontrado para esta categoria.</p>';
                     }
+                    setDivLoad("none");
                 },
 
                 500: function () {

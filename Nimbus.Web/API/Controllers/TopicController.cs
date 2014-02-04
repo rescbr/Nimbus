@@ -424,7 +424,7 @@ namespace Nimbus.Web.API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public List<TopicBag> TrendingTopics(int skip = 0, int take = 12)
+        public List<TopicBag> TrendingTopics(int skip = 0, int take = 12, int categoryId = 0)
         {
             if (skip < 0) skip = 0;
             if (take <= 0) take = 12;
@@ -443,11 +443,43 @@ namespace Nimbus.Web.API.Controllers
             List<TopicBag> tpcList = new List<TopicBag>();
             using (var db = DatabaseFactory.OpenDbConnection())
             {
-                var trending = db.Query<Topic>(
-                #region queryzinha 3: a vingança do sql
-                //este SQL utiliza o metodo de skip/take do sql server 2012 (que funciona no sql azure tbm).
-                //não irá funcionar em versoes antigas.
+                List<Topic> trending = new List<Topic>();
+                if (categoryId > 0)
+                {
+                    trending = db.Query<Topic>(
+                    #region queryzinha 3: a vingança do sql
+                        //este SQL utiliza o metodo de skip/take do sql server 2012 (que funciona no sql azure tbm).
+                        //não irá funcionar em versoes antigas.
 @"                
+select [Id], [ImgUrl], [Title], [TopicType], [Description], [LastModified], [CreatedOn]
+from (
+	select [Topic].[Id], [Topic].[ImgUrl], [Topic].[Title], [Topic].[TopicType], [Topic].[Description], [Topic].[LastModified], [Topic].[CreatedOn],
+		   (select round(
+					cast((log(case when abs([positive] - [negative]) > 1 then abs([positive] - [negative]) else 1 end) 
+						* sign([positive] - [negative])) + (datediff(second, '20130101', [Topic].[CreatedOn]) / 45000)
+					as numeric), 7) 
+				as [hot_score]
+			from (
+				select 
+					(select count([Visible]) from [UserLikeTopic] where [UserLikeTopic].[Visible] = 1 and [UserLikeTopic].[TopicId] = [Topic].[Id]) as [positive], 
+					(select count([Visible]) from [UserLikeTopic] where [UserLikeTopic].[Visible] = 0 and [UserLikeTopic].[TopicId] = [Topic].[Id]) as [negative]
+				) tmpCount
+			where [positive] + [negative] > 0) as [score]
+	from [Topic]
+    inner join [Channel] on [Topic].[ChannelId] = [Channel].[Id] and [Channel].[CategoryId] = @idCategory
+	order by score desc
+    offset @skip rows fetch next @take rows only
+) tmpScoreSort",
+                    #endregion
+                    new { skip = skip * take, take = take, idCategory = categoryId });
+                }
+                else
+                {
+                    trending = db.Query<Topic>(
+                    #region queryzinha 3: a vingança do sql
+                        //este SQL utiliza o metodo de skip/take do sql server 2012 (que funciona no sql azure tbm).
+                        //não irá funcionar em versoes antigas.
+    @"                
 select [Id], [ImgUrl], [Title], [TopicType], [Description], [LastModified], [CreatedOn]
 from (
 	select [Topic].[Id], [Topic].[ImgUrl], [Topic].[Title], [Topic].[TopicType], [Topic].[Description], [Topic].[LastModified], [Topic].[CreatedOn],
@@ -465,10 +497,10 @@ from (
 	from [Topic]
 	order by score desc
     offset @skip rows fetch next @take rows only
-) tmpScoreSort", 
-               #endregion
-                new { skip = skip*take, take = take });
-                
+) tmpScoreSort",
+                    #endregion
+                    new { skip = skip * take, take = take });
+                }
                 if (trending.Count > 0)
                 {
                     foreach (var item in trending)
@@ -699,6 +731,23 @@ from (
 
             topics = TopTopics(skip, take, categoryID);
             
+            foreach (var topic in topics)
+            {
+                html += rz.ParseRazorTemplate<TopicBag>
+                    ("~/Website/Views/ChannelPartials/TopicPartial.cshtml", topic);
+            }
+            return new TopicHtmlWrapper { Html = html, Count = topics.Count };
+        }
+
+        [HttpGet]
+        public TopicHtmlWrapper TrendingTopicHtml(int take = 0, int categoryID = 0, int skip = 0)
+        {
+            var rz = new RazorTemplate();
+            string html = "";
+            List<TopicBag> topics = new List<TopicBag>();
+
+            topics = TrendingTopics(skip, take, categoryID);
+
             foreach (var topic in topics)
             {
                 html += rz.ParseRazorTemplate<TopicBag>

@@ -52,7 +52,7 @@
                         <ul class="sbs">
                             <li>
                                 <div class="userlogo">
-                                    <img class="imgLogo" src="/images/utils/iconeLogo.png" />
+                                    <img class="imgLogo" src="/images/utils/nimbus.png" />
                                 </div>
                             </li>
                             <li><h1 class="logoNimbus" style="font-family:comfortaa;">Nimbus</h1></li>
@@ -83,8 +83,8 @@
             }
             </div>       
     </header>
-    <div id="divToLoadFadein">
-        <div class="container-body" id="container-body">
+  
+    <div class="container-body" id="container-body">
             <div id="divBarSearch" style="display:none;">
                 <input id="txtFieldSearchLayout" style="width:350px;" type="text" value="Busque por canais, tópicos ou pessoas" onclick="this.value=''" />
                 <select id="slcFilterSearchLayout">
@@ -98,6 +98,11 @@
             <div class="middle-body">
                 @RenderBody()
             </div>
+        </div>
+
+    <div id="divFadeLoad" style="display:none;">
+        <div class="divGifLoad" style="width:70px; margin-top:19%;">
+            <img src="/images/utils/loading.gif" class="imgGifLoad" id="imgNotificationLoad" />
         </div>
     </div>
     <div id="footer" class="footerMainPage">
