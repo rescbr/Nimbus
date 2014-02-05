@@ -404,6 +404,20 @@ div.divBtnLogin {
     clear:              both;
 }
 
+ .barraFeedback{
+        width: 60px; height: 100px; 
+        background: none repeat scroll 0% 0% #2d2b2e; 
+        float: right; margin-top: 15%; 
+        border-top-left-radius: 15px; 
+        border-bottom-left-radius: 15px;
+        position: fixed;
+        margin-left:96%;
+        }
+
+.barraFeedback p {
+    color: rgb(255, 255, 255); margin-top: 10px; margin-left: 2px; border-bottom: 1px solid grey; font-size: 12px;
+    }
+
 input[type=submit].divBtnSubmit {
     float:              left;
     background:         #87c240;
@@ -515,7 +529,7 @@ div.divformFaleConosco {
     clear:              both;
 }
 
-#divBtnSendFaleConosco {
+#divBtnSendFaleConosco{
     background:         #87c240;
     width:              120px;
     cursor:             pointer;
@@ -2425,6 +2439,21 @@ ul.ulFooPage {
 .inputSubmit:hover {
    color:              #87c240;
 }
+
+.inputBtnGreen {
+    float:              right;
+    background:         #87c240;
+    cursor:             pointer;
+    border:             none;
+    color:              #fff;
+    margin:             5px;
+    padding:            5px;
+}
+
+.inputBtnGreen:hover {
+   color:              #000;
+}
+
 
 .press {
      cursor:           pointer;

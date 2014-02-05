@@ -36,6 +36,7 @@
     <script type="text/javascript">
         cssOldLink = '';
         oldNameLink = '';
+        typeFeedback = -1;
     </script>
 
 
@@ -100,6 +101,14 @@
             </div>
         </div>
 
+    <div id="divFeedback" class="barraFeedback">
+            <p>Feedback</p>
+            <div style="width: 150px; background: none repeat scroll 0% 0%;">
+                <div style="margin-left:11%; margin-top:10px; width:20px; cursor:pointer;"><img onclick="openModalFeedback('positive');" src="/images/utils/emoticonfeliz.png" /></div>
+                <div style="margin-left: 11%; margin-top: 10px; width: 20px; cursor: pointer;"><img onclick="openModalFeedback('negative');" src="/images/utils/emoticontriste.png" /></div>
+            </div>
+        </div>
+
     <div id="divFadeLoad" style="display:none;">
         <div class="divGifLoad" style="width:70px; margin-top:19%;">
             <img src="/images/utils/loading.gif" class="imgGifLoad" id="imgNotificationLoad" />
@@ -123,6 +132,38 @@
         @Scripts.Render("~/signalr/hubs")
         @Scripts.Render("~/Scripts/Notifications.js")
     }
+
+
+    @*Modal section - parte do feedback*@
+    <section class="semantic-content" id="modal-feedback" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
+        <div class="modal-inner">
+            <header id="modal-label">
+                <div style="height:20px;">
+                    <img style="float:left;" id="imgEmoticon" />
+                    <p style="float:left; padding-left:5px;" id="pTypeFeedback"></p>
+                </div>
+            </header>
+            <form id="formReportUser" onsubmit="return false;">
+                <div class="modal-content">
+                    <!-- The modals content -->
+                    <div class="divformModal">
+                        <p id="pTextContentModal"></p>
+                        <textarea id="txtaFeedback" name="txtaFeedback" rows="10" cols="60" required></textarea>
+                    </div>
+                </div>
+                <footer class="fooModal">
+                    <!-- Footer -->
+                    <input type="submit" class="inputSubmit" onclick="ajaxSendFeedback();" value="Enviar" id="enviarFeedback" />
+                </footer>
+            </form>
+        </div>
+        <a href="#!" id="closeModalRFeedback" class="modal-close" title="Close this modal" data-close="Close"
+           data-dismiss="modal">
+            "x"
+        </a>
+    </section>
+
+
 
     <script type="text/javascript">
         $(function () {

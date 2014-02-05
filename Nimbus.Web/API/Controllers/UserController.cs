@@ -540,6 +540,47 @@ WHERE ([tUser].[test] IS NOT NULL) AND
             return model;
         }
 
+        [HttpPost]
+        public bool SendFeedback(int type, string message)
+        {
+            MandrillApi mandril = new MandrillApi(NimbusConfig.MandrillToken);
+            EmailMessage mensagem = new EmailMessage();
+            List<EmailAddress> address = new List<EmailAddress>();
 
+
+            try
+            {
+                if (type == 1)
+                    mensagem.subject = "[feedbackPositivo]";
+                else if (type == 0)
+                    mensagem.subject = "[feedbackNegativo]";
+
+                string nameUser = NimbusUser.FirstName != null? NimbusUser.FirstName : "nulo";
+                nameUser = nameUser + " " + NimbusUser.LastName != null? NimbusUser.LastName : "nulo";
+                mensagem.from_email = "faleconosco@portalnimbus.com.br";
+                mensagem.from_name = "Feedback";
+                mensagem.text = "Tipo: " + mensagem.subject.Replace("feedback", "") + " \n" +
+                                "Usuário: " + nameUser +"\n"+ 
+                                "Mensagem: " + message + "\n\n\n\n";
+
+                address.Add(new EmailAddress("***REMOVED***"));
+                mensagem.to = address;
+
+                var result = mandril.SendMessage(mensagem);
+                if (result[0].Status == EmailResultStatus.Sent)
+                {
+                    return true;
+                }
+                else
+                {
+
+                    return false; //tem q arrumar
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

@@ -96,6 +96,55 @@ function setDivLoad(display)
     divLoad.style.display = display;
 }
 
+function openModalFeedback(tipo)
+{
+    var field = document.getElementById('pTypeFeedback');
+    var text = '';
+    var modal = document.getElementById('pTextContentModal');
+    document.getElementById('txtaFeedback').value = '';
+
+    if (tipo == 'positive')
+    {
+        text = "Feedback positivo";
+        modal.innerHTML = 'Nós apreciamos o seu feedback. O que você gostou?';
+        document.getElementById('imgEmoticon').src = "/images/utils/emoticonfeliz.png"
+    }
+    else if (tipo == 'negative')
+    {
+        text = "Feedback negativo";
+        modal.innerHTML = 'Nós apreciamos o seu feedback. O que você acha que poderíamos melhorar?';
+        document.getElementById('imgEmoticon').src = "/images/utils/emoticontriste.png"
+    }
+    field.innerHTML = text;
+    typeFeedback = tipo == 'positive' ? 1 : 0;
+    window.location.href = '#modal-feedback';
+}
+
+function ajaxSendFeedback()
+{
+    var message = document.getElementById('txtaFeedback').value;
+    $.ajax({
+        url: "/api/user/SendFeedback/" + "?type=" + typeFeedback + "&message=" + JSON.stringify(message) ,
+        type: "POST",
+        contentType: "application/json;charset=utf-8",
+        statusCode: {
+            200: function (newData) {
+                if(newData == true)
+                    window.alert("Obrigado por nos enviar seu feedback.");
+                else
+                    window.alert("Não foi possível enviar seu feedback neste momento. Tente novamente mais tarde.");
+
+                document.getElementById('closeModalRFeedback').click();
+            },
+
+            500: function () {               
+                window.alert("Não foi possível enviar seu feedback neste momento. Tente novamente mais tarde.");
+            }
+        }
+    });
+    document.getElementById('closeModalRFeedback').click();
+}
+
 function EnableDiv(newDiv, tipoGlobal, fieldRequired, topBar) { 
 
     if (tipoGlobal == 'currentDiv')

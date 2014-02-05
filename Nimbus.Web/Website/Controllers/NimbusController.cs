@@ -48,7 +48,7 @@ namespace Nimbus.Web.Website.Controllers
         }
 
         [HttpPost]
-        public ActionResult SendFaleConosco()                                                                                                                                                                                                                                                                                                                                                                                                                            
+        public ActionResult SendFaleConosco() 
         {
             MandrillApi mandril = new MandrillApi(NimbusConfig.MandrillToken);
             EmailMessage mensagem = new EmailMessage();
@@ -65,7 +65,7 @@ namespace Nimbus.Web.Website.Controllers
                                 "Tipo: " + Request.Form["slcFaleConosco"] + " \n" +
                                 "Mensagem: " + Request.Form["txtaMsgFaleConosco"] + "\n\n\n\n";
 
-                address.Add(new EmailAddress("***REMOVED***"));
+                address.Add(new EmailAddress(Request.Form["iptEmailFaleConosco"]));
                 mensagem.to = address;
 
                 var result = mandril.SendMessage(mensagem);
@@ -84,5 +84,7 @@ namespace Nimbus.Web.Website.Controllers
                 throw ex;
             }
         }
+        
+        
     }
 }

@@ -467,6 +467,7 @@ from (
 			where [positive] + [negative] > 0) as [score]
 	from [Topic]
     inner join [Channel] on [Topic].[ChannelId] = [Channel].[Id] and [Channel].[CategoryId] = @idCategory
+    where [Topic].[Visibility] = 1
 	order by score desc
     offset @skip rows fetch next @take rows only
 ) tmpScoreSort",
@@ -495,6 +496,7 @@ from (
 				) tmpCount
 			where [positive] + [negative] > 0) as [score]
 	from [Topic]
+    where [Topic].[Visibility] = 1
 	order by score desc
     offset @skip rows fetch next @take rows only
 ) tmpScoreSort",
@@ -563,6 +565,7 @@ from (
 			where [positive] + [negative] > 0) as [score]
 	from [Topic]
 	inner join [Channel] on [Topic].[ChannelId] = [Channel].[Id] and [Channel].[CategoryId] = @idCategory
+    where [Topic].[Visibility] = 1
 	order by score desc
     offset @skip rows fetch next @take rows only
 ) tmpScoreSort",
@@ -589,6 +592,7 @@ from (
 				) tmpCount
 			where [positive] + [negative] > 0) as [score]
 	from [Topic]
+    where [Topic].[Visibility] = 1
 	order by score desc
     offset @skip rows fetch next @take rows only
 ) tmpScoreSort",
