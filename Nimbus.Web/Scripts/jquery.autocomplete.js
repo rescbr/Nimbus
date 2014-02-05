@@ -140,7 +140,7 @@
                 }
             };
 
-            that.suggestionsContainer = Autocomplete.utils.createNode('<div class="' + options.containerClass + '" style="position: absolute; display: none;"></div>');
+            that.suggestionsContainer = Autocomplete.utils.createNode('<div class="' + options.containerClass + '" style="position: absolute; display: none; background: white;"></div>');
 
             container = $(that.suggestionsContainer);
 
@@ -487,7 +487,7 @@
             // Build suggestions inner HTML:
             $.each(that.suggestions, function (i, suggestion) {
                 html += '<div class="' + className + '" data-index="' + i + '">' +
-                            '<img id=\"avatar_' + suggestion.data.Id + '"  style=\"height:40px; width:40px;\" src="' + suggestion.data.AvatarUrl + '" />' +
+                            '<img id=\"avatar_' + suggestion.data.Id + '"  style=\"height:35px; width:35px;\" src="' + suggestion.data.AvatarUrl + '" />' +
                             formatResult(suggestion, value) +
                          '</div>';
             });

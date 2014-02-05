@@ -139,7 +139,7 @@ namespace Nimbus.Web.API.Controllers
 
                                 bag.Text = "Comentário removido";
                                 bag.ParentId = cmt.ParentId;
-                                bag.AvatarUrl = "/images/Utils/person_icon.png";
+                                bag.AvatarUrl = "/images/av130x130/person_icon.png";
                                 bag.UserName = "[removido]";
                             }
                             else
@@ -454,7 +454,7 @@ namespace Nimbus.Web.API.Controllers
                                 string name = "";
                                 if (itemChild.Text == "Comentário removido")
                                 {
-                                    userChild.AvatarUrl = "/images/Utils/person_icon.png";
+                                    userChild.AvatarUrl = "/images/av130x130/person_icon.png";
                                     name = "[removido]";
                                     child.IsDeletable = false;
                                     child.IsRepotable = false;
@@ -547,7 +547,7 @@ namespace Nimbus.Web.API.Controllers
                         string name = "";
                         if (itemChild.Text == "Comentário removido")
                         {
-                            userChild.AvatarUrl = "/images/Utils/person_icon.png";
+                            userChild.AvatarUrl = "/images/av130x130/person_icon.png";
                             name = "[removido]";
                             child.IsDeletable = false;
                             child.IsRepotable = false;
@@ -676,7 +676,7 @@ namespace Nimbus.Web.API.Controllers
                             string name = "";
                             if (itemChild.Text == "Comentário removido")
                             {
-                                userChild.AvatarUrl = "/images/Utils/person_icon.png";
+                                userChild.AvatarUrl = "/images/av130x130/person_icon.png";
                                 name = "[removido]";
                                 child.IsDeletable = false;
                                 child.IsRepotable = false;
@@ -765,7 +765,7 @@ namespace Nimbus.Web.API.Controllers
                     string name = "";
                     if (comment.Text == "Comentário removido")
                     {
-                        user.AvatarUrl = "/images/Utils/person_icon.png";
+                        user.AvatarUrl = "/images/av130x130/person_icon.png";
                         name = "[removido]";
                         child.IsDeletable = false;
                         child.IsRepotable = false;

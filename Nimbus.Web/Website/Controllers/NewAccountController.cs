@@ -46,7 +46,7 @@ namespace Nimbus.Web.Website.Controllers
                         LastName = newAccount.LastName,
                         Password = newAccount.Password,
                         State = newAccount.State,
-                        AvatarUrl = "/images/Utils/person_icon.png",
+                        AvatarUrl = "/images/av130x130/person_icon.png",
                         BirthDate = newAccount.BirthDate != null ? newAccount.BirthDate : DateTime.Now
                     };
                      userapi.CreateProfile(newUser);

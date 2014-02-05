@@ -458,16 +458,18 @@ function ajaxLoadModeratorEdit(id)
                 if (newData.length > 0) {                   
                     //incluir itens na div                    
                     for (var i = 0; i < newData.length; i++) {
-                        listModerador += "<div id=\"divModerator_" + newData[i].Id + "\">" +
-                                         "<p>" +
-                                         "<img src=\"" + newData[i].AvatarUrl + "\" title=\"" + newData[i].FirstName + "\" style=\"height:40px; width:40px;\" />" +
-                                         "<label>" + newData[i].FirstName + " " + newData[i].LastName + "</label>" +
-                                         "<input id=\"inputUser_" + newData[i].Id + "\" type=\"text\" disabled value=\"" + newData[i].RoleInChannel + "\" />" +
-                                         "<div id=\"divUser_" + newData[i].Id + "\"></div>" +
-                                         "<img src=\"/images/Utils/edit.png\" onclick=\"ajaxEditModerator(" + id + "," + newData[i].Id + ");\" title=\"Editar\" />" +
-                                         "<img src=\"/images/Utils/delete.png\" onclick=\"ajaxDeleteModerator(" + id + "," + newData[i].Id + ");\" title=\"Deletar\" />" +
-                                        "</p>" +
-                                    "</div>";
+                        listModerador +=  "<div class=\"contentModeratorUser\" id=\"divModerator_" + newData[i].Id + "\">" +
+                                                                           "<img src=\"" + newData[i].AvatarUrl + "\" title=\"" + newData[i].FirstName + "\" style=\"height:35px; width:35px;float: left;\" />" +
+                                                                                "<div style=\"float: left; margin-left: 10px;\">" +
+                                                                                     "<label>" + newData[i].FirstName + " " + newData[i].LastName + "</label>" +
+                                                                                     "<p>Permissão: </p>" +
+                                                                                     "<input id=\"inputUser_" + newData[i].Id + "\" type=\"text\" disabled value=\"" + newData[i].RoleInChannel + "\" />" +
+                                                                                     "<div id=\"divUser_" + newData[i].Id + "\">" +
+                                                                                      "</div>" +
+                                                                                 "</div>" +
+                                                                                 "<img id=\"imgEdit_" + newData[i].Id + "\" src=\"/images/Utils/edit.png\" onclick=\"ajaxEditModerator(" + id + "," + newData[i].Id + ");\" title=\"Editar\" />" +
+                                                                                 "<img src=\"/images/Utils/delete.png\" onclick=\"ajaxDeleteModerator(" + id + "," + newData[i].Id + ");\" title=\"Deletar\" />" +                                                                             
+                                                                       "</div>";
                     }                   
                 }
                 if (newData.length < 5) {
@@ -635,9 +637,17 @@ function ajaxEditModerator(id, idUser) {
                        "<option value=\"3\">Moderar tópicos</option>" +
                        "<option value=\"4\">Moderar usuários</option>" +
                        "</select>";
-
+    document.getElementById('imgEdit_' + idUser).onclick = function () { ajaxCnlEditModerator(id, idUser); };
     document.getElementById('inputUser_' + idUser).style.display = 'none';
     document.getElementById('divUser_' + idUser).innerHTML = select;
+    document.getElementById('divUser_' + idUser).style.display = 'block';
+}
+
+function ajaxCnlEditModerator(id, idUser)
+{
+    document.getElementById('inputUser_' + idUser).style.display = 'block';
+    document.getElementById('divUser_' + idUser).style.display = 'none';
+    document.getElementById('imgEdit_' + idUser).onclick = function () { ajaxEditModerator(id, idUser); };
 }
 
 function ajaxDeleteModerator(id, idUser)
@@ -675,11 +685,10 @@ function ajaxLoadTags(id) {
                 var string = "";
                 if (newData.length > 0) {
                     for (var i = 0; i < newData.length; i++) {
-                        listTag += "<div name=\"nameDivTags\" id=\"divTag_" + newData[i].Id + "\">" +
-                                        "<p>#" + newData[i].TagName +
-                                           "<input type=\"button\" onclick=\"ajaxdeleteTag(" + newData[i].Id + ", " + id + ");\" value=\"X\"></input>" +
-                                        "</p>" +
-                                   "</div>";
+                        listTag += "<div id=\"divContentTag_" + newData[i].Id + "\" style=\"padding-bottom:2px;\"><div class=\"tagsChannel\" name=\"nameDivTags\" id=\"divTag_" + newData[i].Id + "\">" +
+                                        "<p>#" + newData[i].TagName + "</p>" +                                        
+                                   "</div>"+
+                             "<img src=\"/images/utils/delete.png\" style=\"margin-top: 1px;\" onclick=\"ajaxdeleteTag(" + newData[i].Id + ", " + id + ");\"/></div>";
                     }
                     if (newData.length < 5) {
                         string = "<input id=\"txtNewTag\" type=\"text\" value=\"Nova tag\" onclick=\"this.value=''\" />" +
@@ -720,14 +729,13 @@ function ajaxNewTag(id) {
             statusCode: {
                 200: function (newData) {
                     if (newData.Id > 0) {
-                        var tagInfo = "<label id=\"lblTag_" + newData.Id + "\">" + newData.TagName + "</label>";
+                        var tagInfo = "<label id=\"lblTag_" + newData.Id + "\"><p style=\"color:#87c240;\">#" + newData.TagName + "</p></label>";
                         document.getElementById('tagChannel').innerHTML += tagInfo;
                         
-                        var newTag = "<div name=\"nameDivTags\" id=\"divTag_" + newData.Id + "\">" +
-                                        "<p>#" + newData.TagName +
-                                           "<input type=\"button\" onclick=\"ajaxdeleteTag(" + newData.Id + ", " + id + ");\" value=\"X\"></input>" +
-                                        "</p>" +
-                                   "</div>";
+                        var newTag = "<div id=\"divContentTag_" + newData.Id + "\" style=\"padding-bottom:2px;\"><div class=\"tagsChannel\" name=\"nameDivTags\" id=\"divTag_" + newData.Id + "\">" +
+                                        "<p>#" + newData.TagName + "</p>" +
+                                   "</div>" +
+                             "<img src=\"/images/utils/delete.png\" style=\"margin-top: 1px;\" onclick=\"ajaxdeleteTag(" + newData.Id + ", " + id + ");\"/></div>";
                         document.getElementById('divModalTags').innerHTML += newTag;
 
                         var divTags = document.getElementsByName('nameDivTags');
@@ -758,6 +766,7 @@ function ajaxdeleteTag(idTag, id)
                 if (newData.isDelete == true) {
                     document.getElementById('divTag_' + idTag).style.display = "none";
                     document.getElementById("lblTag_" + idTag).style.display = "none";
+                    document.getElementById('divContentTag_' + idTag).style.display = "none";
 
                     if (newData.Count < 5) {
                         string = "<input id=\"txtNewTag\" type=\"text\" value=\"Nova tag\" onclick=\"this.value=''\" />" +

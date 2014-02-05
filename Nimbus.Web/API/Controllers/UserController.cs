@@ -170,7 +170,7 @@ namespace Nimbus.Web.API.Controllers
 @"
 SELECT [tUser].[Id], [tUser].[FirstName], [tUser].[LastName], [tUser].[AvatarUrl]
 FROM [ChannelUser]
-INNER JOIN [Role] ON [ChannelUser].[ChannelId] = [Role].[ChannelId] AND [ChannelUser].[UserId] = [Role].[UserId]
+INNER JOIN [Role] ON [ChannelUser].[ChannelId] = [Role].[ChannelId] AND [ChannelUser].[UserId] <> [Role].[UserId] AND [Role].[Accepted] = 1
 OUTER APPLY (
 
     SELECT TOP (1) 1 AS [test], [User].[Id], [User].[Occupation], [User].[Interest], [User].[FirstName], [User].[LastName], [User].[AvatarUrl]
@@ -204,7 +204,7 @@ WHERE ([tUser].[test] IS NOT NULL) AND
                             data = new UserAutoCompleteResponse.UserData
                             {
                                 Id = x.Id,
-                                AvatarUrl = x.AvatarUrl
+                                AvatarUrl = x.AvatarUrl.Replace("/av130x130", "/av35x35")
                             }
                         });
 
@@ -444,9 +444,11 @@ WHERE ([tUser].[test] IS NOT NULL) AND
 
                         #region//remover da tabela moderador                      
                         db.SqlScalar<int>(@"UPDATE [Role]
-                                                  SET [Role].[IsOwner] = 0, [Role].[MessageManager] = 0,[Role].[UserManager] = 0,
-                                                      [Role].[ModeratorManager] = 0,[Role].[Paid] = 0,[Role].[TopicManager] = 0
+                                                  SET [Role].[Accepted] = 0,[Role].[ChannelMagager] = 0, [Role].[IsOwner] = 0,
+                                                      [Role].[MessageManager] = 0,[Role].[ModeratorManager] = 0,[Role].[Paid] = 0,
+                                                      [Role].[TopicManager] = 0,[Role].[UserManager] = 0
                                                   WHERE [Role].[UserId] = @userId AND 
+
                                                   ([Role].[Accepted] = 1  OR [Role].[ChannelMagager] = 1 OR [Role].[IsOwner] = 1 OR
                                                    [Role].[MessageManager] = 1 OR [Role].[ModeratorManager] = 1 OR [Role].[Paid]= 1 OR
                                                    [Role].[TopicManager] = 1 OR [Role].[UserManager] = 1)", new { userId = NimbusUser.UserId });                        

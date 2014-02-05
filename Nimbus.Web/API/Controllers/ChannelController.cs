@@ -229,11 +229,11 @@ namespace Nimbus.Web.API.Controllers
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    idList = db.SelectParam<Role>(rl => rl.ChannelId == id).Where(rl => (rl.ChannelMagager == true ||
+                    idList = db.SelectParam<Role>(rl => rl.ChannelId == id).Where(rl => rl.IsOwner == false && (rl.ChannelMagager == true ||
                                                                                         rl.MessageManager == true ||
                                                                                         rl.ModeratorManager == true ||
                                                                                         rl.TopicManager == true ||
-                                                                                        rl.UserManager == true) && rl.IsOwner == false).Select(user => user.UserId).ToList();
+                                                                                        rl.UserManager == true)).Select(user => user.UserId).ToList();
                     foreach (int item in idList)
                     {                        
                         User user = db.SelectParam<User>(us => us.Id == item).FirstOrDefault();
@@ -789,10 +789,6 @@ namespace Nimbus.Web.API.Controllers
                             }
 
                         }
-                        else
-                        {
-                            message = "Você não possui permissão para realizar está operação.";
-                        }
 
                         trans.Commit();
                     }
@@ -817,7 +813,8 @@ namespace Nimbus.Web.API.Controllers
                 {
                     try
                     {
-                        var moderator = db.Where<Role>(r => r.ChannelId == id && r.ChannelMagager == true && r.IsOwner == false).ToList();
+                        var moderator = db.Where<Role>(r => r.ChannelId == id && r.IsOwner == false && r.ChannelMagager == true).ToList();
+                        
                         if (moderator.Count > 0)
                         {
                             if (moderator.Count > 1)
@@ -825,43 +822,46 @@ namespace Nimbus.Web.API.Controllers
                                 var moderatorBest = db.Where<ChannelUser>(c => c.ChannelId == id && moderator.Exists(m => m.UserId == c.UserId)).OrderBy(c => c.Interaction).Max();
                                 int newIdOwner = moderator.Where(m => m.UserId == moderatorBest.UserId).Select(m => m.UserId).FirstOrDefault();
 
-                                roleOwner.UserId = newIdOwner;
-
-                                //atualiza a role do antigo moderador
-                                db.Update<Role>(new { IsOwner = true }, r => r.UserId == newIdOwner);
+                                moderator[0] = moderator.Where(c => c.UserId == newIdOwner).FirstOrDefault();
                             }
-                            else
-                            {
-                                roleOwner.UserId = moderator[0].UserId;
-
-                                moderator[0].IsOwner = true;
-                                db.Update<Role>(moderator[0]);
-                            }
+                            
                         }
                         else
                         {
-                            roleOwner.UserId = 1; //nimbus
+                            Role role = new Role ()
+                            {
+                                UserId = 1, //nimbus 
+                                ChannelId = id
+                            };
+                            moderator.Add(role); 
                         }
 
-                        db.Update<Role>(roleOwner);
                         message = "Este canal não pode ser apagado pois existem seguidores. O canal foi transferido para o moderador: " +
-                                db.Where<User>(u => u.Id == roleOwner.UserId).Select(u => new { Name = u.FirstName + " " + u.LastName }).FirstOrDefault().Name;
+                              db.Where<User>(u => u.Id == roleOwner.UserId).Select(u => new { Name = u.FirstName + " " + u.LastName }).FirstOrDefault().Name;
 
-                        //tira as permissões de moderador e owner do usuario
-                        //atualiza a role do antigo moderador
-                        db.Update<Role>(new
-                        {
-                            IsOwner = false,
-                            ChannelMagager = false,
-                            MessageManager = false,
-                            ModeratorManager = false,
-                            TopicManager = false,
-                            UserManager = false
-                        }, r => r.UserId == NimbusUser.UserId);
+                        //atualizando/retirando permissao do dono do canal
+                        roleOwner.IsOwner = false;
+                        roleOwner.ChannelMagager = false;
+                        roleOwner.ModeratorManager = false;
+                        roleOwner.MessageManager = false;
+                        roleOwner.TopicManager = false;
+                        roleOwner.UserManager = false;
+                        db.Update<Role>(roleOwner, r => r.UserId == roleOwner.UserId && r.ChannelId == id);
 
+                        //dando permissao para o moderador
+                        moderator[0].IsOwner = true;
+                        moderator[0].ChannelMagager = true;
+                        moderator[0].ModeratorManager = true;
+                        moderator[0].MessageManager = true;
+                        moderator[0].TopicManager = true;
+                        moderator[0].UserManager = true;
+                        db.Update<Role>(moderator[0], m => m.UserId == moderator[0].UserId && m.ChannelId == id);
+                                             
+
+                        //atualiza no channel quem é o novo dono  
                         Channel channel = db.Where<Channel>(c => c.Id == id && c.Visible == true).FirstOrDefault();
-                        channel.OwnerId = roleOwner.UserId;
-                        db.Update<Channel>(channel);
+                        channel.OwnerId = moderator[0].UserId;
+                        db.Update<Channel>(channel, c=> c.Id == id);
                     }
                     catch (Exception)
                     {
@@ -882,24 +882,14 @@ namespace Nimbus.Web.API.Controllers
                 {
                     try
                     {
-                        var channelUsers = db.Where<ChannelUser>(c => c.ChannelId == id && c.Visible == true).ToList();
-                        foreach (var item in channelUsers)
-                        {
-                            item.Visible = false;
-                            db.Update<ChannelUser>(item);
-                        }
-
-                        var channelRoleUsers = db.Where<Role>(r => r.ChannelId == id);
-                        foreach (var user in channelRoleUsers)
-                        {
-                            user.IsOwner = false;
-                            user.ChannelMagager = false;
-                            user.MessageManager = false;
-                            user.ModeratorManager = false;
-                            user.TopicManager = false;
-                            user.UserManager = false;
-                            db.Update<Role>(user);
-                        }
+                       db.SqlScalar<int>(@"UPDATE [ChannelUser]
+                                                  SET [ChannelUser].[Visible] = 0
+                                                  WHERE [ChannelUser].[ChannelId] = @chnId AND [ChannelUser].[Visible]= 1", new { chnId = id });                       
+                   
+                        db.SqlScalar<int>(@"UPDATE [Role]
+                                                  SET [Role].[IsOwner] = 0, [Role].[ChannelMagager] = 0,[Role].[MessageManager] = 0,
+                                                      [Role].[ModeratorManager] = 0,[Role].[TopicManager] = 0,[Role].[UserManager] = 0
+                                                  WHERE [Role].[ChannelId] = @chnId", new { chnId = id });
 
                         Channel channelDelete = db.Where<Channel>(c => c.Id == id && c.Visible == true).FirstOrDefault();
                         channelDelete.Visible = false;

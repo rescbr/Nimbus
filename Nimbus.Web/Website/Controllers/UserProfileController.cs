@@ -177,7 +177,7 @@ namespace Nimbus.Web.Website.Controllers
                 var user = db.Where<User>(u => u.Id == NimbusUser.UserId).FirstOrDefault();
 
                 //apaga imagem antiga
-                //if (user.AvatarUrl != null && user.AvatarUrl != "/images/Utils/person_icon.png")
+                //if (user.AvatarUrl != null && user.AvatarUrl != "/images/av130x130/person_icon.png")
                 //{
                 //    try
                 //    {

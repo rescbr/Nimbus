@@ -281,7 +281,7 @@
                                 <p>Descrição</p>
                                 <textarea id="txtaEditDescription" name="txtaEditDescription" maxlength="200">@Model.CurrentChannel.Description</textarea>
                                     </div>
-                                    <div class="divformModal">
+                            <div class="divformModal">
                                         <p>Categoria</p>
                                         <input id="txtEditTitle" required type="text" value="@Model.CurrentChannel.Name" maxlength="100" />
                                         <select id="slcCategory" required name="slcCategory">
@@ -298,7 +298,7 @@
                                             }
                                                 </select>
                                             </div>
-                                            <div class="divformModal">
+                            <div class="divformModal">
                                                 <p>Aberto para comentários</p>
                                                 @if (Model.CurrentChannel.OpenToComments == true)
                                                 {
@@ -318,9 +318,9 @@
                         {
                                     <div class="divformModal">
                                         <p>Moderadores</p>
-                                        <div id="divEditModerators">
+                                        <div id="divEditModerators" style="height: 100%; width: 600px;">
                                             <!-- The modals content -->
-                                             @* Incluido por pelo js ajaxLoadModeratorEdit *@
+                                            @* Incluido por pelo js ajaxLoadModeratorEdit *@
                                         </div>
                                     </div>
                         }
