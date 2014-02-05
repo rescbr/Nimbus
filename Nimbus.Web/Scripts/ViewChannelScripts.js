@@ -155,7 +155,7 @@ function DisableOption(currentOpt, nameDiv)
     var index = parseInt(name) + 1; //index da prox opção a ser inserida
     
     var campo = "<li id=\"liPerg" + indexActive + "_opt" + index + "\" >" +
-                      "<input type=\"radio\" name=\"radio\" id=\"rdbPerg" + indexActive + "_opt" + index + "\" class=\"fakeDisableCkb rdbPergEditNimbus\" />" +
+                      "<input type=\"radio\" name=\"radio_perg" + indexActive + "\" id=\"rdbPerg" + indexActive + "_opt" + index + "\" class=\"fakeDisableCkb rdbPergEditNimbus\" />" +
                       "<input id=\"txtPerg" + indexActive + "_opt" + index + "\" onclick=\"DisableOption('" + index + "', 'divPergunta" + indexActive + "');\"  type=\"text\" class=\"fakeDisable\" placeholder=\"Opção " + index + "\" />" +
                 "</li>";
     
@@ -477,7 +477,7 @@ function ajaxLoadModeratorEdit(id)
                     countModerator = newData.length;
                     //coloca o campo de buscar um novo moderador, esse campo é preenchido pelo método acima value=\"Adicionar moderador\" onclick=\"this.value=''\"
                     string = "Nome:<input id=\"search\" type=\"text\"/>" +
-                              "<br/>Permissão:"+
+                              "<br/>Permissão:" +
                                     "<div id=\"divEditModerator\">" +
                                          "<select id=\"permissionSelect\">" +
                                           "<option value=\"0\">Todas</option>" +
@@ -485,9 +485,9 @@ function ajaxLoadModeratorEdit(id)
                                           "<option value=\"2\">Moderar moderadores</option>" +
                                           "<option value=\"3\">Moderar tópicos</option>" +
                                           "<option value=\"4\">Moderar usuários</option>" +
-                                        "</select>" +
-                                    "</div>"+
-                           "<button id=\"btnAddModerator\" onclick=\"ajaxNewModerator();\">Adicionar</button>";
+                                        "</select><button id=\"btnAddModerator\" onclick=\"ajaxNewModerator();\">Adicionar</button>" +
+                                    "</div>";
+                          ;
                     autocomplete = true;
                 }
                 else {

@@ -1492,10 +1492,20 @@ button#bntAddItem, button#btnResetPassword {
     cursor:             pointer;
 }
 
-button#bntAddItem:hover {
+button#bntAddItem:hover,button#btnAddModerator:hover, button#btnSaveTag:hover  {
     background: #2b79a1;
     color:      white;
     }
+
+button#btnAddModerator, button#btnSaveTag { 
+    margin-left:        5px;   
+    background:         #223d98;
+    color:              #FFFFFF;
+    height:             26px;
+    border:             none;
+    cursor:             pointer;
+}
+
 
 ul.ulPerg1 {
     margin:             0 0 0 24px;
