@@ -476,7 +476,7 @@ function ajaxLoadModeratorEdit(id)
                     //atualiza a global
                     countModerator = newData.length;
                     //coloca o campo de buscar um novo moderador, esse campo é preenchido pelo método acima value=\"Adicionar moderador\" onclick=\"this.value=''\"
-                    string = "Nome:<input id=\"search\" type=\"text\"/>" +
+                    string = "<br/>Nome:<input id=\"search\" type=\"text\"/><br/>" +
                               "<br/>Permissão:" +
                                     "<div id=\"divEditModerator\">" +
                                          "<select id=\"permissionSelect\">" +
@@ -487,15 +487,17 @@ function ajaxLoadModeratorEdit(id)
                                           "<option value=\"4\">Moderar usuários</option>" +
                                         "</select><button id=\"btnAddModerator\" onclick=\"ajaxNewModerator();\">Adicionar</button>" +
                                     "</div>";
-                          ;
                     autocomplete = true;
                 }
                 else {
                     string = "<p>Você já possui o limite máximo de moderadores aceitos por canal.</p>";
                 }
                 if (listModerador === "") {
-                    includeDiv = "<div id=\"divModalModerators\">Adicione um moderador para seu canal.</div>" +
-                                      "<div>" + string + "</div>";
+                    includeDiv = "<div id=\"divModalModerators\">"+
+                                        "Adicione um moderador para seu canal." +
+                                        "<p style=\"font-size: 11px; color: #223D98;\"> (somente seguidores do canal podem ser convidados)</p> "+
+                                 "</div>" +
+                                 "<div>" + string + "</div>";
                 }
                 else
                 {                  
@@ -575,37 +577,37 @@ function ajaxNewModerator()
                     if (newData.Id > 0) {
                         if (countModerator < 5) {
                             //coloca o campo de buscar um novo moderador, esse campo é preenchido pelo método acima value=\"Adicionar moderador\" onclick=\"this.value=''\"
-                            var string = "<br/>Nome:<input id=\"search\" type=\"text\"/>" +
-                                      "<br/>Permissão:" +
-                                            "<div id=\"divEditModerator\">" +
-                                                 "<select id=\"permissionSelect\">" +
-                                                  "<option value=\"0\">Todas</option>" +
-                                                  "<option value=\"1\">Moderar mensagens</option>" +
-                                                  "<option value=\"2\">Moderar moderadores</option>" +
-                                                  "<option value=\"3\">Moderar tópicos</option>" +
-                                                  "<option value=\"4\">Moderar usuários</option>" +
-                                                "</select>" +
-                                            "</div>" +
-                                   "<button id=\"btnAddModerator\" onclick=\"ajaxNewModerator();\">Adicionar</button>";
+                            var string = "<br/>Nome:<input id=\"search\" type=\"text\"/><br/>" +
+                              "<br/>Permissão:" +
+                                    "<div id=\"divEditModerator\">" +
+                                         "<select id=\"permissionSelect\">" +
+                                          "<option value=\"0\">Todas</option>" +
+                                          "<option value=\"1\">Moderar mensagens</option>" +
+                                          "<option value=\"2\">Moderar moderadores</option>" +
+                                          "<option value=\"3\">Moderar tópicos</option>" +
+                                          "<option value=\"4\">Moderar usuários</option>" +
+                                        "</select><button id=\"btnAddModerator\" onclick=\"ajaxNewModerator();\">Adicionar</button>" +
+                                    "</div>";
                             autocomplete = true;
                         }
                         else {
                             string = "<p>Este canal já possui a quantidade máxima de moderadores permitido.</p>";
                         }
 
-                        var newDivModerator = "<div id=\"divModerator_" + newData.Id + "\">" +
-                                             "<p>" +
-                                             "<img src=\"" + newData.AvatarUrl + "\" title=\"" + newData.FirstName + "\" style=\"height:40px; width:40px;\" />" +
-                                             "<label>" + newData.FirstName + " " + newData.LastName + "</label>" +
-                                             "<input id=\"inputUser_" + newData.Id + "\" type=\"text\" disabled value=\"" + newData.RoleInChannel + "\" />" +
-                                             "<div id=\"divUser_" + newData.Id + "\"></div>" +
-                                             "<img src=\"/images/Utils/edit.png\" onclick=\"ajaxEditModerator(" + id + "," + newData.Id + ");\" title=\"Editar\" />" +
-                                             "<img src=\"/images/Utils/delete.png\" onclick=\"ajaxDeleteModerator(" + id + "," + newData.Id + ");\" title=\"Deletar\" />" +
-                                            "</p>" +
-                                        "</div>" +
-                                        "<div id=\"divEditModerator_" + newData.Id + "\">" +
-                                        "</div>"+
-                                        "<div>"+ string + "</div>";  
+                        var newDivModerator = "<div id=\"divModalModerators\">" +
+                                                   "<div class=\"contentModeratorUser\" id=\"divModerator_" + newData.Id + "\">" +
+                                                         "<img src=\"" + newData.AvatarUrl + "\" title=\"" + newData.FirstName + "\" style=\"height:35px; width:35px;float: left;\" />" +
+                                                           "<div style=\"float: left; margin-left: 10px;\">" +
+                                                                  "<label>" + newData.FirstName + " " + newData.LastName + "</label>" +
+                                                                  "<p>Permissão: </p>" +
+                                                                  "<input id=\"inputUser_" + newData.Id + "\" type=\"text\" disabled value=\"" + newData.RoleInChannel + "\" />" +
+                                                                     "<div id=\"divUser_" + newData.Id + "\">" +
+                                                                      "</div>" +
+                                                            "</div>" +
+                                                            "<img id=\"imgEdit_" + newData.Id + "\" src=\"/images/Utils/edit.png\" onclick=\"ajaxEditModerator(" + id + "," + newData.Id + ");\" title=\"Editar\" />" +
+                                                            "<img src=\"/images/Utils/delete.png\" onclick=\"ajaxDeleteModerator(" + id + "," + newData.Id + ");\" title=\"Deletar\" />" +
+                                                    "</div>" + string +
+                                              "</div>"
 
                         if (autocomplete) addAutocompleteToSearch();  
 

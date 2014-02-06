@@ -1055,7 +1055,7 @@ namespace Nimbus.Web.API.Controllers
                             bag.AvatarUrl = user.AvatarUrl;
 
                             if (userModerator.ChannelMagager)
-                                bag.RoleInChannel = "";
+                                bag.RoleInChannel = "Todos";
 
                             if (userModerator.MessageManager)
                                 bag.RoleInChannel = "Moderar mensagens";
