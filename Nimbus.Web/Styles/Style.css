@@ -1024,6 +1024,7 @@ a#aProfileEdit:hover, div#profileEdit:hover {
 
 div.aboutUser {
     margin-bottom:      24px;
+    word-wrap:break-word;
 }
 
 .aboutUser p, .aboutUser h1{
@@ -2527,6 +2528,7 @@ header#modal-label {
 }
 
 form#formReportUser div.modal-content,
+form#formForgotPass div.modal-content,
 form#formSendMsgProfile div.modal-content,
 form#formEditProfile div.modal-content,
 div#formChangeAvt div.modal-content,
@@ -2569,6 +2571,7 @@ div.divformModal:last-child {
 }
 
 form#formReportUser footer.fooModal,
+form#formForgotPass footer.fooModal,
 form#formSendMsgProfile footer.fooModal,
 form#formEditProfile footer.fooModal,
 div#formChangeAvt footer.fooModal,
@@ -2582,6 +2585,7 @@ form#formReportComment footer.fooModal  {
 }
 
 form#formReportUser footer.fooModal input.inputSubmit,
+form#formForgotPass footer.fooModal input.inputSubmit,
 form#formSendMsgProfile footer.fooModal input.inputSubmit,
 form#formEditProfile footer.fooModal input.inputSubmit,
 div#formChangeAvt footer.fooModal input.inputSubmit,
@@ -2597,6 +2601,7 @@ form#formReportComment footer.fooModal input.inputSubmit {
 }
 
 form#formReportUser footer.fooModal input.inputSubmit:hover,
+form#formForgotPass footer.fooModal input.inputSubmit:hover,
 form#formSendMsgProfile footer.fooModal input.inputSubmit:hover,
 form#formEditProfile footer.fooModal input.inputSubmit:hover,
 div#formChangeAvt footer.fooModal input.inputSubmit:hover,

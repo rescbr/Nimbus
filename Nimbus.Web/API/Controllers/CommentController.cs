@@ -194,16 +194,13 @@ namespace Nimbus.Web.API.Controllers
 
                 if (rolesUser != null)
                 {
-                    isAllow = rolesUser.ChannelMagager == true || rolesUser.IsOwner == true;
+                    isAllow = (rolesUser.ChannelMagager == true || rolesUser.IsOwner == true || rolesUser.TopicManager == true);
                 }
 
                 if (isAllow == true)
                 {
-                    using (var trans = db.OpenTransaction(System.Data.IsolationLevel.ReadCommitted))
-                    {
                         cmt.IsNew = false;
                         db.Update<Comment>(cmt, c => c.Id == comment.Id);
-                    }
                 }
             }
             return cmt;
@@ -599,8 +596,8 @@ namespace Nimbus.Web.API.Controllers
                         {
                             if (db.SelectParam<Channel>(c => c.Visible == true).Exists(c => c.Id == id))
                             {
-                                List<Comment> comment = db.SelectParam<Comment>(cmt => cmt.Visible == true && cmt.ChannelId == id
-                                                                                    && cmt.IsNew == true && cmt.ParentId == null).Skip(5 * skip).Take(5).ToList();
+                                List<Comment> comment = db.SelectParam<Comment>(cmt => cmt.IsNew == true && cmt.Visible == true && cmt.ChannelId == id
+                                                                                    &&  cmt.ParentId == null).Skip(5 * skip).Take(5).ToList();
 
                                 foreach (Comment item in comment)
                                 {

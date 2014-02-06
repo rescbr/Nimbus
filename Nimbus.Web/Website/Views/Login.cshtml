@@ -45,7 +45,7 @@
 
         </form>
         @*<p class="pLogin">Não possui uma conta no Nimbus? <a href="/NewAccount" title="Inscreva-se">Inscreva-se já</a></p>*@
-        <p class="pLogin"><a href="/api/user/sendTokenResetPassword" title="Esqueci minha senha"><u>Esqueci minha senha</u></a></p>
+        <p class="pLogin"><a href="#modal-forgotPass" title="Esqueci minha senha" class="call-modal"><u>Esqueci minha senha</u></a></p>
         @{
             string facebookLoginUrl = "/login/facebook";
             if (@Model.RedirectURL != null)
@@ -97,3 +97,31 @@
     }  
     
 </div>
+
+
+
+@*Modal section - esqueci minha senha *@
+<section class="semantic-content" id="modal-forgotPass" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
+    <div class="modal-inner">
+        <header id="modal-label">
+           Recuperar senha
+        </header>
+        <form id="formForgotPass" onsubmit="return false;">
+            <div class="modal-content">
+                <!-- The modals content -->
+                <div class="divformModal">
+                    <p>E-mail de login:</p>
+                    <input type="email" style="width:250px;" id="inptEmailPass" placeholder="Digite seu e-mail de cadastrado" />
+                </div>
+            </div>
+            <footer class="fooModal">
+                <!-- Footer -->
+                <input type="submit" class="inputSubmit" onclick="ajaxForgotPassword();" value="Enviar" id="sendForgotPass" />
+            </footer>
+        </form>
+    </div>
+    <a href="#!" id="closeModalRFeedback" class="modal-close" title="Close this modal" data-close="Close"
+       data-dismiss="modal">
+        "x"
+    </a>
+</section>

@@ -253,9 +253,9 @@ WHERE ([tUser].[test] IS NOT NULL) AND
                         currentUser.BirthDate = currentUser.BirthDate;
 
                         db.Save(currentUser);
+                        user.Id = currentUser.Id;
                     }
                 }
-
                 return user;
             }
             catch (Exception ex)
@@ -360,15 +360,33 @@ WHERE ([tUser].[test] IS NOT NULL) AND
         }
 
         [HttpGet]
-        public bool sendTokenResetPassword()
+        [AllowAnonymous]
+        public bool checkValidEmail(string email)
+        {
+            //verificar se email existe
+            using (var db = DatabaseFactory.OpenDbConnection())
+            {
+                bool exist = db.SelectParam<User>(u => u.Email == email).Exists(u  => u.Email == email);
+                if (exist == true)
+                    return sendTokenResetPassword(email);
+                else 
+                    return false;
+            }            
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public bool sendTokenResetPassword(string userEmail = null)
         {
             MandrillApi apiMandrill = new MandrillApi(NimbusConfig.MandrillToken);
             EmailMessage mensagem = new EmailMessage();
             mensagem.from_email = "ResetPassword@portalnimbus.com.br";
             mensagem.from_name = "Portal Nimbus";
             mensagem.subject = "Redefinição de senha";
+            if (userEmail == null)
+                userEmail = NimbusUser.Email;
             List<EmailAddress> address = new List<EmailAddress> ();
-            address.Add(new EmailAddress(NimbusUser.Email));
+            address.Add(new EmailAddress(userEmail));
             mensagem.to = address;
             
             NSCInfo infoToken = new NSCInfo 

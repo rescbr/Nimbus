@@ -315,6 +315,7 @@
     <Content Include="images\Utils\facebook-icon.png" />
     <Content Include="images\Utils\facebook24x24.png" />
     <Content Include="images\Utils\logoName.png" />
+    <Content Include="images\Utils\ltia.png" />
     <Content Include="images\Utils\nimbus.png" />
     <Content Include="images\Utils\pagenotfound.png" />
     <Content Include="images\Utils\report.png" />

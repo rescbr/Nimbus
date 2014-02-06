@@ -728,6 +728,30 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
 
     }
 
+
+    function ajaxForgotPassword() {
+        var email = document.getElementById('inptEmailPass').value;
+                $.ajax({
+                    url: "/api/user/checkValidEmail/" +"?email=" + JSON.stringify(email),
+                type: "GET",
+                contentType: "application/json;charset=utf-8",
+                statusCode: {
+                    200: function (newData) {
+                        if (newData == true) {
+                            window.alert("Um e-mail foi enviado para sua conta de login com o código de redefinição de senha.");
+                        }
+                        else { window.alert("Não conseguimos enviar o código de redefinição de senha para seu email. \n Verifique se digitou o e-mail correto ou tente novamente mais tarde."); }
+                    },
+
+                    500: function () {
+                        //erro
+                        window.alert("Não foi possível alterar sua senha. Tente novamente mais tarde.");
+                    }
+                }
+            });
+
+    }
+
     function getTopTopics()
     {
         /*if (skip < 0)*/ skip = 0;

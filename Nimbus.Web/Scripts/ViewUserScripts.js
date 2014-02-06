@@ -131,6 +131,7 @@
                         200: function (newData) {
 
                             if (newData.Id > 0) {
+
                                 //fechar modal
                                 document.getElementById('closeModalEdit').click();
                                 //limpar campos
@@ -142,22 +143,31 @@
                                 occupation.value = "";
                                 interest.value = "";
                                 experience.value = "";
-                                document.getElementById('lblName').value = newData.FirstName + " " + newData.LastName;
+
+                                document.getElementById('lblName').innerHTML = newData.FirstName + " " + newData.LastName;
 
                                 var place = "";
                                 if (newData.City != "" && newData.State != "")
                                     place = newData.City + " - " + newData.State;
                                 else if (newData.City != "" && newData.State == "")
-                                    place = newData.City
+                                    place = newData.City;
                                 else if (newData.City == "" && newData.State != "")
-                                    place = newData.State
-                                document.getElementById('lblCity').value = place;
+                                    place = newData.State;
+                                
+                                if(place !== "")
+                                document.getElementById('lblCity').innerHTML = place;
 
-                                document.getElementById('lblOccupation').value = newData.Occupation;
-                                document.getElementById('lblCountry').value = newData.Country;
-                                document.getElementById('lblInterest').value = newData.Interest;
-                                document.getElementById('lblExperience').value = newData.Experience;
-                                document.getElementById('lblAbout').value = newData.About;
+                                if(newData.Occupation !== "")
+                                    document.getElementById('lblOccupation').innerHTML = newData.Occupation;
+                                if (newData.Country !== "")
+                                    document.getElementById('lblCountry').innerHTML = newData.Country;
+                                if (newData.Interest !== "")
+                                    document.getElementById('lblInterest').innerHTML = newData.Interest;
+                                if (newData.Experience !== "")
+                                    document.getElementById('lblExperience').innerHTML = newData.Experience;
+                                if (newData.About !== "")
+                                document.getElementById('lblAbout').innerHTML = newData.About;                                
+                                
                             }
                         },
                         500: function () {
