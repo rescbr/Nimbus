@@ -17,5 +17,11 @@ namespace Nimbus.Model.ORM
 
         [References(typeof(User))]
         public override int AuthorId { get; set; }
+
+        [Ignore]
+        public bool UserReadLater { get; set; }
+
+        [Ignore]
+        public bool UserFavorited { get; set; }
     }
 }
