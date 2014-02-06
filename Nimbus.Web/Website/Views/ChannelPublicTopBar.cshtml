@@ -13,7 +13,7 @@
 }
 <script type="text/javascript">
     //global
-    currentDiv = 'divNotification';
+    currentDiv = 'divNotifications';
     skipPopular = 1;
     skipAll = 1;
 </script>
@@ -21,19 +21,19 @@
 <div class="wrapperChannel">
     <nav class="chanTopBar">
         <ul class="sbs">
-            <li id="lidivAllTopics" class="press chanTopBarActived">
-                <a name="divAllTopics" onclick="EnableDiv(this.name, 'currentDiv', '', 'channel');" class="linkTopChanBar">
-                   <p id="pAllTopics">Todos</p></a></li>
+            <li id="lidivNotifications" class="press chanTopBarActived">
+                <a name="divNotifications" onclick="EnableDiv(this.name, 'currentDiv', '', 'channel');" class="linkTopChanBar">
+                    <p id="pNotifications" style="color:#87c240;">Atualizações</p></a>
+            </li>
             <li id="lidivPopularTopics" class="press">
-                <a name="divPopularTopics" onclick="EnableDiv(this.name, 'currentDiv', '', 'channel');" class="linkTopChanBar"> 
-                    <p id="pPopularTopics">Mais vistos</p></a></li>
-            <li id="lidivNotification" class="press">
-                <a name="divNotification" onclick="EnableDiv(this.name, 'currentDiv', '', 'channel');" class="linkTopChanBar">
-                    <p id="pNotification">Atualizações</p></a></li>
-        </ul>
+                <a name="divPopularTopics" onclick="EnableDiv(this.name, 'currentDiv', '', 'channel');" class="linkTopChanBar"><p id="pPopularTopics">Mais vistos</p></a>
+            </li>
+            <li id="lidivAllTopics" class="press">
+                <a name="divAllTopics" onclick="EnableDiv(this.name, 'currentDiv', '', 'channel');" class="linkTopChanBar"><p id="pAllTopics">Todos</p></a></li>
+         </ul>
     </nav>
 
-    <div id="divNotification">
+    <div id="divNotifications">
         <div id="divNotificationWrapper">
             @if (Model.ChannelNotifications.Count > 0)
             {
@@ -42,14 +42,22 @@
             }
             else
             {
-                <text>Não há novas atividades neste canal.</text>
+                <p>Não há novas atividades neste canal.</p>
             }
         </div>
+
         @if (Model.ChannelNotifications.Count > 0)
          {
-           <div id="divNotificationLoad" class="divGifLoad">
-               <img src="/images/utils/loading.gif" class="imgGifLoad" style="display:none;" id="imgNotificationLoad" />
-               <div id="divNotificationLoadButton" style="display:block;" onclick="getChannelNotifications(@Model.CurrentChannel.Id, '@lastNotificationGuid');">Carregar mais notificações</div>
+            <div id="divNotificationLoad" >
+                     <div class="divGifLoad">
+                          <img src="/images/utils/loading.gif" class="imgGifLoad" style="display:none;" id="imgNotificationLoad" />
+                     </div>
+                @if (Model.ChannelNotifications.Count == 15)
+                 { 
+                     <div id="divNotificationLoadButton" style="display:block;" onclick="getChannelNotifications(@Model.CurrentChannel.Id, '@lastNotificationGuid');">
+                         <p>Carregar mais notificações</p>
+                     </div>
+                }
            </div>
          }
     </div>

@@ -30,7 +30,8 @@
     <nav class="chanTopBar">
         <ul class="sbs">
             <li id="lidivNotifications" class="press chanTopBarActived ">
-                <a name="divNotifications" onclick="EnableDiv(this.name, 'currentDiv', '', 'channel');" class="linkTopChanBar"><p id="pNotifications">Atualizações</p></a></li>
+                <a name="divNotifications" onclick="EnableDiv(this.name, 'currentDiv', '', 'channel');" class="linkTopChanBar">
+                    <p id="pNotifications" style="color:#87c240;">Atualizações</p></a></li>
             <li id="lidivPopularTopics" class="press">
                 <a name="divPopularTopics" onclick="EnableDiv(this.name, 'currentDiv', '', 'channel');" class="linkTopChanBar"><p id="pPopularTopics">Mais vistos</p></a></li>
             <li id="lidivAllTopics" class="press">
@@ -99,9 +100,11 @@
                         <div class="divGifLoad">
                              <img src="/images/utils/loading.gif" class="imgGifLoad" style="display:none;" id="imgNotificationLoad" />
                         </div>
+                        @if (Model.ChannelNotifications.Count == 15) { 
                         <div id="divNotificationLoadButton" style="display:block;" onclick="getChannelNotifications(@Model.CurrentChannel.Id, '@lastNotificationGuid');">
                             <p>Carregar mais notificações</p>
                         </div>
+                        }
                     </div>
                 }
             </div>

@@ -929,6 +929,7 @@ h1.userNProfBar {
     color:              #2b2d2e;
     font-size:          2em;
     font-weight:        normal;
+    margin-left:        25px;
 }
 
 div.wrapperUserProfile {
@@ -1385,7 +1386,7 @@ p.txtNotification a {
 }
 
 div.attChoice {
-    margin-top:         38px;
+    margin-top:         28px;
     margin-left:        408px;
     position:           absolute;
     display:            inline-block;
@@ -1397,7 +1398,7 @@ div.btnAccept{
     width:              48px;
     height:             24px;
     font-size:          x-small;
-    background:         #2b2d2e;
+    background:         #223d98;
 }
 
 div.btnAccept p{
@@ -1406,14 +1407,47 @@ div.btnAccept p{
 }
 
 div.btnAccept:hover, div.btnAccept:hover p {
-    color:              #87c240;
+    color:              #fff;
     cursor:             pointer;
+    background:         #2b79a1;
+     width:              48px;
+    height:             24px;
+}
+
+div.btnRefuse{
+    margin-left:        5px;
+    float:              left;
+    width:              48px;
+    height:             24px;
+    font-size:          x-small;
+    background:         #BE1E2D;
+}
+
+div.btnRefuse p{
+    color:              #fff;
+    text-align:         center;
+}
+
+div.btnRefuse:hover, div.btnRefuse:hover p {
+    color:              #fff;
+    cursor:             pointer;
+    background:         #b01d53;
+     width:              48px;
+    height:             24px;
 }
 
 /*------------------ PrivateProfileTopBar New Channel & ChannelPrivateTopBar New Topic ----------------*/
-div#divNewChannel, div#divNewTopic, div#divInfos {
+div#divNewChannel, div#divNewTopic, div#divInfos, 
+div#divTopicFavorite, div#divReadLater {
     margin:             24px;
     width:              596px;
+    clear: both;
+}
+
+.setMargin {
+    margin:             24px;
+    width:              596px;
+    clear: both;
 }
 
 .btnCancel {
@@ -1856,11 +1890,6 @@ nav.chanTopBar {
     cursor:             pointer;
     font-weight:        normal;
 }
-
-.chanTopBarActived p {
-    text-decoration:    none;
-    color:              #87c240;
-    }
 
 /*
 .wrapperChannel div.divTopic-grade:first-child {

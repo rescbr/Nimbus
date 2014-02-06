@@ -47,21 +47,21 @@
         <div id="divChangeChannels" class="tabContent">
             <nav class="messagesTab">
                 <ul class="sbs">
-                    <li id="liMyChannel" style="background:#87c240;" onclick="ChoiceViewChannel('divChannelUsers', 'divChannelFollows', this.id, 'liFollowChannel');" 
+                    <li id="liMyChannel" style="background:#87c240;" onclick="ChoiceViewChannel('divChannelUsers', 'divChannelFollows', this.id, 'liFollowChannel');"
                         class="press">Meus canais</li>
                     <li id="liFollowChannel" class="press" onclick="ChoiceViewChannel('divChannelFollows', 'divChannelUsers', this.id, 'liMyChannel');">Canais seguidos</li>
                 </ul>
             </nav>
         </div>
 
-
-        @if (Model.CurrentUser.UserId == Model.User.Id)
-        { 
-            <div id="divChannelUsers">
-             <div style="width:100%; padding-bottom:30px; float:left;">
-             <h1>Meus Canais</h1>
-             <div id="myChannels">
-                @if (Model.MyChannels.Count > 0) { 
+        <div class="setMargin">
+            @if (Model.CurrentUser.UserId == Model.User.Id)
+            {
+                <div id="divChannelUsers">
+                    <div style="width:100%; padding-bottom:30px; float:left;">
+                        <h1>Meus Canais</h1>
+                        <div id="myChannels">
+                            @if (Model.MyChannels.Count > 0) {
                      foreach (var item in Model.MyChannels)
                      {
                          //partial
@@ -70,26 +70,26 @@
                      }
                      if (Model.MyChannels.Count() == 15)
                      {
-                      <div class="seeMoreContent">
-                        <div class="divGifLoad">
-                            <img src="/images/utils/loading.gif" class="imgGifLoad" id="imgMyChannelsLoad" style="display:none;" />
-                        </div>
-                        <div class="seeMoreButton" id="btn_skipMyChannels" onclick="verMaisChannels(@Model.CurrentUser.UserId, 'myChannels', 0, 'skipMyChannels');"><p>Ver mais</p></div>
-                     </div>
+                <div class="seeMoreContent">
+                    <div class="divGifLoad">
+                        <img src="/images/utils/loading.gif" class="imgGifLoad" id="imgMyChannelsLoad" style="display:none;" />
+                    </div>
+                    <div class="seeMoreButton" id="btn_skipMyChannels" onclick="verMaisChannels(@Model.CurrentUser.UserId, 'myChannels', 0, 'skipMyChannels');"><p>Ver mais</p></div>
+                </div>
                      }
                 }
                 else
                 {
-                    <p>Você não criou nenhum canal até o momento. <Br />Crie seu primeiro canal e comece agora mesmo a divulgar e compartilhar seus conhecimentos.</p>
+                <p>Você não criou nenhum canal até o momento. <br />Crie seu primeiro canal e comece agora mesmo a divulgar e compartilhar seus conhecimentos.</p>
                 }
-            </div>
-             </div>
-            
-             <div style="float:left; width:100%;">
-            <h1>Meus canais moderados</h1>
-             <div id="myChannelsMannager">
-                 @if (Model.ChannelMannager.Count > 0)
-                 { 
+                        </div>
+                    </div>
+
+                    <div style="float:left; width:100%;">
+                        <h1>Meus canais moderados</h1>
+                        <div id="myChannelsMannager">
+                            @if (Model.ChannelMannager.Count > 0)
+                 {
                      foreach (var item in Model.ChannelMannager)
                      {
                          //partial
@@ -99,24 +99,24 @@
 
                      if (Model.MyChannels.Count() == 15)
                      {
-                         <div class="seeMoreContent">
-                             <div class="divGifLoad">
-                                 <img src="/images/utils/loading.gif" class="imgGifLoad" id="imgMyChannelsMannagerLoad" style="display:none;" />
-                             </div>
-                             <div class="seeMoreButton" id="btn_skipMyChannelsMannager" onclick="verMaisChannels(@Model.CurrentUser.UserId, 'myChannelsMannager', 0, 'skipMyChannelsMannager');"><p>Ver mais</p></div>
-                         </div>
+                <div class="seeMoreContent">
+                    <div class="divGifLoad">
+                        <img src="/images/utils/loading.gif" class="imgGifLoad" id="imgMyChannelsMannagerLoad" style="display:none;" />
+                    </div>
+                    <div class="seeMoreButton" id="btn_skipMyChannelsMannager" onclick="verMaisChannels(@Model.CurrentUser.UserId, 'myChannelsMannager', 0, 'skipMyChannelsMannager');"><p>Ver mais</p></div>
+                </div>
                      }
                  }
                  else
                  {
-                     <p>Nenhum canal sendo moderado até o momento.</p>
+                <p>Nenhum canal sendo moderado até o momento.</p>
                  }
-             </div>
-            </div>
-            </div>
-            
-            <div id="divChannelFollows" style="display:none; float:left;">
-                @if (Model.ChannelFollow.Count > 0)
+                        </div>
+                    </div>
+                </div>
+
+                <div id="divChannelFollows" style="display:none; float:left;">
+                    @if (Model.ChannelFollow.Count > 0)
                 {
                 <div id="channelsFollow">
                     @foreach (var item in Model.ChannelFollow)
@@ -148,8 +148,9 @@
                     </p>
                 </div>
                 }
-            </div>
-        }        
+                </div>
+            }
+        </div>
     </div>
 
     <div id="divTopicFavorite" style="display:none;">
@@ -229,7 +230,8 @@
          
       @if (Model.CurrentUser.UserId == Model.User.Id)
       {
-         <div id ="divSeeMessages">
+         
+             <div id ="divSeeMessages">
              @if (Model.Messages.Count > 0) { 
              <div id="divSeeMessagesContent">
                  @foreach (var item in Model.Messages)
@@ -251,11 +253,11 @@
              }
              else
              {
-                 <p> Você não possui novas mensagem até o momento.</p>
+                 <p style="margin-left:24px;"> Você não possui novas mensagem até o momento.</p>
              }
          </div>
 
-         <div id ="divSeeMessagesSend" style="display:none;">  
+             <div id ="divSeeMessagesSend" style="display:none;">  
              @if(Model.CountMessageSend > 0)
              {          
                  <div id="divSeeMessagesSendContent">
@@ -273,11 +275,11 @@
              }
              else
              {
-                 <p>Até o momento você não enviou nenhuma mensagem.</p>
+                 <p style="margin-left:24px;">Até o momento você não enviou nenhuma mensagem.</p>
              }
             
          </div>
-
+         
        }
          </div>
 

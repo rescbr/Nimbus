@@ -21,7 +21,7 @@ function AcceptOrNotBeModerator(id, accepted, notifGuid) {
                         notifBtn.innerHTML = "<div class='btnAccept'>Aceito</div>";
                     }
                     else if (newData == false) {
-                        notifBtn.innerHTML = "<div class='btnAccept'>Recusado</div>";
+                        notifBtn.innerHTML = "<div class='btnRefuse'>Recusado</div>";
                     }
                 } catch (e) { }
             },
