@@ -181,6 +181,12 @@ function cancelNewTopic(idChannel)
     window.location.href = "/channel/index/" + idChannel;
 }
 
+function cancelEditTopic(idTopic)
+{
+    document.getElementById('btnEditTopic').style.display = 'block';
+    window.location.href = "/topic/index/" + idTopic;
+}
+
 function ajaxSaveNewTopic(channelID)
 {
     var url; 

@@ -21,6 +21,11 @@
         @Model.Time - @Model.Date
     </p>
     <p class="txtNotification">
-        @Model.SenderName convidou você para ser moderador do canal <a href="/channel/index/@Model.ChannelId">@Model.ChannelName</a>.
+        @{
+            string nameChn = Model.ChannelName;
+            //if (nameChn.Length > 11)
+            //{nameChn = nameChn.Substring(0, 10) + "...";}
+        }
+        @Model.SenderName convidou você para moderar o canal <a href="/channel/index/@Model.ChannelId">@nameChn</a>.
     </p>
 </div>

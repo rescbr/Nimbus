@@ -27,10 +27,15 @@
 
 <div id="divTrendingTopics" style="display:block;">
     @*depois vai ser carregado por js + ajax, mas para facilitar, motando o modelo aqui*@
-
-    @foreach (var item in Model)
-    {
-        Html.RenderPartial("~/Website/Views/ChannelPartials/TopicPartial.cshtml", item);
+    @if (Model.Count() > 0) { 
+        foreach (var item in Model)
+        {
+            Html.RenderPartial("~/Website/Views/ChannelPartials/TopicPartial.cshtml", item);
+        }
+    }
+    else
+    { 
+        <p>Até o momento, nenhum tópico encontrou para o ranking.</p>
     }
 </div>
 

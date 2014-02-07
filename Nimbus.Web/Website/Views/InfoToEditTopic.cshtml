@@ -141,7 +141,7 @@
             }
             </div>
         <div class="divBtnNewChannel">
-            <input type="submit" class="divCnclInfos" onclick="cancelNewTopic(@Model.CurrentChannel.Id);" value="Cancelar" />
+            <input type="submit" class="divCnclInfos" onclick="cancelEditTopic(@Model.CurrentTopic.Id);" value="Cancelar" />
             <input type="submit" class="divSaveInfos" value="Salvar" onclick="ajaxEditTopic(@Model.CurrentTopic.Id, '@Model.CurrentTopic.TopicType', 'divCurrent_@Model.CurrentTopic.TopicType')" />
         </div>
     </form>

@@ -4,6 +4,7 @@ function clickEditTopic(id, topicType)
 {
     document.getElementById('divCurrent_'+ topicType).style.display = 'none';
     document.getElementById('divRenderEdit').style.display = 'block';
+    document.getElementById('btnEditTopic').style.display = 'none';
 }
 
 function ajaxEditTopic(id, topicType, divOld) {
@@ -71,6 +72,7 @@ function ajaxEditTopic(id, topicType, divOld) {
 
                         document.getElementById('divRenderEdit').style.display = 'none';
                         document.getElementById(divOld).style.display = 'block';
+                        document.getElementById('btnEditTopic').style.display = 'block';
 
                         document.getElementById('iptNewTitle').value = newData.Title;
                         document.getElementById('lblTopicTitle').innerHTML = newData.Title;
