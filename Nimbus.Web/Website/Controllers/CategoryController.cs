@@ -15,10 +15,16 @@ namespace Nimbus.Web.Website.Controllers
             List<ChannelBag> channels = new List<ChannelBag>();
 
             var categoryApi = ClonedContextInstance<API.Controllers.CategoryController>();
+
+            double count = categoryApi.showAllCategory().Count();
+            count = Math.Ceiling(count/10);
+            
             var lstCat = new List<Category>();
-            lstCat = categoryApi.showAllCategory();
+            lstCat = categoryApi.showCategoryToPage();
 
             ViewBag.lstCat = lstCat.OrderBy(c => c.Name).ToList();
+            ViewBag.totalCategory = Convert.ToInt32(count);
+
             return View("Category", channels);
         }
     }

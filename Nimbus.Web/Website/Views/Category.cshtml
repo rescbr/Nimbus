@@ -8,7 +8,7 @@
 @Scripts.Render("~/Scripts/ViewTopicScripts.js")
 
 <script>
-    countCat = 1;
+    countCat = 0;
 </script>
 
 <div class="content-top">
@@ -16,10 +16,11 @@
         <h1>Categorias</h1>
     </div>
     <section class="sectionCategoryPage">
-        <div class="divBacktCat">
-            +
+        <input type="hidden" value="@ViewBag.totalCategory" id="hdnTotalCategory" />
+        <div class="divBacktCat press" onclick="getMoreCategory('back');">
+            -
         </div>
-    <div class="divShowCat">
+    <div id="divShowCat" class="divShowCat">       
         @foreach (var item in (List<Category>)ViewBag.lstCat)
         {
             <div class="imgCategoryPage">
@@ -27,8 +28,8 @@
             </div>
         }
     </div>
-        <div class="divNextCat">
-            -
+        <div class="divNextCat press" onclick="getMoreCategory('next');">
+            +
         </div>
    
     </section>

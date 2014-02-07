@@ -10,13 +10,13 @@ using System.Linq;
 
 namespace Nimbus.Web.API.Controllers
 {
+    [NimbusAuthorize]
     public class CategoryController:NimbusApiController
     {
         /// <summary>
         /// método que lista todas as categorias existentes no nimbus
         /// </summary>
         /// <returns></returns>
-        [Authorize]
         [HttpGet]
         public List<Category> showAllCategory()
         {       
@@ -38,12 +38,35 @@ namespace Nimbus.Web.API.Controllers
         }
 
         /// <summary>
+        /// método que lista todas as categorias existentes no nimbus para a pagina de categorias
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public List<Category> showCategoryToPage(int skip = 0)
+        {
+            try
+            {
+                List<Category> listCat = new List<Category>();
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {
+                    listCat = db.Select<Category>().Skip(skip).Take(10).ToList();
+                }
+
+                return listCat;
+            }
+            catch (Exception ex)
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+            }
+
+        }
+
+        /// <summary>
         /// Método que retorna a string da img de CAPA/TOPO do canal de acordo com a 
         /// categoria que ele pertence
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [Authorize]
         [HttpGet]
         public string GetImgTopChannel(int id) 
         {

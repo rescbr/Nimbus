@@ -781,8 +781,71 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
 
                 500: function () {
                     //erro
-                    window.alert("Não foi possível alterar sua senha. Tente novamente mais tarde.");
+                    window.alert("Não foi possível realizar esta operação. Tente novamente mais tarde.");
                 }
             }
         });
+    }
+
+    function getMoreCategory(option)
+    {
+        var skip = Number(countCat);
+        var totalCat = document.getElementById('hdnTotalCategory').value;
+        var flag = false;
+
+        if (option == 'back')
+        {
+            if (skip == 1)
+                flag = false;
+            else {
+                skip = skip - 1;
+                flag = true;
+            }
+        }
+        else if (option == 'next')
+        {
+            if (skip < totalCat ) {
+                skip = skip + 1;
+                flag = true;
+            }
+            else if(skip == totalCat)
+            { flag = true;}
+            else
+            {
+                flag = false;
+            }
+        }
+
+        if (flag == true)
+        {
+            $.ajax({
+                url: "/api/category/showCategoryToPage/" + "?skip=" + skip,
+                type: "GET",
+                contentType: "application/json;charset=utf-8",
+                statusCode: {
+                    200: function (newData) {
+                        if (newData.length > 0) {
+                            if (option == 'next')
+                                countCat = countCat + 1;
+                            else if(option == 'back')
+                                countCat = countCat - 1;
+                            var string = '';
+
+                            for (var i = 0; i < newData.length; i++) {
+                                string += "<div class=\"imgCategoryPage\">" +
+                                            "<img src=\""+newData[i].ImageUrl +"\" title=\"@item.Name\" alt=\""+newData[i].Name+"\" />" +
+                                         "</div>";
+                            }
+
+                            document.getElementById('divShowCat').innerHTML = string;
+                        }
+                    },
+
+                    500: function () {
+                        //erro
+                        window.alert("Não foi possível realizar esta operação. Tente novamente mais tarde.");
+                    }
+                }
+            });
+        }
     }
