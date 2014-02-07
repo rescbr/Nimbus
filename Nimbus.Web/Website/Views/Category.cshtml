@@ -1,0 +1,28 @@
+﻿@using System.Collections.Generic;
+@using Nimbus.Model.Bags;
+@using Nimbus.Model.ORM;
+@model List<ChannelBag>
+
+@{Layout = "~/Website/Views/Shared/_Layout.cshtml";}
+
+@Scripts.Render("~/Scripts/ViewTopicScripts.js")
+
+
+
+<div class="content-top">
+    <div class="cont-left">
+        <h1>Categorias</h1>
+    </div>
+    <section>
+    @foreach (var item in (List<Category>)ViewBag.lstCat)
+     {
+         <div class="imgCategoryPage">
+             <img src="@item.ImageUrl" title="@item.Name" alt="@item.Name" />
+         </div>
+     }
+    </section>
+</div>
+
+<div id="divAllChnCategory">
+
+</div>

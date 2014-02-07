@@ -505,6 +505,7 @@
     <Content Include="Website\Views\Novidades.cshtml" />
     <Content Include="Website\Views\TermosDeUso.cshtml" />
     <Content Include="Website\Views\PageError404.cshtml" />
+    <Content Include="Website\Views\Category.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\Controllers\DatabaseController.cs" />
@@ -539,6 +540,7 @@
     <Compile Include="Utils\NotificationTableEntity.cs" />
     <Compile Include="Utils\RazorTemplate.cs" />
     <Compile Include="Utils\RemoveHTMLString.cs" />
+    <Compile Include="Website\Controllers\CategoryController.cs" />
     <Compile Include="Website\Controllers\ChannelController.cs" />
     <Compile Include="Website\Controllers\NimbusController.cs" />
     <Compile Include="Website\Controllers\NotificationController.cs" />
@@ -549,6 +551,7 @@
     <Compile Include="Website\Controllers\TopicDemoController.cs" />
     <Compile Include="Website\Controllers\TrendingController.cs" />
     <Compile Include="Website\Controllers\UploadController.cs" />
+    <Compile Include="Website\Models\CategoryModel.cs" />
     <Compile Include="Website\Models\NewsModel.cs" />
     <Compile Include="Website\Models\ResetPasswordModel.cs" />
     <Compile Include="Website\Models\SearchModel.cs" />

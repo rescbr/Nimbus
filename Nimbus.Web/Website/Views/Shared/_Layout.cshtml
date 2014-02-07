@@ -8,6 +8,7 @@
     string trendingClass = "BTrTop";
     string topClass = "BTop";
     string searchClass = "BSearch";
+    string catClass = "BCateg";
     var segments = Context.Request.Url.Segments;
     if (segments.Length > 1) {
         var path = segments[1].ToLower().Trim('/');
@@ -21,6 +22,10 @@
         else if (path == "search")
         {
             searchClass = "BTopBarLinkSelected";
+        }
+        else if(path == "category")
+        {
+            catClass = "BTopBarLinkSelected";
         }
     }
 }
@@ -67,7 +72,7 @@
                         <li class=@searchClass id="aOpenDivSearch" onclick="openDivSearch();">Buscar</li>
                         <li class=@trendingClass id="linkTrending" onclick="window.location.href = '/trending';">Trending</li>
                         <li class=@topClass id="linkTop" onclick="window.location.href = '/top';">Top</li>
-                       @* <li class="BNews" onclick="window.location.href='/news' ;">News</li>*@
+                        <li class="@catClass" onclick="window.location.href='/category' ;">Categorias</li>
                     </ul>
                 </nav>
             

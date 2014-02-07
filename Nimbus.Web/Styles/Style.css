@@ -625,6 +625,11 @@ a.linkFooter {
    color: #2b2d2e;
    font-weight:bold;
 }
+
+.imgCategoryPage {
+    float: left;
+    padding: 10px;
+}
 /*----------------------fim paginas estáticas-----------------*/
 
 /*------------------------New Account ------------------------*/
@@ -2511,7 +2516,7 @@ ul.ulFooPage {
     cursor:            pointer;
 }
 
-.userpic:hover, .logo:hover, .BSearch:hover, .BTrTop:hover, .BTop:hover, .BNews:hover, .press:hover,  #profileEdit:hover, .c-lista:hover .c-grade:hover, .postFoBoxL_l:hover, .postFoBoxR_l:hover, .postFoBoxL_g:hover, .postFoBoxR_g:hover, .post_m:hover, .chanPaidImg:hover {
+.userpic:hover, .logo:hover, .BSearch:hover, .BTrTop:hover, .BTop:hover, .BCateg:hover, .press:hover,  #profileEdit:hover, .c-lista:hover .c-grade:hover, .postFoBoxL_l:hover, .postFoBoxR_l:hover, .postFoBoxL_g:hover, .postFoBoxR_g:hover, .post_m:hover, .chanPaidImg:hover {
 	background:        #bcbec0;
     cursor:            pointer;
 }
