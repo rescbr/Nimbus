@@ -2,7 +2,7 @@
 
 function clickEditTopic(id, topicType)
 {
-    document.getElementById('divCurrent_'+topicType).style.display = 'none';
+    document.getElementById('divCurrent_'+ topicType).style.display = 'none';
     document.getElementById('divRenderEdit').style.display = 'block';
 }
 

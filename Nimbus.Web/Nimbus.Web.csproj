@@ -226,6 +226,7 @@
     <Content Include="images\ca60x60\business.png" />
     <Content Include="images\ca60x60\certificacao.png" />
     <Content Include="images\ca60x60\ciencias.png" />
+    <Content Include="images\ca60x60\computacao.png" />
     <Content Include="images\ca60x60\concursos.png" />
     <Content Include="images\ca60x60\culinaria.png" />
     <Content Include="images\ca60x60\empreendedorismo.png" />
@@ -241,7 +242,6 @@
     <Content Include="images\ca60x60\matematica.png" />
     <Content Include="images\ca60x60\musica.png" />
     <Content Include="images\ca60x60\portugues.png" />
-    <Content Include="images\ca60x60\programacao.png" />
     <Content Include="images\ca60x60\quimica.png" />
     <Content Include="images\ca60x60\redacao.png" />
     <Content Include="images\ca60x60\saude.png" />

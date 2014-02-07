@@ -35,7 +35,7 @@
     </div>
 
     <h1 id="nameTopicPage">
-       <label id="lblTopicTitle"> @Model.CurrentTopic.Title</label>
+        <label id="lblTopicTitle" style="word-wrap:break-word;"> @Model.CurrentTopic.Title</label>
     </h1>
     <a href="/channel/index/@Model.CurrentChannel.Id"><p id="channelTopicPage">@Model.CurrentChannel.Name</p></a>
 
@@ -144,7 +144,7 @@
 </div>
 
 
-<div id="divContentTopic" style="float:left; width: 644px;">
+<div id="divContentTopic">
     <div class="contentPageTopic">
     @*Topico em formato texto*@
     @if (Model.CurrentTopic.TopicType == Nimbus.Model.Enums.TopicType.exam)

@@ -45,6 +45,7 @@
 
     <div>
         <div id="divPopularTopics" style="display:none;">
+            @if (Model.AllTopics.Count > 0) { 
             <div id="popular">
                 @foreach (var item in Model.AllTopics.OrderByDescending(m => m.Count))
                 {
@@ -52,25 +53,31 @@
                 } 
               
             </div>
-            @if (Model.AllTopics.Count() == 15)
-              {
-                <div class="seeMoreContent">
-                    <div class="divGifLoad">
-                        <img src="/images/utils/loading.gif" id="imgPopularLoad" class="imgGifLoad" style="display:none;" />
+                if (Model.AllTopics.Count() == 15)
+                 {
+                    <div class="seeMoreContent">
+                        <div class="divGifLoad">
+                            <img src="/images/utils/loading.gif" id="imgPopularLoad" class="imgGifLoad" style="display:none;" />
+                        </div>
+                     <div class="seeMoreButton" id="btn_skipPopular" onclick="verMaisTopics(@Model.CurrentChannel.Id, 'popular', 0, 'skipPopular');"><p>Ver mais</p></div>                  
                     </div>
-                 <div class="seeMoreButton" id="btn_skipPopular" onclick="verMaisTopics(@Model.CurrentChannel.Id, 'popular', 0, 'skipPopular');"><p>Ver mais</p></div>                  
-                </div>
-              }                         
+                 }         
+            }  
+            else
+            {
+                <p class="setMargin">Este canal ainda não possui nenhum tópico.</p>
+            }              
         </div>
 
         <div id="divAllTopics" style="display:none;">
+            @if(Model.AllTopics.Count() > 0){
             <div id="alltpc">
                 @foreach (var item in Model.AllTopics.OrderByDescending(m => m.LastModified))
                 {
                     Html.RenderPartial("~/Website/Views/ChannelPartials/TopicPartial.cshtml", item);
                 }
             </div>
-            @if (Model.AllTopics.Count() == 15)
+            if (Model.AllTopics.Count() == 15)
                {
                    <div class="seeMoreContent">
                        <div class="divGifLoad">
@@ -79,6 +86,11 @@
                        <div id="btn_skipAll" class="seeMoreButton" onclick="verMaisTopics(@Model.CurrentChannel.Id, 'alltpc', 0, 'skipAll');"><p>Ver mais</p></div>
                    </div>
                }
+            }
+            else
+            {
+            <p class="setMargin">Este canal ainda não possui nenhum tópico.</p>
+            }  
          </div>
     
         <div id="divNotifications">
@@ -91,7 +103,7 @@
                     }
                     else
                     {
-                        <p>Não há novas atividades neste canal.</p>
+                        <p class="setMargin">Não há novas atividades neste canal.</p>
                     }
                 </div>
                 @if (Model.ChannelNotifications.Count > 0)

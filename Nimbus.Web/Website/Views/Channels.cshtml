@@ -62,12 +62,14 @@
 
 @** começo da parte só do channel*@
 <div id="nameChannelPage">
-    <h1 id="hChannelName">@Model.CurrentChannel.Name</h1>
+    <h1 id="hChannelName" style="word-wrap:break-word;">
+        @Model.CurrentChannel.Name
+    </h1>
 </div>
 
 <div id="divInfCanal">
  
-    <p id="pTopicDescription">@Model.CurrentChannel.Description</p>
+    <p id="pTopicDescription" style="word-wrap:break-word;">@Model.CurrentChannel.Description</p>
   <br />
     <p>Dono:<a href="/userprofile/index/@Model.CurrentChannel.OwnerId" class="nameOwner"> @Model.CurrentChannel.OwnerName</a></p>
     @if (Model.Moderators.Count > 0) { 

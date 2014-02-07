@@ -42,7 +42,7 @@
             }
             else
             {
-                <p>Não há novas atividades neste canal.</p>
+                <p class="setMargin">Não há novas atividades neste canal.</p>
             }
         </div>
 
@@ -63,38 +63,50 @@
     </div>
 
     <div id="divPopularTopics" style="display:none;">
+        @if (Model.AllTopics.Count() > 0) { 
         <div id="popular">
             @foreach (var item in Model.AllTopics.OrderByDescending(m => m.Count))
             {
                 Html.RenderPartial("~/Website/Views/ChannelPartials/TopicPartial.cshtml", item);
             }
         </div>
-        @if (Model.AllTopics.Count() == 15)
-        {
-            <div class="seeMoreContent">
+            if (Model.AllTopics.Count() == 15)
+            {
+                <div class="seeMoreContent">
                 <div class="divGifLoad">
                     <img src="/images/utils/loading.gif" class="imgPopularLoad" id="imgNotificationLoad" />
                 </div>
                 <div class="seeMoreButton" id="btn_skipPopular" onclick="verMaisTopics(@Model.CurrentChannel.Id, 'popular', 0, 'skipPopular');"><p>Ver mais</p></div>
             </div>
+            }
+        }
+        else
+        {
+            <p class="setMargin">Este canal ainda não possui nenhum tópico.</p> 
         }
     </div>
 
     <div id="divAllTopics" style="display:none;">
+        @if (Model.AllTopics.Count() > 0) { 
         <div id="alltpc">
             @foreach (var item in Model.AllTopics.OrderByDescending(m => m.LastModified))
             {
                 Html.RenderPartial("~/Website/Views/ChannelPartials/TopicPartial.cshtml", item);
             }
         </div>
-        @if (Model.AllTopics.Count() == 15)
+            if (Model.AllTopics.Count() == 15)
+            {
+                <div class="seeMoreContent">
+                   <div class="divGifLoad">
+                       <img src="/images/utils/loading.gif" class="imgAllLoad" id="imgNotificationLoad" />
+                   </div>
+                   <div class="seeMoreButton" id="btn_skipAll" onclick="verMaisTopics(@Model.CurrentChannel.Id, 'alltpc', 0, 'skipAll');"><p>Ver mais</p></div>
+               </div>
+            }
+        }
+        else
         {
-            <div class="seeMoreContent">
-                <div class="divGifLoad">
-                    <img src="/images/utils/loading.gif" class="imgAllLoad" id="imgNotificationLoad" />
-                </div>
-                <div class="seeMoreButton" id="btn_skipAll" onclick="verMaisTopics(@Model.CurrentChannel.Id, 'alltpc', 0, 'skipAll');"><p>Ver mais</p></div>
-            </div>
+            <p class="setMargin">Este canal ainda não possui nenhum tópico.</p>
         }
     </div>
 

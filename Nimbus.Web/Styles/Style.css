@@ -1779,6 +1779,7 @@ div#divInfCanal {
     background:         #f1f2f2;
     float:              left;
     padding:            10px 10px 0 10px;
+    word-wrap:          break-word;
 }
 
 a.nameOwner {
@@ -1809,6 +1810,7 @@ p.numberIco {
     text-align:         center;
     font-size:          300%;
     color:              #87c240;
+    word-wrap:break-word;
 }
 
 
@@ -2035,6 +2037,7 @@ p.txtInfTopic {
     text-align:         justify;
     color:              #000000;
     font-size:          small;
+    word-wrap:          break-word;
 }
 
 /*button#btnEditTopic {
@@ -2123,8 +2126,9 @@ p.catTopic{
 
 
 /* Content - Parte da direita */
-div.divContentTopic {
-    margin:             0 auto;
+div#divContentTopic {
+    margin-left:        24px;
+    margin-top:  24px;
     width:              644px;
     float:              left;
 }
