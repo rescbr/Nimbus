@@ -49,7 +49,7 @@ namespace Nimbus.Web.API.Controllers
                 List<Category> listCat = new List<Category>();
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    listCat = db.Select<Category>().Skip(skip).Take(10).ToList();
+                    listCat = db.Select<Category>().OrderBy(c => c.Name).Skip(skip).Take(10).ToList();
                 }
 
                 return listCat;
