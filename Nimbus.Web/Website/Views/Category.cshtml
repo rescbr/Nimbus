@@ -7,19 +7,30 @@
 
 @Scripts.Render("~/Scripts/ViewTopicScripts.js")
 
-
+<script>
+    countCat = 1;
+</script>
 
 <div class="content-top">
     <div class="cont-left">
         <h1>Categorias</h1>
     </div>
-    <section>
-    @foreach (var item in (List<Category>)ViewBag.lstCat)
-     {
-         <div class="imgCategoryPage">
-             <img src="@item.ImageUrl" title="@item.Name" alt="@item.Name" />
-         </div>
-     }
+    <section class="sectionCategoryPage">
+        <div class="divBacktCat">
+            +
+        </div>
+    <div class="divShowCat">
+        @foreach (var item in (List<Category>)ViewBag.lstCat)
+        {
+            <div class="imgCategoryPage">
+                <img src="@item.ImageUrl" title="@item.Name" alt="@item.Name" />
+            </div>
+        }
+    </div>
+        <div class="divNextCat">
+            -
+        </div>
+   
     </section>
 </div>
 

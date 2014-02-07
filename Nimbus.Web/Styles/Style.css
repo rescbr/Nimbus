@@ -626,10 +626,37 @@ a.linkFooter {
    font-weight:bold;
 }
 
+.sectionCategoryPage {
+    float: left;
+    padding-top: 10px;
+}
+
 .imgCategoryPage {
     float: left;
-    padding: 10px;
+    padding-left: 2px;
 }
+
+.divNextCat {
+    width: 10px;
+    background: none repeat scroll 0% 0% red; 
+    float: right; margin: auto;
+}
+
+.divShowCat {
+    float: left;
+    margin-left: 15px;
+    width: 95%;
+}
+
+.divBacktCat {
+    background: none repeat scroll 0% 0% red;
+    margin-top: auto;
+    float: left;
+    width: 10px;
+}
+
+
+
 /*----------------------fim paginas estáticas-----------------*/
 
 /*------------------------New Account ------------------------*/
