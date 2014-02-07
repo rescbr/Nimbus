@@ -14,10 +14,10 @@
     <div class="divformInfos">
         <p>
             Imagem ilustrativa
-            </p>
-            <div id="divImgTopico">
-                <img id="imgNewPrevia" src="@Model.CurrentTopic.ImgUrl" height="100" width="150" />
-            </div>
+        </p>
+        <div id="divImgTopico">
+            <img id="imgNewPrevia" src="@Model.CurrentTopic.ImgUrl" height="100" width="150" />
+        </div>
 
         <form action='/channel/upload' method="post" enctype="multipart/form-data" name="imagem_original">
             <input type="file" name="iptNewImgTopic" id="iptNewImgTopic" />
@@ -42,104 +42,108 @@
             @if (Model.CurrentTopic.TopicType == Nimbus.Model.Enums.TopicType.video)
             {
 
-                    <div id="divEditVideo">
-                        <input type="text" id="iptTitlevideo" name="iptTitlevideo" value="URL do vídeo" onfocus="javascript: this.value = ''"
-                               onchange="getUrlVideo(this.name, 'divFrameNewVideo', 'iframeNewVideo');" required />
-                        <label>Somente url do youtube</label><br />
-                        <div id="divFrameNewVideo" style="display:none;">
-                            <iframe name="iframeNewVideo" width="420" height="345" id="iframeNewVideo" src=""></iframe>
-                        </div>
+                <div id="divEditVideo">
+                    <input type="text" id="iptTitlevideo" name="iptTitlevideo" value="URL do vídeo" onfocus="javascript: this.value = ''"
+                           onchange="getUrlVideo(this.name, 'divFrameNewVideo', 'iframeNewVideo');" required />
+                    <label>Somente url do youtube</label><br />
+                    <div id="divFrameNewVideo" style="display:none;">
+                        <iframe name="iframeNewVideo" width="420" height="345" id="iframeNewVideo" src=""></iframe>
                     </div>
+                </div>
 
             }
             else if (Model.CurrentTopic.TopicType == Nimbus.Model.Enums.TopicType.file)
             {
-                    <div id="divNewFile" class="divformNewChannel">
-                        <label>Upload de arquivo (máx. 5MB):</label><br />
-                        <label>(docx, pdf, pptx, ppt, ppsx, pps, xlsx, xls)</label>
-                        <iframe width="300" height="200" src="/upload?type=office&w=300&h=200&field=inptUrlEditFile" frameborder="0"></iframe>
-                        <input type="hidden" id="inptUrlEditFile" />
-                    </div>
+                <div id="divNewFile" class="divformNewChannel">
+                    <label>Upload de arquivo (máx. 5MB):</label><br />
+                    <label>(docx, pdf, pptx, ppt, ppsx, pps, xlsx, xls)</label>
+                    <iframe width="300" height="200" src="/upload?type=office&w=300&h=200&field=inptUrlEditFile" frameborder="0"></iframe>
+                    <input type="hidden" id="inptUrlEditFile" />
+                </div>
             }
-            else if (Model.CurrentTopic.TopicType == Nimbus.Model.Enums.TopicType.text ||
-                     Model.CurrentTopic.TopicType == Nimbus.Model.Enums.TopicType.discussion)
+            else if (Model.CurrentTopic.TopicType == Nimbus.Model.Enums.TopicType.text)
             {
-                    <div id="divNewText">
-                        <textarea id="txtaArticle">@Model.CurrentTopic.Text</textarea>
-
-                        </div>
+                <div id="divNewText">
+                    <textarea id="txtaArticle">@Model.CurrentTopic.Text</textarea>
+                </div>
+            }
+            else if (Model.CurrentTopic.TopicType == Nimbus.Model.Enums.TopicType.discussion)
+            {
+                <div id="divNewText">
+                    <textarea id="txtaTextMsg">@Model.CurrentTopic.Text</textarea>
+                </div>
             }
             else if (Model.CurrentTopic.TopicType == Nimbus.Model.Enums.TopicType.exam)
             {
-                    <div id="divNewExam">
-                        @for (int i = 0; i < Model.CurrentTopic.Question.Count; i++)
-                        {
-                            var question = Model.CurrentTopic.Question[i];
-                            var answers = question.ChoicesAnswer.ToList();
-                            /*lista as questões existentes*/
-                                <section class="divPergEditarNimbus">
-                                    <p>Pergunta:</p>
-                                    <p><strong>@(i + 1)</strong> -<input id="QuestionPerg@(i + 1)" class="enunciado" type="text" value="@question.TextQuestion" /></p>
+                <div id="divNewExam">
+                    @for (int i = 0; i < Model.CurrentTopic.Question.Count; i++)
+                    {
+                        var question = Model.CurrentTopic.Question[i];
+                        var answers = question.ChoicesAnswer.ToList();
+                        /*lista as questões existentes*/
+                        <section class="divPergEditarNimbus">
+                            <p>Pergunta:</p>
+                            <p><strong>@(i + 1)</strong> -<input id="QuestionPerg@(i + 1)" class="enunciado" type="text" value="@question.TextQuestion" /></p>
 
-                                        <p>Respostas:</p>
-                                        <ul>
+                            <p>Respostas:</p>
+                            <ul>
 
-                                            @foreach (var answer in answers)
-                                            {
+                                @foreach (var answer in answers)
+                                {
 
-                                                //imprime as questoes
-                                                    <li id="liPerg_@i">
-                                                        @if (answer.Key == question.CorrectAnswer)
-                                                        {
-                                                                <input class="rdbPergEditNimbus" type="radio" checked name="@i" value="@answer.Key" />
-                                                        }
-                                                        else
-                                                        {
-                                                                <input class="rdbPergEditNimbus" type="radio" name="@i" value="@answer.Key" />
-                                                        }
+                                    //imprime as questoes
+                                    <li id="liPerg_@i">
+                                        @if (answer.Key == question.CorrectAnswer)
+                                        {
+                                            <input class="rdbPergEditNimbus" type="radio" checked name="@i" value="@answer.Key" />
+                                        }
+                                        else
+                                        {
+                                            <input class="rdbPergEditNimbus" type="radio" name="@i" value="@answer.Key" />
+                                        }
 
-                                                            <input class="resposta" type="text" value="@answer.Value" />
-                                                        </li>
+                                        <input class="resposta" type="text" value="@answer.Value" />
+                                    </li>
 
-                                            }
-                                            </ul>
+                                }
+                            </ul>
 
-                                        </section>
-                        }
-                        </div>
+                        </section>
+                    }
+                </div>
 
-                        <div>
-                            <script>
-                                CurrentQuestion = '1';
-                            </script>
-                            <p><h1>Criar novas questões:</h1></p>
-                            <div id="divExam">
-                                <div id="divPergunta1" class="divPergEditarNimbus">
-                                    <p>
-                                        Enunciado da questão:
-                                        <input id="QuestionPerg1" class="enunciado" type="text" required maxlength="600" />
-                                    </p>
-                                    <p>Respostas:</p>
-                                    <div>
-                                        <ul id="ulPerg1">
-                                            <li id="liPerg1_opt1">
-                                                @*pergunta 1 _ opçao 1*@
-                                                    <input type="radio" class="rdbPergEditNimbus" checked name="radio_perg1" id="rdbPerg1_opt1" />
-                                                    <input id="txtPerg1_opt1" class="resposta" required type="text" onfocus="javascript: this.value = ''" value="Opção 1" />
-                                                </li>
-                                                <li id="liPerg1_opt2">
-                                                    <input type="radio" class="fakeDisable rdbPergEditNimbus" name="radio_perg1" id="rdbPerg1_opt2" />
-                                                    <input id="txtPerg1_opt2" class="fakeDisable" required onclick="DisableOption('2', 'divPergunta1');" type="text" value="Opção 2" />
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                <input type="button" class="inputSubmit" id="bntAddItem" onclick="CreatedDivQuestion();" value="Add item" />
+                <div>
+                    <script>
+                        CurrentQuestion = '1';
+                    </script>
+                    <p><h1>Criar novas questões:</h1></p>
+                    <div id="divExam">
+                        <div id="divPergunta1" class="divPergEditarNimbus">
+                            <p>
+                                Enunciado da questão:
+                                <input id="QuestionPerg1" class="enunciado" type="text" required maxlength="600" />
+                            </p>
+                            <p>Respostas:</p>
+                            <div>
+                                <ul id="ulPerg1">
+                                    <li id="liPerg1_opt1">
+                                        @*pergunta 1 _ opçao 1*@
+                                        <input type="radio" class="rdbPergEditNimbus" checked name="radio_perg1" id="rdbPerg1_opt1" />
+                                        <input id="txtPerg1_opt1" class="resposta" required type="text" onfocus="javascript: this.value = ''" value="Opção 1" />
+                                    </li>
+                                    <li id="liPerg1_opt2">
+                                        <input type="radio" class="fakeDisable rdbPergEditNimbus" name="radio_perg1" id="rdbPerg1_opt2" />
+                                        <input id="txtPerg1_opt2" class="fakeDisable" required onclick="DisableOption('2', 'divPergunta1');" type="text" value="Opção 2" />
+                                    </li>
+                                </ul>
                             </div>
+                        </div>
+                    </div>
+                    <input type="button" class="inputSubmit" id="bntAddItem" onclick="CreatedDivQuestion();" value="Add item" />
+                </div>
 
             }
-            </div>
+        </div>
         <div class="divBtnNewChannel">
             <input type="submit" class="divCnclInfos" onclick="cancelEditTopic(@Model.CurrentTopic.Id);" value="Cancelar" />
             <input type="submit" class="divSaveInfos" value="Salvar" onclick="ajaxEditTopic(@Model.CurrentTopic.Id, '@Model.CurrentTopic.TopicType', 'divCurrent_@Model.CurrentTopic.TopicType')" />
@@ -168,8 +172,15 @@
 
 <script type="text/javascript">
     $(function () {
-        $('#txtaArticle').width(500);
-        $('#txtaArticle').height(500);
-        $('#txtaArticle').htmlarea();
+        try {
+            $('#txtaArticle').width(500);
+            $('#txtaArticle').height(300);
+            $('#txtaArticle').htmlarea();
+        } catch (e) {}
+        try {
+            $('#txtaTextMsg').width(500);
+            $('#txtaTextMsg').height(300);
+            $('#txtaTextMsg').htmlarea();
+        } catch (e) { }
     });
 </script>
