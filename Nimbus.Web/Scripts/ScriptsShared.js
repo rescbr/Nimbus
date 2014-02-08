@@ -880,3 +880,46 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
             }
         });
     }
+
+    function validPassword()
+    {
+       
+    }
+
+    function validPassword(senha) {
+        var forca = 0; var color = "";
+        var resultado = "";
+        if ((senha.length >= 4) && (senha.length <= 7)) {
+            forca += 10;
+        } else if (senha.length > 7) {
+            forca += 25;
+        }
+        if (senha.match(/[a-z]+/)) {
+            forca += 10;
+        }
+        if (senha.match(/[A-Z]+/)) {
+            forca += 20;
+        }
+        if (senha.match(/\d+/)) {
+            forca += 20;
+        }
+        if (senha.match(/\W+/)) {
+            forca += 25;
+        }
+       
+        if (forca < 30) {
+            resultado = "Nível: senha fraca";
+            color = "#be1e2d";
+        } else if ((forca >= 30) && (forca < 60)) {
+            resultado = "Nível: senha mediana";
+            color = "#cb5907";
+        } else if ((forca >= 60) && (forca < 85)) {
+            resultado = "Nível: senha forte";
+            color = "#2b79a1";
+        } else {
+            resultado = "Nível: senha muito forte";
+            color = "#223d98";
+        }
+        document.getElementById('pPowerPass').style.color = color;
+        document.getElementById('pPowerPass').innerHTML = resultado;
+    }
