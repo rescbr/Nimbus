@@ -1,4 +1,5 @@
 ﻿using Nimbus.Model.Bags;
+using Nimbus.Model.ORM;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,6 @@ namespace Nimbus.Web.Website.Models
 {
     public class CategoryModel
     {
-        public List<ChannelBag> Channels { get; set; }
+        public List<Channel> Channels { get; set; }
     }
 }

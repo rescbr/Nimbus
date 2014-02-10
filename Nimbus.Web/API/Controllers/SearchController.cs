@@ -9,6 +9,7 @@ using ServiceStack.OrmLite;
 using System.Net;
 using Nimbus.Model;
 using Nimbus.Extensions;
+using Nimbus.Web.Utils;
 
 namespace Nimbus.Web.API.Controllers
 {
@@ -213,6 +214,64 @@ namespace Nimbus.Web.API.Controllers
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Nenhum registro encontrado para '" + q + "'"));
             }
             return channelsFound;
+        }
+
+        public class ChnByCategoryHtmlWrapper
+        {
+            public int Count { get; set; }
+            public string Html { get; set; }
+        }
+
+        [HttpGet]
+        public ChnByCategoryHtmlWrapper AbstChannelHtml(int id, string nameCat)
+        {
+            var rz = new RazorTemplate();
+            string html = "";
+            List<Nimbus.Model.ORM.Channel> channel = new List<Nimbus.Model.ORM.Channel>();
+
+                channel = ChannelByCategory(id, nameCat);
+           
+            foreach (var item in channel)
+            {
+                html += rz.ParseRazorTemplate<Nimbus.Model.ORM.Channel>
+                    ("~/Website/Views/ChannelPartials/ChannelPartial.cshtml", item);
+            }
+            return new ChnByCategoryHtmlWrapper { Html = html, Count = channel.Count };
+        }
+
+
+        /// <summary>
+        /// Retorna os canais encontrados para a categoria escolhida 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public List<Nimbus.Model.ORM.Channel> ChannelByCategory(int id, string nameCat)
+        {
+            List<Nimbus.Model.ORM.Channel> channels = new List<Nimbus.Model.ORM.Channel>();
+
+            if (id > 0)
+            {
+                int idOrg = NimbusOrganization.Id;
+
+                using (var db = DatabaseFactory.OpenDbConnection())
+                {
+                    //pegar canais da categoria
+                    bool idCatValid = db.Where<Category>(ct => ct.Id == id).Exists(c => c.Id == id);
+                    if (idCatValid == true)
+                    {
+                        channels = db.SelectParam<Nimbus.Model.ORM.Channel>(chn => chn.Visible == true && chn.OrganizationId == idOrg && chn.CategoryId == id);
+                        foreach (var item in channels)
+                        {
+                            item.ImgUrl = item.ImgUrl.ToLower().Replace("capachannel","category");
+                        }
+                    }
+                }
+            }
+            else
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Nenhum registro encontrado para '" + nameCat + "'"));
+            }
+            return channels;
         }
 
         /// <summary>

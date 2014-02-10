@@ -634,6 +634,7 @@ a.linkFooter {
 .imgCategoryPage {
     float: left;
     padding-left: 2px;
+    cursor: pointer;
 }
 
 .divNextCat {

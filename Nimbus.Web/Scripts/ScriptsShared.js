@@ -795,7 +795,7 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
 
         if (option == 'back')
         {
-            if (skip == 1)
+            if (skip == 0)
                 flag = false;
             else {
                 skip = skip - 1;
@@ -832,8 +832,8 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
                             var string = '';
 
                             for (var i = 0; i < newData.length; i++) {
-                                string += "<div class=\"imgCategoryPage\">" +
-                                            "<img src=\""+newData[i].ImageUrl +"\" title=\"@item.Name\" alt=\""+newData[i].Name+"\" />" +
+                                string += "<div class=\"imgCategoryPage\" onclick=\"getAllChannels(" + newData[i].Id + ", '" + newData[i].Name + "');\" >" +
+                                            "<img src=\""+newData[i].ImageUrl +"\" title=\""+newData[i].Name+"\" alt=\""+newData[i].Name+"\" />" +
                                          "</div>";
                             }
 
@@ -848,4 +848,78 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
                 }
             });
         }
+    }
+
+    function getAllChannels(id, nameCat)
+    {
+        $.ajax({
+            url: "/api/search/AbstChannelHtml/" +id + "?nameCat=" + JSON.stringify(nameCat),
+            type: "GET",
+            contentType: "application/json;charset=utf-8",
+            statusCode: {
+                200: function (newData) {
+                    if (newData.Count > 0) {
+                        if (newData.Count > 1) {
+                            document.getElementById('hTitleCategory').innerHTML = "Categoria " + nameCat + ": " + newData.Count + " resultados encontrados.";
+                        }
+                        else
+                        {
+                            document.getElementById('hTitleCategory').innerHTML = "Categoria " + nameCat + ": " + newData.Count + " resultado encontrado.";
+                        }
+                        document.getElementById('divAllChnCategory').innerHTML = newData.Html;
+                    }
+                    else {
+                        document.getElementById('divAllChnCategory').innerHTML = '<p>Nenhum resultado encontrado para a categoria '+nameCat+'.</p>';
+                    }
+                },
+
+                500: function () {
+                    //erro
+                    window.alert("Não foi possível realizar esta operação. Tente novamente mais tarde.");
+                }
+            }
+        });
+    }
+
+    function validPassword()
+    {
+       
+    }
+
+    function validPassword(senha) {
+        var forca = 0; var color = "";
+        var resultado = "";
+        if ((senha.length >= 4) && (senha.length <= 7)) {
+            forca += 10;
+        } else if (senha.length > 7) {
+            forca += 25;
+        }
+        if (senha.match(/[a-z]+/)) {
+            forca += 10;
+        }
+        if (senha.match(/[A-Z]+/)) {
+            forca += 20;
+        }
+        if (senha.match(/\d+/)) {
+            forca += 20;
+        }
+        if (senha.match(/\W+/)) {
+            forca += 25;
+        }
+       
+        if (forca < 30) {
+            resultado = "Nível: senha fraca";
+            color = "#be1e2d";
+        } else if ((forca >= 30) && (forca < 60)) {
+            resultado = "Nível: senha mediana";
+            color = "#cb5907";
+        } else if ((forca >= 60) && (forca < 85)) {
+            resultado = "Nível: senha forte";
+            color = "#2b79a1";
+        } else {
+            resultado = "Nível: senha muito forte";
+            color = "#223d98";
+        }
+        document.getElementById('pPowerPass').style.color = color;
+        document.getElementById('pPowerPass').innerHTML = resultado;
     }

@@ -1,7 +1,6 @@
 ﻿@using System.Collections.Generic;
-@using Nimbus.Model.Bags;
 @using Nimbus.Model.ORM;
-@model List<ChannelBag>
+@model List<Nimbus.Model.ORM.Channel>
 
 @{Layout = "~/Website/Views/Shared/_Layout.cshtml";}
 
@@ -22,11 +21,11 @@
         </div>
     <div id="divShowCat" class="divShowCat">       
         @foreach (var item in (List<Category>)ViewBag.lstCat)
-        {
-            <div class="imgCategoryPage">
-                <img src="@item.ImageUrl" title="@item.Name" alt="@item.Name" />
+         {
+            <div class="imgCategoryPage" onclick="getAllChannels('@item.Id' , '@item.Name');">
+               <img src="@item.ImageUrl" title="@item.Name" alt="@item.Name" />
             </div>
-        }
+         }
     </div>
         <div class="divNextCat press" onclick="getMoreCategory('next');">
             +
@@ -35,6 +34,7 @@
     </section>
 </div>
 
-<div id="divAllChnCategory">
-
+<div>
+    <h1 id="hTitleCategory" style="font-size:18px; margin-top:250px;"></h1>
+    <div id="divAllChnCategory"></div>
 </div>

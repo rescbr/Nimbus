@@ -12,7 +12,7 @@ namespace Nimbus.Web.Website.Controllers
     {
         public ActionResult Index()
         {
-            List<ChannelBag> channels = new List<ChannelBag>();
+            List<Channel> channels = new List<Channel>();
 
             var categoryApi = ClonedContextInstance<API.Controllers.CategoryController>();
 
