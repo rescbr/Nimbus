@@ -795,24 +795,37 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
 
         if (option == 'back')
         {
-            if (skip == 0)
+            document.getElementById('imgNextCtg').style.opacity = '1';
+            if (skip == 0) {
+                document.getElementById('imgBackCtg').style.opacity = '0.5';
                 flag = false;
+            }
             else {
                 skip = skip - 1;
+                if (skip == 0)
+                    document.getElementById('imgBackCtg').style.opacity = '0.5';
+                else
+                    document.getElementById('imgBackCtg').style.opacity = '1';
                 flag = true;
             }
         }
         else if (option == 'next')
         {
-            if (skip < totalCat ) {
-                skip = skip + 1;
-                flag = true;
-            }
-            else if(skip == totalCat)
-            { flag = true;}
-            else
+            document.getElementById('imgBackCtg').style.opacity = '1';
+
+            if (skip == (totalCat - 1))
             {
+                document.getElementById('').style.opacity = '0.5';
                 flag = false;
+            }
+            else if(skip < (totalCat - 1)) //pq skip começa do zero
+            {
+                skip = skip + 1;
+                if(skip == (totalCat - 1))
+                    document.getElementById('imgNextCtg').style.opacity = '0.5';
+                else
+                    document.getElementById('imgNextCtg').style.opacity = '1';               
+                flag = true;
             }
         }
 
@@ -879,11 +892,6 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
                 }
             }
         });
-    }
-
-    function validPassword()
-    {
-       
     }
 
     function validPassword(senha) {

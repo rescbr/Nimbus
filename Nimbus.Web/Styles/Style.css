@@ -639,19 +639,23 @@ a.linkFooter {
 
 .divNextCat {
     width: 15px;
-    /* background: none repeat scroll 0% 0% red */; 
-    float: right; margin: auto;
+    margin-top: 87px;
+    margin-bottom: 87px;
+    cursor:pointer;
+    float: right; 
 }
 
 .divShowCat {
     float: left;
-    margin-left: 15px;
+    margin-left: 10px;
+    margin-right: 8px;
     width: 95%;
 }
 
 .divBacktCat {
-    /* background: none repeat scroll 0% 0% red */;
-    margin-top: auto;
+    margin-top: 87px;
+    margin-bottom: 87px;
+    cursor:pointer;
     float: left;
     width: 15px;
 }
