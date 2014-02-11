@@ -58,6 +58,7 @@ namespace Nimbus.Web
                 string exceptionMsg = exception.ToString();
                 if (Context != null)
                 {
+                    if (Context.Request.Path.Contains("/arterySignalR/")) return; //ignora signalr do visual studio
                     exceptionMsg += "\n\n---- Contexto ----\n" +
                         "URL: " + Context.Request.RawUrl + "\n" +
                         "Usuário: " + (Context.User.Identity != null && Context.User.Identity.AuthenticationType == "NimbusUser" ?

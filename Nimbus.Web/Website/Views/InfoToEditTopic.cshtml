@@ -19,12 +19,17 @@
             <img id="imgNewPrevia" src="@Model.CurrentTopic.ImgUrl" height="100" width="150" />
         </div>
 
+        <iframe width="400" height="40" src="/upload?type=topicimg&field=url" frameborder="0"></iframe>
+        <input type="hidden" id="url" name="url" onchange="document.getElementById('imgNewPrevia').src = this.value;" />
+
+        @*
         <form action='/channel/upload' method="post" enctype="multipart/form-data" name="imagem_original">
             <input type="file" name="iptNewImgTopic" id="iptNewImgTopic" />
             <input type="submit" value="Carregar" class="hidden" style="display:none" id="upload" /><br />
             <label>Imagem de no máx. 5MB</label>
             <input type="hidden" id="url" name="url" />
         </form>
+        *@
     </div>
 
     <form id="formEditTopic" onsubmit="return false;">

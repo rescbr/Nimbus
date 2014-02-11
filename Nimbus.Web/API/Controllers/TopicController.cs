@@ -127,7 +127,7 @@ namespace Nimbus.Web.API.Controllers
                             }
 
                             topic.Description = topic.Description;
-                            if(topic.Text != null)
+                            if (topic.Text != null)
                                 topic.Text = HtmlSanitizer.SanitizeHtml(topic.Text);
                             topic.Title = topic.Title;
 
@@ -180,93 +180,91 @@ namespace Nimbus.Web.API.Controllers
         [HttpPost]
         public Topic EditTopic(Topic topic)
         {
-            try
+            using (var db = DatabaseFactory.OpenDbConnection())
             {
-                using (var db = DatabaseFactory.OpenDbConnection())
+                using (var trans = db.OpenTransaction(System.Data.IsolationLevel.ReadCommitted))
                 {
-                    using (var trans = db.OpenTransaction(System.Data.IsolationLevel.ReadCommitted))
+                    try
                     {
-                        try
+                        bool isOwner = IsOwner(topic.ChannelId, "channel");
+                        bool isManager = IsManager(topic.ChannelId, "channel");
+
+                        if (isOwner == true || isManager == true)
                         {
-                            bool isOwner = IsOwner(topic.ChannelId, "channel");
-                            bool isManager = IsManager(topic.ChannelId, "channel");
-                            
-                            if (isOwner == true || isManager == true)
+                            Topic tpc = db.SelectParam<Topic>(tp => tp.Id == topic.Id).FirstOrDefault();
+                            tpc.Description = topic.Description;
+
+                            if (string.IsNullOrEmpty(topic.ImgUrl))
                             {
-                                Topic tpc = db.SelectParam<Topic>(tp => tp.Id == topic.Id).FirstOrDefault();
-                                tpc.Description = topic.Description;
-
-                                if (string.IsNullOrEmpty(topic.ImgUrl))
-                                {
-                                    int idCtg = db.SelectParam<Channel>(ch => ch.Id == tpc.ChannelId).Select(ch => ch.CategoryId).FirstOrDefault();
-                                    tpc.ImgUrl =db.SelectParam<Category>(ct => ct.Id == 1).Select(ct => ct.ImageUrl).FirstOrDefault();
-                                }
-                                tpc.LastModified = DateTime.Now;
-
-                                if (topic.Text != null)
-                                    tpc.Text = HtmlSanitizer.SanitizeHtml(topic.Text);
-                                else
-                                    tpc.Text = null;
-
-                                if (topic.TopicType == Model.Enums.TopicType.exam)
-                                {
-                                   tpc.Question = topic.Question;
-                                }
-
-                                tpc.Title = topic.Title;
-                                tpc.UrlCapa = topic.UrlCapa != null ?  topic.UrlCapa : tpc.UrlCapa;
-                                if (!string.IsNullOrEmpty(topic.UrlVideo))
-                                {
-                                    //tópicos do tipo file devem ter os arquivos armazenados apenas no nimbus.
-                                    if(tpc.TopicType == Model.Enums.TopicType.file &&
-                                        !topic.UrlVideo.StartsWith("http://storage.portalnimbus.com.br/"))
-                                    {
-                                        throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotAcceptable, "arquivo fora da storage")); 
-                                    }
-                                    tpc.UrlVideo = topic.UrlVideo;
-                                }
-                                tpc.Visibility = true;
-                                if (string.IsNullOrEmpty(topic.Price.ToString()))
-                                {
-                                    tpc.Price = 0;
-                                }
-                                else
-                                {
-                                    tpc.Price = topic.Price;
-                                }
-                                
-
-                                db.Update<Topic>(tpc);
-                                trans.Commit();
-
-                                //Renato: comentado devido processo de remoção de htmlencode
-                                //topic.Title = HttpUtility.HtmlDecode(topic.Title);
-                                //topic.Description = HttpUtility.HtmlDecode(topic.Description);
-                                //topic.ImgUrl = HttpUtility.HtmlDecode(topic.ImgUrl);
-                                //topic.Text = HttpUtility.HtmlDecode(topic.Text);
-                                //topic.Title = HttpUtility.HtmlDecode(topic.Title);
-
-                                var notification = new Notifications.TopicNotification();
-                                notification.EditTopic(tpc);
-
-                                return topic;
+                                int idCtg = db.SelectParam<Channel>(ch => ch.Id == tpc.ChannelId).Select(ch => ch.CategoryId).FirstOrDefault();
+                                tpc.ImgUrl = db.SelectParam<Category>(ct => ct.Id == 1).Select(ct => ct.ImageUrl).FirstOrDefault();
                             }
                             else
                             {
-                                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotAcceptable, "erro ao editar item"));
+                                tpc.ImgUrl = topic.ImgUrl;
                             }
+                            tpc.LastModified = DateTime.Now;
+
+                            if (topic.Text != null)
+                                tpc.Text = HtmlSanitizer.SanitizeHtml(topic.Text);
+                            else
+                                tpc.Text = null;
+
+                            if (topic.TopicType == Model.Enums.TopicType.exam)
+                            {
+                                tpc.Question = topic.Question;
+                            }
+
+                            tpc.Title = topic.Title;
+                            tpc.UrlCapa = topic.UrlCapa != null ? topic.UrlCapa : tpc.UrlCapa;
+                            if (!string.IsNullOrEmpty(topic.UrlVideo))
+                            {
+                                //tópicos do tipo file devem ter os arquivos armazenados apenas no nimbus.
+                                if (tpc.TopicType == Model.Enums.TopicType.file &&
+                                    !topic.UrlVideo.StartsWith("http://storage.portalnimbus.com.br/"))
+                                {
+                                    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotAcceptable, "arquivo fora da storage"));
+                                }
+                                tpc.UrlVideo = topic.UrlVideo;
+                            }
+                            tpc.Visibility = true;
+                            if (string.IsNullOrEmpty(topic.Price.ToString()))
+                            {
+                                tpc.Price = 0;
+                            }
+                            else
+                            {
+                                tpc.Price = topic.Price;
+                            }
+
+
+                            db.Update<Topic>(tpc);
+                            trans.Commit();
+
+                            //Renato: comentado devido processo de remoção de htmlencode
+                            //topic.Title = HttpUtility.HtmlDecode(topic.Title);
+                            //topic.Description = HttpUtility.HtmlDecode(topic.Description);
+                            //topic.ImgUrl = HttpUtility.HtmlDecode(topic.ImgUrl);
+                            //topic.Text = HttpUtility.HtmlDecode(topic.Text);
+                            //topic.Title = HttpUtility.HtmlDecode(topic.Title);
+
+                            var notification = new Notifications.TopicNotification();
+                            notification.EditTopic(tpc);
+
+                            return topic;
                         }
-                        catch (Exception ex)
+                        else
                         {
-                            trans.Rollback();
-                            throw;
+                            throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotAcceptable, "erro ao editar item"));
                         }
                     }
+                    catch (Exception ex)
+                    {
+                        trans.Rollback();
+                        throw;
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+
             }
         }
 
@@ -348,7 +346,7 @@ namespace Nimbus.Web.API.Controllers
                                     topic.UrlVideo = param + "?wmode=transparent";
                                 }
                             }
-                            #endregion                          
+                            #endregion
                         }
                     }
                 }
@@ -481,7 +479,7 @@ from (
     offset @skip rows fetch next @take rows only
 ) tmpScoreSort",
                     #endregion
-                    new { skip = skip * take, take = take, idCategory = categoryId , idUser = NimbusUser.UserId});
+ new { skip = skip * take, take = take, idCategory = categoryId, idUser = NimbusUser.UserId });
                 }
                 else
                 {
@@ -520,7 +518,7 @@ from (
     offset @skip rows fetch next @take rows only
 ) tmpScoreSort",
                     #endregion
-                    new { skip = skip * take, take = take, idUser = NimbusUser.UserId });
+ new { skip = skip * take, take = take, idUser = NimbusUser.UserId });
                 }
                 if (trending.Count > 0)
                 {
@@ -601,7 +599,7 @@ from (
     offset @skip rows fetch next @take rows only
 ) tmpScoreSort",
                     #endregion
-                    new { skip = skip * take, take = take, idCategory = idCat, idUser = NimbusUser.UserId });
+ new { skip = skip * take, take = take, idCategory = idCat, idUser = NimbusUser.UserId });
 
 
                 }
@@ -639,7 +637,7 @@ from (
     offset @skip rows fetch next @take rows only
 ) tmpScoreSort",
                     #endregion
-                    new { skip = skip * take, take = take, idUser = NimbusUser.UserId });
+ new { skip = skip * take, take = take, idUser = NimbusUser.UserId });
                 }
                 if (top.Count > 0)
                 {
@@ -656,7 +654,7 @@ from (
                             LastModified = item.LastModified,
                             Count = count,
                             UserReadLater = item.UserReadLater != null ? item.UserReadLater : false,
-                            UserFavorited = item.UserFavorited != null ? item.UserFavorited :  false
+                            UserFavorited = item.UserFavorited != null ? item.UserFavorited : false
                             //db.Where<UserTopicFavorite>(u => u.UserId == NimbusUser.UserId && u.TopicId == item.Id).Exists(u => u.Visible)
                         };
                         tpcList.Add(bag);
@@ -706,7 +704,7 @@ from (
     offset @skip rows fetch next @take rows only
 ) tmpScoreSort",
                 #endregion
-                new { skip = skip * take, take = take });
+ new { skip = skip * take, take = take });
 
                 if (top.Count > 0)
                 {
@@ -734,24 +732,24 @@ from (
 
         public class TopicHtmlWrapper
         {
-            public int Count {get;set;}
-            public string Html{get;set;}
+            public int Count { get; set; }
+            public string Html { get; set; }
         }
 
         [HttpGet]
         public TopicHtmlWrapper AbstTopicHtml(int id = 0, string viewBy = null, int categoryID = 0, int skip = 0, string type = null)
-        { 
+        {
             var rz = new RazorTemplate();
             string html = "";
             List<TopicBag> topics = new List<TopicBag>();
 
             if (type == "abstopic")
             {
-                 topics = AbstTopic(id, viewBy, categoryID, skip);               
+                topics = AbstTopic(id, viewBy, categoryID, skip);
             }
             else if (type == "marcado")
             {
-                 topics = showReadLaterTopic(id, skip);               
+                topics = showReadLaterTopic(id, skip);
             }
             else if (type == "favorited")
             {
@@ -778,7 +776,7 @@ from (
             List<TopicBag> topics = new List<TopicBag>();
 
             topics = TopTopics(skip, take, categoryID);
-            
+
             foreach (var topic in topics)
             {
                 html += rz.ParseRazorTemplate<TopicBag>
@@ -856,7 +854,7 @@ from (
                         foreach (var item in topic)
                         {
                             int count = db.SelectParam<ViewByTopic>(vt => vt.TopicId == item.Id).Select(vt => vt.CountView).FirstOrDefault();
-                            bool willRead =  db.Where<UserTopicReadLater>(u=>u.UserId == NimbusUser.UserId && u.TopicId == item.Id).Select(u => u.Visible).FirstOrDefault();
+                            bool willRead = db.Where<UserTopicReadLater>(u => u.UserId == NimbusUser.UserId && u.TopicId == item.Id).Select(u => u.Visible).FirstOrDefault();
                             TopicBag bag = new TopicBag()
                             {
                                 Id = item.Id,
@@ -866,7 +864,7 @@ from (
                                 ImgUrl = item.ImgUrl,
                                 LastModified = item.LastModified,
                                 Count = count,
-                                UserFavorited = db.Where<UserTopicFavorite>(u => u.UserId == NimbusUser.UserId && u.TopicId == item.Id).Exists( u => u.Visible),
+                                UserFavorited = db.Where<UserTopicFavorite>(u => u.UserId == NimbusUser.UserId && u.TopicId == item.Id).Exists(u => u.Visible),
                                 UserReadLater = willRead != null ? willRead : false
                             };
                             tpcList.Add(bag);
@@ -894,31 +892,31 @@ from (
         {
             bool flag = false;
 
-                using (var db = DatabaseFactory.OpenDbConnection())
+            using (var db = DatabaseFactory.OpenDbConnection())
+            {
+                UserTopicFavorite user = new UserTopicFavorite();
+                user = db.SelectParam<UserTopicFavorite>(us => us.UserId == NimbusUser.UserId && us.TopicId == id).FirstOrDefault();
+
+                if (user == null) //nunca favoritou
                 {
-                    UserTopicFavorite user = new UserTopicFavorite();
-                    user = db.SelectParam<UserTopicFavorite>(us => us.UserId == NimbusUser.UserId && us.TopicId == id).FirstOrDefault();
-                    
-                    if (user == null) //nunca favoritou
+                    UserTopicFavorite usertpv = new UserTopicFavorite()
                     {
-                        UserTopicFavorite usertpv = new UserTopicFavorite()
-                        {
-                            FavoritedOn = DateTime.Now,
-                            TopicId = id,
-                            UserId = NimbusUser.UserId,
-                            Visible = true
-                        };
-                        db.Insert<UserTopicFavorite>(usertpv);
-                        flag = true;
-                    }
-                    else
-                    {
-                        user.FavoritedOn = DateTime.Now;
-                        user.Visible = (user.Visible == true) ? false : true;
-                        db.Update<UserTopicFavorite>(user);
-                        flag = user.Visible;
-                    }
-                }    
+                        FavoritedOn = DateTime.Now,
+                        TopicId = id,
+                        UserId = NimbusUser.UserId,
+                        Visible = true
+                    };
+                    db.Insert<UserTopicFavorite>(usertpv);
+                    flag = true;
+                }
+                else
+                {
+                    user.FavoritedOn = DateTime.Now;
+                    user.Visible = (user.Visible == true) ? false : true;
+                    db.Update<UserTopicFavorite>(user);
+                    flag = user.Visible;
+                }
+            }
             return flag;
         }
 
@@ -930,7 +928,7 @@ from (
         [HttpGet]
         public bool TopicIsFavorite(int id)
         {
-            using(var db = DatabaseFactory.OpenDbConnection())
+            using (var db = DatabaseFactory.OpenDbConnection())
             {
                 return db.Where<UserTopicFavorite>(t => t.TopicId == id && t.UserId == NimbusUser.UserId).Exists(t => t.Visible == true);
             }
@@ -957,7 +955,7 @@ from (
 
                 foreach (var item in listTopic)
                 {
-                    TopicBag bag = new TopicBag 
+                    TopicBag bag = new TopicBag
                     {
                         AuthorId = item.AuthorId,
                         ChannelId = item.ChannelId,
@@ -965,7 +963,7 @@ from (
                         ImgUrl = item.ImgUrl,
                         Title = item.Title,
                         TopicType = item.TopicType,
-                        Visibility = item.Visibility,   
+                        Visibility = item.Visibility,
                         UserReadLater = db.Where<UserTopicReadLater>(c => c.TopicId == item.Id && c.UserId == NimbusUser.UserId).Exists(c => c.Visible == true),
                         UserFavorited = db.Where<UserTopicFavorite>(c => c.Visible == true && c.TopicId == item.Id).Exists(c => c.UserId == NimbusUser.UserId)
                     };
@@ -1009,7 +1007,7 @@ from (
                             ReadOn = DateTime.Now,
                             UserId = NimbusUser.UserId,
                             TopicId = id
-                        };                        
+                        };
                         db.Insert<UserTopicReadLater>(uTpL);
                         operation = true;
                     }
@@ -1020,7 +1018,7 @@ from (
                         db.Update<UserTopicReadLater>(user);
                         operation = true;
                     }
-                }    
+                }
             }
             return operation;
         }
@@ -1045,7 +1043,7 @@ from (
 
                 foreach (var item in listTopic)
                 {
-                    TopicBag bag = new TopicBag 
+                    TopicBag bag = new TopicBag
                     {
                         AuthorId = item.AuthorId,
                         ChannelId = item.ChannelId,
@@ -1141,7 +1139,7 @@ from (
             }
             return count;
         }
-        
+
         /// <summary>
         /// Retorna o número de likes que o tópico possui
         /// </summary>
@@ -1176,10 +1174,10 @@ from (
         public int CountUnLikes(int id)
         {
             int count = 0;
-                using (var db = DatabaseFactory.OpenDbConnection())
-                {
-                    count = db.SelectParam<UserLikeTopic>(fl => fl.TopicId == id && fl.Visible == false).Count();
-                }          
+            using (var db = DatabaseFactory.OpenDbConnection())
+            {
+                count = db.SelectParam<UserLikeTopic>(fl => fl.TopicId == id && fl.Visible == false).Count();
+            }
             return count;
         }
 
@@ -1194,15 +1192,15 @@ from (
             bool? liked = null;
             using (var db = DatabaseFactory.OpenDbConnection())
             {
-               var user = db.SelectParam<UserLikeTopic>(fl => fl.TopicId == id && fl.UserId == NimbusUser.UserId).FirstOrDefault();
-               if (user == null)
-                   liked = null;
-               else
-                   liked = user.Visible; //true = like ; false = unlike
+                var user = db.SelectParam<UserLikeTopic>(fl => fl.TopicId == id && fl.UserId == NimbusUser.UserId).FirstOrDefault();
+                if (user == null)
+                    liked = null;
+                else
+                    liked = user.Visible; //true = like ; false = unlike
             }
             return liked;
         }
-        
+
         /// <summary>
         /// método para like e unlike de um topico
         /// </summary>
@@ -1221,7 +1219,7 @@ from (
                 {
                     UserLikeTopic userLike = new UserLikeTopic()
                     {
-                        Visible = type == "like"?true:false,
+                        Visible = type == "like" ? true : false,
                         UserId = NimbusUser.UserId,
                         TopicId = id,
                         LikedOn = DateTime.Now
@@ -1230,7 +1228,7 @@ from (
                     success = userLike.Visible;
                 }
                 else //atualizar
-                {                    
+                {
                     user.LikedOn = DateTime.Now;
                     if (type == "like")
                         user.Visible = true;
@@ -1251,28 +1249,28 @@ from (
         /// <param name="channelID"></param>
         /// <returns></returns>
         [HttpGet]
-        [AllowAnonymous] 
+        [AllowAnonymous]
         public CategoryBag CategoryTopic(int id)
         {
             CategoryBag category = new CategoryBag();
 
-                using (var db = DatabaseFactory.OpenDbConnection())
+            using (var db = DatabaseFactory.OpenDbConnection())
+            {
+                int channlId = db.SelectParam<Topic>(t => t.Id == id).Select(t => t.ChannelId).FirstOrDefault();
+                if (channlId > 0)
                 {
-                    int channlId = db.SelectParam<Topic>(t => t.Id == id).Select(t => t.ChannelId).FirstOrDefault();
-                    if (channlId > 0)
-                    {
-                        int catID = db.SelectParam<Channel>(ch => ch.Id == channlId && ch.Visible == true).Select(ch => ch.CategoryId).FirstOrDefault();
-                        Category ctg = db.SelectParam<Category>(ct => ct.Id == catID).FirstOrDefault();
-                        //category.ColorCode = ctg.ColorCode;
-                        category.Id = ctg.Id;
-                        category.ImageUrl = ctg.ImageUrl;
-                        category.ImgTopChannel = ctg.ImageUrl.ToLower().Replace("category", "capachannel");
-                        category.LocalizedName = ctg.LocalizedName;
-                        category.Name = ctg.Name;
-                    }
+                    int catID = db.SelectParam<Channel>(ch => ch.Id == channlId && ch.Visible == true).Select(ch => ch.CategoryId).FirstOrDefault();
+                    Category ctg = db.SelectParam<Category>(ct => ct.Id == catID).FirstOrDefault();
+                    //category.ColorCode = ctg.ColorCode;
+                    category.Id = ctg.Id;
+                    category.ImageUrl = ctg.ImageUrl;
+                    category.ImgTopChannel = ctg.ImageUrl.ToLower().Replace("category", "capachannel");
+                    category.LocalizedName = ctg.LocalizedName;
+                    category.Name = ctg.Name;
                 }
-            
-            
+            }
+
+
             return category;
         }
 
@@ -1481,7 +1479,7 @@ from (
         /// <summary>
         /// Classe criada para facilitar enviar as respostas do usuário
         /// </summary>
-        public class UserAnswerExam 
+        public class UserAnswerExam
         {
             public List<int> Choice { get; set; }
             public int TopicId { get; set; }
@@ -1495,7 +1493,7 @@ from (
         public int FinishExam(UserAnswerExam exam)
         {
             int userGrade = 0;
-            using(var db = DatabaseFactory.OpenDbConnection())
+            using (var db = DatabaseFactory.OpenDbConnection())
             {
                 var topic = db.Where<Topic>(t => t.Id == exam.TopicId && t.Visibility == true).Where(t => t != null).FirstOrDefault();
 
@@ -1506,28 +1504,28 @@ from (
                 for (int i = 0; i < questions.Count(); i++)
                 {
                     var correct = questions[i].CorrectAnswer;
-                   
+
                     if (correct == choiceUser[i])
                     {
                         userGrade++;
                     }
-                 }
-            
-            //CHAMAR O ENVIAR MSG para o perfil do usuário
-            var message = ClonedContextInstance<MessageController>();
-            var channel = db.Where<Channel>(c => c.Id == topic.ChannelId && c.Visible == true).Where(c => c != null).FirstOrDefault();
-            
-            message.SendMessageUser(new Message() 
-                                        {
-                                           ChannelId = channel.Id,
-                                           Text =
-                                               "Você realizou a avaliação " + topic.Title + " em " +
-                                               DateTime.Now.ToString("dd/MM/yyyy") + " às " + DateTime.Now.ToString("HH:mm") + " horas, " + 
-                                               "disponível no canal " + channel.Name + ".\n"+
-                                               "Sua nota foi " + userGrade + " com " + (((float)userGrade/(float)questions.Count())*100.0).ToString("F1") + "% de acerto.",                                           
-                                           SenderId = 1, //enviado pelo sistema
-                                           Title = "Sua nota na avaliação " + topic.Title + " do canal " + channel.Name,
-                                        }, NimbusUser.UserId);
+                }
+
+                //CHAMAR O ENVIAR MSG para o perfil do usuário
+                var message = ClonedContextInstance<MessageController>();
+                var channel = db.Where<Channel>(c => c.Id == topic.ChannelId && c.Visible == true).Where(c => c != null).FirstOrDefault();
+
+                message.SendMessageUser(new Message()
+                                            {
+                                                ChannelId = channel.Id,
+                                                Text =
+                                                    "Você realizou a avaliação " + topic.Title + " em " +
+                                                    DateTime.Now.ToString("dd/MM/yyyy") + " às " + DateTime.Now.ToString("HH:mm") + " horas, " +
+                                                    "disponível no canal " + channel.Name + ".\n" +
+                                                    "Sua nota foi " + userGrade + " com " + (((float)userGrade / (float)questions.Count()) * 100.0).ToString("F1") + "% de acerto.",
+                                                SenderId = 1, //enviado pelo sistema
+                                                Title = "Sua nota na avaliação " + topic.Title + " do canal " + channel.Name,
+                                            }, NimbusUser.UserId);
             }
 
             return userGrade;
@@ -1543,11 +1541,11 @@ from (
         {
             bool flag = false;
 
-            using(var db = DatabaseFactory.OpenDbConnection())
-            {                
+            using (var db = DatabaseFactory.OpenDbConnection())
+            {
                 Topic topic = db.Where<Topic>(t => t.Id == id).FirstOrDefault();
-                
-                if(topic != null)
+
+                if (topic != null)
                 {
                     bool allow = db.Where<Role>(r => r.UserId == NimbusUser.UserId && r.ChannelId == topic.ChannelId).Select(r => r.IsOwner).FirstOrDefault();
 

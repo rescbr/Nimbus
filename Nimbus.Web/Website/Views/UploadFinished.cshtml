@@ -30,6 +30,7 @@
             Embedded pdf.js viewer
         </iframe>
     }
+    else if(Model.PreviewType == UploadController.UploadModel.PreviewTypeEnum.none) {}
     else
     {
         <text>Arquivo enviado com sucesso.<br /><a href="@Model.Url" target="_blank">Download</a></text>
@@ -38,7 +39,13 @@
     <script type="text/javascript">
         var origDoc = window.parent.document;
         if (origDoc) {
-            origDoc.getElementById("@Model.ReturnUploadField").value = "@Model.Url";
+            var elem = origDoc.getElementById("@Model.ReturnUploadField");
+            try {
+                elem.value = "@Model.Url";
+            } catch (e) { }
+            try {
+                elem.onchange();
+            } catch (e) {}
         }
 
     </script>
