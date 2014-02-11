@@ -1522,7 +1522,7 @@ from (
                                            ChannelId = channel.Id,
                                            Text =
                                                "Você realizou a avaliação " + topic.Title + " em " +
-                                               DateTime.Now.ToString("dd/MM/yyyy") + " às " + DateTime.Now.ToString("hh:mm") + " horas, " + 
+                                               DateTime.Now.ToString("dd/MM/yyyy") + " às " + DateTime.Now.ToString("HH:mm") + " horas, " + 
                                                "disponível no canal " + channel.Name + ".\n"+
                                                "Sua nota foi " + userGrade + " com " + (((float)userGrade/(float)questions.Count())*100.0).ToString("F1") + "% de acerto.",                                           
                                            SenderId = 1, //enviado pelo sistema
