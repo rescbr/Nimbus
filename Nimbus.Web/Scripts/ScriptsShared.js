@@ -875,6 +875,7 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
 
     function getAllChannels(id, nameCat)
     {
+        document.getElementById('hTitleCategory').innerHTML = '';
         $.ajax({
             url: "/api/search/AbstChannelHtml/" +id + "?nameCat=" + JSON.stringify(nameCat),
             type: "GET",
