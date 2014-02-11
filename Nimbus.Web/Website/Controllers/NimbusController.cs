@@ -65,7 +65,7 @@ namespace Nimbus.Web.Website.Controllers
                                 "Tipo: " + Request.Form["slcFaleConosco"] + " \n" +
                                 "Mensagem: " + Request.Form["txtaMsgFaleConosco"] + "\n\n\n\n";
 
-                address.Add(new EmailAddress(Request.Form["iptEmailFaleConosco"]));
+                address.Add(new EmailAddress("contato@portalnimbus.com.br"));
                 mensagem.to = address;
 
                 var result = mandril.SendMessage(mensagem);
@@ -81,7 +81,7 @@ namespace Nimbus.Web.Website.Controllers
             }
             catch (Exception ex)
             {                
-                throw ex;
+                throw;
             }
         }
         
