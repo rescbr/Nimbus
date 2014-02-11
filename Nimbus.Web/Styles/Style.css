@@ -658,9 +658,16 @@ a.linkFooter {
     cursor:pointer;
     float: left;
     width: 15px;
+} 
+
+div#divCtgLoad {
+    height: 220px;
+    width: 912px;
+    margin-right: 25px;
+    margin-left: 25px;
+    background: #F2F2F2;
+    position: fixed;
 }
-
-
 
 /*----------------------fim paginas estáticas-----------------*/
 
