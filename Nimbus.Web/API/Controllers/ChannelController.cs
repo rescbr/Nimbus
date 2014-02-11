@@ -959,6 +959,35 @@ namespace Nimbus.Web.API.Controllers
                          {
                              db.UpdateOnly(new ChannelUser { Follow = false }, usr => usr.Follow, usr => usr.UserId == NimbusUser.UserId);
                              channelUser.Follow = false;
+                             //verificar se é moderador e retirar da tabela de moderar
+                             using(var trans = db.OpenTransaction(System.Data.IsolationLevel.ReadCommitted))
+                             {
+                                 try
+                                 {
+                                     var moderator = db.Where<Role>(c => c.ChannelId == id && c.UserId == NimbusUser.UserId 
+                                                                                            && (c.IsOwner == false && (c.ChannelMagager == true || c.MessageManager == true
+                                                                                                                        ||c.ModeratorManager == true || c.TopicManager == true
+                                                                                                                        || c.UserManager == true))).FirstOrDefault();
+                                     if (moderator != null && moderator.UserId > 1)
+                                     {
+                                         //é moderador = tirar as permissões
+                                         moderator.ChannelMagager = false;
+                                         moderator.MessageManager = false;
+                                         moderator.ModeratorManager = false;
+                                         moderator.TopicManager = false;
+                                         moderator.UserManager = false;
+                                         db.Update<Role>(moderator, c => c.UserId == NimbusUser.UserId && c.ChannelId == id);
+                                     }
+                                     
+                                     trans.Commit();
+                                 }
+                                 catch (Exception ex)
+                                 {
+                                     trans.Rollback();
+                                     throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+                                 }
+                             }
+
                          }
                          channelUser.ChannelId = id;
                          channelUser.Interaction = user.Interaction;                         
@@ -1602,29 +1631,49 @@ namespace Nimbus.Web.API.Controllers
                     {
                         try
                         {
-                            ChannelUser userChannel = db.Where<ChannelUser>(vt => vt.UserId == NimbusUser.UserId && vt.ChannelId == id && vt.Accepted == true).FirstOrDefault();
-                            bool? voted = userChannel.Vote;
-
+                            bool? voted  = null;
+                            ChannelUser userChannel = db.Where<ChannelUser>(vt => vt.UserId == NimbusUser.UserId && vt.ChannelId == id && vt.Visible == true).FirstOrDefault();
+                            if (userChannel != null)
+                                voted = userChannel.Vote;
+                            
                             VoteChannel vtChannel = db.Where<VoteChannel>(ch => ch.ChannelId == id).FirstOrDefault();
-                            if (vtChannel == null)
+                            if (vtChannel == null) //criando score no banco
                             {
-                                VoteChannel votechn = new VoteChannel 
+                                VoteChannel votechn = new VoteChannel
                                 {
                                     ChannelId = id,
-                                    Score = 0                                   
+                                    Score = 0
                                 };
                                 db.Insert<VoteChannel>(votechn);
                                 vtChannel = votechn;
                             }
 
-                            if ((voted == null || voted == false) && userChannel != null)
+
+                            if (voted == null || voted == false)                                
                             {                               
                                 int notaChannel = vtChannel.Score;
 
-                                userChannel.Vote = true;
-                                userChannel.Score = vote;                                
-                                db.Update<ChannelUser>(userChannel, c=> c.ChannelId == id && c.UserId == NimbusUser.UserId);
-
+                                if (userChannel != null)
+                                {
+                                    userChannel.Vote = true;
+                                    userChannel.Score = vote;
+                                    db.Update<ChannelUser>(userChannel, c => c.ChannelId == id && c.UserId == NimbusUser.UserId);
+                                }
+                                else //cria o usuario na tabela do channelUser
+                                {
+                                    ChannelUser newUser = new ChannelUser()
+                                    {
+                                        Accepted = NimbusOrganization.Id == 1 ? true : false,
+                                        ChannelId = id,
+                                        Follow = false,
+                                        Interaction = 0,
+                                        Score = vote,
+                                        UserId = NimbusUser.UserId,
+                                        Visible = true,
+                                        Vote = true
+                                    };
+                                    db.Insert<ChannelUser>(newUser);
+                                }
                                 score = notaChannel + vote;
 
                                 vtChannel.Score = score;
@@ -1632,7 +1681,7 @@ namespace Nimbus.Web.API.Controllers
 
                                 trans.Commit();
                             }
-                            else if (voted == true)
+                            else if (voted == true) //já votou, está votando outro valor
                             {
                                 int oldVoteUser = userChannel.Score;
 

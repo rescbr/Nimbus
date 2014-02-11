@@ -908,16 +908,17 @@ function ajaxVoteChannel(id, vote)
         contentType: "application/json;charset=utf-8",
         statusCode: {
             200: function (newData) {
-                if (newData > 0) { //deu certo
+                if (newData > 0) {
                     //retornar as estrelinhas                  
                     for (var s = 1; s <= vote; s++) {
                         var img = document.getElementById("icoStar_" + s);
                         img.className = "imgStarGreen";
                     }
-                    for (var i = vote; i <= 5; i++) {
+                    for (var i = (vote + 1); i <= 5; i++) { //a prox q votou passa a ser cinza
                         var img = document.getElementById("icoStar_" + i);
                         img.className = "imgStarGray";
                     }
+                    voteUser = newData;
 
                     //mudar nota do channel
                     document.getElementById('countVtsChannel').innerHTML = newData;

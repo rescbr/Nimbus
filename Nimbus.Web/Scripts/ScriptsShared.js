@@ -944,5 +944,44 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
         document.getElementById('pPowerPass').innerHTML = resultado;
     }
 
+    function validLengthString(min, max, campo, string)
+    {
+        var dontSave = false;
+
+        if (campo == 'pErrorDate')
+        {
+            max = max - 1;
+            if (string < min && string > max) {
+                document.getElementById(campo).innerHTML = '*O ano permitido é de: 1930 até ' + max;
+                dontSave = true;
+            }
+            else { dontSave = false;}
+        }
+        else {
+            if (string.length < min) {
+                document.getElementById(campo).innerHTML = '*Mínimo de caracteres: ' + min;
+                dontSave = true;
+            }
+            else if (string.length > max) {
+                document.getElementById(campo).innerHTML = '*Máximo de caracteres: ' + max;
+                dontSave = true;
+            }
+            else
+            {
+                document.getElementById(campo).innerHTML = '';
+                dontSave = false;
+            }
+        }
+
+        if (dontSave == true)
+        {
+            document.getElementById('salvarNewAccount').disabled = true;
+        }
+        else
+        {
+            document.getElementById('salvarNewAccount').disabled = false;
+        }
+    }
+
 
    

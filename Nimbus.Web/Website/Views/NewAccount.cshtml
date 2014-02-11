@@ -19,7 +19,9 @@
             </div>
         *@
         <div class="divformNewAccount">
-            <input name="BirthDate" pattern="^(0[1-9]|[12][0-9]|[3][0-1])[/](0[1-9]|[1][0-2])[/](19[3-9][0-9]|20[0-1][1-4])$" type="date" placeholder="Data nascimento (dd/mm/aaaa)" style="max-width: 384px; min-width: 384px; padding: 4px;" required />
+            <input name="BirthDate" pattern="^(0[1-9]|[12][0-9]|[3][0-1])[/](0[1-9]|[1][0-2])[/](19[3-9][0-9]|20[0-1][1-4])$" type="date" onchange="validLengthString('1930', '@(DateTime.Now.Year)', 'pErrorDate', this.value);"
+                   placeholder="Data nascimento (dd/mm/aaaa)" style="max-width: 384px; min-width: 384px; padding: 4px;" required />
+            <p id="pErrorDate" style="color:#be1e2d"></p>
         </div>
 
         @*<div class="divformNewAccount">
@@ -48,8 +50,10 @@
         </div>
 
         <div class="divformNewAccount">
-            <input name="Password" type="password" onkeyup="validPassword(this.value);" placeholder="Senha" min="6" maxlength="30" style="max-width: 384px; min-width: 384px; padding: 4px;" required />
+            <input name="Password" type="password" onkeyup="validPassword(this.value);" onchange="validLengthString('6', '30', 'pErrorPass', this.value);" placeholder="Senha" min="6" maxlength="30" 
+                   style="max-width: 384px; min-width: 384px; padding: 4px;" required />
             <p id="pPowerPass"></p>
+            <p id="pErrorPass" style="color:#be1e2d"></p>
         </div>
 
         <div class="divformNewAccount">
@@ -63,7 +67,7 @@
         </div>
 
         <div class="divBtnNewAccount">
-            <input type="submit" value="Criar Conta" id="salvar" class="divSaveNewAccount" />
+            <input type="submit" value="Criar Conta" id="salvarNewAccount" class="divSaveNewAccount" />
         </div>
     </form>
     @*<p class="pNewAccount">Voltar para a <a href="/Login" title="Inscreva-se">Página Inicial</a></p>*@
