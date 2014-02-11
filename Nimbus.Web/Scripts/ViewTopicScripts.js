@@ -322,9 +322,12 @@ function ajaxLikeUnLike(id, type, userCondition)
                         countLike = countLike + 1;
                         countNLike = countNLike - 1; //retira o unlike anterior
                     }
-                    else if (userCondition == 'null')
+                    else if (userCondition === 'null')
                     {
                         countLike = countLike + 1; //nunca votou msm
+                        document.getElementById('linkUnLike').onclick = function () {
+                            ajaxLikeUnLike(id, "unlike", "deuunlike");
+                        };
                     }                   
                 }
                 else {
@@ -336,10 +339,17 @@ function ajaxLikeUnLike(id, type, userCondition)
                         };
 
                         countNLike = countNLike + 1;
+                        if(countLike > 0)
                         countLike = countLike - 1;
                     }
-                    else if (userCondition == 'null') {
-                        countNLike = countNLike - 1;
+                    else if (userCondition === 'null') {
+                        document.getElementById('linkLike').onclick = function () {
+                            ajaxLikeUnLike(id, "like", "deulike");
+                        };
+                        if (countNLike > 0)
+                            countNLike = countNLike - 1;
+                        else
+                            countNLike = countNLike + 1;
                     }
                 }
                 document.getElementById('lblLike').innerHTML = countLike;
