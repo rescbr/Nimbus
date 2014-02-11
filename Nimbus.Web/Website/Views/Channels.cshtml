@@ -97,8 +97,7 @@
         <p id="countVtsChannel" class="numberIco">
             @Model.CurrentChannel.CountVotes
         </p>
-        @if (Model.CurrentChannel.OwnerId != Model.CurrentUser.UserId && !(Model.RolesCurrentUser.Contains("channelmanager") || Model.RolesCurrentUser.Contains("topicmanager")
-        || Model.RolesCurrentUser.Contains("usermanager") || Model.RolesCurrentUser.Contains("messagemanager")))
+        @if (Model.CurrentChannel.OwnerId != Model.CurrentUser.UserId)
         {
             <div style="padding-bottom:40px;">
                 Vote:
