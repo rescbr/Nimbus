@@ -109,7 +109,7 @@ namespace Nimbus.Web.Middleware
             if (context.Response.StatusCode == 401)
             {
                 //apenas faz o redirecionamento caso a request seja de um browser
-                if (context.Request.AcceptTypes.Contains("text/html"))
+                if (context.Request.AcceptTypes != null && context.Request.AcceptTypes.Contains("text/html"))
                 {
                     string originalUrl = context.Request.Url.PathAndQuery;
                     try
