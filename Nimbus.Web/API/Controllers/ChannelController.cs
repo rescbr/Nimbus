@@ -959,6 +959,35 @@ namespace Nimbus.Web.API.Controllers
                          {
                              db.UpdateOnly(new ChannelUser { Follow = false }, usr => usr.Follow, usr => usr.UserId == NimbusUser.UserId);
                              channelUser.Follow = false;
+                             //verificar se é moderador e retirar da tabela de moderar
+                             using(var trans = db.OpenTransaction(System.Data.IsolationLevel.ReadCommitted))
+                             {
+                                 try
+                                 {
+                                     var moderator = db.Where<Role>(c => c.ChannelId == id && c.UserId == NimbusUser.UserId 
+                                                                                            && (c.IsOwner == false && (c.ChannelMagager == true || c.MessageManager == true
+                                                                                                                        ||c.ModeratorManager == true || c.TopicManager == true
+                                                                                                                        || c.UserManager == true))).FirstOrDefault();
+                                     if (moderator != null && moderator.UserId > 1)
+                                     {
+                                         //é moderador = tirar as permissões
+                                         moderator.ChannelMagager = false;
+                                         moderator.MessageManager = false;
+                                         moderator.ModeratorManager = false;
+                                         moderator.TopicManager = false;
+                                         moderator.UserManager = false;
+                                         db.Update<Role>(moderator, c => c.UserId == NimbusUser.UserId && c.ChannelId == id);
+                                     }
+                                     
+                                     trans.Commit();
+                                 }
+                                 catch (Exception ex)
+                                 {
+                                     trans.Rollback();
+                                     throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+                                 }
+                             }
+
                          }
                          channelUser.ChannelId = id;
                          channelUser.Interaction = user.Interaction;                         
