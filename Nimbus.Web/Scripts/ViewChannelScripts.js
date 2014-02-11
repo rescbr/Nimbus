@@ -402,7 +402,18 @@ function ajaxNotIsNewComment(commentId, divName) {
                 }
             });
         }
-    }
+}
+
+function reportComment(commentId, userId, username, cmtText)
+{
+    document.getElementById('pComment').innerHTML = username;
+    document.getElementById('iText').innerHTML = cmtText;
+    document.getElementById('txtJustificativa').innerHTML = '';
+
+    document.getElementById('iptSendRptCmt').onclick = function () { ajaxReportComment(userId, commentId); }
+
+    window.location.href = "#modal-reportComment";
+}
 
 /*Mensagens*/
 function ajaxSendMessage(id)

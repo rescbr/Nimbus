@@ -15,9 +15,8 @@
         <div class="delComment">           
             @if (Model.IsRepotable)
             {
-               <a href="#modal-reportComment">
-                 <img id="btnReportComment_@Model.Id" class="cpointer" src="/images/utils/report.png" title="Reportar comentário" alt="Reportar comentário" />
-               </a>
+               <img id="btnReportComment_@Model.Id" class="cpointer" onclick="reportComment(@Model.Id, @Model.UserId,'@Model.UserName', '@Model.Text');" 
+                    src="/images/utils/report.png" title="Reportar comentário" alt="Reportar comentário" />
             }
             @if (Model.IsDeletable)
             {
@@ -29,8 +28,8 @@
             }
         </div>
         <p class="titleCommentContent">
-            <label id="lblUserName_@Model.Id" style="color: #2b2d2e; font-weight: bold; font-size: small">@Model.UserName</label>
-            <label id="lblPostedOn_@Model.Id" style="color: #bcbec0; font-weight: normal; font-size: small">@Model.PostedOn</label>
+            <a href="/userprofile/index/@Model.UserId"><label id="lblUserName_@Model.Id" style="color: #2b2d2e; font-weight: bold; font-size: small; cursor:pointer;">@Model.UserName</label></a>
+            <label id="lblPostedOn_@Model.Id" style="color: #bcbec0; font-weight: normal; font-size: small">@Model.PostedOn.ToString("dd/MM/yyyy - hh:mm") </label>
         </p>
         <p class="txtCommentContent">
             <label id="lblText_@Model.Id">@Model.Text</label>
@@ -49,20 +48,20 @@
             <!-- The modals content -->
             <div class="divformModal">
                  <p>Reportar comentário realizado por</p>
-                 <p class="modalUser">@Model.UserName</p>
+                 <p class="modalUser" id="pComment"></p>
             </div>
              <div class="divformModal">
                  <p>Comentário reportado</p>
-                 <p>"<i>@Model.Text</i>"</p>
-                     </div>
+                 <p>"<i id="iText"></i>"</p>
+             </div>
              <div class="divformModal">
                  <p>Justificativa</p>
                  <textarea id="txtJustificativa" name="txtJustificativa" rows="10" cols="60" required></textarea>
-                     </div>
+             </div>
         </div>
          <footer class="fooModal">
             <!-- Footer -->  
-             <input type="submit" class="inputSubmit" value="Enviar" onclick="ajaxReportComment(@Model.UserId, @Model.Id);" id="enviarReportCmt" />
+             <input type="submit" id="iptSendRptCmt" class="inputSubmit" value="Enviar" id="enviarReportCmt" />
         </footer>    
         </form>
     </div>
