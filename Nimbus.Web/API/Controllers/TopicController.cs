@@ -355,7 +355,7 @@ namespace Nimbus.Web.API.Controllers
             }
             catch (Exception ex)
             {
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+                throw;
             }
             return topic;
         }
@@ -447,7 +447,7 @@ namespace Nimbus.Web.API.Controllers
                 if (categoryId > 0)
                 {
                     trending = db.Query<Topic>(
-                    #region queryzinha 3: a vingança do sql
+                    #region queryzinha 4: o terror contra-ataca
                         //este SQL utiliza o metodo de skip/take do sql server 2012 (que funciona no sql azure tbm).
                         //não irá funcionar em versoes antigas.
 @"                
@@ -465,13 +465,15 @@ from (
 					(select count([Visible]) from [UserLikeTopic] where [UserLikeTopic].[Visible] = 0 and [UserLikeTopic].[TopicId] = [Topic].[Id]) as [negative]
 				) tmpCount
 			where [positive] + [negative] > 0) as [score],
-        (select 
-		(case when [UserTopicReadLater].[TopicId] = [Topic].[Id] and [UserTopicReadLater].[UserId] = @idUser then 1 else 0 end)  
-		from [UserTopicReadLater]) as [UserReadLater],
+        (select count(*)
+    		from [UserTopicReadLater]
+            where [UserTopicReadLater].[TopicId] = [Topic].[Id] and [UserTopicReadLater].[UserId] = @idUser
+        ) as [UserReadLater],
 		
-		(select 
-		(case when [UserTopicFavorite].[TopicId] = [Topic].[Id] and [UserTopicFavorite].[UserId] = @idUser then 1 else 0 end)  
-		from [UserTopicFavorite]) as [UserFavorited]
+		(select count(*)
+            from [UserTopicFavorite]		
+            where [UserTopicFavorite].[TopicId] = [Topic].[Id] and [UserTopicFavorite].[UserId] = @idUser  
+        ) as [UserFavorited]
 	from [Topic]
     inner join [Channel] on [Topic].[ChannelId] = [Channel].[Id] and [Channel].[CategoryId] = @idCategory
     where [Topic].[Visibility] = 1
@@ -502,13 +504,16 @@ from (
 					(select count([Visible]) from [UserLikeTopic] where [UserLikeTopic].[Visible] = 0 and [UserLikeTopic].[TopicId] = [Topic].[Id]) as [negative]
 				) tmpCount
 			where [positive] + [negative] > 0) as [score],
-        (select 
-		(case when [UserTopicReadLater].[TopicId] = [Topic].[Id] and [UserTopicReadLater].[UserId] = @idUser then 1 else 0 end)  
-		from [UserTopicReadLater]) as [UserReadLater],
+        (select count(*)
+    		from [UserTopicReadLater]
+            where [UserTopicReadLater].[TopicId] = [Topic].[Id] and [UserTopicReadLater].[UserId] = @idUser
+        ) as [UserReadLater],
 		
-		(select 
-		(case when [UserTopicFavorite].[TopicId] = [Topic].[Id] and [UserTopicFavorite].[UserId] = @idUser then 1 else 0 end)  
-		from [UserTopicFavorite]) as [UserFavorited]
+		(select count(*)
+            from [UserTopicFavorite]		
+            where [UserTopicFavorite].[TopicId] = [Topic].[Id] and [UserTopicFavorite].[UserId] = @idUser  
+        ) as [UserFavorited]
+
 	from [Topic]
     where [Topic].[Visibility] = 1
 	order by score desc
@@ -564,7 +569,7 @@ from (
                 if (idCat > 0)
                 {
                     top = db.Query<Topic>(
-                    #region queryzinha 2, o retorno
+                    #region queryzinha 5: destruição total
                         //este SQL utiliza o metodo de skip/take do sql server 2012 (que funciona no sql azure tbm).
                         //não irá funcionar em versoes antigas.
     @"
@@ -580,13 +585,15 @@ from (
 					(select count([Visible]) from [UserLikeTopic] where [UserLikeTopic].[Visible] = 0 and [UserLikeTopic].[TopicId] = [Topic].[Id]) as [negative]
 				) tmpCount
 			where [positive] + [negative] > 0) as [score],
-	    (select 
-		(case when [UserTopicReadLater].[TopicId] = [Topic].[Id] and [UserTopicReadLater].[UserId] =@idUser then 1 else 0 end)  
-		from [UserTopicReadLater]) as [UserReadLater],
+        (select count(*)
+    		from [UserTopicReadLater]
+            where [UserTopicReadLater].[TopicId] = [Topic].[Id] and [UserTopicReadLater].[UserId] = @idUser
+        ) as [UserReadLater],
 		
-		(select 
-		(case when [UserTopicFavorite].[TopicId] = [Topic].[Id] and [UserTopicFavorite].[UserId] = @idUser then 1 else 0 end)  
-		from [UserTopicFavorite]) as [UserFavorited]
+		(select count(*)
+            from [UserTopicFavorite]		
+            where [UserTopicFavorite].[TopicId] = [Topic].[Id] and [UserTopicFavorite].[UserId] = @idUser  
+        ) as [UserFavorited]
 	from [Topic]
 	inner join [Channel] on [Topic].[ChannelId] = [Channel].[Id] and [Channel].[CategoryId] = @idCategory
     where [Topic].[Visibility] = 1
@@ -617,13 +624,15 @@ from (
 					(select count([Visible]) from [UserLikeTopic] where [UserLikeTopic].[Visible] = 0 and [UserLikeTopic].[TopicId] = [Topic].[Id]) as [negative]
 				) tmpCount
 			where [positive] + [negative] > 0) as [score],
-	    (select 
-		(case when [UserTopicReadLater].[TopicId] = [Topic].[Id] and [UserTopicReadLater].[UserId] =@idUser then 1 else 0 end)  
-		from [UserTopicReadLater]) as [UserReadLater],
+        (select count(*)
+    		from [UserTopicReadLater]
+            where [UserTopicReadLater].[TopicId] = [Topic].[Id] and [UserTopicReadLater].[UserId] = @idUser
+        ) as [UserReadLater],
 		
-		(select 
-		(case when [UserTopicFavorite].[TopicId] = [Topic].[Id] and [UserTopicFavorite].[UserId] = @idUser then 1 else 0 end)  
-		from [UserTopicFavorite]) as [UserFavorited]
+		(select count(*)
+            from [UserTopicFavorite]		
+            where [UserTopicFavorite].[TopicId] = [Topic].[Id] and [UserTopicFavorite].[UserId] = @idUser  
+        ) as [UserFavorited]
 	from [Topic]
     where [Topic].[Visibility] = 1
 	order by score desc
@@ -676,7 +685,7 @@ from (
             {
 
                 var top = db.Query<Topic>(
-                #region queryzinha 2, o retorno
+                #region queryzinha 6: oráculo da visão
                     //este SQL utiliza o metodo de skip/take do sql server 2012 (que funciona no sql azure tbm).
                     //não irá funcionar em versoes antigas.
 @"
