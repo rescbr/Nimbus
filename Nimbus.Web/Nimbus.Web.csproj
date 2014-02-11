@@ -305,6 +305,7 @@
     <Content Include="images\Category\saude.png" />
     <Content Include="images\Category\televisao.png" />
     <Content Include="images\Category\vestibular.png" />
+    <Content Include="images\Utils\back.png" />
     <Content Include="images\Utils\bottomBar.png" />
     <Content Include="images\Utils\coracheio.png" />
     <Content Include="images\Utils\coravazado.png" />

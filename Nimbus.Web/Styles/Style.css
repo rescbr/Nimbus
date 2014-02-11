@@ -638,8 +638,8 @@ a.linkFooter {
 }
 
 .divNextCat {
-    width: 10px;
-    background: none repeat scroll 0% 0% red; 
+    width: 15px;
+    /* background: none repeat scroll 0% 0% red */; 
     float: right; margin: auto;
 }
 
@@ -650,10 +650,10 @@ a.linkFooter {
 }
 
 .divBacktCat {
-    background: none repeat scroll 0% 0% red;
+    /* background: none repeat scroll 0% 0% red */;
     margin-top: auto;
     float: left;
-    width: 10px;
+    width: 15px;
 }
 
 

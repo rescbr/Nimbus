@@ -17,7 +17,7 @@
     <section class="sectionCategoryPage">
         <input type="hidden" value="@ViewBag.totalCategory" id="hdnTotalCategory" />
         <div class="divBacktCat press" onclick="getMoreCategory('back');">
-            -
+            <img src="/images/utils/back.png" />
         </div>
     <div id="divShowCat" class="divShowCat">       
         @foreach (var item in (List<Category>)ViewBag.lstCat)
@@ -28,7 +28,7 @@
          }
     </div>
         <div class="divNextCat press" onclick="getMoreCategory('next');">
-            +
+            <img src="/images/utils/next.png" />
         </div>
    
     </section>
