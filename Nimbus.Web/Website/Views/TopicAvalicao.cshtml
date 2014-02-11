@@ -6,31 +6,34 @@
         @for (int i = 0; i < Model.CurrentTopic.Question.Count; i++)
         {
             var question = Model.CurrentTopic.Question[i];
-            var answers = question.ChoicesAnswer.ToList();
-            answers.Shuffle();
+            if (question.ChoicesAnswer != null)
+            {
+                var answers = question.ChoicesAnswer.ToList();
+                answers.Shuffle();
 
-            <div id="divQuestTopAval">
-            <section class="divPergExam">
-                <p>@(i + 1). <label class="enunciado">@question.TextQuestion</label></p>
+                <div id="divQuestTopAval">
+                    <section class="divPergExam">
+                        <p>@(i + 1). <label class="enunciado">@question.TextQuestion</label></p>
 
-                @foreach (var answer in answers)
-                {
-                    //imprime as questoes
-                    <input type="radio" class="rdbPergExam" name="@i" value="@answer.Key" />
-                    <label class="resposta">@answer.Value</label><br />
-                }
-            </section>
-            </div>
+                        @foreach (var answer in answers)
+                        {
+                            //imprime as questoes
+                            <input type="radio" class="rdbPergExam" name="@i" value="@answer.Key" />
+                            <label class="resposta">@answer.Value</label><br />
+                        }
+                    </section>
+                </div>
+            }
         }
     </div>
 
     @*@if(Model.CurrentChannel.OwnerId != Model.CurrentUser.UserId ||
-        !Model.RolesCurrentUser.Contains("topicmanager") ||
-        !Model.RolesCurrentUser.Contains("channelmanager")) 
-    {*@
-        <div id="divBtnFinishExam">
-            <button onclick="ajaxFinishExam(@Model.CurrentTopic.Id);" class="btnFinishTopicAval">Terminar</button>
-        </div>
+            !Model.RolesCurrentUser.Contains("topicmanager") ||
+            !Model.RolesCurrentUser.Contains("channelmanager"))
+        {*@
+    <div id="divBtnFinishExam">
+        <button onclick="ajaxFinishExam(@Model.CurrentTopic.Id);" class="btnFinishTopicAval">Terminar</button>
+    </div>
     @*}*@
 </div>
 
