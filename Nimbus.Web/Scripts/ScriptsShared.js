@@ -792,85 +792,86 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
         //region load
         var divLoad = document.getElementById("divCtgLoad");
        
-        FadeIn('divCtgLoad', 0.3);
-        divLoad.style.display = 'block'
-        
+        var skip = Number(countCat);
+        var totalCat = document.getElementById('hdnTotalCategory').value;
+        var flag = false;
 
-        //var skip = Number(countCat);
-        //var totalCat = document.getElementById('hdnTotalCategory').value;
-        //var flag = false;
+        if (skip != totalCat - 1) {
+            FadeIn('divCtgLoad', 0.3);
+            divLoad.style.display = 'block';
+        }
 
-        //if (option == 'back')
-        //{
-        //    document.getElementById('imgNextCtg').style.opacity = '1';
-        //    if (skip == 0) {
-        //        document.getElementById('imgBackCtg').style.opacity = '0.5';
-        //        flag = false;
-        //    }
-        //    else {
-        //        skip = skip - 1;
-        //        if (skip == 0)
-        //            document.getElementById('imgBackCtg').style.opacity = '0.5';
-        //        else
-        //            document.getElementById('imgBackCtg').style.opacity = '1';
-        //        flag = true;
-        //    }
-        //}
-        //else if (option == 'next')
-        //{
-        //    document.getElementById('imgBackCtg').style.opacity = '1';
+        if (option == 'back')
+        {
+            document.getElementById('imgNextCtg').style.opacity = '1';
+            if (skip == 0) {
+                document.getElementById('imgBackCtg').style.opacity = '0.5';
+                flag = false;
+            }
+            else {
+                skip = skip - 1;
+                if (skip == 0)
+                    document.getElementById('imgBackCtg').style.opacity = '0.5';
+                else
+                    document.getElementById('imgBackCtg').style.opacity = '1';
+                flag = true;
+            }
+        }
+        else if (option == 'next')
+        {
+            document.getElementById('imgBackCtg').style.opacity = '1';
 
-        //    if (skip == (totalCat - 1))
-        //    {
-        //        document.getElementById('').style.opacity = '0.5';
-        //        flag = false;
-        //    }
-        //    else if(skip < (totalCat - 1)) //pq skip começa do zero
-        //    {
-        //        skip = skip + 1;
-        //        if(skip == (totalCat - 1))
-        //            document.getElementById('imgNextCtg').style.opacity = '0.5';
-        //        else
-        //            document.getElementById('imgNextCtg').style.opacity = '1';               
-        //        flag = true;
-        //    }
-        //}
+            if (skip == (totalCat - 1))
+            {
+                document.getElementById('').style.opacity = '0.5';
+                flag = false;
+            }
+            else if(skip < (totalCat - 1)) //pq skip começa do zero
+            {
+                skip = skip + 1;
+                if(skip == (totalCat - 1))
+                    document.getElementById('imgNextCtg').style.opacity = '0.5';
+                else
+                    document.getElementById('imgNextCtg').style.opacity = '1';               
+                flag = true;
+            }
+        }
 
-        //if (flag == true)
-        //{
-        //    $.ajax({
-        //        url: "/api/category/showCategoryToPage/" + "?skip=" + skip,
-        //        type: "GET",
-        //        contentType: "application/json;charset=utf-8",
-        //        statusCode: {
-        //            200: function (newData) {
-        //                if (newData.length > 0) {
-        //                    if (option == 'next')
-        //                        countCat = countCat + 1;
-        //                    else if(option == 'back')
-        //                        countCat = countCat - 1;
-        //                    var string = '';
+        if (flag == true)
+        {
+            $.ajax({
+                url: "/api/category/showCategoryToPage/" + "?skip=" + skip,
+                type: "GET",
+                contentType: "application/json;charset=utf-8",
+                statusCode: {
+                    200: function (newData) {
+                        if (newData.length > 0) {
+                            if (option == 'next')
+                                countCat = countCat + 1;
+                            else if(option == 'back')
+                                countCat = countCat - 1;
+                            var string = '';
 
-        //                    for (var i = 0; i < newData.length; i++) {
-        //                        string += "<div class=\"imgCategoryPage\" onclick=\"getAllChannels(" + newData[i].Id + ", '" + newData[i].Name + "');\" >" +
-        //                                    "<img src=\""+newData[i].ImageUrl +"\" title=\""+newData[i].Name+"\" alt=\""+newData[i].Name+"\" />" +
-        //                                 "</div>";
-        //                    }
+                            for (var i = 0; i < newData.length; i++) {
+                                string += "<div class=\"imgCategoryPage\" onclick=\"getAllChannels(" + newData[i].Id + ", '" + newData[i].Name + "');\" >" +
+                                            "<img src=\""+newData[i].ImageUrl +"\" title=\""+newData[i].Name+"\" alt=\""+newData[i].Name+"\" width='180' height='100' />" +
+                                         "</div>";
+                            }
 
-        //                    document.getElementById('divShowCat').innerHTML = string;
-        //                }
-        //            },
+                            document.getElementById('divShowCat').innerHTML = string;
+                        }
+                    },
 
-        //            500: function () {
-        //                //erro
-        //                window.alert("Não foi possível realizar esta operação. Tente novamente mais tarde.");
-        //            }
-        //        }
-        //    });
-        //}
+                    500: function () {
+                        //erro
+                        window.alert("Não foi possível realizar esta operação. Tente novamente mais tarde.");
+                    }
+                }
+            });
+        }
 
-        //FadeOut('divCtgLoad', 1);
-        //divLoad.style.display = 'none';
+        FadeOut('divCtgLoad', 1);
+        divLoad.style.display = 'none';
     }
 
     function getAllChannels(id, nameCat)

@@ -666,7 +666,7 @@ div#divCtgLoad {
     margin-right: 25px;
     margin-left: 25px;
     background: #F2F2F2;
-    position: fixed;
+    position: absolute;
 }
 
 /*----------------------fim paginas estáticas-----------------*/

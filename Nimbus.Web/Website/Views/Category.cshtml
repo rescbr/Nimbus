@@ -19,15 +19,15 @@
         <div class="divBacktCat" onclick="getMoreCategory('back');">
             <img src="/images/utils/back.png" id="imgBackCtg" style="opacity:0.5;" />
         </div>
-                
+
         <div id="divShowCat" class="divShowCat">
-                @foreach (var item in (List<Category>)ViewBag.lstCat)
-         {
-                    <div class="imgCategoryPage" onclick="getAllChannels('@item.Id' , '@item.Name');">
-                        <img src="@item.ImageUrl" title="@item.Name" alt="@item.Name" />
-                    </div>
-         }
-            </div>
+            @foreach (var item in (List<Category>)ViewBag.lstCat)
+            {
+                <div class="imgCategoryPage" onclick="getAllChannels('@item.Id' , '@item.Name');">
+                    <img src="@item.ImageUrl" title="@item.Name" alt="@item.Name" width="180" height="100"/>
+                </div>
+            }
+        </div>
 
 
         <div id="divCtgLoad" style="display:none;">
