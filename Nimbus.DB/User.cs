@@ -12,6 +12,7 @@ namespace Nimbus.Model
 
 
         public virtual string Email { get; set; }
+
         public string Password { get; set; }
         public string TOTPKey { get; set; }
         
