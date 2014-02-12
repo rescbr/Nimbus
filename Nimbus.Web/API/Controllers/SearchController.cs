@@ -37,11 +37,11 @@ namespace Nimbus.Web.API.Controllers
                             SELECT [User].[Id], [User].[FirstName], [User].[LastName],
                                    [User].[Occupation], [User].[Interest], [User].[AvatarUrl]
                             FROM [User]
-                            WHERE ((([User].[FirstName] LIKE @strQuery) OR 
-			                            ([User].[LastName] LIKE @strQuery) OR 
-			                            ([User].[Occupation] LIKE @strQuery) OR 
-			                            ([User].[Interest] LIKE @strQuery))) ",
-                          new { strQuery = "%" + q + "%" });
+                            WHERE ((([User].[FirstName] COLLATE Latin1_general_CI_AI LIKE @search COLLATE Latin1_general_CI_AI) OR 
+			                            ([User].[LastName] COLLATE Latin1_general_CI_AI LIKE @search COLLATE Latin1_general_CI_AI) OR 
+			                            ([User].[Occupation] COLLATE Latin1_general_CI_AI LIKE @search COLLATE Latin1_general_CI_AI) OR 
+			                            ([User].[Interest] COLLATE Latin1_general_CI_AI LIKE @search COLLATE Latin1_general_CI_AI))) ",
+                          new { search = "%" + q + "%" });
 
                     foreach (var item in users)
                     {
@@ -77,7 +77,7 @@ namespace Nimbus.Web.API.Controllers
         [HttpGet]
         public List<SearchBag> SearchTopic(string q)
         {
-            List<Topic> topics = new List<Topic>();
+            var topics = new List<Model.ORM.Topic>();
             List<SearchBag> topicsFound = new List<SearchBag>();
             if (!string.IsNullOrEmpty(q))
             {
@@ -90,43 +90,26 @@ namespace Nimbus.Web.API.Controllers
                     //verificar se é tag
                     if (q.StartsWith("#"))
                     {
-                        int i = 0;
-                        while (q.StartsWith("#"))
-                        {
-                            q = q.Substring(i + 1);
-                            i++;
-                        }
-                        int tagID = db.SelectParam<Tag>(tag => tag.TagName.ToLower() == q.ToLower()).Select(tag => tag.Id).FirstOrDefault();
-                        List<int> idTopics = db.SelectParam<TagTopic>(tgc => tgc.TagId == tagID).Select(tgc => tgc.TopicId).ToList();
-
-                        foreach (int item in idTopics)
-                        {
-                            Topic tpc = db.SelectParam<Topic>(tp => idChannelTopic.Contains(tp.ChannelId) && tp.Visibility == true && idTopics.Contains(tp.Id)).FirstOrDefault();
-                            if (tpc != null)
-                                topics.Add(tpc);
-                        }
+                        q = q.TrimStart('#');
+                        topics = db.Query<Model.ORM.Topic>(@"
+                            select distinct [Topic].*
+                            from [Tag], [TagChannel], [Topic], [Channel]
+                            where [Tag].TagName collate Latin1_general_CI_AI like @search collate Latin1_general_CI_AI
+                                  and [Tag].[Id] = [TagChannel].TagId and [Topic].ChannelId = [TagChannel].ChannelId and [Topic].Visibility = 1
+                                  and [Channel].[Id] = [TagChannel].ChannelId and [Channel].Visible = 1 and [Channel].OrganizationId = @organization",
+                            new { search = "%" + q + "%", organization = idOrg });
+                        
                     }
                     else
                     {
-                        //pegar canais da categoria
-                        int idCat = db.SelectParam<Category>(ct => ct.Name.ToLower() == q.ToLower()).Select(ct => ct.Id).FirstOrDefault();
-                        if (idCat > 0)
-                        {
-                            //restringe a busca para o conteudo da organizacao MAS com a categoria
-                            idChannelTopic = db.SelectParam<Channel>(ch => ch.CategoryId == idCat && ch.Visible == true && ch.OrganizationId == idOrg).Select(ch => ch.Id).ToList();
-
-                            topics = db.Where<Topic>(tp => (tp.Text.Contains(q) ||
-                                                                 tp.Title.Contains(q) ||
-                                                                 tp.Description.Contains(q))
-                                                                 && tp.Visibility == true && idChannelTopic.Contains(tp.ChannelId));
-                        }
-                        else
-                        {
-                            topics = db.Where<Topic>(tp => (tp.Text.Contains(q) ||
-                                                                 tp.Title.Contains(q) ||
-                                                                 tp.Description.Contains(q))
-                                                                 && tp.Visibility == true && idChannelTopic.Contains(tp.ChannelId));
-                        }
+                        topics = db.Query<Model.ORM.Topic>(
+@"select distinct [Topic].*
+from [Topic], [Channel]
+where ([Topic].[Text] collate Latin1_general_CI_AI like @search collate Latin1_general_CI_AI
+        or [Topic].[Title] collate Latin1_general_CI_AI like @search collate Latin1_general_CI_AI
+	    or [Topic].[Description] collate Latin1_general_CI_AI like @search collate Latin1_general_CI_AI)
+	    and [Topic].[Visibility] = 1 and [Channel].[Id] = [Topic].ChannelId and [Channel].[OrganizationId] = @organization",
+     new { search = "%" + q + "%", organization = idOrg });
                     }
                 }
                 foreach (var item in topics)
@@ -159,7 +142,7 @@ namespace Nimbus.Web.API.Controllers
         public List<SearchBag> SearchChannel(string q)
         {
             List<SearchBag> channelsFound = new List<SearchBag>();
-            List<Channel> channels = new List<Channel>();
+            var channels = new List<Model.ORM.Channel>();
             if (!string.IsNullOrEmpty(q))
             {
                 int idOrg = NimbusOrganization.Id;
@@ -169,32 +152,23 @@ namespace Nimbus.Web.API.Controllers
                         //verificar se é tag
                         if (q.StartsWith("#"))
                         {
-                            int i = 0;
-                            while (q.StartsWith("#"))
-                            {
-                                q = q.Substring(i + 1);
-                                i++;
-                            }
-                            int tagID = db.SelectParam<Tag>(tag => tag.TagName.ToLower() == q.ToLower()).Select(tag => tag.Id).FirstOrDefault();
-
-                            var idChannels = db.Where<TagChannel>(tgc => tgc.TagId == tagID).Select(tgc => tgc.ChannelId);
-
-                            channels = idChannels.Select(ch => db.Where<Channel>(c => c.Visible == true && c.OrganizationId == idOrg && c.Id == ch)
-                                                                .FirstOrDefault()).Where(ch => ch != null).ToList();
+                            q = q.TrimStart('#');
+                            channels = db.Query<Model.ORM.Channel>(@"
+                                select distinct [Channel].*
+                                from [Tag], [TagChannel], [Channel]
+                                where [Tag].TagName collate Latin1_general_CI_AI like @search collate Latin1_general_CI_AI
+                                        and [Tag].[Id] = [TagChannel].TagId and [Channel].[Id] = [TagChannel].ChannelId 
+		                                and [Channel].Visible = 1 and [Channel].OrganizationId = @organization",
+                                new { search = "%" + q + "%", organization = idOrg });
                         }
                         else
                         {
-                            //pegar canais da categoria
-                            int idCat = db.SelectParam<Category>(ct => ct.Name.ToLower() == q.ToLower()).Select(ct => ct.Id).FirstOrDefault();
-                            if (idCat > 0)
-                            {
-                                channels = db.SelectParam<Channel>(chn => (chn.Name.Contains(q) || chn.CategoryId == idCat)
-                                                                        && chn.Visible == true && chn.OrganizationId == idOrg);
-                            }
-                            else
-                            {
-                                channels = db.SelectParam<Channel>(chn => chn.Name.Contains(q) && chn.Visible == true && chn.OrganizationId == idOrg);
-                            }
+                            channels = db.Query<Model.ORM.Channel>(@"
+                                select distinct [Channel].*
+                                from [Channel]
+                                where [Channel].Name collate Latin1_general_CI_AI like @search collate Latin1_general_CI_AI
+		                              and [Channel].Visible = 1 and [Channel].OrganizationId = @organization",
+                                new { search = "%" + q + "%", organization = idOrg });
                         }
                         foreach (var channel in channels)
                         {
