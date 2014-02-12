@@ -144,7 +144,8 @@ namespace Nimbus.Web.API.Controllers
 
                         foreach (var item in listReceiver.Distinct())
                         {
-                            if (item.UserId == NimbusUser.UserId) //qm está enviando
+                            if (item.UserId == NimbusUser.UserId && dadosMsg.SenderId == NimbusUser.UserId) //qm está enviando: garante que mesmo que ele envie msg para ele mesmo, 
+                                                                                                            //tera apenas uma cópia em enviadas e apenas uma em 'recebidas'
                             {
                                 db.Insert(new ReceiverMessage
                                 {
@@ -201,7 +202,7 @@ namespace Nimbus.Web.API.Controllers
             List<Nimbus.Model.Receiver> listReceiver = new List<Model.Receiver>();
             using (var db = DatabaseFactory.OpenDbConnection())
             {
-                var roles = db.SelectParam<Role>(r => r.ChannelId == message.ChannelId && (r.MessageManager == true || r.IsOwner == true));
+                var roles = db.SelectParam<Role>(r => r.ChannelId == message.ChannelId && (r.MessageManager == true || r.ChannelMagager == true || r.IsOwner == true));
 
                 //add todos os destinatarios dono + moderadores do canal
                 foreach (var item in roles)
