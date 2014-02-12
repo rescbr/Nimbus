@@ -11,7 +11,7 @@ function ajaxFollowChannel(id)
             200: function (newData) {
                 count = parseInt(countFollowers);
                 if (newData.Follow == true && newData.Accepted == true) {
-                    document.getElementById('pFollow').innerHTML = "Deixar de seguir";
+                    document.getElementById('pFollow').innerHTML = "Não seguir";
                     document.getElementById('pCountFollowers').innerHTML = (count + 1).toString();
                 }
                 else if (newData.Follow == true && newData.Accepted == false)

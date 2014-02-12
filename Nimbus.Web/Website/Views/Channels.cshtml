@@ -18,33 +18,34 @@
 
 <div id="divCapa">
     <img src="@Model.CurrentChannel.ImgUrl" id="imgCapa" height="192" alt="" width="864" />
-    @if (Model.CurrentChannel.OwnerId != Model.CurrentUser.UserId)
+    @if (Model.CurrentChannel.OwnerId != Model.CurrentUser.UserId && (Model.RolesCurrentUser.Contains("channelmanager") == false
+                                                                      && Model.RolesCurrentUser.Contains("moderatormanager") == false))
     {
-    if (Model.CurrentChannel.UserFollow == true && Model.CurrentChannel.isAccept == true)
-    {
-        <a href="#" onclick="ajaxFollowChannel(@Model.CurrentChannel.Id);">
-            <div class="followChannelPage">
-                <p id="pFollow">Não seguir</p>
-            </div>
-        </a>
-    }
-    else if (Model.CurrentChannel.UserFollow == true && Model.CurrentChannel.isAccept == false)
-    {
+        if (Model.CurrentChannel.UserFollow == true && Model.CurrentChannel.isAccept == true)
+        {
+            <a href="#" onclick="ajaxFollowChannel(@Model.CurrentChannel.Id);">
+                <div class="followChannelPage">
+                    <p id="pFollow">Não seguir</p>
+                </div>
+            </a>       
+        }
+        else if (Model.CurrentChannel.UserFollow == true && Model.CurrentChannel.isAccept == false)
+        {
 
-                 <div class="followChannelPage">
-                     <p id="pFollow">Aguardando aprovação</p> 
-                 </div>
-    }
-    else if(Model.CurrentChannel.UserFollow == false)
-    {
-        <a href="#" onclick="ajaxFollowChannel(@Model.CurrentChannel.Id);">
-            <div class="followChannelPage">
-                <p id="pFollow">Seguir</p>
-            </div>
-        </a>
-    }
+                     <div class="followChannelPage">
+                       <p id="pFollow">Aguardando aprovação</p> 
+                   </div>
+        }
+        else if(Model.CurrentChannel.UserFollow == false)
+        {
+            <a href="#" onclick="ajaxFollowChannel(@Model.CurrentChannel.Id);">
+              <div class="followChannelPage">
+                  <p id="pFollow">Seguir</p>
+              </div>
+          </a>
+        }
 
-}
+    }
     else if (Model.CurrentChannel.OwnerId == Model.CurrentChannel.userID || Model.RolesCurrentUser.Contains("channelmanager")
                                                                          || Model.RolesCurrentUser.Contains("moderatormanager"))
     {
@@ -57,6 +58,14 @@
                 <p>Editar</p>
             </div>
         </a>
+        if (Model.CurrentChannel.UserFollow == true)
+        {
+             <a href="#" onclick="ajaxFollowChannel(@Model.CurrentChannel.Id);">
+                 <div class="followChannelPage" style="margin-top:-80px;">
+                     <p id="pFollow">Não seguir</p>
+                </div>
+             </a>     
+        }
     }
 </div>
 
@@ -242,6 +251,11 @@
                     <div class="divformModal">
                         <p>Assunto</p>
                         <input required id="txtTitleMsg" name="txtTitleMsg" type="text" maxlength="100" />
+                    </div>
+
+                    <div class="divformModal">
+                        <p>Mensagem</p>
+                        <textarea id="txtTextMsg" name="txtTextMsg" rows="8" cols="60" required></textarea>
                     </div>
                 </div>
 

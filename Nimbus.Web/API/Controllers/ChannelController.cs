@@ -952,12 +952,12 @@ namespace Nimbus.Web.API.Controllers
                      {
                          if (user.Follow == false)
                          {
-                             db.UpdateOnly(new ChannelUser { Follow = true }, usr => usr.Follow, usr => usr.UserId == NimbusUser.UserId);                             
+                             db.UpdateOnly(new ChannelUser { Follow = true }, usr => usr.Follow, usr => usr.UserId == NimbusUser.UserId && usr.ChannelId == id);                             
                              channelUser.Follow = true;
                          }
                          else if (user.Follow == true)
                          {
-                             db.UpdateOnly(new ChannelUser { Follow = false }, usr => usr.Follow, usr => usr.UserId == NimbusUser.UserId);
+                             db.UpdateOnly(new ChannelUser { Follow = false }, usr => usr.Follow, usr => usr.UserId == NimbusUser.UserId && usr.ChannelId == id);
                              channelUser.Follow = false;
                              //verificar se é moderador e retirar da tabela de moderar
                              using(var trans = db.OpenTransaction(System.Data.IsolationLevel.ReadCommitted))

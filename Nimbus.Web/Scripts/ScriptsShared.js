@@ -803,36 +803,36 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
 
         if (option == 'back')
         {
-            document.getElementById('imgNextCtg').style.opacity = '1';
+            document.getElementById('imgNextCtg').src = '/images/utils/direita-verde.png';
             if (skip == 0) {
-                document.getElementById('imgBackCtg').style.opacity = '0.5';
+                document.getElementById('imgBackCtg').src = '/images/utils/esquerda-cinza.png';
                 flag = false;
             }
             else {
                 skip = skip - 1;
                 if (skip == 0)
-                    document.getElementById('imgBackCtg').style.opacity = '0.5';
+                    document.getElementById('imgBackCtg').src = '/images/utils/esquerda-cinza.png';
                 else
-                    document.getElementById('imgBackCtg').style.opacity = '1';
+                    document.getElementById('imgBackCtg').src = '/images/utils/esquerda-verde.png';
                 flag = true;
             }
         }
         else if (option == 'next')
         {
-            document.getElementById('imgBackCtg').style.opacity = '1';
+            document.getElementById('imgBackCtg').src = '/images/utils/esquerda-verde.png';
 
             if (skip == (totalCat - 1))
             {
-                document.getElementById('').style.opacity = '0.5';
+                document.getElementById('imgNextCtg').src = '/images/utils/direita-cinza.png';
                 flag = false;
             }
             else if(skip < (totalCat - 1)) //pq skip começa do zero
             {
                 skip = skip + 1;
                 if(skip == (totalCat - 1))
-                    document.getElementById('imgNextCtg').style.opacity = '0.5';
+                    document.getElementById('imgNextCtg').src = '/images/utils/direita-cinza.png';
                 else
-                    document.getElementById('imgNextCtg').style.opacity = '1';               
+                    document.getElementById('imgNextCtg').src = '/images/utils/direita-verde.png';
                 flag = true;
             }
         }
