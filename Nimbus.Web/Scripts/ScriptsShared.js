@@ -331,7 +331,7 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
     }
 
     //método que busca os comentarios de 15 em 15 e 'filhos' de 5 em 5
-    function seeMoreComments(id, nameDiv, global, page) {
+    function seeMoreComments(id, nameDiv, global, page, button) {
        
         var limite = 0;
         var value = -1;
@@ -368,7 +368,7 @@ function EnableDivHiddenBtn(nameDiv, nameBtn)
                         document.getElementById(nameDiv).innerHTML += newData.Html;
                     }
                     if (newData.Count < limite) {
-                        document.getElementById("btn_" + global).style.display = "none";
+                        button.style.display = "none";
                     }
                   
                 },

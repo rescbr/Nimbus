@@ -5,17 +5,17 @@
     <title>Nimbus Upload</title>
 </head>
 <body style="margin:0; padding:0">
-    <form action="/upload/@Model.UploadAction" method="post" id="formUpload" enctype="multipart/form-data">
-        <input type="file" name="file" id="file" />
-        <input type="hidden" name="field" value="@Model.ReturnUploadField" />
-        <input type="hidden" name="w" value="@Model.ReturnPreviewWidth" />
-        <input type="hidden" name="h" value="@Model.ReturnPreviewHeight" />
-        <input type="hidden" name="popup" value="@Model.isPopUp" />
-        <span id="divLoadingImage" style="display:none"><img src="/images/utils/ringload.gif" /></span>
-        <br />
-        <input type="submit" value="Enviar" id="btnSubmit"/>
-    </form>
-
+    <div style="position: relative;">
+        <form action="/upload/@Model.UploadAction" method="post" id="formUpload" enctype="multipart/form-data">
+            <input type="file" name="file" id="file" style="display: inline-block;"/>
+            <input type="hidden" name="field" value="@Model.ReturnUploadField" />
+            <input type="hidden" name="w" value="@Model.ReturnPreviewWidth" />
+            <input type="hidden" name="h" value="@Model.ReturnPreviewHeight" />
+            <input type="hidden" name="popup" value="@Model.isPopUp" />
+            <span id="divLoadingImage" style="display:none"><img src="/images/utils/ringload.gif" /></span>
+            <input type="submit" value="Enviar" id="btnSubmit" style="display: none;"/>
+        </form>
+    </div>
     <script type="text/javascript">
         function dgi(el) { return document.getElementById(el); }
 
@@ -26,9 +26,12 @@
                 return false;
             }
 
-            dgi("divLoadingImage").style.display = "block";
+            dgi("divLoadingImage").style.display = "inline-block";
             dgi("btnSubmit").style.display = "none";
         };
+
+        dgi("file").onchange = function () { dgi("btnSubmit").click(); }
+        
 
     </script>
 

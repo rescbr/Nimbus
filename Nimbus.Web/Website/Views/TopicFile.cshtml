@@ -9,8 +9,8 @@
         else
         {
             string file = Model.CurrentTopic.UrlVideo;
-            var height = "285px";
-            var width = "350px";
+            var height = "412px";
+            var width = "550px";
             string urlFile = "https://view.officeapps.live.com/op/embed.aspx?src=" + file + "&wdAr=1.3333333333333333";
         
             if (Model.CurrentTopic.UrlVideo.EndsWith(".pdf"))
@@ -37,7 +37,9 @@
             }
             else
             {
-                <img src="@file" style="height:auto; width:auto; max-width:@width; max-height:@height;" />
+                <a href="@file" target="_blank" title="Abrir em outra janela">
+                    <img src="@file" style="height:auto; width:auto; max-width:@width;" alt="@Model.CurrentTopic.Title" />
+                </a>
             }
         }
 }

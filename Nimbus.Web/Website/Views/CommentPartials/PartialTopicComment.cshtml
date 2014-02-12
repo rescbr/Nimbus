@@ -29,7 +29,7 @@
     @if (Model.CommentChild.Count >= 3)
     {
         <div class="seeMoreContent">
-            <div class="seeMoreButton" id="btn_skipCommentsChild_@Model.Id" onclick="seeMoreComments(@Model.Id, 'divAllCommentChild_@Model.Id', 'skipCommentsChild','child');">
+            <div class="seeMoreButton" id="btn_skipCommentsChild_@Model.Id" onclick="seeMoreComments(@Model.Id, 'divAllCommentChild_@Model.Id', 'skipCommentsChild', 'child', this);">
                 <p>Ver mais</p></div>
         </div>
     }
