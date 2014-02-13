@@ -51,9 +51,14 @@ namespace Nimbus.Web
             EmailMessage mensagem = new EmailMessage();
             List<EmailAddress> address = new List<EmailAddress>();
 
+            int httpErrorCode = 500;
             var exception = Server.GetLastError();
+            if (exception is System.Web.HttpException)
+            {
+                httpErrorCode = ((System.Web.HttpException)exception).GetHttpCode();
+            }
 
-            if (exception != null)
+            if (exception != null && httpErrorCode == 500) //erros que nao sao 500 o iis que resolva
             {
                 string exceptionMsg = exception.ToString();
                 if (Context != null)
@@ -86,6 +91,7 @@ namespace Nimbus.Web
                 }
             }
 
+            Response.Redirect("/nimbus/pageerror404");
         }
 
         protected void Session_End(object sender, EventArgs e)

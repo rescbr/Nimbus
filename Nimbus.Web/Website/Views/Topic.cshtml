@@ -1,7 +1,7 @@
 ﻿@model Nimbus.Web.Website.Models.TopicModel
 @{
     Layout = "~/Website/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "Topico";
+    ViewBag.Title = Model.CurrentTopic.Title;
 }
 
 @Scripts.Render("~/Scripts/ViewChannelScripts.js")

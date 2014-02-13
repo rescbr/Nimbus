@@ -62,10 +62,6 @@ namespace Nimbus.Web.API.Controllers
                     }
                 }
             }
-            else
-            {
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Nenhum registro encontrado para '" + q + "'"));
-            }
             return usersFound;
         }
         
@@ -126,10 +122,6 @@ where ([Topic].[Text] collate Latin1_general_CI_AI like @search collate Latin1_g
                     topicsFound.Add(bag);
                 }
             }
-            else
-            {
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Nenhum registro encontrado para '" + q + "'"));
-            }
             return topicsFound;
         }
 
@@ -182,10 +174,6 @@ where ([Topic].[Text] collate Latin1_general_CI_AI like @search collate Latin1_g
                             channelsFound.Add(bag);
                         }
                     }                
-            }
-            else
-            {
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Nenhum registro encontrado para '" + q + "'"));
             }
             return channelsFound;
         }
