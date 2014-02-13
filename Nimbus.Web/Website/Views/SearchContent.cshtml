@@ -52,7 +52,11 @@
 </div>
 
 <div>
-    @if (Model.ItensFound.Count > 0) { 
+    @if (Model.ItensFound == null)
+    {
+        <p class="setMargin">Utilize o campo de busca acima para descobrir novos conteúdos!</p>
+    }
+    else if (Model.ItensFound.Count > 0) { 
         foreach (var item in Model.ItensFound)
         {
             string urlTamAvatarCorreto = item.UrlImage.Replace("/av130x130/", "/av180x100/");

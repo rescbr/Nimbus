@@ -11,11 +11,16 @@ namespace Nimbus.Web.Website.Controllers
     public class SearchController : NimbusWebController
     {
 
-        public ActionResult Index(string text, int filter)
+        public ActionResult Index(string text = null, int filter = -1)
         {
-            try
+            if (string.IsNullOrEmpty(text) || filter < 0 || filter > 3)
             {
-
+                var mdl = new SearchModel();
+                mdl.ItensFound = null;
+                return View("SearchContent", new SearchModel());
+            }
+            else
+            {
                 var searchApi = ClonedContextInstance<API.Controllers.SearchController>();
                 var search = new SearchModel();
 
@@ -41,11 +46,6 @@ namespace Nimbus.Web.Website.Controllers
 
                 return View("SearchContent", search);
             }
-            catch (Exception)
-            {
-                return Redirect("/trending");
-            }
-
         }
     }
 }

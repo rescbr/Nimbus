@@ -951,7 +951,7 @@ from (
                 var listUserTpc = db.SelectParam<UserTopicFavorite>(t => t.UserId == NimbusUser.UserId && t.Visible == true)
                                                              .Skip(15 * skip).Take(15);
 
-                var listTopic = listUserTpc.Select(r => db.Where<Topic>(t => t.Visibility == true && t.Id == r.TopicId).FirstOrDefault()).ToList();
+                var listTopic = listUserTpc.Select(r => db.Where<Topic>(t => t.Visibility == true && t.Id == r.TopicId).FirstOrDefault()).Where(x => x != null).ToList();
 
                 foreach (var item in listTopic)
                 {
