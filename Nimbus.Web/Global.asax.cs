@@ -57,6 +57,10 @@ namespace Nimbus.Web
             {
                 httpErrorCode = ((System.Web.HttpException)exception).GetHttpCode();
             }
+            else if (exception is System.Web.Http.HttpResponseException)
+            {
+                httpErrorCode = (int)((System.Web.Http.HttpResponseException)exception).Response.StatusCode;
+            }
 
             if (exception != null && httpErrorCode == 500) //erros que nao sao 500 o iis que resolva
             {
