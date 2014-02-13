@@ -210,7 +210,7 @@ function ajaxFinishExam(id)
             statusCode: {
                 200: function (newData) {                  
                     var porcentagem = (newData/listQuestion.length)*100;
-                        alert("Sua nota foi de " + newData + " com " + porcentagem + "% de acerto.");
+                        alert("Sua nota foi " + newData + " com " + porcentagem + "% de acerto.");
                     }
                 },
 
