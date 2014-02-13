@@ -786,11 +786,11 @@ namespace Nimbus.Web.API.Controllers
                                                             SET [Topic].[Visibility] = 0
                                                             WHERE [Topic].[ChannelId] = @channelId", new { channelId = id });
 
-                                    DeleteChannelWithoutTopics(id, roleOwner);
+                                    message = DeleteChannelWithoutTopics(id, roleOwner);
                                 }
                                 else 
                                 {
-                                    DeleteChannelWithoutTopics(id, roleOwner);
+                                   message = DeleteChannelWithoutTopics(id, roleOwner);
                                 }
 
                             }
@@ -900,12 +900,14 @@ namespace Nimbus.Web.API.Controllers
 
                         Channel channelDelete = db.Where<Channel>(c => c.Id == id && c.Visible == true).FirstOrDefault();
                         channelDelete.Visible = false;
-                        db.Update<Channel>(channelDelete);
+                        db.Update<Channel>(channelDelete, ch => ch.Id == id);
                         message = "/userprofile/index/" + NimbusUser.UserId;
+
+                        trans.Commit();
                     }
                     catch (Exception)
                     {
-
+                        trans.Rollback();
                         throw;
                     }
                 }

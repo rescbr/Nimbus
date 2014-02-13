@@ -276,7 +276,7 @@ namespace Nimbus.Web.API.Controllers
         [HttpGet]
         public Topic ShowTopic(int id)
         {
-            Topic topic = new Topic();
+            Topic topic = null;
             try
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
@@ -285,8 +285,11 @@ namespace Nimbus.Web.API.Controllers
 
                     if (allow == true)
                     {
-                        topic = db.SelectParam<Topic>(tp => tp.Id == id).FirstOrDefault();
-
+                        topic = db.SelectParam<Topic>(tp => tp.Id == id && tp.Visibility == true).FirstOrDefault();
+                        if (topic == null)
+                        {
+                            throw new HttpResponseException(HttpStatusCode.NotFound);
+                        }
                         //Renato: comentado devido processo de remoção de htmlencode
                         //topic.Title = HttpUtility.HtmlDecode(topic.Title);                       
                         //topic.Description = HttpUtility.HtmlDecode(topic.Description);
@@ -371,7 +374,7 @@ namespace Nimbus.Web.API.Controllers
             {
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
-                    topic = db.SelectParam<Topic>(tp => tp.Id == id).FirstOrDefault();
+                    topic = db.SelectParam<Topic>(tp => tp.Id == id && tp.Visibility == true).FirstOrDefault();
 
                     if (topic.TopicType == Nimbus.Model.Enums.TopicType.video)
                     {
@@ -988,7 +991,7 @@ from (
 
             using (var db = DatabaseFactory.OpenDbConnection())
             {
-                UserTopicReadLater user = db.SelectParam<UserTopicReadLater>(rl => rl.UserId == NimbusUser.UserId && rl.TopicId == id).FirstOrDefault();
+                UserTopicReadLater user = db.SelectParam<UserTopicReadLater>(rl => rl.UserId == NimbusUser.UserId && rl.TopicId == id && rl.Visible == true).FirstOrDefault();
 
                 if (willRead == false)//retirar da lista
                 {
@@ -1076,8 +1079,11 @@ from (
             //ver permissao p vizualizar => se é pago = ter pagado, se é privado = ser aceito
             using (var db = DatabaseFactory.OpenDbConnection())
             {
-                Topic tpc = db.SelectParam<Topic>(tp => tp.Id == id).FirstOrDefault();
-                if (tpc.Visibility == false) return false;
+                Topic tpc = db.SelectParam<Topic>(tp => tp.Id == id && tp.Visibility == true).FirstOrDefault();
+                if (tpc == null)
+                {
+                    throw new HttpResponseException(HttpStatusCode.NotFound);
+                }
 
 
                 bool chnPrivate = db.SelectParam<Channel>(ch => ch.Id == tpc.ChannelId).Select(ch => ch.IsPrivate).FirstOrDefault();

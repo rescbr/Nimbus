@@ -19,22 +19,14 @@ namespace Nimbus.Web.API.Controllers
         /// <returns></returns>
         [HttpGet]
         public List<Category> showAllCategory()
-        {       
-            try
+        {
+            List<Category> listCat = new List<Category>();
+            using (var db = DatabaseFactory.OpenDbConnection())
             {
-                List<Category> listCat = new List<Category>();
-                using (var db = DatabaseFactory.OpenDbConnection())
-                {
-                    listCat = db.Select<Category>();
-                }
-
-                return listCat;
-            }
-            catch(Exception ex)
-            {
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+                listCat = db.Select<Category>();
             }
 
+            return listCat;
         }
 
         /// <summary>
@@ -44,21 +36,13 @@ namespace Nimbus.Web.API.Controllers
         [HttpGet]
         public List<Category> showCategoryToPage(int skip = 0)
         {
-            try
-            {
                 List<Category> listCat = new List<Category>();
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
                     listCat = db.Select<Category>().OrderBy(c => c.Name).Skip(10 * skip).Take(10).ToList();
                 }
 
-                return listCat;
-            }
-            catch (Exception ex)
-            {
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
-            }
-
+                return listCat;          
         }
 
         /// <summary>

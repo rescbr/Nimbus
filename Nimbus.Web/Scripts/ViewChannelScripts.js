@@ -108,10 +108,12 @@ function ajaxDeleteChannel(id, idUser)
                 200: function (newData) {
                     if (newData.indexOf('userprofile') > 0)
                     {
+                        document.getElementById("closeModalEdit").click();
                         window.location.href = newData;
                     }
                     else if (newData.indexOf('transferido') > 0) {
                         window.alert(newData);
+                        document.getElementById("closeModalEdit").click();
                         window.location.href = "/userprofile/index/"+ idUser;
                     }               
                     else {
@@ -204,7 +206,7 @@ function ajaxSaveNewTopic(channelID)
     }
     if (divTipoTopic == "divVideo")
     {
-        url = document.getElementById('iframeVideo').src;
+        url = document.getElementById('inptVideo').value;
         enumTopicType = 1;
 
     }  
