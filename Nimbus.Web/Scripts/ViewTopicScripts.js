@@ -152,15 +152,16 @@ function updateFieldsEcam(data)
         var stringAswer = ""; 
         for (var a in answers)
         {
-            stringAswer += "<input type=\"radio\" name=\"" + i + "\" value=\"" + a.Key + "\" />" + a.Value + "<br />";
+            stringAswer += "<input type=\"radio\" class=\"rdbPergExam\" name=\"" + i + "\" value=\"" + a + "\" />" +
+                               "<label class=\"resposta\">"+ answers[a] +"</label><br />";
         }
 
-        stringQuestion += "<section>" +
-                            "<p><strong>" + (i + 1) + "</strong> - " + question.TextQuestion + "</p>" +
+        stringQuestion += "<div id=\"divQuestTopAval\"><section class=\"divPergExam\">" +
+                            "<p>" + (i + 1) + ". " +"<label class=\"enunciado\">" + question.TextQuestion + "</label></p>" +
                             stringAswer +
-                          "</section>";
+                          "</section></div>";
 
-        divContent.innerHTML = stringQuestion;
+        divContent.innerHTML = "<div id=\"divAllQuestions\">" + stringQuestion + "</div>";
     }
 }
 

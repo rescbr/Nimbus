@@ -11,38 +11,40 @@
         Deletar Tópico <img src="/images/utils/delete.png" class="classChanDel" alt="Deletar canal" title="Deletar canal" />
     </a>
 
-    <div class="divformInfos">
+    <div class="divformNewChannel">
         <p>
             Imagem ilustrativa
         </p>
         <div id="divImgTopico">
             <img id="imgNewPrevia" src="@Model.CurrentTopic.ImgUrl" height="100" width="150" />
         </div>
-
         <iframe width="400" height="40" src="/upload?type=topicimg&field=url" frameborder="0"></iframe>
         <input type="hidden" id="url" name="url" onchange="document.getElementById('imgNewPrevia').src = this.value;" />
-
-        @*
-        <form action='/channel/upload' method="post" enctype="multipart/form-data" name="imagem_original">
-            <input type="file" name="iptNewImgTopic" id="iptNewImgTopic" />
-            <input type="submit" value="Carregar" class="hidden" style="display:none" id="upload" /><br />
-            <label>Imagem de no máx. 5MB</label>
-            <input type="hidden" id="url" name="url" />
-        </form>
-        *@
+        <label style="float:left; margin-top:-20px;">Imagem de no máx. 5MB</label>
     </div>
 
+        @*
+    <form action='/channel/upload' method="post" enctype="multipart/form-data" name="imagem_original">
+        <input type="file" name="iptNewImgTopic" id="iptNewImgTopic" />
+        <input type="submit" value="Carregar" class="hidden" style="display:none" id="upload" /><br />
+        <label>Imagem de no máx. 5MB</label>
+        <input type="hidden" id="url" name="url" />
+    </form>divformInfos
+*@
+
     <form id="formEditTopic" onsubmit="return false;">
-        <div class="divformInfos">
-            <p>Nome</p>
-            <input id="iptNewTitle" value="@Model.CurrentTopic.Title" type="text" required />
+        <div class="divformNewChannel">
+            <p>Nome do tópico</p>
+            <input type="text" id="iptNewTitle" maxlength="50" min="5" required name="txtNameTopic" value="@Model.CurrentTopic.Title" class=" textboxformat" />
+        </div>
+        
+        <div class="divformNewChannel">
+            <p>Descrição</p>
+            <textarea cols="30" rows="5" id="iptNewDescription" maxlength="150" required name="txtaDescription" class="textAreaFormat">@Model.CurrentTopic.Description</textarea>
+
         </div>
 
-        <div class="divformInfos">
-            <p>Descrição</p>
-            <input id="iptNewDescription" value="@Model.CurrentTopic.Description" type="text" required />
-        </div>
-        <div class="divformInfos">
+        <div class="divformNewChannel">
 
             @if (Model.CurrentTopic.TopicType == Nimbus.Model.Enums.TopicType.video)
             {
@@ -80,75 +82,54 @@
             }
             else if (Model.CurrentTopic.TopicType == Nimbus.Model.Enums.TopicType.exam)
             {
-                <div id="divNewExam">
+                <div id="divExam">
                     @for (int i = 0; i < Model.CurrentTopic.Question.Count; i++)
-                    {
-                        var question = Model.CurrentTopic.Question[i];
-                        var answers = question.ChoicesAnswer.ToList();
-                        /*lista as questões existentes*/
-                        <section class="divPergEditarNimbus">
-                            <p>Pergunta:</p>
-                            <p><strong>@(i + 1)</strong> -<input id="QuestionPerg@(i + 1)" class="enunciado" type="text" value="@question.TextQuestion" /></p>
+                     {
+                         var question = Model.CurrentTopic.Question[i];
+                         var answers = question.ChoicesAnswer.ToList();
+                         /*lista as questões existentes*/
+                         <div id="divPergunta1" class="divPergEditarNimbus">
+                             <p>Enunciado da questão:</p>
+                             <p><strong>@(i + 1)</strong> -<input id="QuestionPerg@(i + 1)" class="enunciado" type="text" value="@question.TextQuestion" maxlength="600" /></p>
+                     
+                             <p>Respostas:</p>
+                             <div>
+                     
+                                 @for (int j = 0; j < answers.Count; j++ )
+                                 {
 
-                            <p>Respostas:</p>
-                            <ul>
-
-                                @foreach (var answer in answers)
-                                {
-
-                                    //imprime as questoes
-                                    <li id="liPerg_@i">
-                                        @if (answer.Key == question.CorrectAnswer)
-                                        {
-                                            <input class="rdbPergEditNimbus" type="radio" checked name="@i" value="@answer.Key" />
-                                        }
-                                        else
-                                        {
-                                            <input class="rdbPergEditNimbus" type="radio" name="@i" value="@answer.Key" />
-                                        }
-
-                                        <input class="resposta" type="text" value="@answer.Value" />
-                                    </li>
-
-                                }
-                            </ul>
-
-                        </section>
-                    }
+                                     //imprime as perg
+                                        <ul id="ulPerg@(i + 1)">
+                                            <li id="liPerg@(i + 1)_opt@(j + 1)">
+                                                @if (answers[j].Key == question.CorrectAnswer)
+                                                {
+                                                    <input class="rdbPergEditNimbus" type="radio" checked name="radio_perg@(i + 1)" id="rdbPerg@(i + 1)_opt@(j + 1)" value="@answers[j].Key" />
+                                                }
+                                                else
+                                                {
+                                                    <input class="rdbPergEditNimbus" type="radio" name="radio_perg@(i + 1)" id="rdbPerg@(i + 1)_opt@(j + 1)" value="@answers[j].Key" />
+                                                }
+                                    
+                                                <input class="resposta" type="text" value="@answers[j].Value" id="txtPerg@(i + 1)_opt@(j + 1)" />
+                                            </li>
+                                        </ul>
+                                 }
+                             </div>
+                     
+                         </div>
+                     }
                 </div>
 
-                <div>
-                    <script>
-                        CurrentQuestion = '1';
-                    </script>
-                    <p><h1>Criar novas questões:</h1></p>
-                    <div id="divExam">
-                        <div id="divPergunta1" class="divPergEditarNimbus">
-                            <p>
-                                Enunciado da questão:
-                                <input id="QuestionPerg1" class="enunciado" type="text" required maxlength="600" />
-                            </p>
-                            <p>Respostas:</p>
-                            <div>
-                                <ul id="ulPerg1">
-                                    <li id="liPerg1_opt1">
-                                        @*pergunta 1 _ opçao 1*@
-                                        <input type="radio" class="rdbPergEditNimbus" checked name="radio_perg1" id="rdbPerg1_opt1" />
-                                        <input id="txtPerg1_opt1" class="resposta" required type="text" onfocus="javascript: this.value = ''" value="Opção 1" />
-                                    </li>
-                                    <li id="liPerg1_opt2">
-                                        <input type="radio" class="fakeDisable rdbPergEditNimbus" name="radio_perg1" id="rdbPerg1_opt2" />
-                                        <input id="txtPerg1_opt2" class="fakeDisable" required onclick="DisableOption('2', 'divPergunta1');" type="text" value="Opção 2" />
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <input type="button" class="inputSubmit" id="bntAddItem" onclick="CreatedDivQuestion();" value="Add item" />
-                </div>
+                 <script>
+                     CurrentQuestion = @Model.CurrentTopic.Question.Count();
+                 </script>
+               <div id="btnAddNewQuestion">
+                   <button id="btnAddItemEdit" onclick="CreatedDivQuestion();">Criar nova questão</button>
+               </div>
 
             }
         </div>
+
         <div class="divBtnNewChannel">
             <input type="submit" class="divCnclInfos" onclick="cancelEditTopic(@Model.CurrentTopic.Id);" value="Cancelar" />
             <input type="submit" class="divSaveInfos" value="Salvar" onclick="ajaxEditTopic(@Model.CurrentTopic.Id, '@Model.CurrentTopic.TopicType', 'divCurrent_@Model.CurrentTopic.TopicType')" />

@@ -52,6 +52,7 @@
     font-size: small;
     max-width: 384px;
     min-width: 384px;
+    clear:both;
 }
 
 label.custom-select {
@@ -1481,10 +1482,15 @@ div.btnRefuse:hover, div.btnRefuse:hover p {
 }
 
 /*------------------ PrivateProfileTopBar New Channel & ChannelPrivateTopBar New Topic ----------------*/
-div#divNewChannel, div#divNewTopic, div#divInfos, 
+div#divNewChannel, div#divNewTopic, 
 div#divTopicFavorite, div#divReadLater {
     margin:             24px;
     width:              596px;
+    clear: both;
+}
+
+div#divInfos {
+  width:              596px;
     clear: both;
 }
 
@@ -1571,10 +1577,24 @@ button#bntAddItem, button#btnResetPassword {
     cursor:             pointer;
 }
 
-button#bntAddItem:hover,button#btnAddModerator:hover, button#btnSaveTag:hover  {
+button#bntAddItem:hover,button#btnAddModerator:hover, button#btnSaveTag:hover,button#btnAddItemEdit:hover  {
     background: #2b79a1;
     color:      white;
     }
+
+
+button#btnAddItemEdit {
+    margin-left:        179px;
+    background:         #223d98;
+    color:              #FFFFFF;
+    height:             26px;
+    width:              150px;
+    border:             none;
+    cursor:             pointer;
+    margin-top: 20px;
+}
+
+
 
 button#btnAddModerator, button#btnSaveTag { 
     margin-left:        5px;   
@@ -2197,7 +2217,7 @@ div.contentPageTopicVideo, div.contentPageTopicText {
 
 /* Topico Avaliacao */
 div#divAllQuestions{
-    margin:           0 24px 0 24px;
+    margin-bottom:         24px;
 }
 
 div#divQuestTopAval {

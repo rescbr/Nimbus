@@ -39,7 +39,7 @@ namespace Nimbus.Web.API.Controllers
         {
             public List<UserAutoCompleteResponse> suggestions { get; set; }
         }
-
+        
         #region métodos de exibir informações do perfil
 
         ///<summary>
@@ -84,10 +84,11 @@ namespace Nimbus.Web.API.Controllers
                     userBag.Age = (int)Math.Floor((DateTime.Now.Subtract(user.BirthDate).Days) / 365.25);
 
 
-                    var roles = db.Where<Channel>(c => c.Visible == true && c.OrganizationId == NimbusOrganization.Id).Select(c => db.Where<Role>(rl => rl.UserId == id && rl.ChannelId == c.Id &&
-                                                                                                                                  (rl.IsOwner == true || rl.ChannelMagager == true || rl.MessageManager == true
-                                                                                                                                   || rl.ModeratorManager == true || rl.TopicManager == true
-                                                                                                                                   || rl.UserManager == true)).FirstOrDefault()).Where(r => r != null);
+                    var roles = db.Where<Channel>(c => c.Visible == true && c.OrganizationId == NimbusOrganization.Id)
+                                                        .Select(c => db.Where<Role>(rl => rl.UserId == id && rl.ChannelId == c.Id &&
+                                                                                     (rl.IsOwner == true || rl.ChannelMagager == true || rl.MessageManager == true
+                                                                                       || rl.ModeratorManager == true || rl.TopicManager == true
+                                                                                       || rl.UserManager == true)).FirstOrDefault()).Where(r => r != null);
                     int pointsChn = 0; int hundredFollowers = 0;
                     int pointsTpc = 0; int fiftyFollowers = 0;
                     int pointsCmt = 0; 
@@ -95,14 +96,14 @@ namespace Nimbus.Web.API.Controllers
                     {
                          pointsChn = roles.Select(c => c.UserId == id && c.IsOwner == true).Count() * 50;
 
-                        pointsChn = pointsChn + (roles.Where(c => c.IsOwner == false && c.UserId == id )
+                        pointsChn = pointsChn + (roles.Where(c => c.IsOwner == false && c.UserId == id && c.Accepted == true )
                                                       .Select(c => c.ChannelMagager == true || c.MessageManager == true ||
                                                                    c.ModeratorManager == true || c.TopicManager == true || c.UserManager == true)
                                                       .Count() * 25);
 
 
-                         pointsTpc = roles.Select(r => db.Where<Topic>(t => t.AuthorId == r.UserId &&
-                                                                            t.ChannelId == r.ChannelId && t.Visibility == true)).Count();
+                         pointsTpc = roles.Sum(r => db.Where<Topic>(t => t.AuthorId == r.UserId &&
+                                                                            t.ChannelId == r.ChannelId && t.Visibility == true).Count());
 
                         pointsCmt =  db.Where<Comment>(c => c.UserId == id && c.Visible == true).Count();
                        
@@ -535,7 +536,7 @@ WHERE ([tUser].[test] IS NOT NULL) AND
 
                 model.CountChannelOwner = db.Where<Role>(r => r.UserId == id && r.IsOwner == true).Count();
 
-                model.CountChannelManager = db.Where<Role>(r => r.IsOwner == false && r.UserId == id)
+                model.CountChannelManager = db.Where<Role>(r => r.IsOwner == false && r.UserId == id && r.Accepted == true)
                                               .Select(c => c.ChannelMagager == true || c.MessageManager == true ||
                                                            c.ModeratorManager == true || c.TopicManager == true || c.UserManager == true)
                                                       .Count();

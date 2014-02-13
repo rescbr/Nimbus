@@ -447,11 +447,7 @@ namespace Nimbus.Web.API.Controllers
                         string lastName = db.SelectParam<User>(us => us.Id == channel.OwnerId).Select(us => us.LastName).FirstOrDefault();
 
                         var channelUser = db.Where<ChannelUser>(c => c.ChannelId == id && c.UserId == NimbusUser.UserId && c.Visible == true).Where(c => c != null).FirstOrDefault();
-                        if (channelUser == null)
-                        {
-                            throw new HttpResponseException(HttpStatusCode.NotFound);
-                        }
-
+                      
                         showChannel.Name = channel.Name;
                         showChannel.Description = channel.Description;
                         showChannel.CategoryId = channel.CategoryId;
