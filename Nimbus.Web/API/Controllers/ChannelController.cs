@@ -399,6 +399,10 @@ namespace Nimbus.Web.API.Controllers
                     bool allow = false;
                     bool accepted = false;
                     Channel channel = db.SelectParam<Channel>(ch => ch.Visible == true && ch.Id == id).FirstOrDefault();
+                    if (channel == null)
+                    {
+                        throw new HttpResponseException(HttpStatusCode.NotFound);
+                    }
 
                     #region verifica permissão
                     if (channel != null)
@@ -443,6 +447,10 @@ namespace Nimbus.Web.API.Controllers
                         string lastName = db.SelectParam<User>(us => us.Id == channel.OwnerId).Select(us => us.LastName).FirstOrDefault();
 
                         var channelUser = db.Where<ChannelUser>(c => c.ChannelId == id && c.UserId == NimbusUser.UserId && c.Visible == true).Where(c => c != null).FirstOrDefault();
+                        if (channelUser == null)
+                        {
+                            throw new HttpResponseException(HttpStatusCode.NotFound);
+                        }
 
                         showChannel.Name = channel.Name;
                         showChannel.Description = channel.Description;
@@ -493,7 +501,10 @@ namespace Nimbus.Web.API.Controllers
                     bool allow = false;
                     bool accepted = false;
                     Channel channel = db.SelectParam<Channel>(ch => ch.Visible == true && ch.Id == id).FirstOrDefault();
-
+                    if (channel == null)
+                    {
+                        throw new HttpResponseException(HttpStatusCode.NotFound);
+                    }
                     #region verifica permissão
                     if (channel != null)
                     {

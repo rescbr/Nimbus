@@ -63,6 +63,10 @@ namespace Nimbus.Web.API.Controllers
                         id = NimbusUser.UserId;
 
                     var user = db.SelectParam<User>(usr => usr.Id == id).FirstOrDefault();
+                    if (user == null)
+                    {
+                        throw new HttpResponseException(HttpStatusCode.NotFound);
+                    }
                     UserBag userBag = new UserBag();
                     userBag.Id = user.Id;
                     userBag.About = user.About;

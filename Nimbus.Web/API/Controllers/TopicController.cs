@@ -375,6 +375,10 @@ namespace Nimbus.Web.API.Controllers
                 using (var db = DatabaseFactory.OpenDbConnection())
                 {
                     topic = db.SelectParam<Topic>(tp => tp.Id == id && tp.Visibility == true).FirstOrDefault();
+                    if (topic == null)
+                    {
+                        throw new HttpResponseException(HttpStatusCode.NotFound);
+                    }
 
                     if (topic.TopicType == Nimbus.Model.Enums.TopicType.video)
                     {
