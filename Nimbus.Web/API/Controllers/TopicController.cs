@@ -827,7 +827,7 @@ from (
                     }
                     else
                     {
-                        idChannel = null;
+                        return tpcList; //lista em branco
                     }
                 }
                 //busca todos os canais da categoria da organizacao
