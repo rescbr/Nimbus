@@ -37,11 +37,11 @@ namespace Nimbus.Web.API.Controllers
                             SELECT [User].[Id], [User].[FirstName], [User].[LastName],
                                    [User].[Occupation], [User].[Interest], [User].[AvatarUrl]
                             FROM [User]
-                            WHERE ((([User].[FirstName] COLLATE Latin1_general_CI_AI LIKE @search COLLATE Latin1_general_CI_AI) OR 
-			                            ([User].[LastName] COLLATE Latin1_general_CI_AI LIKE @search COLLATE Latin1_general_CI_AI) OR 
-			                            ([User].[Occupation] COLLATE Latin1_general_CI_AI LIKE @search COLLATE Latin1_general_CI_AI) OR 
-			                            ([User].[Interest] COLLATE Latin1_general_CI_AI LIKE @search COLLATE Latin1_general_CI_AI))) ",
-                          new { search = "%" + q + "%" });
+                            WHERE ( (([User].[FirstName] COLLATE Latin1_general_CI_AI LIKE @search COLLATE Latin1_general_CI_AI) OR 
+			                         ([User].[LastName] COLLATE Latin1_general_CI_AI LIKE @search COLLATE Latin1_general_CI_AI) OR 
+			                         ([User].[Occupation] COLLATE Latin1_general_CI_AI LIKE @search COLLATE Latin1_general_CI_AI) OR 
+			                         ([User].[Interest] COLLATE Latin1_general_CI_AI LIKE @search COLLATE Latin1_general_CI_AI)) AND (NOT([User].[Password] = '') OR [User].[Password] IS NULL)
+                                  ) ",new { search = "%" + q + "%" , vazia = ""});
 
                     foreach (var item in users)
                     {

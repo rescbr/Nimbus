@@ -17,9 +17,9 @@ namespace Nimbus.Web.API.Controllers
         {
             using (var db = DatabaseFactory.OpenDbConnection())
             {
-                var allDifferentChannelsFromFollowers = db.Where<ChannelUser>(chu => chu.ChannelId == id)
-                        .Select(s => db.Where<ChannelUser>(t => t.UserId == s.UserId && t.ChannelId != s.ChannelId)
-                        .Select(u => u.ChannelId));
+                var allDifferentChannelsFromFollowers = db.Where<ChannelUser>(chu => chu.ChannelId == id && chu.Visible == true)
+                                                          .Select(s => db.Where<ChannelUser>(t => t.UserId == s.UserId && t.ChannelId != s.ChannelId && t.Visible == true)
+                                                                       .Select(u => u.ChannelId));
 
                 Dictionary<int, int> relatedCounter = new Dictionary<int, int>();
                 foreach (var neighborChannels in allDifferentChannelsFromFollowers)
@@ -36,7 +36,7 @@ namespace Nimbus.Web.API.Controllers
                 var listRelatedChannelIds = relatedCounter.OrderByDescending(ctr => ctr.Value).Take(qtd).Select(chid => chid.Key).ToArray();
                 if (listRelatedChannelIds.Count() > 0)
                 {
-                    var relatedChannels = db.Where<Channel>(ch => listRelatedChannelIds.Contains(ch.Id));
+                    var relatedChannels = db.Where<Channel>(ch => listRelatedChannelIds.Contains(ch.Id) && ch.Visible == true);
                     foreach (var item in relatedChannels)
                     {
                         item.ImgUrl = item.ImgUrl.ToLower().Replace("capachannel", "category");

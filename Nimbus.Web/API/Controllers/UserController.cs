@@ -582,7 +582,7 @@ WHERE ([tUser].[test] IS NOT NULL) AND
 
                 string nameUser = NimbusUser.FirstName != null? NimbusUser.FirstName : "nulo";
                 nameUser = nameUser + " " + NimbusUser.LastName != null? NimbusUser.LastName : "nulo";
-                mensagem.from_email = "faleconosco@portalnimbus.com.br";
+                mensagem.from_email = "contato@portalnimbus.com.br";
                 mensagem.from_name = "Feedback";
                 mensagem.text = "Tipo: " + mensagem.subject.Replace("feedback", "") + " \n" +
                                 "Usuário: " + nameUser +"\n"+ 

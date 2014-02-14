@@ -65,18 +65,18 @@ namespace Nimbus.Web.Website.Controllers
                                 "Tipo: " + Request.Form["slcFaleConosco"] + " \n" +
                                 "Mensagem: " + Request.Form["txtaMsgFaleConosco"] + "\n\n\n\n";
 
-                address.Add(new EmailAddress("contato@portalnimbus.com.br"));
+                address.Add(new EmailAddress("***REMOVED***"));
                 mensagem.to = address;
 
                 var result = mandril.SendMessage(mensagem);
                 if (result[0].Status == EmailResultStatus.Sent)
-                {                    
-                    return Redirect("/login");
+                {                   
+                        return Redirect("/userprofile");                   
                 }
                 else
                     {
 
-                        return Redirect("/login"); //tem q arrumar
+                        return Redirect("/pageerror404"); //tem q arrumar
                     }
             }
             catch (Exception ex)
