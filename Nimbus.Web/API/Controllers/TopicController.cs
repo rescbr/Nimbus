@@ -370,54 +370,47 @@ namespace Nimbus.Web.API.Controllers
         public Topic ShowTopicToLoginPage(int id)
         {
             Topic topic = new Topic();
-            try
+            using (var db = DatabaseFactory.OpenDbConnection())
             {
-                using (var db = DatabaseFactory.OpenDbConnection())
+                topic = db.SelectParam<Topic>(tp => tp.Id == id && tp.Visibility == true).FirstOrDefault();
+                if (topic == null)
                 {
-                    topic = db.SelectParam<Topic>(tp => tp.Id == id && tp.Visibility == true).FirstOrDefault();
-                    if (topic == null)
-                    {
-                        throw new HttpResponseException(HttpStatusCode.NotFound);
-                    }
-
-                    if (topic.TopicType == Nimbus.Model.Enums.TopicType.video)
-                    {
-                        #region video
-                        string url = topic.UrlVideo;
-                        //garantir que mesmo que o vídeo tenha sido salvo com string padrao diferente, irá retornar o param certo
-                        if (url.Length >= 11)
-                        {
-                            string param = "";
-                            if (url.IndexOf("/embed") <= 0)
-                            {
-                                if (url.IndexOf("youtube.be/") > 0)
-                                {
-                                    int posicao = url.IndexOf(".be/") + 4;
-                                    param = url.Substring(posicao);
-                                }
-                                else if (url.IndexOf("youtube.com") > 0)
-                                {
-                                    string querystring = new Uri(topic.UrlVideo).Query;
-                                    var q = HttpUtility.ParseQueryString(querystring);
-                                    param = q["v"];
-                                }
-                                topic.UrlVideo = "//www.youtube.com/embed/" + param + "?wmode=transparent";
-                            }
-                            else
-                            {
-                                //já foi salvo da forma correta
-                                int posicao = url.IndexOf("http:") + 5;
-                                param = url.Substring(posicao);
-                                topic.UrlVideo = param + "?wmode=transparent";
-                            }
-                        }
-                        #endregion
-                    }
+                    throw new HttpResponseException(HttpStatusCode.NotFound);
                 }
-            }
-            catch (Exception ex)
-            {
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex));
+
+                if (topic.TopicType == Nimbus.Model.Enums.TopicType.video)
+                {
+                    #region video
+                    string url = topic.UrlVideo;
+                    //garantir que mesmo que o vídeo tenha sido salvo com string padrao diferente, irá retornar o param certo
+                    if (url.Length >= 11)
+                    {
+                        string param = "";
+                        if (url.IndexOf("/embed") <= 0)
+                        {
+                            if (url.IndexOf("youtube.be/") > 0)
+                            {
+                                int posicao = url.IndexOf(".be/") + 4;
+                                param = url.Substring(posicao);
+                            }
+                            else if (url.IndexOf("youtube.com") > 0)
+                            {
+                                string querystring = new Uri(topic.UrlVideo).Query;
+                                var q = HttpUtility.ParseQueryString(querystring);
+                                param = q["v"];
+                            }
+                            topic.UrlVideo = "//www.youtube.com/embed/" + param + "?wmode=transparent";
+                        }
+                        else
+                        {
+                            //já foi salvo da forma correta
+                            int posicao = url.IndexOf("http:") + 5;
+                            param = url.Substring(posicao);
+                            topic.UrlVideo = param + "?wmode=transparent";
+                        }
+                    }
+                    #endregion
+                }
             }
             return topic;
         }
@@ -707,6 +700,7 @@ from (
 				) tmpCount
 			where [positive] + [negative] > 0) as [score]
 	from [Topic]
+    where [Topic].[Visibility] = 1
 	order by score desc
     offset @skip rows fetch next @take rows only
 ) tmpScoreSort",
