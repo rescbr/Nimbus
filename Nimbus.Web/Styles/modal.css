@@ -121,7 +121,8 @@ html {
   text-indent: -100px;
   overflow: hidden;
 }
-.semantic-content .modal-close:before, ._modal .modal-close:before {
+.semantic-content .modal-close:before, ._modal .modal-close:before,
+.semantic-content .modal-closeInfo:before, ._modal .modal-closeInfo:before {
   content: '';
   position: absolute;
   top: 0;
@@ -145,6 +146,22 @@ html {
   text-decoration: none;
   text-indent: 0;
 }
+
+.semantic-content .modal-closeInfo:after, ._modal .modal-closeInfo:after {
+  content: '\00d7';
+  position: absolute;
+  top: 56px;
+  left: 50%;
+  z-index: 20;
+  margin-left: 360px;
+  background: #2b2d2e;
+  border-radius: 2px;
+  padding: 2px 8px;
+  font-size: 1.2em;
+  text-decoration: none;
+  text-indent: 0;
+}
+
 @media screen and (max-width: 690px) {
   .semantic-content .modal-inner, ._modal .modal-inner {
     width: auto;
@@ -215,11 +232,13 @@ html {
   .semantic-content .modal-content, ._modal .modal-content {
     max-height: none;
   }
-  .semantic-content .modal-close, ._modal .modal-close {
+  .semantic-content .modal-close, ._modal .modal-close,
+  .semantic-content .modal-closeInfo, ._modal .modal-closeInfo {
     right: auto;
     text-decoration: none;
   }
-  .semantic-content .modal-close:before, ._modal .modal-close:before {
+  .semantic-content .modal-close:before, ._modal .modal-close:before,
+    .semantic-content .modal-closeInfo:before, ._modal .modal-closeInfo:before {
     display: none;
   }
   .semantic-content .modal-close:after, ._modal .modal-close:after {
@@ -231,6 +250,17 @@ html {
     font-size: 1em;
     padding: 0.5em 1em;
   }
+
+    .semantic-content .modal-closeInfo:after, ._modal .modal-closeInfo:after {
+    content: attr(data-close);
+    top: 0.4em;
+    left: 1em;
+    z-index: 40;
+    margin-left: 0;
+    font-size: 1em;
+    padding: 0.5em 1em;
+  }
+}
 }
 @media screen and (max-height: 46em) and (min-width: 30em) {
   .semantic-content .modal-content, ._modal .modal-content {
