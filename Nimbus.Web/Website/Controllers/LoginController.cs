@@ -81,10 +81,14 @@ namespace Nimbus.Web.Website.Controllers
                         Expires = DateTime.Now.AddDays(Const.CookieExpiryDays)
                     };
 
+                    var modalHowToUseCookie = new HttpCookie("ShowHowToUse", "false") { Expires = DateTime.MaxValue };
+
+
                     //adiciona objeto do usuário logado à sessão
                     Session[Const.UserSession] = loggedInUser;
 
                     Response.Cookies.Add(loginCookie);
+                    Response.Cookies.Add(modalHowToUseCookie);
                     return Redirect(login.RedirectURL);
 
                 }
