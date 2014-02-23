@@ -4,6 +4,31 @@
     Layout = "~/Website/Views/Shared/_LayoutPublic.cshtml";
 }
 
+<script type="text/javascript">
+    $(function () {
+        
+        var cookie = getCookie('ShowHowToUse')
+        if(cookie != 'false')        
+        window.location.href = '#modal-HowUseNimbus';
+    });
+
+    
+ function getCookie(c_name) {
+        if (document.cookie.length > 0) {
+            c_start = document.cookie.indexOf(c_name + "=");
+            if (c_start != -1) {
+                c_start = c_start + c_name.length + 1;
+                c_end = document.cookie.indexOf(";", c_start);
+                if (c_end == -1) {
+                    c_end = document.cookie.length;
+                }
+                return unescape(document.cookie.substring(c_start, c_end));
+            }
+        }
+        return "";
+    }
+</script>
+
 <div style="width: 900px; height: 450px;">
     <div id="divNewAccountLogin" style="float: left; width: 500px; background:rgb(241, 242, 242); margin-top:24px;">
         @{
@@ -100,7 +125,7 @@
 
 
 @*Modal section - img de como funfao nimbus*@
-<section class="semantic-content" id="modal-WhoUseNimbus" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
+<section class="semantic-content" id="modal-HowUseNimbus" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
     <div class="modal-inner" style="margin-left:-400px; width:800px;">
         <header id="modal-label">
             Como usar o Portal Nimbus
