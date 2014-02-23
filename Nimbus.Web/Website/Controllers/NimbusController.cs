@@ -47,6 +47,12 @@ namespace Nimbus.Web.Website.Controllers
             return View("pageerror404");
         }
 
+        [HttpGet]
+        public ActionResult PageError500()
+        {
+            return View("pageerror500");
+        }
+
         [HttpPost]
         public ActionResult SendFaleConosco() 
         {

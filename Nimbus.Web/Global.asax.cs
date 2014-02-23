@@ -95,7 +95,10 @@ namespace Nimbus.Web
                 }
             }
 
-            Response.Redirect("/nimbus/pageerror404");
+            if (httpErrorCode == 404)
+                Response.Redirect("/nimbus/pageerror404");
+            else
+                Response.Redirect("/nimbus/pageerror500");
         }
 
         protected void Session_End(object sender, EventArgs e)

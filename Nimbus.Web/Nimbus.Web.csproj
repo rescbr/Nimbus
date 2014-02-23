@@ -316,10 +316,12 @@
     <Content Include="images\Utils\edit.png" />
     <Content Include="images\Utils\emoticonfeliz.png" />
     <Content Include="images\Utils\emoticontriste.png" />
+    <Content Include="images\Utils\erro.png" />
     <Content Include="images\Utils\esquerda-cinza.png" />
     <Content Include="images\Utils\esquerda-verde.png" />
     <Content Include="images\Utils\facebook-icon.png" />
     <Content Include="images\Utils\facebook24x24.png" />
+    <Content Include="images\Utils\info.png" />
     <Content Include="images\Utils\logoName.png" />
     <Content Include="images\Utils\ltia.png" />
     <Content Include="images\Utils\nimbus.png" />
@@ -512,6 +514,7 @@
     <Content Include="Website\Views\TermosDeUso.cshtml" />
     <Content Include="Website\Views\PageError404.cshtml" />
     <Content Include="Website\Views\Category.cshtml" />
+    <Content Include="Website\Views\PageError500.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\Controllers\DatabaseController.cs" />
