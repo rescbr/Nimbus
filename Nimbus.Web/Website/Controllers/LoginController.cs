@@ -214,9 +214,11 @@ namespace Nimbus.Web.Website.Controllers
                         Expires = DateTime.Now.AddDays(Const.CookieExpiryDays)
                     };
 
+                    var modalHowToUseCookie = new HttpCookie("ShowHowToUse", "false") { Expires = DateTime.MaxValue };
                     //adiciona objeto do usuário logado à sessão
                     Session[Const.UserSession] = DatabaseLogin.GetNimbusPrincipal(nimbusUser);
                     Response.Cookies.Add(loginCookie);
+                    Response.Cookies.Add(modalHowToUseCookie);
                     return Redirect(redirect);
                    
                 } //fim if (fbResult.IsSuccess)
