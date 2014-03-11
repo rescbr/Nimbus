@@ -171,7 +171,8 @@
         <p id="tagChannel" class="tagChannel">
             @foreach (var item in Model.Tags)
             {
-                <label id="lblTag_@item.Id">#@item.TagName</label>
+                string urlsearch = string.Format("/search/index/?text={0}&filter=0", Uri.EscapeDataString("#" + item.TagName));
+                <a class="aTags" href="@urlsearch" id="lblTag_@item.Id">#@item.TagName</a>
             }
         </p>
     </div>   

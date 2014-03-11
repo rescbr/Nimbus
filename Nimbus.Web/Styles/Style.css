@@ -1164,6 +1164,11 @@ nav#relatedChannel {
     clear:              both;
 }
 
+a.aTags{
+    cursor: pointer;
+    color: #87c240;
+}
+
 nav#relatedChannel ul li {
     margin:             4px 10px 4px 0px;
     float:              left;

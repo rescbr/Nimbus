@@ -39,6 +39,10 @@ namespace Nimbus.Web.Middleware
         {
             HttpApplication app = (HttpApplication)sender;
 
+            //força pt-br
+            Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("pt-br");
+            Thread.CurrentThread.CurrentUICulture = Thread.CurrentThread.CurrentCulture;
+
             //força sessão para requests webapi e owin (/api/ e /signalr/)
             //Resolve o bug criado pelo signalr que foi para resolver um bug.
             //Não fiquei bravo. Estou calmo. hehe =)
